@@ -304,7 +304,7 @@ export default function PropertyMap({
           {/* Filters Overlay on Map */}
           <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-[1000]">
             <div className="backdrop-blur-md rounded-lg shadow-xl p-2 sm:p-4 border border-white/20">
-              <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-3">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-2 sm:gap-3">
                 {/* Top row - Main filters */}
                 <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 flex-1">
                   {/* Price Range Filter */}
@@ -314,7 +314,7 @@ export default function PropertyMap({
                       value={filters.maxPrice?.toString() || ''} 
                       onValueChange={(value) => handleFilterChange('maxPrice', value)}
                     >
-                      <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-white">
+                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-white">
                         <SelectValue placeholder="Any Price" />
                       </SelectTrigger>
                       <SelectContent>
@@ -333,7 +333,7 @@ export default function PropertyMap({
                       value={filters.type || ''} 
                       onValueChange={(value) => handleFilterChange('type', value)}
                     >
-                      <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-white">
+                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-white">
                         <SelectValue placeholder="All Types" />
                       </SelectTrigger>
                       <SelectContent>
@@ -353,7 +353,7 @@ export default function PropertyMap({
                       value={filters.bedrooms?.toString() || ''} 
                       onValueChange={(value) => handleFilterChange('bedrooms', value)}
                     >
-                      <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-white">
+                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-white">
                         <SelectValue placeholder="Any" />
                       </SelectTrigger>
                       <SelectContent>
@@ -372,15 +372,15 @@ export default function PropertyMap({
                   {/* Apply Filters Button */}
                   <Button 
                     onClick={() => onFilterChange?.(filters)}
-                    className="h-8 sm:h-9 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium rounded-md transition-colors flex-shrink-0"
+                    className="h-9 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium rounded-md transition-colors flex-shrink-0"
                     data-testid="apply-filters-button"
                   >
-                    <Search className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
+                    <Search className="mr-1 h-4 w-4" />
                     Apply
                   </Button>
                   
                   {/* Properties Count */}
-                  <Badge className="text-xs bg-white/20 text-white border border-white/30 backdrop-blur-sm flex-shrink-0">
+                  <Badge className="h-9 flex items-center text-xs bg-white/20 text-white border border-white/30 backdrop-blur-sm flex-shrink-0 px-3">
                     {properties.length} Properties
                   </Badge>
                 </div>
