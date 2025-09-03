@@ -309,12 +309,12 @@ export default function PropertyMap({
                 <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 flex-1">
                   {/* Price Range Filter */}
                   <div className="flex-1 min-w-[120px] sm:min-w-[130px]">
-                    <label className="block text-xs font-medium text-white mb-1">Price</label>
+                    <label className="block text-xs font-medium text-blue-400 mb-1">Price</label>
                     <Select 
                       value={filters.maxPrice?.toString() || ''} 
                       onValueChange={(value) => handleFilterChange('maxPrice', value)}
                     >
-                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-white">
+                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400">
                         <SelectValue placeholder="Any Price" />
                       </SelectTrigger>
                       <SelectContent>
@@ -328,12 +328,12 @@ export default function PropertyMap({
                   
                   {/* Property Type Filter */}
                   <div className="flex-1 min-w-[120px] sm:min-w-[130px]">
-                    <label className="block text-xs font-medium text-white mb-1">Type</label>
+                    <label className="block text-xs font-medium text-blue-400 mb-1">Type</label>
                     <Select 
                       value={filters.type || ''} 
                       onValueChange={(value) => handleFilterChange('type', value)}
                     >
-                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-white">
+                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400">
                         <SelectValue placeholder="All Types" />
                       </SelectTrigger>
                       <SelectContent>
@@ -348,12 +348,12 @@ export default function PropertyMap({
                   
                   {/* Bedrooms Filter */}
                   <div className="flex-1 min-w-[100px] sm:min-w-[110px]">
-                    <label className="block text-xs font-medium text-white mb-1">Rooms</label>
+                    <label className="block text-xs font-medium text-blue-400 mb-1">Rooms</label>
                     <Select 
                       value={filters.bedrooms?.toString() || ''} 
                       onValueChange={(value) => handleFilterChange('bedrooms', value)}
                     >
-                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-white">
+                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400">
                         <SelectValue placeholder="Any" />
                       </SelectTrigger>
                       <SelectContent>
@@ -380,7 +380,7 @@ export default function PropertyMap({
                   </Button>
                   
                   {/* Properties Count */}
-                  <Badge className="h-9 flex items-center text-xs bg-white/20 text-white border border-white/30 backdrop-blur-sm flex-shrink-0 px-3">
+                  <Badge className="h-9 flex items-center text-xs bg-white/20 text-blue-400 border border-white/30 backdrop-blur-sm flex-shrink-0 px-3">
                     {properties.length} Properties
                   </Badge>
                 </div>
