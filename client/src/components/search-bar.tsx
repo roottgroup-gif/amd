@@ -102,37 +102,6 @@ export default function SearchBar({ onResults, placeholder, className }: SearchB
         )}
       </div>
 
-      {/* Search Results Summary */}
-      {aiSearch.data && (
-        <Card className="mt-4 p-4">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="font-semibold">Search Results</h3>
-            <span className="text-sm text-muted-foreground">
-              {aiSearch.data.count} properties found
-            </span>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Query: "{aiSearch.data.query}"
-          </p>
-          {Object.keys(aiSearch.data.filters).length > 0 && (
-            <div className="mt-2">
-              <p className="text-xs text-muted-foreground">Applied filters:</p>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {Object.entries(aiSearch.data.filters).map(([key, value]) => (
-                  value && (
-                    <span
-                      key={key}
-                      className="inline-block bg-primary/10 text-primary px-2 py-1 rounded text-xs"
-                    >
-                      {key}: {value.toString()}
-                    </span>
-                  )
-                ))}
-              </div>
-            </div>
-          )}
-        </Card>
-      )}
     </div>
   );
 }
