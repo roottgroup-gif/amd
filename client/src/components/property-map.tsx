@@ -62,6 +62,11 @@ export default function PropertyMap({
         const L = (window as any).L;
         
         try {
+          // Clear any existing map first
+          if ((mapRef.current as any)._leaflet_id) {
+            (mapRef.current as any)._leaflet_id = null;
+          }
+          
           // Initialize map centered on Erbil, Kurdistan
           mapInstanceRef.current = L.map(mapRef.current).setView([36.1911, 44.0093], 13);
           
@@ -412,8 +417,11 @@ export default function PropertyMap({
   };
 
   const handleFilterChange = (key: string, value: string) => {
+    console.log(`Filter change: ${key} = ${value}`);
     const newFilters = { ...localFilters };
-    if (value === 'all' || value === 'any' || value === '') {
+    
+    // Handle special "clear" values
+    if (value === 'any-price' || value === 'all-types' || value === 'any-bedrooms') {
       delete newFilters[key as keyof PropertyFilters];
     } else {
       // Convert values to proper types
@@ -424,6 +432,7 @@ export default function PropertyMap({
       }
     }
     setLocalFilters(newFilters);
+    console.log('Updated filters:', newFilters);
   };
 
   return (
@@ -441,17 +450,17 @@ export default function PropertyMap({
                 {/* Price Range Filter */}
                 <div className="flex-1 min-w-[120px] sm:min-w-[140px] transition-all duration-300">
                   <Select 
-                    value={localFilters.maxPrice?.toString() || ''} 
+                    value={localFilters.maxPrice?.toString() || 'any-price'} 
                     onValueChange={(value) => handleFilterChange('maxPrice', value)}
                   >
                     <SelectTrigger className="h-10 sm:h-11 border-0 rounded-xl bg-white/15 backdrop-blur-2xl text-sm sm:text-base text-blue-700 font-semibold w-full transition-all duration-300 hover:bg-white/25 focus:bg-white/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_8px_32px_rgba(31,38,135,0.15)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_12px_40px_rgba(31,38,135,0.25)] focus:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_16px_48px_rgba(59,130,246,0.3)] ring-1 ring-white/20 hover:ring-white/30 focus:ring-blue-400/50">
                       <SelectValue placeholder="💰 Any Price" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Any Price</SelectItem>
+                      <SelectItem value="any-price">Any Price</SelectItem>
                       <SelectItem value="200000">Under $200k</SelectItem>
-                      <SelectItem value="500000">$200k - $500k</SelectItem>
-                      <SelectItem value="1000000">$500k+</SelectItem>
+                      <SelectItem value="500000">Under $500k</SelectItem>
+                      <SelectItem value="1000000">Under $1M</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -459,14 +468,14 @@ export default function PropertyMap({
                 {/* Property Type Filter */}
                 <div className="flex-1 min-w-[120px] sm:min-w-[140px] transition-all duration-300">
                   <Select 
-                    value={localFilters.type || ''} 
+                    value={localFilters.type || 'all-types'} 
                     onValueChange={(value) => handleFilterChange('type', value)}
                   >
                     <SelectTrigger className="h-10 sm:h-11 border-0 rounded-xl bg-white/15 backdrop-blur-2xl text-sm sm:text-base text-blue-700 font-semibold w-full transition-all duration-300 hover:bg-white/25 focus:bg-white/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_8px_32px_rgba(31,38,135,0.15)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_12px_40px_rgba(31,38,135,0.25)] focus:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_16px_48px_rgba(59,130,246,0.3)] ring-1 ring-white/20 hover:ring-white/30 focus:ring-blue-400/50">
                       <SelectValue placeholder="🏠 All Types" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All Types</SelectItem>
+                      <SelectItem value="all-types">All Types</SelectItem>
                       <SelectItem value="house">House</SelectItem>
                       <SelectItem value="apartment">Apartment</SelectItem>
                       <SelectItem value="villa">Villa</SelectItem>
@@ -478,25 +487,28 @@ export default function PropertyMap({
                 {/* Bedrooms Filter */}
                 <div className="flex-1 min-w-[100px] sm:min-w-[120px] transition-all duration-300">
                   <Select 
-                    value={localFilters.bedrooms?.toString() || ''} 
+                    value={localFilters.bedrooms?.toString() || 'any-bedrooms'} 
                     onValueChange={(value) => handleFilterChange('bedrooms', value)}
                   >
                     <SelectTrigger className="h-10 sm:h-11 border-0 rounded-xl bg-white/15 backdrop-blur-2xl text-sm sm:text-base text-blue-700 font-semibold w-full transition-all duration-300 hover:bg-white/25 focus:bg-white/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_8px_32px_rgba(31,38,135,0.15)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_12px_40px_rgba(31,38,135,0.25)] focus:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_16px_48px_rgba(59,130,246,0.3)] ring-1 ring-white/20 hover:ring-white/30 focus:ring-blue-400/50">
                       <SelectValue placeholder="🛏️ Beds" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="any">Any</SelectItem>
-                      <SelectItem value="1">1+</SelectItem>
-                      <SelectItem value="2">2+</SelectItem>
-                      <SelectItem value="3">3+</SelectItem>
-                      <SelectItem value="4">4+</SelectItem>
+                      <SelectItem value="any-bedrooms">Any</SelectItem>
+                      <SelectItem value="1">1+ Bedrooms</SelectItem>
+                      <SelectItem value="2">2+ Bedrooms</SelectItem>
+                      <SelectItem value="3">3+ Bedrooms</SelectItem>
+                      <SelectItem value="4">4+ Bedrooms</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Apply Filters Button */}
                 <Button 
-                  onClick={() => onFilterChange?.(localFilters)}
+                  onClick={() => {
+                    console.log('Search button clicked with filters:', localFilters);
+                    onFilterChange?.(localFilters);
+                  }}
                   className="h-10 sm:h-11 px-4 sm:px-6 bg-gradient-to-br from-blue-500/80 via-blue-600/70 to-indigo-600/80 backdrop-blur-2xl text-white text-sm sm:text-base font-bold rounded-xl transition-all duration-300 flex-shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_32px_rgba(59,130,246,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_12px_48px_rgba(59,130,246,0.4)] hover:bg-gradient-to-br hover:from-blue-400/90 hover:via-blue-500/80 hover:to-indigo-500/90 transform hover:scale-105 hover:-translate-y-0.5 active:scale-95 ring-1 ring-white/30 hover:ring-white/40"
                   data-testid="apply-filters-button"
                 >
