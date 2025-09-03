@@ -360,18 +360,18 @@ export default function PropertyMap({
           <div ref={mapRef} className="w-full h-full" />
           
           {/* Filters Overlay on Map */}
-          <div className="absolute top-1 left-1 right-1 sm:top-2 sm:left-2 sm:right-2 md:top-4 md:left-4 md:right-4 z-[1000]">
-            <div className="backdrop-blur-md rounded-lg shadow-xl p-2 sm:p-3 md:p-4 border border-white/20">
-              {/* All elements in one row */}
-              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <div className="absolute top-4 left-4 right-4 md:top-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
+            <div className="backdrop-blur-xl bg-white/10 rounded-2xl shadow-2xl border border-white/20 p-4 md:p-6 hover:shadow-3xl transition-all duration-300 hover:bg-white/15">
+              {/* All elements in one row with enhanced spacing */}
+              <div className="flex items-center gap-3 md:gap-4 flex-wrap">
                 {/* Price Range Filter */}
-                <div className="flex-1 min-w-[100px] sm:min-w-[120px]">
+                <div className="flex-1 min-w-[120px] sm:min-w-[140px] transition-all duration-300">
                   <Select 
                     value={filters.maxPrice?.toString() || ''} 
                     onValueChange={(value) => handleFilterChange('maxPrice', value)}
                   >
-                    <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
-                      <SelectValue placeholder="Any Price" />
+                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
+                      <SelectValue placeholder="💰 Any Price" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Any Price</SelectItem>
@@ -383,13 +383,13 @@ export default function PropertyMap({
                 </div>
                 
                 {/* Property Type Filter */}
-                <div className="flex-1 min-w-[100px] sm:min-w-[120px]">
+                <div className="flex-1 min-w-[120px] sm:min-w-[140px] transition-all duration-300">
                   <Select 
                     value={filters.type || ''} 
                     onValueChange={(value) => handleFilterChange('type', value)}
                   >
-                    <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
-                      <SelectValue placeholder="All Types" />
+                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
+                      <SelectValue placeholder="🏠 All Types" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Types</SelectItem>
@@ -402,13 +402,13 @@ export default function PropertyMap({
                 </div>
                 
                 {/* Bedrooms Filter */}
-                <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
+                <div className="flex-1 min-w-[100px] sm:min-w-[120px] transition-all duration-300">
                   <Select 
                     value={filters.bedrooms?.toString() || ''} 
                     onValueChange={(value) => handleFilterChange('bedrooms', value)}
                   >
-                    <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
-                      <SelectValue placeholder="Beds" />
+                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
+                      <SelectValue placeholder="🛏️ Beds" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="any">Any</SelectItem>
@@ -423,59 +423,69 @@ export default function PropertyMap({
                 {/* Apply Filters Button */}
                 <Button 
                   onClick={() => onFilterChange?.(filters)}
-                  className="h-8 sm:h-9 px-2 sm:px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium rounded-md transition-colors flex-shrink-0"
+                  className="h-10 sm:h-11 px-4 sm:px-6 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm sm:text-base font-semibold rounded-xl transition-all duration-300 flex-shrink-0 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
                   data-testid="apply-filters-button"
                 >
-                  <Search className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline ml-1">Apply</span>
+                  <Search className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                  <span className="hidden sm:inline">Search</span>
+                  <span className="sm:hidden">Go</span>
                 </Button>
                 
                 {/* Properties Count */}
-                <Badge className="h-8 sm:h-9 flex items-center text-xs bg-white/20 text-blue-400 border border-white/30 backdrop-blur-sm flex-shrink-0 px-2 sm:px-3">
-                  <span className="hidden sm:inline">{properties.length} Properties</span>
-                  <span className="sm:hidden">{properties.length}</span>
+                <Badge className="h-10 sm:h-11 flex items-center text-sm sm:text-base bg-gradient-to-r from-green-500/20 to-blue-500/20 text-blue-600 border border-blue-300/40 backdrop-blur-md flex-shrink-0 px-4 sm:px-5 rounded-xl shadow-lg font-semibold transition-all duration-300 hover:from-green-500/30 hover:to-blue-500/30">
+                  <span className="hidden sm:inline">📊 {properties.length} Properties</span>
+                  <span className="sm:hidden">📊 {properties.length}</span>
                 </Badge>
               </div>
             </div>
           </div>
           
           {/* Legend Overlay on Map */}
-          <div className="absolute bottom-1 left-1 right-1 sm:bottom-2 sm:left-2 sm:right-2 md:bottom-4 md:left-4 md:right-4 z-[1000]">
-            <div className="backdrop-blur-md rounded-lg shadow-xl p-2 sm:p-3 border border-white/20">
-              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 text-xs">
-                <div className="flex items-center space-x-1 sm:space-x-2">
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-600 rounded-full flex-shrink-0"></div>
-                  <span className="font-medium text-xs text-white" style={{ color: 'white !important' }}>For Sale</span>
+          <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
+            <div className="backdrop-blur-xl bg-white/10 rounded-2xl shadow-2xl border border-white/20 p-4 md:p-5 hover:shadow-3xl transition-all duration-300 hover:bg-white/15">
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-sm">
+                <div className="flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg animate-pulse"></div>
+                  <span className="font-semibold text-sm text-white drop-shadow-lg" style={{ color: 'white !important' }}>🏷️ For Sale</span>
                 </div>
-                <div className="flex items-center space-x-1 sm:space-x-2">
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-600 rounded-full flex-shrink-0"></div>
-                  <span className="font-medium text-xs text-white" style={{ color: 'white !important' }}>For Rent</span>
+                <div className="flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0 shadow-lg animate-pulse"></div>
+                  <span className="font-semibold text-sm text-white drop-shadow-lg" style={{ color: 'white !important' }}>🔑 For Rent</span>
                 </div>
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <div className="flex items-center space-x-1">
-                    <i className="fas fa-home text-blue-600 text-xs sm:text-sm flex-shrink-0"></i>
-                    <span className="text-xs text-white" style={{ color: 'white !important' }}>Houses</span>
+                <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
+                  <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
+                    <i className="fas fa-home text-blue-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
+                    <span className="text-sm text-white font-medium drop-shadow-lg" style={{ color: 'white !important' }}>Houses</span>
                   </div>
-                  <div className="flex items-center space-x-1">
-                    <i className="fas fa-building text-purple-600 text-xs sm:text-sm flex-shrink-0"></i>
-                    <span className="text-xs text-white" style={{ color: 'white !important' }}>Apartments</span>
+                  <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
+                    <i className="fas fa-building text-purple-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
+                    <span className="text-sm text-white font-medium drop-shadow-lg" style={{ color: 'white !important' }}>Apartments</span>
                   </div>
-                  <div className="flex items-center space-x-1">
-                    <i className="fas fa-map-marked-alt text-orange-600 text-xs sm:text-sm flex-shrink-0"></i>
-                    <span className="text-xs text-white" style={{ color: 'white !important' }}>Land</span>
+                  <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
+                    <i className="fas fa-map-marked-alt text-orange-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
+                    <span className="text-sm text-white font-medium drop-shadow-lg" style={{ color: 'white !important' }}>Land</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Fallback content if map fails to load */}
+          {/* Enhanced Fallback content if map fails to load */}
           {typeof window === 'undefined' || !(window as any).L ? (
-            <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <p className="text-gray-600">Loading interactive map...</p>
-                <p className="text-sm text-gray-500 mt-2">Powered by OpenStreetMap & Leaflet.js</p>
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center backdrop-blur-sm">
+              <div className="text-center p-8 rounded-2xl bg-white/20 backdrop-blur-md shadow-2xl border border-white/30">
+                <div className="relative">
+                  <MapPin className="mx-auto h-16 w-16 text-blue-500 mb-6 animate-bounce drop-shadow-lg" />
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-blue-500 rounded-full animate-ping opacity-75"></div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">Loading Interactive Map</h3>
+                <p className="text-gray-600 mb-4">Discovering amazing properties for you...</p>
+                <div className="flex items-center justify-center space-x-1 mb-4">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                </div>
+                <p className="text-sm text-gray-500 font-medium">🗺️ Powered by OpenStreetMap & Leaflet.js</p>
               </div>
             </div>
           ) : null}
