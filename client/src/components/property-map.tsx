@@ -133,7 +133,7 @@ export default function PropertyMap({
           
           // Add OpenStreetMap tiles
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+            attribution: ''
           }).addTo(mapInstanceRef.current);
 
           // Add zoom event listener for clustering
