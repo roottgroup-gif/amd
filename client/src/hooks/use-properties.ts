@@ -15,9 +15,12 @@ export function useProperties(filters?: PropertyFilters) {
         });
       }
       const url = `/api/properties${params.toString() ? `?${params}` : ''}`;
+      console.log('Fetching properties with URL:', url);
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch properties');
-      return response.json();
+      const data = await response.json();
+      console.log('Fetched properties:', data.length, 'items');
+      return data;
     },
   });
 }

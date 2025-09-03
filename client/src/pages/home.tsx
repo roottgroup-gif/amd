@@ -45,6 +45,7 @@ export default function HomePage() {
   };
 
   const handleFilterChange = (key: keyof PropertyFilters, value: any) => {
+    console.log('Filter change:', key, '=', value);
     const newFilters = { ...mapFilters };
     
     // Handle "all", "any", and empty values by removing the filter
@@ -57,6 +58,7 @@ export default function HomePage() {
     // Always maintain the limit for map properties
     newFilters.limit = 100;
     
+    console.log('New filters:', newFilters);
     setMapFilters(newFilters);
   };
 
