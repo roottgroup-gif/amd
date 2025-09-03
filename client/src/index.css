@@ -504,3 +504,25 @@
     gap: 4px;
   }
 }
+
+/* Custom Property Marker Styles */
+.custom-property-marker {
+  background: transparent !important;
+  border: none !important;
+  transition: transform 0.2s ease !important;
+}
+
+.custom-property-marker:hover {
+  transform: scale(1.1) !important;
+  z-index: 1000 !important;
+}
+
+.custom-property-marker div {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-property-marker:hover div {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4) !important;
+}

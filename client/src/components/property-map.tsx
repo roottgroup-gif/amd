@@ -68,17 +68,80 @@ export default function PropertyMap({
         const lat = parseFloat(property.latitude);
         const lng = parseFloat(property.longitude);
         
-        // Create marker with custom color based on listing type
-        const markerColor = property.listingType === 'sale' ? '#2563eb' : '#059669'; // Blue for sale, green for rent
+        // Create custom icon based on property type and listing type
+        const getPropertyIcon = (type: string, listingType: string) => {
+          let iconHtml = '';
+          let bgColor = '';
+          
+          // Set background color based on listing type
+          if (listingType === 'sale') {
+            bgColor = '#2563eb'; // Blue for sale
+          } else {
+            bgColor = '#059669'; // Green for rent
+          }
+          
+          // Set icon based on property type
+          if (type === 'house' || type === 'villa') {
+            iconHtml = `
+              <div style="
+                background: ${bgColor};
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                border: 3px solid white;
+              ">
+                <i class="fas fa-home" style="color: white; font-size: 16px;"></i>
+              </div>
+            `;
+          } else if (type === 'apartment') {
+            iconHtml = `
+              <div style="
+                background: ${bgColor};
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                border: 3px solid white;
+              ">
+                <i class="fas fa-building" style="color: white; font-size: 16px;"></i>
+              </div>
+            `;
+          } else {
+            // Default for land or other types
+            iconHtml = `
+              <div style="
+                background: ${bgColor};
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                border: 3px solid white;
+              ">
+                <i class="fas fa-map-marker-alt" style="color: white; font-size: 16px;"></i>
+              </div>
+            `;
+          }
+          
+          return L.divIcon({
+            html: iconHtml,
+            className: 'custom-property-marker',
+            iconSize: [40, 40],
+            iconAnchor: [20, 20]
+          });
+        };
         
-        const marker = L.circleMarker([lat, lng], {
-          radius: 8,
-          fillColor: markerColor,
-          color: '#ffffff',
-          weight: 2,
-          opacity: 1,
-          fillOpacity: 0.8
-        }).addTo(mapInstanceRef.current);
+        const customIcon = getPropertyIcon(property.type, property.listingType);
+        const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstanceRef.current);
 
         // Add popup with property info, image, and view button
         const firstImage = property.images && property.images.length > 0 ? property.images[0] : '';
