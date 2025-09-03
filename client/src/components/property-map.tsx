@@ -29,27 +29,55 @@ export default function PropertyMap({
   useEffect(() => {
     if (!mapRef.current) return;
 
-    // Check if Leaflet is available
-    if (typeof window !== 'undefined' && (window as any).L) {
-      const L = (window as any).L;
-      
-      // Initialize map centered on Erbil, Kurdistan
-      mapInstanceRef.current = L.map(mapRef.current).setView([36.1911, 44.0093], 13);
-      
-      // Add OpenStreetMap tiles
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(mapInstanceRef.current);
+    const initializeMap = () => {
+      // Check if Leaflet is available
+      if (typeof window !== 'undefined' && (window as any).L && mapRef.current && !mapInstanceRef.current) {
+        const L = (window as any).L;
+        
+        try {
+          // Initialize map centered on Erbil, Kurdistan
+          mapInstanceRef.current = L.map(mapRef.current).setView([36.1911, 44.0093], 13);
+          
+          // Add OpenStreetMap tiles
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+          }).addTo(mapInstanceRef.current);
 
-      // Add zoom event listener for clustering
-      mapInstanceRef.current.on('zoomend', updateMarkers);
-      
-      // Invalidate size to ensure proper rendering
-      setTimeout(() => {
-        if (mapInstanceRef.current) {
-          mapInstanceRef.current.invalidateSize();
+          // Add zoom event listener for clustering
+          mapInstanceRef.current.on('zoomend', updateMarkers);
+          
+          // Invalidate size to ensure proper rendering
+          setTimeout(() => {
+            if (mapInstanceRef.current) {
+              mapInstanceRef.current.invalidateSize();
+            }
+          }, 100);
+          
+          console.log('Map initialized successfully');
+        } catch (error) {
+          console.error('Error initializing map:', error);
+        }
+      }
+    };
+
+    // Try to initialize immediately
+    initializeMap();
+
+    // If Leaflet is not ready, wait for it
+    if (!((window as any).L)) {
+      const checkLeaflet = setInterval(() => {
+        if ((window as any).L) {
+          clearInterval(checkLeaflet);
+          initializeMap();
         }
       }, 100);
+
+      return () => {
+        clearInterval(checkLeaflet);
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.remove();
+        }
+      };
     }
 
     // Cleanup on unmount
@@ -328,8 +356,8 @@ export default function PropertyMap({
     <div className={className}>
       <div className="relative">
         {/* Map Container - Full Size */}
-        <div className="relative h-full" data-testid="property-map">
-          <div ref={mapRef} className="w-full h-full" />
+        <div className="relative h-full min-h-[400px]" data-testid="property-map">
+          <div ref={mapRef} className="w-full h-full" style={{ minHeight: '400px' }} />
           
           {/* Filters Overlay on Map */}
           <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-[1000]">
