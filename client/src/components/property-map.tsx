@@ -360,18 +360,18 @@ export default function PropertyMap({
           <div ref={mapRef} className="w-full h-full" />
           
           {/* Filters Overlay on Map */}
-          <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-[1000]">
-            <div className="backdrop-blur-md rounded-lg shadow-xl p-2 sm:p-4 border border-white/20">
-              <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end gap-2 sm:gap-3">
-                {/* Top row - Main filters */}
-                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 flex-1">
+          <div className="absolute top-1 left-1 right-1 sm:top-2 sm:left-2 sm:right-2 md:top-4 md:left-4 md:right-4 z-[1000]">
+            <div className="backdrop-blur-md rounded-lg shadow-xl p-2 sm:p-3 md:p-4 border border-white/20">
+              <div className="flex flex-col gap-2 sm:gap-3">
+                {/* Main filters - Stack on mobile, row on larger screens */}
+                <div className="flex flex-col xs:flex-row gap-2 sm:gap-3">
                   {/* Price Range Filter */}
-                  <div className="flex-1 min-w-[120px] sm:min-w-[130px]">
+                  <div className="flex-1 min-w-0">
                     <Select 
                       value={filters.maxPrice?.toString() || ''} 
                       onValueChange={(value) => handleFilterChange('maxPrice', value)}
                     >
-                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400">
+                      <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
                         <SelectValue placeholder="Any Price" />
                       </SelectTrigger>
                       <SelectContent>
@@ -384,12 +384,12 @@ export default function PropertyMap({
                   </div>
                   
                   {/* Property Type Filter */}
-                  <div className="flex-1 min-w-[120px] sm:min-w-[130px]">
+                  <div className="flex-1 min-w-0">
                     <Select 
                       value={filters.type || ''} 
                       onValueChange={(value) => handleFilterChange('type', value)}
                     >
-                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400">
+                      <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
                         <SelectValue placeholder="All Types" />
                       </SelectTrigger>
                       <SelectContent>
@@ -403,13 +403,13 @@ export default function PropertyMap({
                   </div>
                   
                   {/* Bedrooms Filter */}
-                  <div className="flex-1 min-w-[100px] sm:min-w-[110px]">
+                  <div className="flex-1 min-w-0">
                     <Select 
                       value={filters.bedrooms?.toString() || ''} 
                       onValueChange={(value) => handleFilterChange('bedrooms', value)}
                     >
-                      <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400">
-                        <SelectValue placeholder="Any" />
+                      <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
+                        <SelectValue placeholder="Bedrooms" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="any">Any</SelectItem>
@@ -422,21 +422,23 @@ export default function PropertyMap({
                   </div>
                 </div>
                 
-                {/* Bottom row - Button and count */}
-                <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3">
+                {/* Button and count row */}
+                <div className="flex items-center justify-between gap-2">
                   {/* Apply Filters Button */}
                   <Button 
                     onClick={() => onFilterChange?.(filters)}
-                    className="h-9 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium rounded-md transition-colors flex-shrink-0"
+                    className="h-8 sm:h-9 px-3 sm:px-4 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium rounded-md transition-colors flex-shrink-0"
                     data-testid="apply-filters-button"
                   >
-                    <Search className="mr-1 h-4 w-4" />
-                    Apply
+                    <Search className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden xs:inline">Apply</span>
+                    <span className="xs:hidden">Go</span>
                   </Button>
                   
                   {/* Properties Count */}
-                  <Badge className="h-9 flex items-center text-xs bg-white/20 text-blue-400 border border-white/30 backdrop-blur-sm flex-shrink-0 px-3">
-                    {properties.length} Properties
+                  <Badge className="h-8 sm:h-9 flex items-center text-xs bg-white/20 text-blue-400 border border-white/30 backdrop-blur-sm flex-shrink-0 px-2 sm:px-3">
+                    <span className="hidden xs:inline">{properties.length} Properties</span>
+                    <span className="xs:hidden">{properties.length}</span>
                   </Badge>
                 </div>
               </div>
@@ -444,29 +446,29 @@ export default function PropertyMap({
           </div>
           
           {/* Legend Overlay on Map */}
-          <div className="absolute bottom-4 left-4 right-4 z-[1000]">
-            <div className="backdrop-blur-md rounded-lg shadow-xl p-3 border border-white/20">
-              <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-red-600 rounded-full"></div>
-                  <span className="font-medium text-[#000000]" style={{ color: 'white' }}>For Sale</span>
+          <div className="absolute bottom-1 left-1 right-1 sm:bottom-2 sm:left-2 sm:right-2 md:bottom-4 md:left-4 md:right-4 z-[1000]">
+            <div className="backdrop-blur-md rounded-lg shadow-xl p-2 sm:p-3 border border-white/20">
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 text-xs">
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-600 rounded-full flex-shrink-0"></div>
+                  <span className="font-medium text-xs" style={{ color: 'white' }}>For Sale</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-green-600 rounded-full"></div>
-                  <span className="font-medium text-[#000000]" style={{ color: 'white' }}>For Rent</span>
+                <div className="flex items-center space-x-1 sm:space-x-2">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-600 rounded-full flex-shrink-0"></div>
+                  <span className="font-medium text-xs" style={{ color: 'white' }}>For Rent</span>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2 sm:space-x-3">
                   <div className="flex items-center space-x-1">
-                    <i className="fas fa-home text-blue-600 text-sm"></i>
-                    <span className="text-white" style={{ color: 'white' }}>Houses</span>
+                    <i className="fas fa-home text-blue-600 text-xs sm:text-sm flex-shrink-0"></i>
+                    <span className="text-xs" style={{ color: 'white' }}>Houses</span>
                   </div>
                   <div className="flex items-center space-x-1">
-                    <i className="fas fa-building text-purple-600 text-sm"></i>
-                    <span className="text-white" style={{ color: 'white' }}>Apartments</span>
+                    <i className="fas fa-building text-purple-600 text-xs sm:text-sm flex-shrink-0"></i>
+                    <span className="text-xs" style={{ color: 'white' }}>Apartments</span>
                   </div>
                   <div className="flex items-center space-x-1">
-                    <i className="fas fa-map-marked-alt text-orange-600 text-sm"></i>
-                    <span className="text-white" style={{ color: 'white' }}>Land</span>
+                    <i className="fas fa-map-marked-alt text-orange-600 text-xs sm:text-sm flex-shrink-0"></i>
+                    <span className="text-xs" style={{ color: 'white' }}>Land</span>
                   </div>
                 </div>
               </div>
