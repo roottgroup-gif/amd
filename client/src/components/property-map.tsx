@@ -83,28 +83,26 @@ export default function PropertyMap({
         // Add popup with property info, image, and view button
         const firstImage = property.images && property.images.length > 0 ? property.images[0] : '';
         const popupContent = `
-          <div class="property-popup" style="width: 280px; max-width: 280px;">
+          <div class="property-popup responsive-popup">
             ${firstImage ? `
-              <div class="popup-image" style="width: 100%; height: 140px; margin-bottom: 12px; border-radius: 8px; overflow: hidden;">
+              <div class="popup-image">
                 <img src="${firstImage}" alt="${property.title}" 
-                     style="width: 100%; height: 100%; object-fit: cover; display: block;" 
                      onerror="this.style.display='none'; this.parentNode.style.height='0'; this.parentNode.style.marginBottom='0';" />
               </div>
             ` : ''}
-            <div class="popup-content" style="padding: 8px 0;">
-              <h4 class="popup-title" style="font-weight: 600; font-size: 14px; margin: 0 0 6px 0; line-height: 1.3; color: #1a1a1a;">${property.title}</h4>
-              <p class="popup-address" style="font-size: 12px; color: #666; margin: 0 0 8px 0;">${property.address}</p>
-              <p class="popup-price" style="font-weight: 700; font-size: 16px; color: #2563eb; margin: 0 0 8px 0;">
+            <div class="popup-content">
+              <h4 class="popup-title">${property.title}</h4>
+              <p class="popup-address">${property.address}</p>
+              <p class="popup-price">
                 ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
               </p>
-              <div class="popup-details" style="font-size: 12px; color: #888; margin: 0 0 12px 0; display: flex; gap: 8px;">
+              <div class="popup-details">
                 ${property.bedrooms ? `<span>${property.bedrooms} beds</span>` : ''} 
                 ${property.bathrooms ? `<span>• ${property.bathrooms} baths</span>` : ''}
                 ${property.area ? `<span>• ${property.area} sq ft</span>` : ''}
               </div>
               <button class="popup-button" 
                       onclick="window.viewPropertyFromMap('${property.id}')"
-                      style="width: 100%; background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: background-color 0.2s;"
                       onmouseover="this.style.background='#1d4ed8'"
                       onmouseout="this.style.background='#2563eb'">
                 View Property
