@@ -27,6 +27,14 @@
     <!-- Leaflet JavaScript -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
+    <!-- Global function for map popup navigation -->
+    <script>
+      window.viewPropertyFromMap = function(propertyId) {
+        // Navigate to property detail page
+        window.location.href = '/property/' + propertyId;
+      };
+    </script>
+    
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
     <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
   </body>
