@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,33 @@ export default function PropertyMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+  
+  // Local state for filters
+  const [localFilters, setLocalFilters] = useState<PropertyFilters>(filters || {});
+
+  // Filter properties based on current filters
+  const filteredProperties = properties.filter(property => {
+    // Price filter
+    if (localFilters.maxPrice) {
+      const maxPrice = parseInt(localFilters.maxPrice.toString());
+      const propertyPrice = parseFloat(property.price || '0');
+      if (propertyPrice > maxPrice) return false;
+    }
+
+    // Type filter
+    if (localFilters.type && localFilters.type !== 'all') {
+      if (property.type !== localFilters.type.toString()) return false;
+    }
+
+    // Bedrooms filter
+    if (localFilters.bedrooms && localFilters.bedrooms > 0) {
+      const minBedrooms = localFilters.bedrooms;
+      const propertyBedrooms = property.bedrooms || 0;
+      if (propertyBedrooms < minBedrooms) return false;
+    }
+
+    return true;
+  });
 
   // Initialize map
   useEffect(() => {
@@ -44,7 +71,7 @@ export default function PropertyMap({
           }).addTo(mapInstanceRef.current);
 
           // Add zoom event listener for clustering
-          mapInstanceRef.current.on('zoomend', updateMarkers);
+          mapInstanceRef.current.on('zoomend', () => updateMarkersForProperties(filteredProperties));
           
           // Invalidate size to ensure proper rendering
           setTimeout(() => {
@@ -135,7 +162,7 @@ export default function PropertyMap({
 
     if (shouldCluster) {
       // Create clusters when zoomed out
-      const clusters = createClusters();
+      const clusters = createClustersForProperties(properties);
       clusters.forEach(cluster => {
         if (cluster.properties.length === 1) {
           createSingleMarker(cluster.properties[0], L);
@@ -153,13 +180,13 @@ export default function PropertyMap({
     }
   };
 
-  // Function to create clusters
-  const createClusters = () => {
+  // Function to create clusters for given properties
+  const createClustersForProperties = (propertiesToCluster: Property[]) => {
     const clusters: any[] = [];
     const processed = new Set<number>();
     const CLUSTER_DISTANCE = 0.02;
 
-    properties.forEach((property, index) => {
+    propertiesToCluster.forEach((property, index) => {
       if (processed.has(index) || !property.latitude || !property.longitude) return;
 
       const lat = parseFloat(property.latitude);
@@ -168,7 +195,7 @@ export default function PropertyMap({
       processed.add(index);
 
       // Find nearby properties
-      properties.forEach((otherProperty, otherIndex) => {
+      propertiesToCluster.forEach((otherProperty, otherIndex) => {
         if (processed.has(otherIndex) || !otherProperty.latitude || !otherProperty.longitude) return;
 
         const otherLat = parseFloat(otherProperty.latitude);
@@ -337,19 +364,66 @@ export default function PropertyMap({
     markersRef.current.push(marker);
   };
 
-  // Update markers when properties change
+  // Update markers when filtered properties change
   useEffect(() => {
-    updateMarkers();
-  }, [properties]);
+    updateMarkersForProperties(filteredProperties);
+  }, [filteredProperties]);
+
+  // Update markers function that accepts properties array
+  const updateMarkersForProperties = (propertiesToShow: Property[]) => {
+    if (!mapInstanceRef.current || typeof window === 'undefined' || !(window as any).L) return;
+    
+    // Clear existing markers
+    markersRef.current.forEach(marker => {
+      mapInstanceRef.current.removeLayer(marker);
+    });
+    markersRef.current = [];
+
+    // Don't update markers if properties array is empty
+    if (!propertiesToShow || propertiesToShow.length === 0) {
+      return;
+    }
+
+    const L = (window as any).L;
+    const zoom = mapInstanceRef.current.getZoom();
+
+    // Clustering threshold - show clusters when zoomed out
+    const CLUSTER_ZOOM_THRESHOLD = 12;
+    const shouldCluster = zoom < CLUSTER_ZOOM_THRESHOLD;
+
+    if (shouldCluster) {
+      // Create clusters when zoomed out
+      const clusters = createClustersForProperties(propertiesToShow);
+      clusters.forEach(cluster => {
+        if (cluster.properties.length === 1) {
+          createSingleMarker(cluster.properties[0], L);
+        } else {
+          createClusterMarker(cluster, L);
+        }
+      });
+    } else {
+      // Show individual markers when zoomed in
+      propertiesToShow.forEach(property => {
+        if (property.latitude && property.longitude) {
+          createSingleMarker(property, L);
+        }
+      });
+    }
+  };
 
   const handleFilterChange = (key: string, value: string) => {
-    const newFilters = { ...filters };
+    const newFilters = { ...localFilters };
     if (value === 'all' || value === 'any' || value === '') {
       delete newFilters[key as keyof PropertyFilters];
     } else {
-      newFilters[key as keyof PropertyFilters] = value as any;
+      // Convert values to proper types
+      if (key === 'maxPrice' || key === 'bedrooms') {
+        newFilters[key as keyof PropertyFilters] = parseInt(value) as any;
+      } else {
+        newFilters[key as keyof PropertyFilters] = value as any;
+      }
     }
-    onFilterChange?.(newFilters);
+    setLocalFilters(newFilters);
   };
 
   return (
@@ -361,16 +435,16 @@ export default function PropertyMap({
           
           {/* Filters Overlay on Map */}
           <div className="absolute top-4 left-4 right-4 md:top-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
-            <div className="p-4 md:p-6 transition-all duration-300">
+            <div className="backdrop-blur-xl bg-white/10 rounded-2xl shadow-2xl border border-white/20 p-4 md:p-6 hover:shadow-3xl transition-all duration-300 hover:bg-white/15">
               {/* All elements in one row with enhanced spacing */}
               <div className="flex items-center gap-3 md:gap-4 flex-wrap">
                 {/* Price Range Filter */}
                 <div className="flex-1 min-w-[120px] sm:min-w-[140px] transition-all duration-300">
                   <Select 
-                    value={filters.maxPrice?.toString() || ''} 
+                    value={localFilters.maxPrice?.toString() || ''} 
                     onValueChange={(value) => handleFilterChange('maxPrice', value)}
                   >
-                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
                       <SelectValue placeholder="💰 Any Price" />
                     </SelectTrigger>
                     <SelectContent>
@@ -385,10 +459,10 @@ export default function PropertyMap({
                 {/* Property Type Filter */}
                 <div className="flex-1 min-w-[120px] sm:min-w-[140px] transition-all duration-300">
                   <Select 
-                    value={filters.type || ''} 
+                    value={localFilters.type || ''} 
                     onValueChange={(value) => handleFilterChange('type', value)}
                   >
-                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
                       <SelectValue placeholder="🏠 All Types" />
                     </SelectTrigger>
                     <SelectContent>
@@ -404,10 +478,10 @@ export default function PropertyMap({
                 {/* Bedrooms Filter */}
                 <div className="flex-1 min-w-[100px] sm:min-w-[120px] transition-all duration-300">
                   <Select 
-                    value={filters.bedrooms?.toString() || ''} 
+                    value={localFilters.bedrooms?.toString() || ''} 
                     onValueChange={(value) => handleFilterChange('bedrooms', value)}
                   >
-                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 shadow-lg hover:shadow-xl">
+                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
                       <SelectValue placeholder="🛏️ Beds" />
                     </SelectTrigger>
                     <SelectContent>
@@ -422,7 +496,7 @@ export default function PropertyMap({
 
                 {/* Apply Filters Button */}
                 <Button 
-                  onClick={() => onFilterChange?.(filters)}
+                  onClick={() => onFilterChange?.(localFilters)}
                   className="h-10 sm:h-11 px-4 sm:px-6 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm sm:text-base font-semibold rounded-xl transition-all duration-300 flex-shrink-0 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
                   data-testid="apply-filters-button"
                 >
@@ -432,9 +506,9 @@ export default function PropertyMap({
                 </Button>
                 
                 {/* Properties Count */}
-                <Badge className="h-10 sm:h-11 flex items-center text-sm sm:text-base text-blue-600 border border-blue-300/40 flex-shrink-0 px-4 sm:px-5 rounded-xl shadow-lg font-semibold transition-all duration-300">
-                  <span className="hidden sm:inline">📊 {properties.length} Properties</span>
-                  <span className="sm:hidden">📊 {properties.length}</span>
+                <Badge className="h-10 sm:h-11 flex items-center text-sm sm:text-base bg-gradient-to-r from-green-500/20 to-blue-500/20 text-blue-600 border border-blue-300/40 backdrop-blur-md flex-shrink-0 px-4 sm:px-5 rounded-xl shadow-lg font-semibold transition-all duration-300 hover:from-green-500/30 hover:to-blue-500/30">
+                  <span className="hidden sm:inline">📊 {filteredProperties.length} Properties</span>
+                  <span className="sm:hidden">📊 {filteredProperties.length}</span>
                 </Badge>
               </div>
             </div>
@@ -442,13 +516,13 @@ export default function PropertyMap({
           
           {/* Legend Overlay on Map */}
           <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
-            <div className="p-4 md:p-5 transition-all duration-300">
+            <div className="backdrop-blur-xl bg-white/10 rounded-2xl shadow-2xl border border-white/20 p-4 md:p-5 hover:shadow-3xl transition-all duration-300 hover:bg-white/15">
               <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-sm">
-                <div className="flex items-center space-x-2 sm:space-x-3 p-2 transition-all duration-300 hover:scale-105">
+                <div className="flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
                   <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg animate-pulse"></div>
                   <span className="font-semibold text-sm text-white drop-shadow-lg" style={{ color: 'white !important' }}>🏷️ For Sale</span>
                 </div>
-                <div className="flex items-center space-x-2 sm:space-x-3 p-2 transition-all duration-300 hover:scale-105">
+                <div className="flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
                   <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0 shadow-lg animate-pulse"></div>
                   <span className="font-semibold text-sm text-white drop-shadow-lg" style={{ color: 'white !important' }}>🔑 For Rent</span>
                 </div>
