@@ -362,85 +362,79 @@ export default function PropertyMap({
           {/* Filters Overlay on Map */}
           <div className="absolute top-1 left-1 right-1 sm:top-2 sm:left-2 sm:right-2 md:top-4 md:left-4 md:right-4 z-[1000]">
             <div className="backdrop-blur-md rounded-lg shadow-xl p-2 sm:p-3 md:p-4 border border-white/20">
-              <div className="flex flex-col gap-2 sm:gap-3">
-                {/* Main filters - Stack on mobile, row on larger screens */}
-                <div className="flex flex-col xs:flex-row gap-2 sm:gap-3">
-                  {/* Price Range Filter */}
-                  <div className="flex-1 min-w-0">
-                    <Select 
-                      value={filters.maxPrice?.toString() || ''} 
-                      onValueChange={(value) => handleFilterChange('maxPrice', value)}
-                    >
-                      <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
-                        <SelectValue placeholder="Any Price" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Any Price</SelectItem>
-                        <SelectItem value="200000">Under $200k</SelectItem>
-                        <SelectItem value="500000">$200k - $500k</SelectItem>
-                        <SelectItem value="1000000">$500k+</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  {/* Property Type Filter */}
-                  <div className="flex-1 min-w-0">
-                    <Select 
-                      value={filters.type || ''} 
-                      onValueChange={(value) => handleFilterChange('type', value)}
-                    >
-                      <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
-                        <SelectValue placeholder="All Types" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Types</SelectItem>
-                        <SelectItem value="house">House</SelectItem>
-                        <SelectItem value="apartment">Apartment</SelectItem>
-                        <SelectItem value="villa">Villa</SelectItem>
-                        <SelectItem value="land">Land</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  {/* Bedrooms Filter */}
-                  <div className="flex-1 min-w-0">
-                    <Select 
-                      value={filters.bedrooms?.toString() || ''} 
-                      onValueChange={(value) => handleFilterChange('bedrooms', value)}
-                    >
-                      <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
-                        <SelectValue placeholder="Bedrooms" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="any">Any</SelectItem>
-                        <SelectItem value="1">1+</SelectItem>
-                        <SelectItem value="2">2+</SelectItem>
-                        <SelectItem value="3">3+</SelectItem>
-                        <SelectItem value="4">4+</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+              {/* All elements in one row */}
+              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                {/* Price Range Filter */}
+                <div className="flex-1 min-w-[100px] sm:min-w-[120px]">
+                  <Select 
+                    value={filters.maxPrice?.toString() || ''} 
+                    onValueChange={(value) => handleFilterChange('maxPrice', value)}
+                  >
+                    <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
+                      <SelectValue placeholder="Any Price" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Any Price</SelectItem>
+                      <SelectItem value="200000">Under $200k</SelectItem>
+                      <SelectItem value="500000">$200k - $500k</SelectItem>
+                      <SelectItem value="1000000">$500k+</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 
-                {/* Button and count row */}
-                <div className="flex items-center justify-between gap-2">
-                  {/* Apply Filters Button */}
-                  <Button 
-                    onClick={() => onFilterChange?.(filters)}
-                    className="h-8 sm:h-9 px-3 sm:px-4 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium rounded-md transition-colors flex-shrink-0"
-                    data-testid="apply-filters-button"
+                {/* Property Type Filter */}
+                <div className="flex-1 min-w-[100px] sm:min-w-[120px]">
+                  <Select 
+                    value={filters.type || ''} 
+                    onValueChange={(value) => handleFilterChange('type', value)}
                   >
-                    <Search className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
-                    <span className="hidden xs:inline">Apply</span>
-                    <span className="xs:hidden">Go</span>
-                  </Button>
-                  
-                  {/* Properties Count */}
-                  <Badge className="h-8 sm:h-9 flex items-center text-xs bg-white/20 text-blue-400 border border-white/30 backdrop-blur-sm flex-shrink-0 px-2 sm:px-3">
-                    <span className="hidden xs:inline">{properties.length} Properties</span>
-                    <span className="xs:hidden">{properties.length}</span>
-                  </Badge>
+                    <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
+                      <SelectValue placeholder="All Types" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Types</SelectItem>
+                      <SelectItem value="house">House</SelectItem>
+                      <SelectItem value="apartment">Apartment</SelectItem>
+                      <SelectItem value="villa">Villa</SelectItem>
+                      <SelectItem value="land">Land</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
+                
+                {/* Bedrooms Filter */}
+                <div className="flex-1 min-w-[80px] sm:min-w-[100px]">
+                  <Select 
+                    value={filters.bedrooms?.toString() || ''} 
+                    onValueChange={(value) => handleFilterChange('bedrooms', value)}
+                  >
+                    <SelectTrigger className="h-8 sm:h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-xs sm:text-sm text-blue-400 w-full">
+                      <SelectValue placeholder="Beds" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="any">Any</SelectItem>
+                      <SelectItem value="1">1+</SelectItem>
+                      <SelectItem value="2">2+</SelectItem>
+                      <SelectItem value="3">3+</SelectItem>
+                      <SelectItem value="4">4+</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Apply Filters Button */}
+                <Button 
+                  onClick={() => onFilterChange?.(filters)}
+                  className="h-8 sm:h-9 px-2 sm:px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium rounded-md transition-colors flex-shrink-0"
+                  data-testid="apply-filters-button"
+                >
+                  <Search className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline ml-1">Apply</span>
+                </Button>
+                
+                {/* Properties Count */}
+                <Badge className="h-8 sm:h-9 flex items-center text-xs bg-white/20 text-blue-400 border border-white/30 backdrop-blur-sm flex-shrink-0 px-2 sm:px-3">
+                  <span className="hidden sm:inline">{properties.length} Properties</span>
+                  <span className="sm:hidden">{properties.length}</span>
+                </Badge>
               </div>
             </div>
           </div>
