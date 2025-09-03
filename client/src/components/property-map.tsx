@@ -442,26 +442,26 @@ export default function PropertyMap({
           
           {/* Legend Overlay on Map */}
           <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
-            <div className="backdrop-blur-xl bg-white/10 rounded-2xl shadow-2xl border border-white/20 p-4 md:p-5 hover:shadow-3xl transition-all duration-300 hover:bg-white/15">
+            <div className="p-4 md:p-5 transition-all duration-300">
               <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-sm">
-                <div className="flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
+                <div className="flex items-center space-x-2 sm:space-x-3 p-2 transition-all duration-300 hover:scale-105">
                   <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg animate-pulse"></div>
                   <span className="font-semibold text-sm text-white drop-shadow-lg" style={{ color: 'white !important' }}>🏷️ For Sale</span>
                 </div>
-                <div className="flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
+                <div className="flex items-center space-x-2 sm:space-x-3 p-2 transition-all duration-300 hover:scale-105">
                   <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0 shadow-lg animate-pulse"></div>
                   <span className="font-semibold text-sm text-white drop-shadow-lg" style={{ color: 'white !important' }}>🔑 For Rent</span>
                 </div>
                 <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
-                  <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
+                  <div className="flex items-center space-x-2 p-2 transition-all duration-300 hover:scale-105">
                     <i className="fas fa-home text-blue-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
                     <span className="text-sm text-white font-medium drop-shadow-lg" style={{ color: 'white !important' }}>Houses</span>
                   </div>
-                  <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
+                  <div className="flex items-center space-x-2 p-2 transition-all duration-300 hover:scale-105">
                     <i className="fas fa-building text-purple-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
                     <span className="text-sm text-white font-medium drop-shadow-lg" style={{ color: 'white !important' }}>Apartments</span>
                   </div>
-                  <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
+                  <div className="flex items-center space-x-2 p-2 transition-all duration-300 hover:scale-105">
                     <i className="fas fa-map-marked-alt text-orange-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
                     <span className="text-sm text-white font-medium drop-shadow-lg" style={{ color: 'white !important' }}>Land</span>
                   </div>
