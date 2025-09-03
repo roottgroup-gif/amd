@@ -303,16 +303,16 @@ export default function PropertyMap({
           
           {/* Filters Overlay on Map */}
           <div className="absolute top-4 left-4 right-4 z-[1000]">
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-4 border border-white/50">
+            <div className="backdrop-blur-md rounded-lg shadow-xl p-4 border border-white/20">
               <div className="flex flex-wrap items-center gap-3">
                 {/* Price Range Filter */}
                 <div className="min-w-[130px]">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Price</label>
+                  <label className="block text-xs font-medium text-white mb-1">Price</label>
                   <Select 
                     value={filters.maxPrice?.toString() || ''} 
                     onValueChange={(value) => handleFilterChange('maxPrice', value)}
                   >
-                    <SelectTrigger className="h-9 border border-gray-300 hover:border-blue-400 rounded-md bg-white/90 text-sm">
+                    <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-sm text-white">
                       <SelectValue placeholder="Any Price" />
                     </SelectTrigger>
                     <SelectContent>
@@ -326,12 +326,12 @@ export default function PropertyMap({
                 
                 {/* Property Type Filter */}
                 <div className="min-w-[130px]">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Type</label>
+                  <label className="block text-xs font-medium text-white mb-1">Type</label>
                   <Select 
                     value={filters.type || ''} 
                     onValueChange={(value) => handleFilterChange('type', value)}
                   >
-                    <SelectTrigger className="h-9 border border-gray-300 hover:border-blue-400 rounded-md bg-white/90 text-sm">
+                    <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-sm text-white">
                       <SelectValue placeholder="All Types" />
                     </SelectTrigger>
                     <SelectContent>
@@ -346,12 +346,12 @@ export default function PropertyMap({
                 
                 {/* Bedrooms Filter */}
                 <div className="min-w-[110px]">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Rooms</label>
+                  <label className="block text-xs font-medium text-white mb-1">Rooms</label>
                   <Select 
                     value={filters.bedrooms?.toString() || ''} 
                     onValueChange={(value) => handleFilterChange('bedrooms', value)}
                   >
-                    <SelectTrigger className="h-9 border border-gray-300 hover:border-blue-400 rounded-md bg-white/90 text-sm">
+                    <SelectTrigger className="h-9 border border-white/30 hover:border-blue-400 rounded-md bg-white/20 backdrop-blur-sm text-sm text-white">
                       <SelectValue placeholder="Any" />
                     </SelectTrigger>
                     <SelectContent>
@@ -376,7 +376,7 @@ export default function PropertyMap({
                 
                 {/* Properties Count */}
                 <div className="ml-auto">
-                  <Badge className="text-xs bg-blue-100 text-blue-800 border-0">
+                  <Badge className="text-xs bg-white/20 text-white border border-white/30 backdrop-blur-sm">
                     {properties.length} Properties
                   </Badge>
                 </div>
@@ -386,28 +386,28 @@ export default function PropertyMap({
           
           {/* Legend Overlay on Map */}
           <div className="absolute bottom-4 left-4 right-4 z-[1000]">
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-lg p-3 border border-white/50">
+            <div className="backdrop-blur-md rounded-lg shadow-xl p-3 border border-white/20">
               <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 bg-red-600 rounded-full"></div>
-                  <span className="text-gray-700 font-medium">For Sale</span>
+                  <span className="text-white font-medium">For Sale</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 bg-green-600 rounded-full"></div>
-                  <span className="text-gray-700 font-medium">For Rent</span>
+                  <span className="text-white font-medium">For Rent</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="flex items-center space-x-1">
                     <i className="fas fa-home text-blue-600 text-sm"></i>
-                    <span className="text-gray-700">Houses</span>
+                    <span className="text-white">Houses</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <i className="fas fa-building text-purple-600 text-sm"></i>
-                    <span className="text-gray-700">Apartments</span>
+                    <span className="text-white">Apartments</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <i className="fas fa-map-marked-alt text-orange-600 text-sm"></i>
-                    <span className="text-gray-700">Land</span>
+                    <span className="text-white">Land</span>
                   </div>
                 </div>
               </div>
