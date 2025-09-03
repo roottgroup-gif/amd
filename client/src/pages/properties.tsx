@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Navigation from "@/components/navigation";
 import PropertyCard from "@/components/property-card";
 import SearchBar from "@/components/search-bar";
@@ -21,25 +21,53 @@ export default function PropertiesPage() {
     offset: 0
   });
   const [priceRange, setPriceRange] = useState([0, 1000000]);
+  const [cityInput, setCityInput] = useState('');
   const [searchResults, setSearchResults] = useState<AISearchResponse | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const { data: properties, isLoading } = useProperties(filters);
 
-  const handleFilterChange = (key: keyof PropertyFilters, value: any) => {
+  // Debounced city filter
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters(prev => ({
+        ...prev,
+        city: cityInput.trim() || undefined,
+        offset: 0
+      }));
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [cityInput]);
+
+  const handleFilterChange = useCallback((key: keyof PropertyFilters, value: any) => {
     setFilters(prev => ({
       ...prev,
       [key]: (value === 'all' || value === 'any' || value === '') ? undefined : value,
       offset: 0 // Reset pagination when filters change
     }));
-  };
+  }, []);
+
+  // Auto-apply price range with debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters(prev => ({
+        ...prev,
+        minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
+        maxPrice: priceRange[1] < 1000000 ? priceRange[1] : undefined,
+        offset: 0
+      }));
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [priceRange]);
 
   const handleSearchResults = (results: AISearchResponse) => {
     setSearchResults(results);
     setFilters(prev => ({ ...prev, ...results.filters }));
   };
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setFilters({
       sortBy: 'date',
       sortOrder: 'desc',
@@ -47,8 +75,9 @@ export default function PropertiesPage() {
       offset: 0
     });
     setPriceRange([0, 1000000]);
+    setCityInput('');
     setSearchResults(null);
-  };
+  }, []);
 
   const displayProperties = searchResults ? searchResults.results : properties || [];
 
@@ -129,10 +158,6 @@ export default function PropertiesPage() {
                     <Slider
                       value={priceRange}
                       onValueChange={setPriceRange}
-                      onValueCommit={(value) => {
-                        handleFilterChange('minPrice', value[0]);
-                        handleFilterChange('maxPrice', value[1]);
-                      }}
                       max={1000000}
                       step={10000}
                       className="mt-2"
@@ -186,8 +211,8 @@ export default function PropertiesPage() {
                     <label className="text-sm font-medium mb-2 block">City</label>
                     <Input
                       placeholder="Enter city..."
-                      value={filters.city || ''}
-                      onChange={(e) => handleFilterChange('city', e.target.value || undefined)}
+                      value={cityInput}
+                      onChange={(e) => setCityInput(e.target.value)}
                       data-testid="city-input"
                     />
                   </div>
