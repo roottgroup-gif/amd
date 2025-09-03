@@ -45,11 +45,18 @@ export default function HomePage() {
   };
 
   const handleFilterChange = (key: keyof PropertyFilters, value: any) => {
-    const newFilters = {
-      ...mapFilters,
-      [key]: (value === 'all' || value === 'any' || value === '') ? undefined : value,
-      limit: 100
-    };
+    const newFilters = { ...mapFilters };
+    
+    // Handle "all", "any", and empty values by removing the filter
+    if (value === 'all' || value === 'any' || value === '' || value === null || value === undefined) {
+      delete newFilters[key];
+    } else {
+      newFilters[key] = value as any;
+    }
+    
+    // Always maintain the limit for map properties
+    newFilters.limit = 100;
+    
     setMapFilters(newFilters);
   };
 
@@ -180,7 +187,7 @@ export default function HomePage() {
                 </label>
                 <Select 
                   value={mapFilters.bedrooms?.toString() || ''} 
-                  onValueChange={(value) => handleFilterChange('bedrooms', value ? parseInt(value) : undefined)}
+                  onValueChange={(value) => handleFilterChange('bedrooms', (value === 'any' || !value) ? undefined : parseInt(value))}
                 >
                   <SelectTrigger className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20" data-testid="bedrooms-select">
                     <SelectValue placeholder="Any" />
@@ -204,7 +211,7 @@ export default function HomePage() {
                 </label>
                 <Select 
                   value={mapFilters.bathrooms?.toString() || ''} 
-                  onValueChange={(value) => handleFilterChange('bathrooms', value ? parseInt(value) : undefined)}
+                  onValueChange={(value) => handleFilterChange('bathrooms', (value === 'any' || !value) ? undefined : parseInt(value))}
                 >
                   <SelectTrigger className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20" data-testid="bathrooms-select">
                     <SelectValue placeholder="Any" />
