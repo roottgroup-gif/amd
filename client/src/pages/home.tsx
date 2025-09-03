@@ -82,9 +82,21 @@ export default function HomePage() {
 
   return (
     <div className="h-screen w-full bg-background relative">
-      {/* Top Blurred Filter Section */}
-      <div className="absolute top-4 left-4 right-4 z-50">
-        <div className="bg-white/20 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl p-6">
+      {/* Full Screen Map Section */}
+      <section className="h-full w-full relative">
+        <PropertyMap 
+          properties={mapProperties || []}
+          filters={mapFilters}
+          onFilterChange={handleMapFilterChange}
+          onPropertyClick={(property) => {
+            window.location.href = `/property/${property.id}`;
+          }}
+          className="h-full w-full"
+        />
+        
+        {/* Absolute Blurred Filter Section inside Map */}
+        <div className="absolute top-4 left-4 right-4 z-50">
+          <div className="bg-white/20 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Filter className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -302,35 +314,22 @@ export default function HomePage() {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Search Results */}
-      {searchResults && (
-        <div className="absolute top-4 left-4 right-4 z-40 mt-64">
-          <Card className="bg-white/95 dark:bg-black/95 backdrop-blur-xl border-white/30 dark:border-white/10 shadow-2xl">
-            <CardContent className="p-6">
-              <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">AI Search Results</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-h-60 overflow-y-auto">
-                {searchResults.results.map((property) => (
-                  <PropertyCard key={property.id} property={property} />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {/* Full Screen Map Section */}
-      <section className="h-full w-full">
-        <PropertyMap 
-          properties={mapProperties || []}
-          filters={mapFilters}
-          onFilterChange={handleMapFilterChange}
-          onPropertyClick={(property) => {
-            window.location.href = `/property/${property.id}`;
-          }}
-          className="h-full w-full"
-        />
+        
+        {/* Search Results inside Map */}
+        {searchResults && (
+          <div className="absolute top-4 left-4 right-4 z-40 mt-64">
+            <Card className="bg-white/95 dark:bg-black/95 backdrop-blur-xl border-white/30 dark:border-white/10 shadow-2xl">
+              <CardContent className="p-6">
+                <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-white">AI Search Results</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-h-60 overflow-y-auto">
+                  {searchResults.results.map((property) => (
+                    <PropertyCard key={property.id} property={property} />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </section>
     </div>
   );
