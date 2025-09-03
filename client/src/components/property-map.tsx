@@ -280,7 +280,7 @@ export default function PropertyMap({
     };
   }, []);
 
-  // Function to update markers based on zoom level
+  // Function to update markers - always show all individual markers
   const updateMarkers = () => {
     if (!mapInstanceRef.current || typeof window === 'undefined' || !(window as any).L) return;
     
@@ -290,7 +290,6 @@ export default function PropertyMap({
     }
 
     const L = (window as any).L;
-    const zoom = mapInstanceRef.current.getZoom();
 
     // Clear existing markers safely
     markersRef.current.forEach(marker => {
@@ -304,28 +303,12 @@ export default function PropertyMap({
     });
     markersRef.current = [];
 
-    // Clustering threshold - show clusters when zoomed out
-    const CLUSTER_ZOOM_THRESHOLD = 12;
-    const shouldCluster = zoom < CLUSTER_ZOOM_THRESHOLD;
-
-    if (shouldCluster) {
-      // Create clusters when zoomed out
-      const clusters = createClustersForProperties(properties);
-      clusters.forEach(cluster => {
-        if (cluster.properties.length === 1) {
-          createSingleMarker(cluster.properties[0], L);
-        } else {
-          createClusterMarker(cluster, L);
-        }
-      });
-    } else {
-      // Show individual markers when zoomed in
-      properties.forEach(property => {
-        if (property.latitude && property.longitude) {
-          createSingleMarker(property, L);
-        }
-      });
-    }
+    // Always show individual markers for all properties
+    properties.forEach(property => {
+      if (property.latitude && property.longitude) {
+        createSingleMarker(property, L);
+      }
+    });
   };
 
   // Function to create clusters for given properties
@@ -517,7 +500,7 @@ export default function PropertyMap({
     updateMarkersForProperties(filteredProperties);
   }, [filteredProperties]);
 
-  // Update markers function that accepts properties array
+  // Update markers function that accepts properties array - always show all markers
   const updateMarkersForProperties = (propertiesToShow: Property[]) => {
     if (!mapInstanceRef.current || typeof window === 'undefined' || !(window as any).L) return;
     
@@ -539,30 +522,13 @@ export default function PropertyMap({
     }
 
     const L = (window as any).L;
-    const zoom = mapInstanceRef.current.getZoom();
 
-    // Clustering threshold - show clusters when zoomed out
-    const CLUSTER_ZOOM_THRESHOLD = 12;
-    const shouldCluster = zoom < CLUSTER_ZOOM_THRESHOLD;
-
-    if (shouldCluster) {
-      // Create clusters when zoomed out
-      const clusters = createClustersForProperties(propertiesToShow);
-      clusters.forEach(cluster => {
-        if (cluster.properties.length === 1) {
-          createSingleMarker(cluster.properties[0], L);
-        } else {
-          createClusterMarker(cluster, L);
-        }
-      });
-    } else {
-      // Show individual markers when zoomed in
-      propertiesToShow.forEach(property => {
-        if (property.latitude && property.longitude) {
-          createSingleMarker(property, L);
-        }
-      });
-    }
+    // Always show individual markers for all properties
+    propertiesToShow.forEach(property => {
+      if (property.latitude && property.longitude) {
+        createSingleMarker(property, L);
+      }
+    });
   };
 
   const handleFilterChange = (key: string, value: string) => {
