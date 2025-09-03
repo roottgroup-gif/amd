@@ -10,7 +10,7 @@ import { Slider } from "@/components/ui/slider";
 import { useTranslation } from "@/lib/i18n";
 import { useProperties } from "@/hooks/use-properties";
 import type { PropertyFilters, AISearchResponse } from "@/types";
-import { Search, Filter, Grid, List, MapPin } from "lucide-react";
+import { Search, Filter, Grid, List, MapPin, Home, Building, Castle, Mountain, Tag, Key, Bed, Bath } from "lucide-react";
 
 export default function PropertiesPage() {
   const { t } = useTranslation();
@@ -123,9 +123,9 @@ export default function PropertiesPage() {
                         <SelectValue placeholder="All Types" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Types</SelectItem>
-                        <SelectItem value="sale">For Sale</SelectItem>
-                        <SelectItem value="rent">For Rent</SelectItem>
+                        <SelectItem value="all"><span className="flex items-center gap-2"><Filter className="h-4 w-4" />All Types</span></SelectItem>
+                        <SelectItem value="sale"><span className="flex items-center gap-2"><Tag className="h-4 w-4" />For Sale</span></SelectItem>
+                        <SelectItem value="rent"><span className="flex items-center gap-2"><Key className="h-4 w-4" />For Rent</span></SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -141,11 +141,11 @@ export default function PropertiesPage() {
                         <SelectValue placeholder="All Properties" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Properties</SelectItem>
-                        <SelectItem value="house">House</SelectItem>
-                        <SelectItem value="apartment">Apartment</SelectItem>
-                        <SelectItem value="villa">Villa</SelectItem>
-                        <SelectItem value="land">Land</SelectItem>
+                        <SelectItem value="all"><span className="flex items-center gap-2"><Home className="h-4 w-4" />All Properties</span></SelectItem>
+                        <SelectItem value="house"><span className="flex items-center gap-2"><Home className="h-4 w-4" />House</span></SelectItem>
+                        <SelectItem value="apartment"><span className="flex items-center gap-2"><Building className="h-4 w-4" />Apartment</span></SelectItem>
+                        <SelectItem value="villa"><span className="flex items-center gap-2"><Castle className="h-4 w-4" />Villa</span></SelectItem>
+                        <SelectItem value="land"><span className="flex items-center gap-2"><Mountain className="h-4 w-4" />Land</span></SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -176,12 +176,12 @@ export default function PropertiesPage() {
                         <SelectValue placeholder="Any" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="any">Any</SelectItem>
-                        <SelectItem value="1">1+</SelectItem>
-                        <SelectItem value="2">2+</SelectItem>
-                        <SelectItem value="3">3+</SelectItem>
-                        <SelectItem value="4">4+</SelectItem>
-                        <SelectItem value="5">5+</SelectItem>
+                        <SelectItem value="any"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />Any</span></SelectItem>
+                        <SelectItem value="1"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />1+</span></SelectItem>
+                        <SelectItem value="2"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />2+</span></SelectItem>
+                        <SelectItem value="3"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />3+</span></SelectItem>
+                        <SelectItem value="4"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />4+</span></SelectItem>
+                        <SelectItem value="5"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />5+</span></SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -197,11 +197,11 @@ export default function PropertiesPage() {
                         <SelectValue placeholder="Any" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="any">Any</SelectItem>
-                        <SelectItem value="1">1+</SelectItem>
-                        <SelectItem value="2">2+</SelectItem>
-                        <SelectItem value="3">3+</SelectItem>
-                        <SelectItem value="4">4+</SelectItem>
+                        <SelectItem value="any"><span className="flex items-center gap-2"><Bath className="h-4 w-4" />Any</span></SelectItem>
+                        <SelectItem value="1"><span className="flex items-center gap-2"><Bath className="h-4 w-4" />1+</span></SelectItem>
+                        <SelectItem value="2"><span className="flex items-center gap-2"><Bath className="h-4 w-4" />2+</span></SelectItem>
+                        <SelectItem value="3"><span className="flex items-center gap-2"><Bath className="h-4 w-4" />3+</span></SelectItem>
+                        <SelectItem value="4"><span className="flex items-center gap-2"><Bath className="h-4 w-4" />4+</span></SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
