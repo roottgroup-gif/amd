@@ -160,7 +160,7 @@ export default function HomePage() {
                   <SelectTrigger className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20" data-testid="listing-type-select">
                     <SelectValue placeholder="All Types" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-[10000]">
                     <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="sale">For Sale</SelectItem>
                     <SelectItem value="rent">For Rent</SelectItem>
@@ -181,7 +181,7 @@ export default function HomePage() {
                   <SelectTrigger className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20" data-testid="property-type-select">
                     <SelectValue placeholder="All Properties" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-[10000]">
                     <SelectItem value="all">All Properties</SelectItem>
                     <SelectItem value="house">House</SelectItem>
                     <SelectItem value="apartment">Apartment</SelectItem>
@@ -204,7 +204,7 @@ export default function HomePage() {
                   <SelectTrigger className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20" data-testid="bedrooms-select">
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-[10000]">
                     <SelectItem value="any">Any</SelectItem>
                     <SelectItem value="1">1+</SelectItem>
                     <SelectItem value="2">2+</SelectItem>
@@ -228,7 +228,7 @@ export default function HomePage() {
                   <SelectTrigger className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20" data-testid="bathrooms-select">
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-[10000]">
                     <SelectItem value="any">Any</SelectItem>
                     <SelectItem value="1">1+</SelectItem>
                     <SelectItem value="2">2+</SelectItem>
