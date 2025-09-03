@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from "@/lib/i18n";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
-import type { Property, AISearchResponse } from "@/types";
+import type { Property, AISearchResponse, PropertyFilters } from "@/types";
 import { Tag, Key, Home, Building2, MapPin } from "lucide-react";
 
 export default function HomePage() {
@@ -16,11 +16,12 @@ export default function HomePage() {
   const { data: featuredProperties, isLoading: featuredLoading } = useFeaturedProperties();
   const [searchResults, setSearchResults] = useState<AISearchResponse | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>('sale');
-
-  // Load all properties for the map (not filtered by activeFilter)
-  const { data: mapProperties } = useProperties({
+  const [mapFilters, setMapFilters] = useState<PropertyFilters>({
     limit: 100 // Get more properties for the map
   });
+
+  // Load properties for the map with current filters
+  const { data: mapProperties } = useProperties(mapFilters);
 
   const handleSearchResults = (results: AISearchResponse) => {
     setSearchResults(results);
@@ -28,6 +29,13 @@ export default function HomePage() {
 
   const handleFilterClick = (filter: string) => {
     setActiveFilter(filter);
+  };
+
+  const handleMapFilterChange = (filters: PropertyFilters) => {
+    setMapFilters({
+      ...filters,
+      limit: 100 // Always maintain the limit for map
+    });
   };
 
   
@@ -51,6 +59,8 @@ export default function HomePage() {
       <section className="h-full w-full">
         <PropertyMap 
           properties={mapProperties || []}
+          filters={mapFilters}
+          onFilterChange={handleMapFilterChange}
           onPropertyClick={(property) => {
             window.location.href = `/property/${property.id}`;
           }}
