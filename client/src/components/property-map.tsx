@@ -72,71 +72,86 @@ export default function PropertyMap({
         const getPropertyIcon = (type: string, listingType: string) => {
           let iconHtml = '';
           let bgColor = '';
+          let borderColor = '';
           
-          // Set background color based on listing type
+          // Set colors based on listing type
           if (listingType === 'sale') {
-            bgColor = '#2563eb'; // Blue for sale
+            bgColor = '#dc2626'; // Red for sale
+            borderColor = '#fef2f2'; // Light red border
           } else {
-            bgColor = '#059669'; // Green for rent
+            bgColor = '#16a34a'; // Green for rent
+            borderColor = '#f0fdf4'; // Light green border
           }
           
           // Set icon based on property type
           if (type === 'house' || type === 'villa') {
             iconHtml = `
-              <div style="
+              <div class="property-marker-icon" style="
                 background: ${bgColor};
-                width: 40px;
-                height: 40px;
+                border-color: ${borderColor};
+                width: 44px;
+                height: 44px;
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                border: 3px solid white;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+                border: 4px solid ${borderColor};
+                cursor: pointer;
+                position: relative;
+                z-index: 100;
               ">
-                <i class="fas fa-home" style="color: white; font-size: 16px;"></i>
+                <i class="fas fa-home" style="color: white; font-size: 18px; pointer-events: none;"></i>
               </div>
             `;
           } else if (type === 'apartment') {
             iconHtml = `
-              <div style="
+              <div class="property-marker-icon" style="
                 background: ${bgColor};
-                width: 40px;
-                height: 40px;
+                border-color: ${borderColor};
+                width: 44px;
+                height: 44px;
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                border: 3px solid white;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+                border: 4px solid ${borderColor};
+                cursor: pointer;
+                position: relative;
+                z-index: 100;
               ">
-                <i class="fas fa-building" style="color: white; font-size: 16px;"></i>
+                <i class="fas fa-building" style="color: white; font-size: 18px; pointer-events: none;"></i>
               </div>
             `;
           } else {
             // Default for land or other types
             iconHtml = `
-              <div style="
+              <div class="property-marker-icon" style="
                 background: ${bgColor};
-                width: 40px;
-                height: 40px;
+                border-color: ${borderColor};
+                width: 44px;
+                height: 44px;
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                border: 3px solid white;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+                border: 4px solid ${borderColor};
+                cursor: pointer;
+                position: relative;
+                z-index: 100;
               ">
-                <i class="fas fa-map-marker-alt" style="color: white; font-size: 16px;"></i>
+                <i class="fas fa-map-marked-alt" style="color: white; font-size: 18px; pointer-events: none;"></i>
               </div>
             `;
           }
           
           return L.divIcon({
             html: iconHtml,
-            className: 'custom-property-marker',
-            iconSize: [40, 40],
-            iconAnchor: [20, 20]
+            className: 'custom-property-marker clickable-marker',
+            iconSize: [44, 44],
+            iconAnchor: [22, 22]
           });
         };
         
@@ -296,12 +311,22 @@ export default function PropertyMap({
         <div className="p-4 bg-muted/30 border-t border-border">
           <div className="flex items-center justify-center space-x-6 text-sm">
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-primary rounded-full"></div>
-              <span className="text-muted-foreground">For Sale</span>
+              <div className="w-4 h-4 bg-red-600 rounded-full border-2 border-white shadow-sm"></div>
+              <span className="text-muted-foreground font-medium">For Sale</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-emerald-600 rounded-full"></div>
-              <span className="text-muted-foreground">For Rent</span>
+              <div className="w-4 h-4 bg-green-600 rounded-full border-2 border-white shadow-sm"></div>
+              <span className="text-muted-foreground font-medium">For Rent</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-1">
+                <i className="fas fa-home text-gray-600 text-sm"></i>
+                <span className="text-muted-foreground text-xs">Houses</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <i className="fas fa-building text-gray-600 text-sm"></i>
+                <span className="text-muted-foreground text-xs">Apartments</span>
+              </div>
             </div>
             <div className="flex items-center space-x-2">
               <Badge variant="secondary" className="text-xs">

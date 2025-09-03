@@ -509,20 +509,32 @@
 .custom-property-marker {
   background: transparent !important;
   border: none !important;
-  transition: transform 0.2s ease !important;
+  cursor: pointer !important;
 }
 
-.custom-property-marker:hover {
-  transform: scale(1.1) !important;
-  z-index: 1000 !important;
+.clickable-marker {
+  pointer-events: auto !important;
+  cursor: pointer !important;
 }
 
-.custom-property-marker div {
-  cursor: pointer;
-  transition: all 0.3s ease;
+.property-marker-icon {
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
 }
 
-.custom-property-marker:hover div {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4) !important;
+.custom-property-marker:hover .property-marker-icon {
+  transform: scale(1.15) !important;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4) !important;
+}
+
+/* Ensure icons inside markers don't block clicks */
+.custom-property-marker i {
+  pointer-events: none !important;
+}
+
+/* Map legend color updates */
+.leaflet-control-layers {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(8px) !important;
 }
