@@ -33,76 +33,8 @@ export default function PropertyMap({
     setLocalFilters(filters || {});
   }, [filters]);
 
-  // Filter properties based on current filters
-  const filteredProperties = properties.filter(property => {
-    // Listing Type filter (sale/rent)
-    if (localFilters.listingType) {
-      if (property.listingType !== localFilters.listingType) return false;
-    }
-
-    // Property Type filter (house/apartment/villa/land)
-    if (localFilters.type && localFilters.type !== 'all') {
-      if (property.type !== localFilters.type.toString()) return false;
-    }
-
-    // Price range filter
-    const propertyPrice = parseFloat(property.price || '0');
-    if (localFilters.minPrice && propertyPrice < localFilters.minPrice) {
-      return false;
-    }
-    if (localFilters.maxPrice && propertyPrice > localFilters.maxPrice) {
-      return false;
-    }
-
-    // Bedrooms filter
-    if (localFilters.bedrooms && localFilters.bedrooms > 0) {
-      const propertyBedrooms = property.bedrooms || 0;
-      if (propertyBedrooms < localFilters.bedrooms) return false;
-    }
-
-    // Bathrooms filter
-    if (localFilters.bathrooms && localFilters.bathrooms > 0) {
-      const propertyBathrooms = property.bathrooms || 0;
-      if (propertyBathrooms < localFilters.bathrooms) return false;
-    }
-
-    // City filter
-    if (localFilters.city && localFilters.city.trim()) {
-      const cityFilter = localFilters.city.toLowerCase().trim();
-      const propertyCity = (property.city || '').toLowerCase();
-      const propertyAddress = (property.address || '').toLowerCase();
-      const propertyCountry = (property.country || '').toLowerCase();
-      
-      if (!propertyCity.includes(cityFilter) && 
-          !propertyAddress.includes(cityFilter) && 
-          !propertyCountry.includes(cityFilter)) {
-        return false;
-      }
-    }
-
-    // Search filter (if provided)
-    if (localFilters.search && localFilters.search.trim()) {
-      const searchTerm = localFilters.search.toLowerCase().trim();
-      const title = (property.title || '').toLowerCase();
-      const description = (property.description || '').toLowerCase();
-      const address = (property.address || '').toLowerCase();
-      const city = (property.city || '').toLowerCase();
-      
-      if (!title.includes(searchTerm) && 
-          !description.includes(searchTerm) && 
-          !address.includes(searchTerm) && 
-          !city.includes(searchTerm)) {
-        return false;
-      }
-    }
-
-    // Status filter (only show active properties)
-    if (property.status !== 'active') {
-      return false;
-    }
-
-    return true;
-  });
+  // Properties are already filtered from the API, so we use them directly
+  // The filtering happens on the server side when onFilterChange is called
 
   // Initialize map
   useEffect(() => {
@@ -196,7 +128,7 @@ export default function PropertyMap({
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstanceRef.current);
 
           // Add zoom event listener for clustering
-          mapInstanceRef.current.on('zoomend', () => updateMarkersForProperties(filteredProperties));
+          mapInstanceRef.current.on('zoomend', () => updateMarkersForProperties(properties));
           
           // Invalidate size to ensure proper rendering
           setTimeout(() => {
@@ -495,10 +427,10 @@ export default function PropertyMap({
     markersRef.current.push(marker);
   };
 
-  // Update markers when filtered properties change
+  // Update markers when properties change (from API)
   useEffect(() => {
-    updateMarkersForProperties(filteredProperties);
-  }, [filteredProperties]);
+    updateMarkersForProperties(properties);
+  }, [properties]);
 
   // Update markers function that accepts properties array - always show all markers
   const updateMarkersForProperties = (propertiesToShow: Property[]) => {
