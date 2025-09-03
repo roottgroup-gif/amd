@@ -62,9 +62,53 @@ export default function PropertyMap({
     });
     markersRef.current = [];
 
-    // Add new markers
-    properties.forEach(property => {
-      if (property.latitude && property.longitude) {
+    // Group properties by proximity for clustering
+    const clusters = [];
+    const processed = new Set();
+    const CLUSTER_DISTANCE = 0.01; // Adjust this value to change clustering sensitivity
+
+    properties.forEach((property, index) => {
+      if (processed.has(index) || !property.latitude || !property.longitude) return;
+
+      const lat = parseFloat(property.latitude);
+      const lng = parseFloat(property.longitude);
+      const cluster = [property];
+      processed.add(index);
+
+      // Find nearby properties
+      properties.forEach((otherProperty, otherIndex) => {
+        if (processed.has(otherIndex) || !otherProperty.latitude || !otherProperty.longitude) return;
+
+        const otherLat = parseFloat(otherProperty.latitude);
+        const otherLng = parseFloat(otherProperty.longitude);
+        
+        // Calculate distance
+        const distance = Math.sqrt(
+          Math.pow(lat - otherLat, 2) + Math.pow(lng - otherLng, 2)
+        );
+
+        if (distance <= CLUSTER_DISTANCE) {
+          cluster.push(otherProperty);
+          processed.add(otherIndex);
+        }
+      });
+
+      clusters.push({
+        properties: cluster,
+        lat: lat,
+        lng: lng,
+        center: cluster.length > 1 ? {
+          lat: cluster.reduce((sum, p) => sum + parseFloat(p.latitude), 0) / cluster.length,
+          lng: cluster.reduce((sum, p) => sum + parseFloat(p.longitude), 0) / cluster.length
+        } : { lat, lng }
+      });
+    });
+
+    // Create markers for each cluster
+    clusters.forEach(cluster => {
+      if (cluster.properties.length === 1) {
+        // Single property
+        const property = cluster.properties[0];
         const lat = parseFloat(property.latitude);
         const lng = parseFloat(property.longitude);
         
@@ -208,6 +252,83 @@ export default function PropertyMap({
         });
 
         markersRef.current.push(marker);
+      } else {
+        // Multiple properties - create cluster marker
+        const count = cluster.properties.length;
+        const clusterLat = cluster.center.lat;
+        const clusterLng = cluster.center.lng;
+        
+        // Create cluster icon
+        const clusterIcon = L.divIcon({
+          html: `
+            <div class="cluster-marker" style="
+              background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+              border: 4px solid white;
+              cursor: pointer;
+              position: relative;
+              z-index: 200;
+              font-weight: 700;
+              color: white;
+              font-size: 14px;
+            ">
+              ${count}
+            </div>
+          `,
+          className: 'custom-cluster-marker',
+          iconSize: [50, 50],
+          iconAnchor: [25, 25]
+        });
+        
+        const clusterMarker = L.marker([clusterLat, clusterLng], { icon: clusterIcon }).addTo(mapInstanceRef.current);
+        
+        // Create cluster popup with all properties
+        const clusterPopupContent = `
+          <div class="cluster-popup" style="width: 320px; max-width: 95vw;">
+            <div class="cluster-header" style="
+              background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+              color: white;
+              padding: 12px 16px;
+              margin: -8px -8px 12px -8px;
+              border-radius: 12px 12px 0 0;
+              font-weight: 600;
+              text-align: center;
+            ">
+              ${count} Properties in this area
+            </div>
+            <div class="cluster-properties" style="max-height: 300px; overflow-y: auto;">
+              ${cluster.properties.map(property => `
+                <div class="cluster-property-item" style="
+                  padding: 8px 0;
+                  border-bottom: 1px solid #e5e7eb;
+                  cursor: pointer;
+                " onclick="window.viewPropertyFromMap('${property.id}')">
+                  <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">${property.title}</div>
+                  <div style="font-size: 11px; color: #666; margin-bottom: 4px;">${property.address}</div>
+                  <div style="font-weight: 700; color: #2563eb; font-size: 12px;">
+                    ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        
+        clusterMarker.bindPopup(clusterPopupContent, {
+          maxWidth: 350,
+          className: 'custom-cluster-popup',
+          closeButton: true,
+          autoClose: true,
+          autoPan: true
+        });
+        
+        markersRef.current.push(clusterMarker);
       }
     });
 

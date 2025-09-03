@@ -600,3 +600,35 @@
 .premium-marker:hover {
   box-shadow: 0 8px 30px rgba(251, 191, 36, 0.6) !important;
 }
+
+/* Cluster Marker Styles */
+.custom-cluster-marker {
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.cluster-marker {
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+}
+
+.custom-cluster-marker:hover .cluster-marker {
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6) !important;
+}
+
+/* Cluster popup styles */
+.custom-cluster-popup .leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+.cluster-property-item:hover {
+  background: rgba(59, 130, 246, 0.05) !important;
+  transition: background 0.2s ease !important;
+}
+
+.cluster-property-item:last-child {
+  border-bottom: none !important;
+}
