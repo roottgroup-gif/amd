@@ -95,7 +95,7 @@ export default function HomePage() {
         />
         
         {/* Absolute Blurred Filter Section inside Map */}
-        <div className="absolute top-4 left-4 right-4 z-50">
+        <div className="absolute top-4 left-4 right-4 z-[9999]" style={{position: 'absolute'}}>
           <div className="bg-white/20 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl p-6">
             <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
