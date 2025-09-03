@@ -309,7 +309,6 @@ export default function PropertyMap({
                 <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-3 flex-1">
                   {/* Price Range Filter */}
                   <div className="flex-1 min-w-[120px] sm:min-w-[130px]">
-                    <label className="block text-xs font-medium text-blue-400 mb-1">Price</label>
                     <Select 
                       value={filters.maxPrice?.toString() || ''} 
                       onValueChange={(value) => handleFilterChange('maxPrice', value)}
@@ -328,7 +327,6 @@ export default function PropertyMap({
                   
                   {/* Property Type Filter */}
                   <div className="flex-1 min-w-[120px] sm:min-w-[130px]">
-                    <label className="block text-xs font-medium text-blue-400 mb-1">Type</label>
                     <Select 
                       value={filters.type || ''} 
                       onValueChange={(value) => handleFilterChange('type', value)}
@@ -348,7 +346,6 @@ export default function PropertyMap({
                   
                   {/* Bedrooms Filter */}
                   <div className="flex-1 min-w-[100px] sm:min-w-[110px]">
-                    <label className="block text-xs font-medium text-blue-400 mb-1">Rooms</label>
                     <Select 
                       value={filters.bedrooms?.toString() || ''} 
                       onValueChange={(value) => handleFilterChange('bedrooms', value)}
