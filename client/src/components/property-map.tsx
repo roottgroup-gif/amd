@@ -298,7 +298,7 @@ export default function PropertyMap({
     <div className={className}>
       <div className="relative">
         {/* Map Container - Full Size */}
-        <div className="relative h-[600px] lg:h-[700px]" data-testid="property-map">
+        <div className="relative h-full" data-testid="property-map">
           <div ref={mapRef} className="w-full h-full" />
           
           {/* Filters Overlay on Map */}
