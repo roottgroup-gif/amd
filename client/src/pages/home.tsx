@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "wouter";
 import SearchBar from "@/components/search-bar";
 import PropertyCard from "@/components/property-card";
@@ -25,6 +25,7 @@ export default function HomePage() {
   const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [cityInput, setCityInput] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load properties for the map with current filters
   const { data: mapProperties } = useProperties(mapFilters);
@@ -45,20 +46,23 @@ export default function HomePage() {
   };
 
   const handleFilterChange = (key: keyof PropertyFilters, value: any) => {
-    console.log('Filter change:', key, '=', value);
     const newFilters = { ...mapFilters };
     
     // Handle "all", "any", and empty values by removing the filter
     if (value === 'all' || value === 'any' || value === '' || value === null || value === undefined) {
       delete newFilters[key];
     } else {
-      newFilters[key] = value as any;
+      // Special handling for numbers
+      if (key === 'bedrooms' || key === 'bathrooms') {
+        newFilters[key] = parseInt(value);
+      } else {
+        newFilters[key] = value as any;
+      }
     }
     
     // Always maintain the limit for map properties
     newFilters.limit = 100;
     
-    console.log('New filters:', newFilters);
     setMapFilters(newFilters);
   };
 
@@ -75,12 +79,18 @@ export default function HomePage() {
 
   const handleCityChange = (city: string) => {
     setCityInput(city);
-    const newFilters = {
-      ...mapFilters,
-      city: city.trim() || undefined,
-      limit: 100
-    };
-    setMapFilters(newFilters);
+    // Debounce the filter change
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = setTimeout(() => {
+      const newFilters = {
+        ...mapFilters,
+        city: city.trim() || undefined,
+        limit: 100
+      };
+      setMapFilters(newFilters);
+    }, 500);
   };
 
   const clearFilters = () => {
