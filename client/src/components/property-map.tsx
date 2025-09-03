@@ -449,24 +449,24 @@ export default function PropertyMap({
               <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 bg-red-600 rounded-full"></div>
-                  <span className="text-white font-medium">For Sale</span>
+                  <span className="text-white font-medium" style={{ color: 'white' }}>For Sale</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 bg-green-600 rounded-full"></div>
-                  <span className="text-white font-medium">For Rent</span>
+                  <span className="text-white font-medium" style={{ color: 'white' }}>For Rent</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="flex items-center space-x-1">
                     <i className="fas fa-home text-blue-600 text-sm"></i>
-                    <span className="text-white">Houses</span>
+                    <span className="text-white" style={{ color: 'white' }}>Houses</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <i className="fas fa-building text-purple-600 text-sm"></i>
-                    <span className="text-white">Apartments</span>
+                    <span className="text-white" style={{ color: 'white' }}>Apartments</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <i className="fas fa-map-marked-alt text-orange-600 text-sm"></i>
-                    <span className="text-white">Land</span>
+                    <span className="text-white" style={{ color: 'white' }}>Land</span>
                   </div>
                 </div>
               </div>
