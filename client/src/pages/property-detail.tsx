@@ -135,8 +135,8 @@ export default function PropertyDetailPage() {
           <p className="text-muted-foreground mb-8">
             The property you're looking for doesn't exist or has been removed.
           </p>
-          <Link href="/properties">
-            <Button>Back to Properties</Button>
+          <Link href="/">
+            <Button>Back to Home</Button>
           </Link>
         </div>
       </div>
@@ -152,10 +152,10 @@ export default function PropertyDetailPage() {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
-        <Link href="/properties">
+        <Link href="/">
           <Button variant="ghost" className="mb-6" data-testid="back-button">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Properties
+            Back to Home
           </Button>
         </Link>
 
