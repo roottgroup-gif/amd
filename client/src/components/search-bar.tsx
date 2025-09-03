@@ -1,0 +1,138 @@
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { useTranslation } from "@/lib/i18n";
+import { useAISearch, useSearchSuggestions } from "@/hooks/use-properties";
+import { Search, Bot, Lightbulb } from "lucide-react";
+
+interface SearchBarProps {
+  onResults?: (results: any) => void;
+  placeholder?: string;
+  className?: string;
+}
+
+export default function SearchBar({ onResults, placeholder, className }: SearchBarProps) {
+  const { t } = useTranslation();
+  const [query, setQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const aiSearch = useAISearch();
+  const { data: suggestions } = useSearchSuggestions();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleSearch = async () => {
+    if (!query.trim()) return;
+    
+    try {
+      const result = await aiSearch.mutateAsync({ query });
+      onResults?.(result);
+      setShowSuggestions(false);
+    } catch (error) {
+      console.error("Search failed:", error);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setQuery(suggestion);
+    setShowSuggestions(false);
+    // Auto-search when suggestion is clicked
+    setTimeout(() => handleSearch(), 100);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className={`relative ${className}`}>
+      <div className="bg-white rounded-lg p-2 shadow-xl border border-border">
+        <div className="flex items-center space-x-2">
+          <div className="flex-1 relative" ref={inputRef}>
+            <Bot className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary h-5 w-5" />
+            <Input
+              type="text"
+              placeholder={placeholder || t('hero.searchPlaceholder')}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => setShowSuggestions(true)}
+              onKeyPress={handleKeyPress}
+              className="pl-10 pr-4 py-3 border-0 focus:ring-2 focus:ring-primary"
+              data-testid="ai-search-input"
+            />
+          </div>
+          <Button 
+            onClick={handleSearch}
+            disabled={aiSearch.isPending || !query.trim()}
+            className="px-6 py-3"
+            data-testid="search-button"
+          >
+            <Search className="mr-2 h-4 w-4" />
+            {aiSearch.isPending ? t('common.loading') : t('hero.search')}
+          </Button>
+        </div>
+        
+        {/* AI Search Suggestions */}
+        {showSuggestions && suggestions && suggestions.length > 0 && (
+          <Card className="absolute top-full left-0 right-0 mt-2 z-50 p-0 border border-border">
+            {suggestions.map((suggestion, index) => (
+              <div
+                key={index}
+                onClick={() => handleSuggestionClick(suggestion)}
+                className="p-3 hover:bg-muted cursor-pointer border-b border-border last:border-b-0 flex items-center"
+                data-testid={`search-suggestion-${index}`}
+              >
+                <Lightbulb className="text-yellow-500 mr-2 h-4 w-4" />
+                <span className="text-sm">{suggestion}</span>
+              </div>
+            ))}
+          </Card>
+        )}
+      </div>
+
+      {/* Search Results Summary */}
+      {aiSearch.data && (
+        <Card className="mt-4 p-4">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-semibold">Search Results</h3>
+            <span className="text-sm text-muted-foreground">
+              {aiSearch.data.count} properties found
+            </span>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Query: "{aiSearch.data.query}"
+          </p>
+          {Object.keys(aiSearch.data.filters).length > 0 && (
+            <div className="mt-2">
+              <p className="text-xs text-muted-foreground">Applied filters:</p>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {Object.entries(aiSearch.data.filters).map(([key, value]) => (
+                  value && (
+                    <span
+                      key={key}
+                      className="inline-block bg-primary/10 text-primary px-2 py-1 rounded text-xs"
+                    >
+                      {key}: {value.toString()}
+                    </span>
+                  )
+                ))}
+              </div>
+            </div>
+          )}
+        </Card>
+      )}
+    </div>
+  );
+}
