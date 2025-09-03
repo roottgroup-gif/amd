@@ -444,7 +444,7 @@ export default function PropertyMap({
                     value={localFilters.maxPrice?.toString() || ''} 
                     onValueChange={(value) => handleFilterChange('maxPrice', value)}
                   >
-                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
+                    <SelectTrigger className="h-10 sm:h-11 border-0 rounded-xl bg-white/15 backdrop-blur-2xl text-sm sm:text-base text-blue-700 font-semibold w-full transition-all duration-300 hover:bg-white/25 focus:bg-white/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_8px_32px_rgba(31,38,135,0.15)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_12px_40px_rgba(31,38,135,0.25)] focus:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_16px_48px_rgba(59,130,246,0.3)] ring-1 ring-white/20 hover:ring-white/30 focus:ring-blue-400/50">
                       <SelectValue placeholder="💰 Any Price" />
                     </SelectTrigger>
                     <SelectContent>
@@ -462,7 +462,7 @@ export default function PropertyMap({
                     value={localFilters.type || ''} 
                     onValueChange={(value) => handleFilterChange('type', value)}
                   >
-                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
+                    <SelectTrigger className="h-10 sm:h-11 border-0 rounded-xl bg-white/15 backdrop-blur-2xl text-sm sm:text-base text-blue-700 font-semibold w-full transition-all duration-300 hover:bg-white/25 focus:bg-white/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_8px_32px_rgba(31,38,135,0.15)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_12px_40px_rgba(31,38,135,0.25)] focus:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_16px_48px_rgba(59,130,246,0.3)] ring-1 ring-white/20 hover:ring-white/30 focus:ring-blue-400/50">
                       <SelectValue placeholder="🏠 All Types" />
                     </SelectTrigger>
                     <SelectContent>
@@ -481,7 +481,7 @@ export default function PropertyMap({
                     value={localFilters.bedrooms?.toString() || ''} 
                     onValueChange={(value) => handleFilterChange('bedrooms', value)}
                   >
-                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
+                    <SelectTrigger className="h-10 sm:h-11 border-0 rounded-xl bg-white/15 backdrop-blur-2xl text-sm sm:text-base text-blue-700 font-semibold w-full transition-all duration-300 hover:bg-white/25 focus:bg-white/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_8px_32px_rgba(31,38,135,0.15)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_12px_40px_rgba(31,38,135,0.25)] focus:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_16px_48px_rgba(59,130,246,0.3)] ring-1 ring-white/20 hover:ring-white/30 focus:ring-blue-400/50">
                       <SelectValue placeholder="🛏️ Beds" />
                     </SelectTrigger>
                     <SelectContent>
@@ -497,7 +497,7 @@ export default function PropertyMap({
                 {/* Apply Filters Button */}
                 <Button 
                   onClick={() => onFilterChange?.(localFilters)}
-                  className="h-10 sm:h-11 px-4 sm:px-6 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm sm:text-base font-semibold rounded-xl transition-all duration-300 flex-shrink-0 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
+                  className="h-10 sm:h-11 px-4 sm:px-6 bg-gradient-to-br from-blue-500/80 via-blue-600/70 to-indigo-600/80 backdrop-blur-2xl text-white text-sm sm:text-base font-bold rounded-xl transition-all duration-300 flex-shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_32px_rgba(59,130,246,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_12px_48px_rgba(59,130,246,0.4)] hover:bg-gradient-to-br hover:from-blue-400/90 hover:via-blue-500/80 hover:to-indigo-500/90 transform hover:scale-105 hover:-translate-y-0.5 active:scale-95 ring-1 ring-white/30 hover:ring-white/40"
                   data-testid="apply-filters-button"
                 >
                   <Search className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
@@ -506,7 +506,7 @@ export default function PropertyMap({
                 </Button>
                 
                 {/* Properties Count */}
-                <Badge className="h-10 sm:h-11 flex items-center text-sm sm:text-base bg-gradient-to-r from-green-500/20 to-blue-500/20 text-blue-600 border border-blue-300/40 backdrop-blur-md flex-shrink-0 px-4 sm:px-5 rounded-xl shadow-lg font-semibold transition-all duration-300 hover:from-green-500/30 hover:to-blue-500/30">
+                <Badge className="h-10 sm:h-11 flex items-center text-sm sm:text-base bg-gradient-to-br from-emerald-400/15 via-green-500/10 to-blue-500/15 text-blue-700 backdrop-blur-2xl flex-shrink-0 px-4 sm:px-5 rounded-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_8px_32px_rgba(16,185,129,0.1)] font-bold transition-all duration-300 hover:bg-gradient-to-br hover:from-emerald-400/25 hover:via-green-500/20 hover:to-blue-500/25 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_12px_40px_rgba(16,185,129,0.2)] ring-1 ring-white/20 hover:ring-white/30 hover:scale-105 hover:-translate-y-0.5">
                   <span className="hidden sm:inline">📊 {filteredProperties.length} Properties</span>
                   <span className="sm:hidden">📊 {filteredProperties.length}</span>
                 </Badge>
