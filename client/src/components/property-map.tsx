@@ -74,7 +74,8 @@ export default function PropertyMap({
           
           // Initialize map centered on Erbil, Kurdistan with custom zoom control position
           mapInstanceRef.current = L.map(mapRef.current, {
-            zoomControl: false // Disable default zoom control
+            zoomControl: false, // Disable default zoom control
+            attributionControl: false // Disable attribution control
           }).setView([36.1911, 44.0093], 13);
           
           // Add styled zoom control at bottom right
@@ -132,9 +133,7 @@ export default function PropertyMap({
           }, 100);
           
           // Add OpenStreetMap tiles
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: ''
-          }).addTo(mapInstanceRef.current);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstanceRef.current);
 
           // Add zoom event listener for clustering
           mapInstanceRef.current.on('zoomend', () => updateMarkersForProperties(filteredProperties));
