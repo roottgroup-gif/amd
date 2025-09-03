@@ -435,7 +435,7 @@ export default function PropertyMap({
           
           {/* Filters Overlay on Map */}
           <div className="absolute top-4 left-4 right-4 md:top-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
-            <div className="backdrop-blur-xl bg-white/10 rounded-2xl shadow-2xl border border-white/20 p-4 md:p-6 hover:shadow-3xl transition-all duration-300 hover:bg-white/15">
+            <div className="backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 p-4 md:p-6 hover:shadow-3xl transition-all duration-300">
               {/* All elements in one row with enhanced spacing */}
               <div className="flex items-center gap-3 md:gap-4 flex-wrap">
                 {/* Price Range Filter */}
