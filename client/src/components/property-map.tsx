@@ -453,7 +453,7 @@ export default function PropertyMap({
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 bg-green-600 rounded-full"></div>
-                  <span className="text-white font-medium" style={{ color: 'white' }}>For Rent</span>
+                  <span className="font-medium text-[#000000]" style={{ color: 'white' }}>For Rent</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="flex items-center space-x-1">
