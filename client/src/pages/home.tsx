@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import Navigation from "@/components/navigation";
 import SearchBar from "@/components/search-bar";
 import PropertyCard from "@/components/property-card";
 import PropertyMap from "@/components/property-map";
@@ -35,12 +34,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
-      
-      
-
-      
-
       {/* Search Results */}
       {searchResults && (
         <section className="py-8 bg-background">
