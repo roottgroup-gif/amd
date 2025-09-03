@@ -72,8 +72,15 @@ export default function PropertyMap({
             (mapRef.current as any)._leaflet_id = null;
           }
           
-          // Initialize map centered on Erbil, Kurdistan
-          mapInstanceRef.current = L.map(mapRef.current).setView([36.1911, 44.0093], 13);
+          // Initialize map centered on Erbil, Kurdistan with custom zoom control position
+          mapInstanceRef.current = L.map(mapRef.current, {
+            zoomControl: false // Disable default zoom control
+          }).setView([36.1911, 44.0093], 13);
+          
+          // Add zoom control at bottom right
+          L.control.zoom({
+            position: 'bottomright'
+          }).addTo(mapInstanceRef.current);
           
           // Add OpenStreetMap tiles
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
