@@ -18,9 +18,9 @@ export default function HomePage() {
   const [searchResults, setSearchResults] = useState<AISearchResponse | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>('sale');
 
+  // Load all properties for the map (not filtered by activeFilter)
   const { data: mapProperties } = useProperties({
-    listingType: activeFilter as "sale" | "rent",
-    limit: 50
+    limit: 100 // Get more properties for the map
   });
 
   const handleSearchResults = (results: AISearchResponse) => {
