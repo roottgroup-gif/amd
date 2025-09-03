@@ -47,9 +47,8 @@ export default function HomePage() {
           </div>
         </section>
       )}
-
       {/* Interactive Map Section */}
-      <section className="py-8 sm:py-16 bg-muted/30">
+      <section className="py-8 sm:py-16 bg-muted/30 pt-[0px] pb-[0px]">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
           <PropertyMap 
             properties={mapProperties || []}
@@ -60,10 +59,6 @@ export default function HomePage() {
           />
         </div>
       </section>
-
-      
-
-      
     </div>
   );
 }
