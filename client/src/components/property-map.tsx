@@ -28,6 +28,11 @@ export default function PropertyMap({
   // Local state for filters
   const [localFilters, setLocalFilters] = useState<PropertyFilters>(filters || {});
 
+  // Sync local filters with prop changes
+  useEffect(() => {
+    setLocalFilters(filters || {});
+  }, [filters]);
+
   // Filter properties based on current filters
   const filteredProperties = properties.filter(property => {
     // Price filter
@@ -431,8 +436,15 @@ export default function PropertyMap({
         newFilters[key as keyof PropertyFilters] = value as any;
       }
     }
+    
+    // Always maintain the limit for map properties
+    newFilters.limit = 100;
+    
     setLocalFilters(newFilters);
     console.log('Updated filters:', newFilters);
+    
+    // Immediately trigger parent filter change to call API
+    onFilterChange?.(newFilters);
   };
 
   return (
@@ -503,18 +515,15 @@ export default function PropertyMap({
                   </Select>
                 </div>
 
-                {/* Apply Filters Button */}
+                {/* Auto-Search Status Button */}
                 <Button 
-                  onClick={() => {
-                    console.log('Search button clicked with filters:', localFilters);
-                    onFilterChange?.(localFilters);
-                  }}
-                  className="h-10 sm:h-11 px-4 sm:px-6 bg-gradient-to-br from-blue-500/80 via-blue-600/70 to-indigo-600/80 backdrop-blur-2xl text-white text-sm sm:text-base font-bold rounded-xl transition-all duration-300 flex-shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_32px_rgba(59,130,246,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_12px_48px_rgba(59,130,246,0.4)] hover:bg-gradient-to-br hover:from-blue-400/90 hover:via-blue-500/80 hover:to-indigo-500/90 transform hover:scale-105 hover:-translate-y-0.5 active:scale-95 ring-1 ring-white/30 hover:ring-white/40"
-                  data-testid="apply-filters-button"
+                  disabled
+                  className="h-10 sm:h-11 px-4 sm:px-6 bg-gradient-to-br from-green-500/80 via-green-600/70 to-emerald-600/80 backdrop-blur-2xl text-white text-sm sm:text-base font-bold rounded-xl transition-all duration-300 flex-shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_8px_32px_rgba(34,197,94,0.3)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.5),0_12px_48px_rgba(34,197,94,0.4)] ring-1 ring-white/30 cursor-default"
+                  data-testid="auto-search-status"
                 >
                   <Search className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                  <span className="hidden sm:inline">Search</span>
-                  <span className="sm:hidden">Go</span>
+                  <span className="hidden sm:inline">Auto Search</span>
+                  <span className="sm:hidden">Live</span>
                 </Button>
                 
                 {/* Properties Count */}
