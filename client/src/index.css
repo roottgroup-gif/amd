@@ -116,9 +116,7 @@
   padding: 0 !important;
   backdrop-filter: blur(8px) !important;
   background: rgba(255, 255, 255, 0.98) !important;
-  transform: scale(0.95) !important;
-  opacity: 0 !important;
-  animation: popupSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+  animation: popupSlideIn 0.3s ease-out forwards !important;
 }
 
 .leaflet-popup-content {
@@ -190,7 +188,6 @@
   border-radius: 16px;
   overflow: hidden;
   position: relative;
-  animation: contentFadeIn 0.4s ease-out 0.1s both;
 }
 
 .responsive-popup::before {
@@ -219,7 +216,6 @@
   object-fit: cover;
   display: block;
   transition: transform 0.3s ease;
-  animation: imageSlideIn 0.5s ease-out 0.2s both;
 }
 
 .responsive-popup .popup-image:hover img {
@@ -240,7 +236,6 @@
   color: #0f172a;
   word-wrap: break-word;
   letter-spacing: -0.025em;
-  animation: textSlideUp 0.4s ease-out 0.3s both;
 }
 
 .responsive-popup .popup-address {
@@ -252,7 +247,6 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  animation: textSlideUp 0.4s ease-out 0.35s both;
 }
 
 .responsive-popup .popup-address::before {
@@ -266,7 +260,6 @@
   color: #1e40af;
   margin: 0 0 12px 0;
   text-shadow: 0 1px 2px rgba(30, 64, 175, 0.1);
-  animation: textSlideUp 0.4s ease-out 0.4s both;
 }
 
 .responsive-popup .popup-details {
@@ -277,7 +270,6 @@
   flex-wrap: wrap;
   gap: 10px;
   font-weight: 500;
-  animation: textSlideUp 0.4s ease-out 0.45s both;
 }
 
 .responsive-popup .popup-details span {
@@ -308,7 +300,6 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
-  animation: buttonSlideUp 0.4s ease-out 0.5s both;
   letter-spacing: 0.5px;
 }
 

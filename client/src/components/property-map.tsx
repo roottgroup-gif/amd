@@ -112,8 +112,12 @@ export default function PropertyMap({
         `;
         
         marker.bindPopup(popupContent, {
-          maxWidth: 300,
-          className: 'custom-popup'
+          maxWidth: 350,
+          minWidth: 240,
+          className: 'custom-popup',
+          closeButton: true,
+          autoClose: true,
+          autoPan: true
         });
 
         markersRef.current.push(marker);
