@@ -217,6 +217,58 @@ export default function PropertiesPage() {
                     />
                   </div>
                 </div>
+
+                {/* Active Filters Display */}
+                <div className="mt-4">
+                  {(filters.type || filters.listingType || filters.bedrooms || filters.bathrooms || filters.city || filters.minPrice || filters.maxPrice) && (
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-medium text-muted-foreground">Active Filters:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {filters.type && (
+                          <Badge className="bg-blue-600 text-white flex items-center gap-1">
+                            {filters.type === 'house' && <Home className="h-3 w-3" />}
+                            {filters.type === 'apartment' && <Building className="h-3 w-3" />}
+                            {filters.type === 'villa' && <Castle className="h-3 w-3" />}
+                            {filters.type === 'land' && <Mountain className="h-3 w-3" />}
+                            {filters.type === 'house' && 'House'}
+                            {filters.type === 'apartment' && 'Apartment'}
+                            {filters.type === 'villa' && 'Villa'}
+                            {filters.type === 'land' && 'Land'}
+                          </Badge>
+                        )}
+                        {filters.listingType && (
+                          <Badge className="bg-blue-600 text-white flex items-center gap-1">
+                            {filters.listingType === 'sale' ? <Tag className="h-3 w-3" /> : <Key className="h-3 w-3" />}
+                            {filters.listingType === 'sale' ? 'For Sale' : 'For Rent'}
+                          </Badge>
+                        )}
+                        {filters.bedrooms && (
+                          <Badge className="bg-blue-600 text-white flex items-center gap-1">
+                            <Bed className="h-3 w-3" />
+                            {filters.bedrooms}+ Beds
+                          </Badge>
+                        )}
+                        {filters.bathrooms && (
+                          <Badge className="bg-blue-600 text-white flex items-center gap-1">
+                            <Bath className="h-3 w-3" />
+                            {filters.bathrooms}+ Baths
+                          </Badge>
+                        )}
+                        {filters.city && (
+                          <Badge className="bg-blue-600 text-white flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {filters.city}
+                          </Badge>
+                        )}
+                        {(filters.minPrice || filters.maxPrice) && (
+                          <Badge className="bg-blue-600 text-white">
+                            ${filters.minPrice ? filters.minPrice.toLocaleString() : '0'} - ${filters.maxPrice ? filters.maxPrice.toLocaleString() : '1M+'}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </div>
