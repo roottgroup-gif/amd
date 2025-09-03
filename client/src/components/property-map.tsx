@@ -361,7 +361,7 @@ export default function PropertyMap({
           
           {/* Filters Overlay on Map */}
           <div className="absolute top-4 left-4 right-4 md:top-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
-            <div className="backdrop-blur-xl bg-white/10 rounded-2xl shadow-2xl border border-white/20 p-4 md:p-6 hover:shadow-3xl transition-all duration-300 hover:bg-white/15">
+            <div className="p-4 md:p-6 transition-all duration-300">
               {/* All elements in one row with enhanced spacing */}
               <div className="flex items-center gap-3 md:gap-4 flex-wrap">
                 {/* Price Range Filter */}
@@ -370,7 +370,7 @@ export default function PropertyMap({
                     value={filters.maxPrice?.toString() || ''} 
                     onValueChange={(value) => handleFilterChange('maxPrice', value)}
                   >
-                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
+                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 shadow-lg hover:shadow-xl">
                       <SelectValue placeholder="💰 Any Price" />
                     </SelectTrigger>
                     <SelectContent>
@@ -388,7 +388,7 @@ export default function PropertyMap({
                     value={filters.type || ''} 
                     onValueChange={(value) => handleFilterChange('type', value)}
                   >
-                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
+                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 shadow-lg hover:shadow-xl">
                       <SelectValue placeholder="🏠 All Types" />
                     </SelectTrigger>
                     <SelectContent>
@@ -407,7 +407,7 @@ export default function PropertyMap({
                     value={filters.bedrooms?.toString() || ''} 
                     onValueChange={(value) => handleFilterChange('bedrooms', value)}
                   >
-                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl bg-white/25 backdrop-blur-md text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 hover:bg-white/30 focus:bg-white/35 shadow-lg hover:shadow-xl">
+                    <SelectTrigger className="h-10 sm:h-11 border border-white/30 hover:border-blue-400 focus:border-blue-500 rounded-xl text-sm sm:text-base text-blue-600 font-medium w-full transition-all duration-300 shadow-lg hover:shadow-xl">
                       <SelectValue placeholder="🛏️ Beds" />
                     </SelectTrigger>
                     <SelectContent>
@@ -432,7 +432,7 @@ export default function PropertyMap({
                 </Button>
                 
                 {/* Properties Count */}
-                <Badge className="h-10 sm:h-11 flex items-center text-sm sm:text-base bg-gradient-to-r from-green-500/20 to-blue-500/20 text-blue-600 border border-blue-300/40 backdrop-blur-md flex-shrink-0 px-4 sm:px-5 rounded-xl shadow-lg font-semibold transition-all duration-300 hover:from-green-500/30 hover:to-blue-500/30">
+                <Badge className="h-10 sm:h-11 flex items-center text-sm sm:text-base text-blue-600 border border-blue-300/40 flex-shrink-0 px-4 sm:px-5 rounded-xl shadow-lg font-semibold transition-all duration-300">
                   <span className="hidden sm:inline">📊 {properties.length} Properties</span>
                   <span className="sm:hidden">📊 {properties.length}</span>
                 </Badge>
