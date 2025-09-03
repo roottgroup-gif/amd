@@ -59,6 +59,18 @@ export default function PropertyMap({
 
     const L = (window as any).L;
     const zoom = mapInstanceRef.current.getZoom();
+    
+    // Debug logging
+    console.log('Updating markers:', {
+      propertiesCount: properties.length,
+      zoom,
+      properties: properties.map(p => ({
+        id: p.id,
+        title: p.title,
+        lat: p.latitude,
+        lng: p.longitude
+      }))
+    });
 
     // Clear existing markers
     markersRef.current.forEach(marker => {
@@ -124,8 +136,8 @@ export default function PropertyMap({
       clusters.push({
         properties: cluster,
         center: {
-          lat: cluster.reduce((sum, p) => sum + parseFloat(p.latitude), 0) / cluster.length,
-          lng: cluster.reduce((sum, p) => sum + parseFloat(p.longitude), 0) / cluster.length
+          lat: cluster.reduce((sum, p) => sum + parseFloat(p.latitude || '0'), 0) / cluster.length,
+          lng: cluster.reduce((sum, p) => sum + parseFloat(p.longitude || '0'), 0) / cluster.length
         }
       });
     });
@@ -194,8 +206,18 @@ export default function PropertyMap({
 
   // Function to create individual property marker
   const createSingleMarker = (property: any, L: any) => {
-    const lat = parseFloat(property.latitude);
-    const lng = parseFloat(property.longitude);
+    const lat = parseFloat(property.latitude || '0');
+    const lng = parseFloat(property.longitude || '0');
+    
+    // Debug logging
+    console.log('Creating marker for property:', {
+      id: property.id,
+      title: property.title,
+      lat,
+      lng,
+      originalLat: property.latitude,
+      originalLng: property.longitude
+    });
 
     // Create custom icon based on property type and listing type
     const getPropertyIcon = (type: string, listingType: string, isFeatured: boolean = false) => {
