@@ -117,11 +117,6 @@ export default function PropertyMap({
           maxWidth: 300,
           className: 'custom-popup'
         });
-        
-        // Handle marker click
-        marker.on('click', () => {
-          onPropertyClick?.(property);
-        });
 
         markersRef.current.push(marker);
       }
