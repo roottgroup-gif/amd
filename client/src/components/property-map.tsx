@@ -445,24 +445,24 @@ export default function PropertyMap({
               <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4 text-xs">
                 <div className="flex items-center space-x-1 sm:space-x-2">
                   <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-600 rounded-full flex-shrink-0"></div>
-                  <span className="font-medium text-xs" style={{ color: 'white' }}>For Sale</span>
+                  <span className="font-medium text-xs text-white" style={{ color: 'white !important' }}>For Sale</span>
                 </div>
                 <div className="flex items-center space-x-1 sm:space-x-2">
                   <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-600 rounded-full flex-shrink-0"></div>
-                  <span className="font-medium text-xs" style={{ color: 'white' }}>For Rent</span>
+                  <span className="font-medium text-xs text-white" style={{ color: 'white !important' }}>For Rent</span>
                 </div>
                 <div className="flex items-center space-x-2 sm:space-x-3">
                   <div className="flex items-center space-x-1">
                     <i className="fas fa-home text-blue-600 text-xs sm:text-sm flex-shrink-0"></i>
-                    <span className="text-xs" style={{ color: 'white' }}>Houses</span>
+                    <span className="text-xs text-white" style={{ color: 'white !important' }}>Houses</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <i className="fas fa-building text-purple-600 text-xs sm:text-sm flex-shrink-0"></i>
-                    <span className="text-xs" style={{ color: 'white' }}>Apartments</span>
+                    <span className="text-xs text-white" style={{ color: 'white !important' }}>Apartments</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <i className="fas fa-map-marked-alt text-orange-600 text-xs sm:text-sm flex-shrink-0"></i>
-                    <span className="text-xs" style={{ color: 'white' }}>Land</span>
+                    <span className="text-xs text-white" style={{ color: 'white !important' }}>Land</span>
                   </div>
                 </div>
               </div>
