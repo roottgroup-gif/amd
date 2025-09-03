@@ -43,6 +43,13 @@ export default function PropertyMap({
 
       // Add zoom event listener for clustering
       mapInstanceRef.current.on('zoomend', updateMarkers);
+      
+      // Invalidate size to ensure proper rendering
+      setTimeout(() => {
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.invalidateSize();
+        }
+      }, 100);
     }
 
     // Cleanup on unmount
@@ -50,6 +57,29 @@ export default function PropertyMap({
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
       }
+    };
+  }, []);
+
+  // Resize handler for full screen
+  useEffect(() => {
+    const handleResize = () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    
+    // Also invalidate size when component is first rendered with full height
+    const timer = setTimeout(() => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.invalidateSize();
+      }
+    }, 300);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timer);
     };
   }, []);
 
