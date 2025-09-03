@@ -40,6 +40,9 @@ export default function PropertyMap({
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
       }).addTo(mapInstanceRef.current);
+
+      // Add zoom event listener for clustering
+      mapInstanceRef.current.on('zoomend', updateMarkers);
     }
 
     // Cleanup on unmount
@@ -50,11 +53,12 @@ export default function PropertyMap({
     };
   }, []);
 
-  // Update markers when properties change
-  useEffect(() => {
+  // Function to update markers based on zoom level
+  const updateMarkers = () => {
     if (!mapInstanceRef.current || typeof window === 'undefined' || !(window as any).L) return;
 
     const L = (window as any).L;
+    const zoom = mapInstanceRef.current.getZoom();
 
     // Clear existing markers
     markersRef.current.forEach(marker => {
@@ -62,161 +66,218 @@ export default function PropertyMap({
     });
     markersRef.current = [];
 
-    // Add new markers
-    properties.forEach(property => {
-      if (property.latitude && property.longitude) {
-        const lat = parseFloat(property.latitude);
-        const lng = parseFloat(property.longitude);
-        
-        // Create custom icon based on property type and listing type
-        const getPropertyIcon = (type: string, listingType: string, isFeatured: boolean = false) => {
-          let iconHtml = '';
-          let bgColor = '';
-          let borderColor = '';
-          let animationClass = '';
-          
-          // Set colors based on listing type
-          if (listingType === 'sale') {
-            bgColor = '#dc2626'; // Red for sale
-            borderColor = '#fef2f2'; // Light red border
-          } else {
-            bgColor = '#16a34a'; // Green for rent
-            borderColor = '#f0fdf4'; // Light green border
-          }
-          
-          // Add premium animation if featured
-          if (isFeatured) {
-            animationClass = 'premium-marker';
-          }
-          
-          // Set icon based on property type
-          if (type === 'house' || type === 'villa') {
-            iconHtml = `
-              <div class="property-marker-icon ${animationClass}" style="
-                background: ${bgColor};
-                border-color: ${borderColor};
-                width: 44px;
-                height: 44px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-                border: 4px solid ${borderColor};
-                cursor: pointer;
-                position: relative;
-                z-index: 100;
-              ">
-                <i class="fas fa-home" style="color: white; font-size: 18px; pointer-events: none;"></i>
-                ${isFeatured ? '<div class="premium-ring"></div>' : ''}
-              </div>
-            `;
-          } else if (type === 'apartment') {
-            iconHtml = `
-              <div class="property-marker-icon ${animationClass}" style="
-                background: ${bgColor};
-                border-color: ${borderColor};
-                width: 44px;
-                height: 44px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-                border: 4px solid ${borderColor};
-                cursor: pointer;
-                position: relative;
-                z-index: 100;
-              ">
-                <i class="fas fa-building" style="color: white; font-size: 18px; pointer-events: none;"></i>
-                ${isFeatured ? '<div class="premium-ring"></div>' : ''}
-              </div>
-            `;
-          } else {
-            // Default for land or other types
-            iconHtml = `
-              <div class="property-marker-icon ${animationClass}" style="
-                background: ${bgColor};
-                border-color: ${borderColor};
-                width: 44px;
-                height: 44px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-                border: 4px solid ${borderColor};
-                cursor: pointer;
-                position: relative;
-                z-index: 100;
-              ">
-                <i class="fas fa-map-marked-alt" style="color: white; font-size: 18px; pointer-events: none;"></i>
-                ${isFeatured ? '<div class="premium-ring"></div>' : ''}
-              </div>
-            `;
-          }
-          
-          return L.divIcon({
-            html: iconHtml,
-            className: 'custom-property-marker clickable-marker',
-            iconSize: [44, 44],
-            iconAnchor: [22, 22]
-          });
-        };
-        
-        const customIcon = getPropertyIcon(property.type, property.listingType, property.isFeatured);
-        const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstanceRef.current);
+    // Clustering threshold - show clusters when zoomed out
+    const CLUSTER_ZOOM_THRESHOLD = 12;
+    const shouldCluster = zoom < CLUSTER_ZOOM_THRESHOLD;
 
-        // Add popup with property info, image, and view button
-        const firstImage = property.images && property.images.length > 0 ? property.images[0] : '';
-        const popupContent = `
-          <div class="property-popup responsive-popup">
-            ${firstImage ? `
-              <div class="popup-image">
-                <img src="${firstImage}" alt="${property.title}" 
-                     onerror="this.style.display='none'; this.parentNode.style.height='0'; this.parentNode.style.marginBottom='0';" />
-              </div>
-            ` : ''}
-            <div class="popup-content">
-              <h4 class="popup-title">${property.title}</h4>
-              <p class="popup-address">${property.address}</p>
-              <p class="popup-price">
-                ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
-              </p>
-              <div class="popup-details">
-                ${property.bedrooms ? `<span>${property.bedrooms} beds</span>` : ''} 
-                ${property.bathrooms ? `<span>• ${property.bathrooms} baths</span>` : ''}
-                ${property.area ? `<span>• ${property.area} sq ft</span>` : ''}
-              </div>
-              <button class="popup-button" 
-                      onclick="window.viewPropertyFromMap('${property.id}')"
-                      onmouseover="this.style.background='#1d4ed8'"
-                      onmouseout="this.style.background='#2563eb'">
-                View Property
-              </button>
-            </div>
-          </div>
-        `;
-        
-        marker.bindPopup(popupContent, {
-          maxWidth: 350,
-          minWidth: 240,
-          className: 'custom-popup',
-          closeButton: true,
-          autoClose: true,
-          autoPan: true
-        });
+    if (shouldCluster) {
+      // Create clusters when zoomed out
+      const clusters = createClusters();
+      clusters.forEach(cluster => {
+        if (cluster.properties.length === 1) {
+          createSingleMarker(cluster.properties[0], L);
+        } else {
+          createClusterMarker(cluster, L);
+        }
+      });
+    } else {
+      // Show individual markers when zoomed in
+      properties.forEach(property => {
+        if (property.latitude && property.longitude) {
+          createSingleMarker(property, L);
+        }
+      });
+    }
+  };
 
-        markersRef.current.push(marker);
-      }
+  // Function to create clusters
+  const createClusters = () => {
+    const clusters: any[] = [];
+    const processed = new Set<number>();
+    const CLUSTER_DISTANCE = 0.02;
+
+    properties.forEach((property, index) => {
+      if (processed.has(index) || !property.latitude || !property.longitude) return;
+
+      const lat = parseFloat(property.latitude);
+      const lng = parseFloat(property.longitude);
+      const cluster = [property];
+      processed.add(index);
+
+      // Find nearby properties
+      properties.forEach((otherProperty, otherIndex) => {
+        if (processed.has(otherIndex) || !otherProperty.latitude || !otherProperty.longitude) return;
+
+        const otherLat = parseFloat(otherProperty.latitude);
+        const otherLng = parseFloat(otherProperty.longitude);
+        
+        const distance = Math.sqrt(
+          Math.pow(lat - otherLat, 2) + Math.pow(lng - otherLng, 2)
+        );
+
+        if (distance <= CLUSTER_DISTANCE) {
+          cluster.push(otherProperty);
+          processed.add(otherIndex);
+        }
+      });
+
+      clusters.push({
+        properties: cluster,
+        center: {
+          lat: cluster.reduce((sum, p) => sum + parseFloat(p.latitude), 0) / cluster.length,
+          lng: cluster.reduce((sum, p) => sum + parseFloat(p.longitude), 0) / cluster.length
+        }
+      });
     });
 
-    // Fit map to show all markers if there are any
-    if (markersRef.current.length > 0 && properties.length > 0) {
-      const group = new L.featureGroup(markersRef.current);
-      mapInstanceRef.current.fitBounds(group.getBounds().pad(0.1));
-    }
-  }, [properties, onPropertyClick]);
+    return clusters;
+  };
+
+  // Function to create cluster marker
+  const createClusterMarker = (cluster: any, L: any) => {
+    const count = cluster.properties.length;
+    const { lat, lng } = cluster.center;
+    
+    const clusterIcon = L.divIcon({
+      html: `
+        <div class="cluster-marker" style="
+          background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+          border: 4px solid white;
+          cursor: pointer;
+          font-weight: 700;
+          color: white;
+          font-size: 14px;
+        ">
+          ${count}
+        </div>
+      `,
+      className: 'custom-cluster-marker',
+      iconSize: [50, 50],
+      iconAnchor: [25, 25]
+    });
+    
+    const marker = L.marker([lat, lng], { icon: clusterIcon }).addTo(mapInstanceRef.current);
+    
+    const popupContent = `
+      <div class="cluster-popup" style="width: 320px; max-width: 95vw;">
+        <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 12px 16px; margin: -8px -8px 12px -8px; border-radius: 12px 12px 0 0; font-weight: 600; text-align: center;">
+          ${count} Properties in this area
+        </div>
+        <div style="max-height: 300px; overflow-y: auto;">
+          ${cluster.properties.map((property: any) => `
+            <div style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; cursor: pointer;" onclick="window.viewPropertyFromMap('${property.id}')">
+              <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">${property.title}</div>
+              <div style="font-size: 11px; color: #666; margin-bottom: 4px;">${property.address}</div>
+              <div style="font-weight: 700; color: #2563eb; font-size: 12px;">
+                ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    
+    marker.bindPopup(popupContent, {
+      maxWidth: 350,
+      className: 'custom-cluster-popup'
+    });
+    
+    markersRef.current.push(marker);
+  };
+
+  // Function to create individual property marker
+  const createSingleMarker = (property: any, L: any) => {
+    const lat = parseFloat(property.latitude);
+    const lng = parseFloat(property.longitude);
+
+    // Create custom icon based on property type and listing type
+    const getPropertyIcon = (type: string, listingType: string, isFeatured: boolean = false) => {
+      let bgColor = listingType === 'sale' ? '#dc2626' : '#16a34a';
+      let borderColor = listingType === 'sale' ? '#fef2f2' : '#f0fdf4';
+      let animationClass = isFeatured ? 'premium-marker' : '';
+      let iconType = type === 'apartment' ? 'fa-building' : type === 'land' ? 'fa-map-marked-alt' : 'fa-home';
+
+      return L.divIcon({
+        html: `
+          <div class="property-marker-icon ${animationClass}" style="
+            background: ${bgColor};
+            border-color: ${borderColor};
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            border: 4px solid ${borderColor};
+            cursor: pointer;
+            position: relative;
+            z-index: 100;
+          ">
+            <i class="fas ${iconType}" style="color: white; font-size: 18px; pointer-events: none;"></i>
+            ${isFeatured ? '<div class="premium-ring"></div>' : ''}
+          </div>
+        `,
+        className: 'custom-property-marker clickable-marker',
+        iconSize: [44, 44],
+        iconAnchor: [22, 22]
+      });
+    };
+
+    const customIcon = getPropertyIcon(property.type, property.listingType, property.isFeatured);
+    const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstanceRef.current);
+
+    // Add popup
+    const firstImage = property.images && property.images.length > 0 ? property.images[0] : '';
+    const popupContent = `
+      <div class="property-popup responsive-popup">
+        ${firstImage ? `
+          <div class="popup-image">
+            <img src="${firstImage}" alt="${property.title}" 
+                 onerror="this.style.display='none'; this.parentNode.style.height='0'; this.parentNode.style.marginBottom='0';" />
+          </div>
+        ` : ''}
+        <div class="popup-content">
+          <h4 class="popup-title">${property.title}</h4>
+          <p class="popup-address">${property.address}</p>
+          <p class="popup-price">
+            ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
+          </p>
+          <div class="popup-details">
+            ${property.bedrooms ? `<span>${property.bedrooms} beds</span>` : ''} 
+            ${property.bathrooms ? `<span>• ${property.bathrooms} baths</span>` : ''}
+            ${property.area ? `<span>• ${property.area} sq ft</span>` : ''}
+          </div>
+          <button class="popup-button" 
+                  onclick="window.viewPropertyFromMap('${property.id}')"
+                  onmouseover="this.style.background='#1d4ed8'"
+                  onmouseout="this.style.background='#2563eb'">
+            View Property
+          </button>
+        </div>
+      </div>
+    `;
+    
+    marker.bindPopup(popupContent, {
+      maxWidth: 350,
+      minWidth: 240,
+      className: 'custom-popup'
+    });
+
+    markersRef.current.push(marker);
+  };
+
+  // Update markers when properties change
+  useEffect(() => {
+    updateMarkers();
+  }, [properties]);
 
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...filters };
