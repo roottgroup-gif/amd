@@ -538,3 +538,65 @@
   background: rgba(255, 255, 255, 0.95) !important;
   backdrop-filter: blur(8px) !important;
 }
+
+/* Premium Property Animations */
+.premium-marker {
+  animation: premiumPulse 2s ease-in-out infinite !important;
+}
+
+.premium-ring {
+  position: absolute !important;
+  top: -8px !important;
+  left: -8px !important;
+  right: -8px !important;
+  bottom: -8px !important;
+  border: 2px solid #fbbf24 !important;
+  border-radius: 50% !important;
+  opacity: 0.7 !important;
+  animation: premiumRing 2s ease-in-out infinite !important;
+  pointer-events: none !important;
+}
+
+@keyframes premiumPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+  }
+}
+
+@keyframes premiumRing {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+/* Marker clustering improvements */
+.leaflet-marker-icon.custom-property-marker {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Enhanced hover effects for all markers */
+.custom-property-marker:hover .property-marker-icon {
+  transform: scale(1.2) !important;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4) !important;
+  z-index: 1000 !important;
+}
+
+/* Premium marker hover enhancement */
+.premium-marker:hover {
+  box-shadow: 0 8px 30px rgba(251, 191, 36, 0.6) !important;
+}

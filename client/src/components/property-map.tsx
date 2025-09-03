@@ -69,10 +69,11 @@ export default function PropertyMap({
         const lng = parseFloat(property.longitude);
         
         // Create custom icon based on property type and listing type
-        const getPropertyIcon = (type: string, listingType: string) => {
+        const getPropertyIcon = (type: string, listingType: string, isFeatured: boolean = false) => {
           let iconHtml = '';
           let bgColor = '';
           let borderColor = '';
+          let animationClass = '';
           
           // Set colors based on listing type
           if (listingType === 'sale') {
@@ -83,10 +84,15 @@ export default function PropertyMap({
             borderColor = '#f0fdf4'; // Light green border
           }
           
+          // Add premium animation if featured
+          if (isFeatured) {
+            animationClass = 'premium-marker';
+          }
+          
           // Set icon based on property type
           if (type === 'house' || type === 'villa') {
             iconHtml = `
-              <div class="property-marker-icon" style="
+              <div class="property-marker-icon ${animationClass}" style="
                 background: ${bgColor};
                 border-color: ${borderColor};
                 width: 44px;
@@ -102,11 +108,12 @@ export default function PropertyMap({
                 z-index: 100;
               ">
                 <i class="fas fa-home" style="color: white; font-size: 18px; pointer-events: none;"></i>
+                ${isFeatured ? '<div class="premium-ring"></div>' : ''}
               </div>
             `;
           } else if (type === 'apartment') {
             iconHtml = `
-              <div class="property-marker-icon" style="
+              <div class="property-marker-icon ${animationClass}" style="
                 background: ${bgColor};
                 border-color: ${borderColor};
                 width: 44px;
@@ -122,12 +129,13 @@ export default function PropertyMap({
                 z-index: 100;
               ">
                 <i class="fas fa-building" style="color: white; font-size: 18px; pointer-events: none;"></i>
+                ${isFeatured ? '<div class="premium-ring"></div>' : ''}
               </div>
             `;
           } else {
             // Default for land or other types
             iconHtml = `
-              <div class="property-marker-icon" style="
+              <div class="property-marker-icon ${animationClass}" style="
                 background: ${bgColor};
                 border-color: ${borderColor};
                 width: 44px;
@@ -143,6 +151,7 @@ export default function PropertyMap({
                 z-index: 100;
               ">
                 <i class="fas fa-map-marked-alt" style="color: white; font-size: 18px; pointer-events: none;"></i>
+                ${isFeatured ? '<div class="premium-ring"></div>' : ''}
               </div>
             `;
           }
@@ -155,7 +164,7 @@ export default function PropertyMap({
           });
         };
         
-        const customIcon = getPropertyIcon(property.type, property.listingType);
+        const customIcon = getPropertyIcon(property.type, property.listingType, property.isFeatured);
         const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstanceRef.current);
 
         // Add popup with property info, image, and view button
