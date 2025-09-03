@@ -147,25 +147,29 @@ export class DatabaseStorage implements IStorage {
 
     conditions.push(eq(properties.status, "active"));
 
-    let query = db
+    // Build base query
+    const baseQuery = db
       .select()
       .from(properties)
-      .leftJoin(users, eq(properties.agentId, users.id));
+      .leftJoin(users, eq(properties.agentId, users.id))
+      .where(conditions.length > 0 ? and(...conditions) : undefined);
 
-    if (conditions.length > 0) {
-      query = query.where(and(...conditions));
-    }
-
-    // Sorting
+    // Determine sorting
+    let orderByClause;
     if (filters.sortBy === "price") {
-      query = query.orderBy(filters.sortOrder === "desc" ? desc(properties.price) : asc(properties.price));
+      orderByClause = filters.sortOrder === "desc" ? desc(properties.price) : asc(properties.price);
     } else if (filters.sortBy === "views") {
-      query = query.orderBy(filters.sortOrder === "desc" ? desc(properties.views) : asc(properties.views));
+      orderByClause = filters.sortOrder === "desc" ? desc(properties.views) : asc(properties.views);
     } else {
-      query = query.orderBy(filters.sortOrder === "desc" ? desc(properties.createdAt) : asc(properties.createdAt));
+      orderByClause = filters.sortOrder === "desc" ? desc(properties.createdAt) : asc(properties.createdAt);
     }
 
-    // Pagination
+    // Build final query with all clauses
+    const finalQuery = baseQuery
+      .orderBy(orderByClause)
+      .$dynamic();
+
+    let query = finalQuery;
     if (filters.limit) {
       query = query.limit(filters.limit);
     }
@@ -212,15 +216,16 @@ export class DatabaseStorage implements IStorage {
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
     const [property] = await db
       .insert(properties)
-      .values([insertProperty])
+      .values(insertProperty as any)
       .returning();
     return property;
   }
 
   async updateProperty(id: string, updateProperty: Partial<InsertProperty>): Promise<Property | undefined> {
+    const updateData = { ...updateProperty, updatedAt: new Date() } as any;
     const [property] = await db
       .update(properties)
-      .set({ ...updateProperty, updatedAt: new Date() })
+      .set(updateData)
       .where(eq(properties.id, id))
       .returning();
     return property || undefined;
