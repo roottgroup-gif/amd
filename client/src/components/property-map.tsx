@@ -296,85 +296,89 @@ export default function PropertyMap({
 
   return (
     <div className={className}>
-      <Card className="bg-white rounded-xl shadow-xl border-0 overflow-hidden">
+      <Card className="bg-transparent border-0 shadow-none overflow-hidden">
         {/* Professional Map Filters */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 border-b border-gray-100">
+        <div className="p-6 border-b border-gray-200">
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Property Map Filters</h3>
-            <p className="text-sm text-gray-600">Refine your search to find the perfect property</p>
+            <h3 className="text-lg font-semibold text-gray-800 mb-1">Filter Properties</h3>
+            <p className="text-xs text-gray-500">Refine your search criteria</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="flex flex-wrap items-end gap-4">
             {/* Price Range Filter */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Price Range</label>
+            <div className="min-w-[140px]">
+              <label className="block text-xs font-medium text-gray-600 mb-1">Price Range</label>
               <Select 
                 value={filters.maxPrice?.toString() || ''} 
                 onValueChange={(value) => handleFilterChange('maxPrice', value)}
               >
-                <SelectTrigger className="w-full h-12 bg-white border-2 border-gray-200 hover:border-blue-300 rounded-lg shadow-sm transition-colors">
-                  <SelectValue placeholder="Any Price" className="text-gray-600" />
+                <SelectTrigger className="h-10 border border-gray-300 hover:border-gray-400 rounded-md bg-white text-sm">
+                  <SelectValue placeholder="Any Price" />
                 </SelectTrigger>
-                <SelectContent className="rounded-lg border-2 border-gray-100">
-                  <SelectItem value="all" className="py-3">Any Price</SelectItem>
-                  <SelectItem value="200000" className="py-3">Under $200k</SelectItem>
-                  <SelectItem value="500000" className="py-3">$200k - $500k</SelectItem>
-                  <SelectItem value="1000000" className="py-3">$500k+</SelectItem>
+                <SelectContent>
+                  <SelectItem value="all">Any Price</SelectItem>
+                  <SelectItem value="200000">Under $200k</SelectItem>
+                  <SelectItem value="500000">$200k - $500k</SelectItem>
+                  <SelectItem value="1000000">$500k+</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             {/* Property Type Filter */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Property Type</label>
+            <div className="min-w-[140px]">
+              <label className="block text-xs font-medium text-gray-600 mb-1">Property Type</label>
               <Select 
                 value={filters.type || ''} 
                 onValueChange={(value) => handleFilterChange('type', value)}
               >
-                <SelectTrigger className="w-full h-12 bg-white border-2 border-gray-200 hover:border-blue-300 rounded-lg shadow-sm transition-colors">
-                  <SelectValue placeholder="All Types" className="text-gray-600" />
+                <SelectTrigger className="h-10 border border-gray-300 hover:border-gray-400 rounded-md bg-white text-sm">
+                  <SelectValue placeholder="All Types" />
                 </SelectTrigger>
-                <SelectContent className="rounded-lg border-2 border-gray-100">
-                  <SelectItem value="all" className="py-3">All Types</SelectItem>
-                  <SelectItem value="house" className="py-3">🏠 House</SelectItem>
-                  <SelectItem value="apartment" className="py-3">🏢 Apartment</SelectItem>
-                  <SelectItem value="villa" className="py-3">🏛️ Villa</SelectItem>
-                  <SelectItem value="land" className="py-3">🌍 Land</SelectItem>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="house">House</SelectItem>
+                  <SelectItem value="apartment">Apartment</SelectItem>
+                  <SelectItem value="villa">Villa</SelectItem>
+                  <SelectItem value="land">Land</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             {/* Bedrooms Filter */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Bedrooms</label>
+            <div className="min-w-[120px]">
+              <label className="block text-xs font-medium text-gray-600 mb-1">Bedrooms</label>
               <Select 
                 value={filters.bedrooms?.toString() || ''} 
                 onValueChange={(value) => handleFilterChange('bedrooms', value)}
               >
-                <SelectTrigger className="w-full h-12 bg-white border-2 border-gray-200 hover:border-blue-300 rounded-lg shadow-sm transition-colors">
-                  <SelectValue placeholder="Any" className="text-gray-600" />
+                <SelectTrigger className="h-10 border border-gray-300 hover:border-gray-400 rounded-md bg-white text-sm">
+                  <SelectValue placeholder="Any" />
                 </SelectTrigger>
-                <SelectContent className="rounded-lg border-2 border-gray-100">
-                  <SelectItem value="any" className="py-3">Any</SelectItem>
-                  <SelectItem value="1" className="py-3">1+ Bedroom</SelectItem>
-                  <SelectItem value="2" className="py-3">2+ Bedrooms</SelectItem>
-                  <SelectItem value="3" className="py-3">3+ Bedrooms</SelectItem>
-                  <SelectItem value="4" className="py-3">4+ Bedrooms</SelectItem>
+                <SelectContent>
+                  <SelectItem value="any">Any</SelectItem>
+                  <SelectItem value="1">1+</SelectItem>
+                  <SelectItem value="2">2+</SelectItem>
+                  <SelectItem value="3">3+</SelectItem>
+                  <SelectItem value="4">4+</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             {/* Apply Filters Button */}
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 uppercase tracking-wide invisible">Actions</label>
-              <Button 
-                onClick={() => onFilterChange?.(filters)}
-                className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
-                data-testid="apply-filters-button"
-              >
-                <Search className="mr-2 h-5 w-5" />
-                Apply Filters
-              </Button>
+            <Button 
+              onClick={() => onFilterChange?.(filters)}
+              className="h-10 px-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors"
+              data-testid="apply-filters-button"
+            >
+              <Search className="mr-1 h-4 w-4" />
+              Apply
+            </Button>
+            
+            {/* Properties Count */}
+            <div className="ml-auto">
+              <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-700">
+                {properties.length} Properties
+              </Badge>
             </div>
           </div>
         </div>
@@ -395,36 +399,30 @@ export default function PropertyMap({
           ) : null}
         </div>
         
-        {/* Enhanced Map Legend */}
-        <div className="p-6 bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200">
-          <div className="flex flex-wrap items-center justify-center gap-8 text-sm">
-            <div className="flex items-center space-x-3">
-              <div className="w-5 h-5 bg-red-600 rounded-full border-3 border-white shadow-lg ring-2 ring-red-100"></div>
-              <span className="font-semibold text-gray-700">For Sale</span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-5 h-5 bg-green-600 rounded-full border-3 border-white shadow-lg ring-2 ring-green-100"></div>
-              <span className="font-semibold text-gray-700">For Rent</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-home text-blue-600 text-lg"></i>
-                <span className="font-medium text-gray-600">Houses</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-building text-purple-600 text-lg"></i>
-                <span className="font-medium text-gray-600">Apartments</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-map-marked-alt text-orange-600 text-lg"></i>
-                <span className="font-medium text-gray-600">Land</span>
-              </div>
+        {/* Map Legend */}
+        <div className="px-6 py-3 border-t border-gray-200 bg-white">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-red-600 rounded-full"></div>
+              <span className="text-gray-600">For Sale</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Badge variant="outline" className="px-4 py-2 bg-blue-50 text-blue-700 border-blue-200 font-semibold">
-                <MapPin className="mr-2 h-4 w-4" />
-                {properties.length} Properties
-              </Badge>
+              <div className="w-3 h-3 bg-green-600 rounded-full"></div>
+              <span className="text-gray-600">For Rent</span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-1">
+                <i className="fas fa-home text-gray-500 text-sm"></i>
+                <span className="text-gray-600">Houses</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <i className="fas fa-building text-gray-500 text-sm"></i>
+                <span className="text-gray-600">Apartments</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <i className="fas fa-map-marked-alt text-gray-500 text-sm"></i>
+                <span className="text-gray-600">Land</span>
+              </div>
             </div>
           </div>
         </div>
