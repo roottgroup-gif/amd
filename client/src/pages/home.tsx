@@ -33,13 +33,13 @@ export default function HomePage() {
   
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen w-full bg-background">
       {/* Search Results */}
       {searchResults && (
-        <section className="py-8 bg-background">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold mb-6">Search Results</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <section className="absolute top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <h2 className="text-xl font-bold mb-4">Search Results</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 max-h-60 overflow-y-auto">
               {searchResults.results.map((property) => (
                 <PropertyCard key={property.id} property={property} />
               ))}
@@ -47,17 +47,15 @@ export default function HomePage() {
           </div>
         </section>
       )}
-      {/* Interactive Map Section */}
-      <section className="py-8 sm:py-16 bg-muted/30 pt-[0px] pb-[0px]">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-          <PropertyMap 
-            properties={mapProperties || []}
-            onPropertyClick={(property) => {
-              window.location.href = `/property/${property.id}`;
-            }}
-            className="w-full"
-          />
-        </div>
+      {/* Full Screen Map Section */}
+      <section className="h-full w-full">
+        <PropertyMap 
+          properties={mapProperties || []}
+          onPropertyClick={(property) => {
+            window.location.href = `/property/${property.id}`;
+          }}
+          className="h-full w-full"
+        />
       </section>
     </div>
   );
