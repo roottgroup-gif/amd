@@ -468,15 +468,15 @@ export default function PropertyMap({
                   <span className="font-semibold text-sm text-black drop-shadow-lg">🔑 For Rent</span>
                 </div>
                 <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
-                  <div className="flex items-center space-x-2 p-2 transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
                     <i className="fas fa-home text-blue-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
                     <span className="text-sm text-black font-medium drop-shadow-lg">Houses</span>
                   </div>
-                  <div className="flex items-center space-x-2 p-2 transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
                     <i className="fas fa-building text-purple-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
                     <span className="text-sm text-black font-medium drop-shadow-lg">Apartments</span>
                   </div>
-                  <div className="flex items-center space-x-2 p-2 transition-all duration-300 hover:scale-105">
+                  <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md transition-all duration-300 hover:bg-white/20 hover:scale-105">
                     <i className="fas fa-map-marked-alt text-orange-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
                     <span className="text-sm text-black font-medium drop-shadow-lg">Land</span>
                   </div>
