@@ -356,8 +356,8 @@ export default function PropertyMap({
     <div className={className}>
       <div className="relative">
         {/* Map Container - Full Size */}
-        <div className="relative h-full min-h-[400px]" data-testid="property-map">
-          <div ref={mapRef} className="w-full h-full" style={{ minHeight: '400px' }} />
+        <div className="relative h-screen" data-testid="property-map">
+          <div ref={mapRef} className="w-full h-full" />
           
           {/* Filters Overlay on Map */}
           <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-[1000]">
