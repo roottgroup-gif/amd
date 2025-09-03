@@ -97,7 +97,7 @@ export default function HomePage() {
         {/* Absolute Blurred Filter Section inside Map */}
         <div className="absolute top-4 left-4 right-4 z-50">
           <div className="bg-white/20 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl p-6">
-          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Filter className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Property Filters</h2>
@@ -313,6 +313,7 @@ export default function HomePage() {
               </div>
             </div>
           )}
+          </div>
         </div>
         
         {/* Search Results inside Map */}

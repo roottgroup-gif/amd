@@ -115,8 +115,21 @@ export default function PropertyMap({
         
         try {
           // Clear any existing map first
+          if (mapInstanceRef.current) {
+            mapInstanceRef.current.remove();
+            mapInstanceRef.current = null;
+          }
+          
+          // Clear Leaflet ID if exists
           if ((mapRef.current as any)._leaflet_id) {
-            (mapRef.current as any)._leaflet_id = null;
+            delete (mapRef.current as any)._leaflet_id;
+          }
+          
+          // Ensure the container is ready
+          if (!mapRef.current || !mapRef.current.offsetParent) {
+            // Container not ready yet, retry in a moment
+            setTimeout(initializeMap, 100);
+            return;
           }
           
           // Initialize map centered on Erbil, Kurdistan with custom zoom control position
@@ -222,8 +235,25 @@ export default function PropertyMap({
     // Cleanup on unmount
     return () => {
       if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
+        try {
+          mapInstanceRef.current.remove();
+        } catch (error) {
+          console.warn('Error cleaning up map:', error);
+        }
+        mapInstanceRef.current = null;
       }
+      
+      // Clear markers
+      markersRef.current.forEach(marker => {
+        try {
+          if (marker && marker.remove) {
+            marker.remove();
+          }
+        } catch (error) {
+          // Ignore cleanup errors
+        }
+      });
+      markersRef.current = [];
     };
   }, []);
 
@@ -262,9 +292,15 @@ export default function PropertyMap({
     const L = (window as any).L;
     const zoom = mapInstanceRef.current.getZoom();
 
-    // Clear existing markers
+    // Clear existing markers safely
     markersRef.current.forEach(marker => {
-      mapInstanceRef.current.removeLayer(marker);
+      try {
+        if (mapInstanceRef.current && marker) {
+          mapInstanceRef.current.removeLayer(marker);
+        }
+      } catch (error) {
+        // Ignore cleanup errors
+      }
     });
     markersRef.current = [];
 
@@ -485,9 +521,15 @@ export default function PropertyMap({
   const updateMarkersForProperties = (propertiesToShow: Property[]) => {
     if (!mapInstanceRef.current || typeof window === 'undefined' || !(window as any).L) return;
     
-    // Clear existing markers
+    // Clear existing markers safely
     markersRef.current.forEach(marker => {
-      mapInstanceRef.current.removeLayer(marker);
+      try {
+        if (mapInstanceRef.current && marker) {
+          mapInstanceRef.current.removeLayer(marker);
+        }
+      } catch (error) {
+        // Ignore cleanup errors
+      }
     });
     markersRef.current = [];
 
