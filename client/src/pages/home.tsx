@@ -205,7 +205,7 @@ export default function HomePage() {
                   value={mapFilters.listingType || ''} 
                   onValueChange={(value) => handleFilterChange('listingType', value)}
                 >
-                  <SelectTrigger className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20" data-testid="listing-type-select">
+                  <SelectTrigger className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400" data-testid="listing-type-select" style={{borderColor: '#FF7800'}}>
                     <SelectValue placeholder="All Types" />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
@@ -227,7 +227,7 @@ export default function HomePage() {
                   value={mapFilters.type || ''} 
                   onValueChange={(value) => handleFilterChange('type', value)}
                 >
-                  <SelectTrigger className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20" data-testid="property-type-select">
+                  <SelectTrigger className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400" data-testid="property-type-select" style={{borderColor: '#FF7800'}}>
                     <SelectValue placeholder="All Properties" />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
@@ -251,7 +251,7 @@ export default function HomePage() {
                   value={mapFilters.bedrooms?.toString() || ''} 
                   onValueChange={(value) => handleFilterChange('bedrooms', (value === 'any' || !value) ? undefined : parseInt(value))}
                 >
-                  <SelectTrigger className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20" data-testid="bedrooms-select">
+                  <SelectTrigger className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400" data-testid="bedrooms-select" style={{borderColor: '#FF7800'}}>
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
@@ -276,7 +276,7 @@ export default function HomePage() {
                   value={mapFilters.bathrooms?.toString() || ''} 
                   onValueChange={(value) => handleFilterChange('bathrooms', (value === 'any' || !value) ? undefined : parseInt(value))}
                 >
-                  <SelectTrigger className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20" data-testid="bathrooms-select">
+                  <SelectTrigger className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400" data-testid="bathrooms-select" style={{borderColor: '#FF7800'}}>
                     <SelectValue placeholder="Any" />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
@@ -300,7 +300,8 @@ export default function HomePage() {
                   placeholder="e.g. Erbil, Baghdad"
                   value={cityInput}
                   onChange={(e) => handleCityChange(e.target.value)}
-                  className="bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20"
+                  className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400"
+                  style={{borderColor: '#FF7800'}}
                   data-testid="city-input"
                 />
               </div>
@@ -311,7 +312,8 @@ export default function HomePage() {
                 <Button 
                   variant="outline" 
                   onClick={clearFilters}
-                  className="w-full bg-white/50 dark:bg-black/50 backdrop-blur-sm border-white/30 dark:border-white/20 hover:bg-white/70 dark:hover:bg-black/70"
+                  className="w-full bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 hover:bg-orange-200/80 dark:hover:bg-orange-800/80 focus:border-orange-500 dark:focus:border-orange-400"
+                  style={{borderColor: '#FF7800'}}
                   data-testid="clear-filters"
                 >
                   Clear All
