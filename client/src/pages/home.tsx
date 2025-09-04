@@ -121,7 +121,7 @@ export default function HomePage() {
         
         {/* Absolute Blurred Filter Section inside Map */}
         <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-[9999] max-h-[calc(100vh-120px)] max-h-[calc(100dvh-120px)] overflow-hidden" style={{position: 'absolute'}}>
-          <div className={`bg-white/20 dark:bg-black/20 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/30 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 max-h-full overflow-y-auto ${showFilters ? 'p-3 sm:p-4 md:p-6' : 'p-2 sm:p-3'}`}>
+          <div className={`bg-white/90 dark:bg-black/90 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/30 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 max-h-full overflow-y-auto ${showFilters ? 'p-3 sm:p-4 md:p-6' : 'p-2 sm:p-3'}`}>
             <div className={`flex items-center justify-between ${showFilters ? 'mb-3 sm:mb-4' : 'mb-1 sm:mb-2'}`}>
             <div className="flex items-center gap-1 sm:gap-2">
               <Filter className="h-4 w-4 sm:h-5 sm:w-5" style={{color: '#FF7800'}} />
