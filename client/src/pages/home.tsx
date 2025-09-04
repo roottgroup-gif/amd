@@ -113,9 +113,8 @@ export default function HomePage() {
           onPropertyClick={(property) => {
             window.location.href = `/property/${property.id}`;
           }}
-          onPropertySelect={(property, coordinates) => {
-            setSelectedProperty(property);
-            setCardPosition(coordinates || null);
+          onPropertySelect={(property) => {
+            // Just trigger zoom, use built-in marker popup
           }}
           className="h-full w-full"
         />
@@ -391,110 +390,6 @@ export default function HomePage() {
           </div>
         </div>
         
-        {/* Floating Property Card */}
-        {selectedProperty && cardPosition && (
-          <div 
-            className="absolute z-50 pointer-events-none"
-            style={{
-              left: `${cardPosition.x}px`,
-              top: `${cardPosition.y}px`,
-              transform: 'translate(-50%, -100%)',
-              marginTop: '-20px'
-            }}
-          >
-            <div className="pointer-events-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden max-w-sm">
-                {/* Close button */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedProperty(null);
-                    setCardPosition(null);
-                  }}
-                  className="absolute top-2 right-2 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full h-8 w-8 p-0"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-                
-                {/* Property Image */}
-                <div className="relative h-40">
-                  <img 
-                    src={selectedProperty.images?.[0] || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600'}
-                    alt={selectedProperty.title}
-                    className="w-full h-40 object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
-                    }}
-                  />
-                  <Badge 
-                    className={`absolute top-3 left-3 ${
-                      selectedProperty.listingType === 'sale' 
-                        ? 'bg-red-600 text-white' 
-                        : 'bg-green-600 text-white'
-                    }`}
-                  >
-                    {selectedProperty.listingType === 'sale' ? 'For Sale' : 'For Rent'}
-                  </Badge>
-                </div>
-                
-                {/* Property Details */}
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-1 line-clamp-2">
-                    {selectedProperty.title}
-                  </h3>
-                  
-                  <div className="flex items-center text-gray-600 dark:text-gray-400 mb-2">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    <span className="text-sm truncate">{selectedProperty.address}, {selectedProperty.city}</span>
-                  </div>
-                  
-                  <div className="text-2xl font-bold text-orange-600 mb-3">
-                    ${parseFloat(selectedProperty.price).toLocaleString()}
-                    {selectedProperty.listingType === 'rent' ? '/mo' : ''}
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    {selectedProperty.bedrooms && (
-                      <span className="flex items-center">
-                        <Bed className="h-4 w-4 mr-1 text-orange-600" />
-                        {selectedProperty.bedrooms} beds
-                      </span>
-                    )}
-                    {selectedProperty.bathrooms && (
-                      <span className="flex items-center">
-                        <Bath className="h-4 w-4 mr-1 text-orange-600" />
-                        {selectedProperty.bathrooms} baths
-                      </span>
-                    )}
-                  </div>
-                  
-                  {selectedProperty.area && (
-                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-4">
-                      <span className="flex items-center">
-                        <span className="inline-block w-4 h-4 mr-1 text-orange-600">⬜</span>
-                        {selectedProperty.area.toLocaleString()} sq ft
-                      </span>
-                    </div>
-                  )}
-                  
-                  <Link href={`/property/${selectedProperty.id}`}>
-                    <Button 
-                      className="w-full bg-orange-600 hover:bg-orange-700 text-white"
-                    >
-                      View Property
-                    </Button>
-                  </Link>
-                </div>
-                
-                {/* Arrow pointing down to marker */}
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
-                  <div className="w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[12px] border-t-white dark:border-t-gray-900"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Search Results inside Map */}
         {searchResults && (
