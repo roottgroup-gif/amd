@@ -61,16 +61,6 @@ export default function SearchBar({ onResults, placeholder, className }: SearchB
         <div className="flex items-center space-x-2">
           <div className="flex-1 relative" ref={inputRef}>
             <Bot className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary h-5 w-5" />
-            <Input
-              type="text"
-              placeholder={placeholder || t('hero.searchPlaceholder')}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => setShowSuggestions(true)}
-              onKeyPress={handleKeyPress}
-              className="pl-10 pr-4 py-3 border-0 focus:ring-2 focus:ring-primary"
-              data-testid="ai-search-input"
-            />
           </div>
         </div>
         
