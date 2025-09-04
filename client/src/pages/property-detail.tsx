@@ -220,6 +220,32 @@ export default function PropertyDetailPage() {
               </Button>
             </div>
           </div>
+          
+          {/* Thumbnail Gallery */}
+          {images.length > 1 && (
+            <div className="p-4 bg-gray-50">
+              <div className="flex gap-2 overflow-x-auto">
+                {images.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`flex-shrink-0 cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
+                      index === currentImageIndex 
+                        ? 'border-primary shadow-md' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => setCurrentImageIndex(index)}
+                    data-testid={`thumbnail-${index}`}
+                  >
+                    <img
+                      src={image}
+                      alt={`${property.title} thumbnail ${index + 1}`}
+                      className="w-16 h-16 md:w-20 md:h-20 object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
