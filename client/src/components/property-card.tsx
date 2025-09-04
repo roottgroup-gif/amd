@@ -1,12 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 import { useTranslation } from "@/lib/i18n";
 import { useAddToFavorites, useRemoveFromFavorites, useIsFavorite } from "@/hooks/use-properties";
 import { useState } from "react";
 import type { Property } from "@/types";
-import { Heart, Bed, Bath, Square, MapPin, User, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, Bed, Bath, Square, MapPin, User, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
 interface PropertyCardProps {
   property: Property;
@@ -16,11 +16,13 @@ interface PropertyCardProps {
 
 export default function PropertyCard({ property, userId, className }: PropertyCardProps) {
   const { t } = useTranslation();
+  const [, navigate] = useLocation();
   const addToFavorites = useAddToFavorites();
   const removeFromFavorites = useRemoveFromFavorites();
   const { data: favoriteData } = useIsFavorite(userId || "", property.id);
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isNavigating, setIsNavigating] = useState(false);
   const isFavorite = favoriteData?.isFavorite || false;
   
   // Get all images or use default if no images
@@ -64,6 +66,19 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
     const formattedAmount = new Intl.NumberFormat().format(amount);
     const suffix = listingType === 'rent' ? '/mo' : '';
     return `${currency === 'USD' ? '$' : currency}${formattedAmount}${suffix}`;
+  };
+
+  const handleViewProperty = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    setIsNavigating(true);
+    
+    // Add a small delay to show the loading state for professional feel
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // Navigate to property detail page
+    navigate(`/property/${property.id}`);
   };
 
 
@@ -190,14 +205,21 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
             </div>
           )}
           
-          <Link href={`/property/${property.id}`}>
-            <Button 
-              className="ml-auto"
-              data-testid={`view-details-button-${property.id}`}
-            >
-              {t('property.viewDetails')}
-            </Button>
-          </Link>
+          <Button 
+            onClick={handleViewProperty}
+            disabled={isNavigating}
+            className="ml-auto"
+            data-testid={`view-details-button-${property.id}`}
+          >
+            {isNavigating ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Loading...
+              </>
+            ) : (
+              t('property.viewDetails')
+            )}
+          </Button>
         </div>
       </CardContent>
     </Card>
