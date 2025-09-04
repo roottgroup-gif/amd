@@ -589,8 +589,12 @@ export default function PropertyMap({
           const L = (window as any).L;
           
           if (mapInstanceRef.current && L) {
-            // Zoom to user's location
-            mapInstanceRef.current.setView([latitude, longitude], 15);
+            // Smoothly fly to user's location with animation
+            mapInstanceRef.current.flyTo([latitude, longitude], 15, {
+              animate: true,
+              duration: 2.5, // 2.5 seconds smooth animation
+              easeLinearity: 0.25
+            });
             
             // Add a marker for user's location
             const userLocationIcon = L.divIcon({
