@@ -26,8 +26,6 @@ export default function HomePage() {
   const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [cityInput, setCityInput] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  const [focusedProperty, setFocusedProperty] = useState<Property | null>(null);
-  const [showFocusedCard, setShowFocusedCard] = useState(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load properties for the map with current filters
@@ -102,16 +100,6 @@ export default function HomePage() {
     setCityInput('');
   };
 
-  const handlePropertyFocus = (property: Property) => {
-    setFocusedProperty(property);
-    setShowFocusedCard(true);
-  };
-
-  const closeFocusedCard = () => {
-    setShowFocusedCard(false);
-    setTimeout(() => setFocusedProperty(null), 300); // Wait for animation to complete
-  };
-
   return (
     <div className="map-page h-screen w-full bg-background relative">
       {/* Full Screen Map Section */}
@@ -120,7 +108,9 @@ export default function HomePage() {
           properties={mapProperties || []}
           filters={mapFilters}
           onFilterChange={handleMapFilterChange}
-          onPropertyClick={handlePropertyFocus}
+          onPropertyClick={(property) => {
+            window.location.href = `/property/${property.id}`;
+          }}
           className="h-full w-full"
         />
         
@@ -408,45 +398,6 @@ export default function HomePage() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-        )}
-
-        {/* Full Screen Focused Property Card Modal */}
-        {focusedProperty && (
-          <div 
-            className={`fixed inset-0 z-[10002] flex items-center justify-center p-4 transition-all duration-300 ${
-              showFocusedCard 
-                ? 'opacity-100 backdrop-blur-md bg-black/60' 
-                : 'opacity-0 pointer-events-none'
-            }`}
-            onClick={closeFocusedCard}
-          >
-            <div 
-              className={`relative max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all duration-500 ease-out ${
-                showFocusedCard 
-                  ? 'scale-100 translate-y-0 opacity-100' 
-                  : 'scale-75 translate-y-8 opacity-0'
-              }`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={closeFocusedCard}
-                className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 text-white rounded-full h-10 w-10"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-
-              {/* Property Card with Animation */}
-              <div className="animate-in slide-in-from-bottom-4 duration-500">
-                <PropertyCard 
-                  property={focusedProperty} 
-                  className="shadow-2xl transform hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            </div>
           </div>
         )}
       </section>
