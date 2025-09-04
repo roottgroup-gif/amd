@@ -279,7 +279,7 @@ export default function PropertyMap({
             <div style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; cursor: pointer;" onclick="window.viewPropertyFromMap('${property.id}')">
               <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">${property.title}</div>
               <div style="font-size: 11px; color: #666; margin-bottom: 4px;">${property.address}</div>
-              <div style="font-weight: 700; color: #bdd479; font-size: 12px;">
+              <div style="font-weight: 700; color: #FF7800; font-size: 12px;">
                 ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
               </div>
             </div>
@@ -355,9 +355,9 @@ export default function PropertyMap({
             ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
           </p>
           <div class="popup-details">
-            ${property.bedrooms ? `<span><i class="fas fa-bed" style="color: #bdd479; margin-right: 4px;"></i>${property.bedrooms} beds</span>` : ''} 
-            ${property.bathrooms ? `<span><i class="fas fa-bath" style="color: #bdd479; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
-            ${property.area ? `<span><i class="fas fa-ruler-combined" style="color: #bdd479; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
+            ${property.bedrooms ? `<span><i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} beds</span>` : ''} 
+            ${property.bathrooms ? `<span><i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
+            ${property.area ? `<span><i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
           </div>
           <button class="popup-button" 
                   onclick="window.viewPropertyFromMap('${property.id}')"
@@ -484,7 +484,7 @@ export default function PropertyMap({
             <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center backdrop-blur-sm">
               <div className="text-center p-8 rounded-2xl bg-white/20 backdrop-blur-md shadow-2xl border border-white/30">
                 <div className="relative">
-                  <MapPin className="mx-auto h-16 w-16 mb-6 animate-bounce drop-shadow-lg" style={{color: '#bdd479'}} />
+                  <MapPin className="mx-auto h-16 w-16 mb-6 animate-bounce drop-shadow-lg" style={{color: '#FF7800'}} />
                   <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full animate-ping opacity-75" style={{backgroundColor: '#bdd479'}}></div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">Loading Interactive Map</h3>

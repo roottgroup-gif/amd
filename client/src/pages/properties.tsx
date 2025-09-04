@@ -142,11 +142,11 @@ export default function PropertiesPage() {
                         <SelectValue placeholder="All Properties" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all"><span className="flex items-center gap-2"><Home className="h-4 w-4" />All Properties</span></SelectItem>
-                        <SelectItem value="house"><span className="flex items-center gap-2"><Home className="h-4 w-4" />House</span></SelectItem>
-                        <SelectItem value="apartment"><span className="flex items-center gap-2"><Building className="h-4 w-4" />Apartment</span></SelectItem>
-                        <SelectItem value="villa"><span className="flex items-center gap-2"><Castle className="h-4 w-4" />Villa</span></SelectItem>
-                        <SelectItem value="land"><span className="flex items-center gap-2"><Mountain className="h-4 w-4" />Land</span></SelectItem>
+                        <SelectItem value="all"><span className="flex items-center gap-2"><Home className="h-4 w-4" style={{color: '#FF7800'}} />All Properties</span></SelectItem>
+                        <SelectItem value="house"><span className="flex items-center gap-2"><Home className="h-4 w-4" style={{color: '#FF7800'}} />House</span></SelectItem>
+                        <SelectItem value="apartment"><span className="flex items-center gap-2"><Building className="h-4 w-4" style={{color: '#FF7800'}} />Apartment</span></SelectItem>
+                        <SelectItem value="villa"><span className="flex items-center gap-2"><Castle className="h-4 w-4" style={{color: '#FF7800'}} />Villa</span></SelectItem>
+                        <SelectItem value="land"><span className="flex items-center gap-2"><Mountain className="h-4 w-4" style={{color: '#FF7800'}} />Land</span></SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -177,12 +177,12 @@ export default function PropertiesPage() {
                         <SelectValue placeholder="Any" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="any"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />Any</span></SelectItem>
-                        <SelectItem value="1"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />1+</span></SelectItem>
-                        <SelectItem value="2"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />2+</span></SelectItem>
-                        <SelectItem value="3"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />3+</span></SelectItem>
-                        <SelectItem value="4"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />4+</span></SelectItem>
-                        <SelectItem value="5"><span className="flex items-center gap-2"><Bed className="h-4 w-4" />5+</span></SelectItem>
+                        <SelectItem value="any"><span className="flex items-center gap-2"><Bed className="h-4 w-4" style={{color: '#FF7800'}} />Any</span></SelectItem>
+                        <SelectItem value="1"><span className="flex items-center gap-2"><Bed className="h-4 w-4" style={{color: '#FF7800'}} />1+</span></SelectItem>
+                        <SelectItem value="2"><span className="flex items-center gap-2"><Bed className="h-4 w-4" style={{color: '#FF7800'}} />2+</span></SelectItem>
+                        <SelectItem value="3"><span className="flex items-center gap-2"><Bed className="h-4 w-4" style={{color: '#FF7800'}} />3+</span></SelectItem>
+                        <SelectItem value="4"><span className="flex items-center gap-2"><Bed className="h-4 w-4" style={{color: '#FF7800'}} />4+</span></SelectItem>
+                        <SelectItem value="5"><span className="flex items-center gap-2"><Bed className="h-4 w-4" style={{color: '#FF7800'}} />5+</span></SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -198,11 +198,11 @@ export default function PropertiesPage() {
                         <SelectValue placeholder="Any" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="any"><span className="flex items-center gap-2"><Bath className="h-4 w-4" />Any</span></SelectItem>
-                        <SelectItem value="1"><span className="flex items-center gap-2"><Bath className="h-4 w-4" />1+</span></SelectItem>
-                        <SelectItem value="2"><span className="flex items-center gap-2"><Bath className="h-4 w-4" />2+</span></SelectItem>
-                        <SelectItem value="3"><span className="flex items-center gap-2"><Bath className="h-4 w-4" />3+</span></SelectItem>
-                        <SelectItem value="4"><span className="flex items-center gap-2"><Bath className="h-4 w-4" />4+</span></SelectItem>
+                        <SelectItem value="any"><span className="flex items-center gap-2"><Bath className="h-4 w-4" style={{color: '#FF7800'}} />Any</span></SelectItem>
+                        <SelectItem value="1"><span className="flex items-center gap-2"><Bath className="h-4 w-4" style={{color: '#FF7800'}} />1+</span></SelectItem>
+                        <SelectItem value="2"><span className="flex items-center gap-2"><Bath className="h-4 w-4" style={{color: '#FF7800'}} />2+</span></SelectItem>
+                        <SelectItem value="3"><span className="flex items-center gap-2"><Bath className="h-4 w-4" style={{color: '#FF7800'}} />3+</span></SelectItem>
+                        <SelectItem value="4"><span className="flex items-center gap-2"><Bath className="h-4 w-4" style={{color: '#FF7800'}} />4+</span></SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
