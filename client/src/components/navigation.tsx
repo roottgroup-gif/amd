@@ -34,27 +34,6 @@ export default function Navigation() {
             <span className="text-xl font-bold text-foreground">EstateAI</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive(item.href)
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-gray-700 hover:text-primary hover:bg-gray-100'
-                  }`}
-                  data-testid={`nav-${item.href.slice(1) || 'home'}`}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.name}</span>
-                </Link>
-              );
-            })}
-          </div>
 
           {/* Language Selector */}
           <div className="hidden md:block">
