@@ -126,7 +126,7 @@ export default function HomePage() {
             <div className="flex items-center gap-1 sm:gap-2">
               <Filter className="h-4 w-4 sm:h-5 sm:w-5" style={{color: '#FF7800'}} />
               <h2 className="text-sm sm:text-base md:text-lg font-semibold text-black dark:text-white">Property Filters</h2>
-              <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs hidden sm:inline-flex" style={{backgroundColor: '#FF7800', color: '#000'}}>
+              <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs hidden sm:inline-flex" style={{backgroundColor: '#FF7800', color: '#fff'}}>
                 {(mapProperties || []).length} properties
               </Badge>
             </div>
