@@ -486,12 +486,29 @@ export default function PropertyMap({
             ${property.bathrooms ? `<span><i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
             ${property.area ? `<span><i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
           </div>
-          <button class="popup-button" 
-                  onclick="window.viewPropertyFromMap('${property.id}')"
-                  onmouseover="this.style.background='#e56600'"
-                  onmouseout="this.style.background='#FF7800'">
-            View Property
-          </button>
+          <div class="popup-buttons" style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="popup-button" 
+                    onclick="window.viewPropertyFromMap('${property.id}')"
+                    onmouseover="this.style.background='#e56600'"
+                    onmouseout="this.style.background='#FF7800'"
+                    style="flex: 1; min-width: 100px;">
+              View Property
+            </button>
+            <button class="popup-button" 
+                    onclick="window.open('tel:+9647501234567', '_self')"
+                    onmouseover="this.style.background='#0c7b00'"
+                    onmouseout="this.style.background='#16a34a'"
+                    style="background: #16a34a; flex: 1; min-width: 80px;">
+              <i class="fas fa-phone" style="margin-right: 4px;"></i>Call Now
+            </button>
+            <button class="popup-button" 
+                    onclick="window.open('https://wa.me/9647501234567?text=Hi, I\\'m interested in this property: ${encodeURIComponent(property.title)} - ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}', '_blank')"
+                    onmouseover="this.style.background='#128C7E'"
+                    onmouseout="this.style.background='#25D366'"
+                    style="background: #25D366; flex: 1; min-width: 80px;">
+              <i class="fab fa-whatsapp" style="margin-right: 4px;"></i>WhatsApp
+            </button>
+          </div>
         </div>
       </div>
     `;
