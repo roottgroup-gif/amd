@@ -375,6 +375,17 @@ export default function PropertyMap({
       className: 'custom-popup'
     });
 
+    // Add click event to zoom in on the property
+    marker.on('click', () => {
+      if (mapInstanceRef.current) {
+        // Zoom to level 16 (closer view) and center on the property
+        mapInstanceRef.current.setView([lat, lng], 16, {
+          animate: true,
+          duration: 0.8
+        });
+      }
+    });
+
     markersRef.current.push(marker);
   };
 
