@@ -409,8 +409,8 @@ export default function PropertyMap({
           </p>
           <div class="popup-details">
             ${property.bedrooms ? `<span><i class="fas fa-bed" style="color: #3b82f6; margin-right: 4px;"></i>${property.bedrooms} beds</span>` : ''} 
-            ${property.bathrooms ? `<span>• <i class="fas fa-bath" style="color: #3b82f6; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
-            ${property.area ? `<span>• <i class="fas fa-ruler-combined" style="color: #3b82f6; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
+            ${property.bathrooms ? `<span><i class="fas fa-bath" style="color: #3b82f6; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
+            ${property.area ? `<span><i class="fas fa-ruler-combined" style="color: #3b82f6; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
           </div>
           <button class="popup-button" 
                   onclick="window.viewPropertyFromMap('${property.id}')"
