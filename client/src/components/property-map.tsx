@@ -498,15 +498,17 @@ export default function PropertyMap({
                     onclick="window.open('tel:+9647501234567', '_self')"
                     onmouseover="this.style.background='#0c7b00'"
                     onmouseout="this.style.background='#16a34a'"
-                    style="background: #16a34a; flex: 1; min-width: 80px;">
-              <i class="fas fa-phone" style="margin-right: 4px;"></i>Call Now
+                    style="background: #16a34a; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
+                    title="Call Now">
+              <i class="fas fa-phone"></i>
             </button>
             <button class="popup-button" 
                     onclick="window.open('https://wa.me/9647501234567?text=Hi, I\\'m interested in this property: ${encodeURIComponent(property.title)} - ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}', '_blank')"
                     onmouseover="this.style.background='#128C7E'"
                     onmouseout="this.style.background='#25D366'"
-                    style="background: #25D366; flex: 1; min-width: 80px;">
-              <i class="fab fa-whatsapp" style="margin-right: 4px;"></i>WhatsApp
+                    style="background: #25D366; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
+                    title="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
             </button>
           </div>
         </div>
