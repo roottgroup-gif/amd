@@ -11,7 +11,7 @@ interface PropertyMapProps {
   filters?: PropertyFilters;
   onFilterChange?: (filters: PropertyFilters) => void;
   onPropertyClick?: (property: Property) => void;
-  onPropertySelect?: (property: Property) => void;
+  onPropertySelect?: (property: Property, coordinates?: {x: number, y: number}) => void;
   className?: string;
 }
 
@@ -389,7 +389,12 @@ export default function PropertyMap({
         // Show property card after zoom animation completes
         if (onPropertySelect) {
           setTimeout(() => {
-            onPropertySelect(property);
+            // Get the screen coordinates of the marker
+            const markerPoint = mapInstanceRef.current.latLngToContainerPoint([lat, lng]);
+            onPropertySelect(property, {
+              x: markerPoint.x,
+              y: markerPoint.y
+            });
           }, 800); // Match the zoom animation duration
         }
       }
