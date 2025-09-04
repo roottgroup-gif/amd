@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Property, PropertyFilters } from "@/types";
-import { Search, MapPin, Navigation, X, Bed, Bath, Square, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, MapPin, Navigation } from "lucide-react";
 
 interface PropertyMapProps {
   properties: Property[];
@@ -31,11 +31,6 @@ export default function PropertyMap({
   
   // Local state for filters
   const [localFilters, setLocalFilters] = useState<PropertyFilters>(filters || {});
-  
-  // State for selected property card
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [cardAnimation, setCardAnimation] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Sync local filters with prop changes
   useEffect(() => {
@@ -394,13 +389,141 @@ export default function PropertyMap({
     const customIcon = getPropertyIcon(property.type, property.listingType, property.isFeatured);
     const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstanceRef.current);
 
-    // Add click event to show property card
+    // Add popup with image slider
+    const images = property.images && property.images.length > 0 ? property.images : ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'];
+    const hasMultipleImages = images.length > 1;
+    const popupId = `popup-${property.id}`;
+    
+    const popupContent = `
+      <div class="property-popup responsive-popup" id="${popupId}">
+        ${images.length > 0 ? `
+          <div class="popup-image-container" style="position: relative;">
+            <div class="popup-image-slider" style="position: relative; height: 150px; overflow: hidden;">
+              ${images.map((img, index) => `
+                <img src="${img}" alt="${property.title} - Image ${index + 1}" 
+                     class="popup-slide" 
+                     style="
+                       width: 100%; 
+                       height: 150px; 
+                       object-fit: cover; 
+                       position: absolute; 
+                       top: 0; 
+                       left: 0;
+                       opacity: ${index === 0 ? '1' : '0'};
+                       transition: opacity 0.3s ease;
+                     "
+                     data-slide-index="${index}"
+                     onerror="this.style.display='none';" />
+              `).join('')}
+            </div>
+            ${hasMultipleImages ? `
+              <button onclick="changeSlide('${popupId}', -1)" 
+                      style="
+                        position: absolute; 
+                        left: 8px; 
+                        top: 50%; 
+                        transform: translateY(-50%);
+                        background: rgba(0,0,0,0.5); 
+                        color: white; 
+                        border: none; 
+                        border-radius: 50%; 
+                        width: 30px; 
+                        height: 30px; 
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 14px;
+                        z-index: 1000;
+                      "
+                      onmouseover="this.style.background='rgba(0,0,0,0.7)'"
+                      onmouseout="this.style.background='rgba(0,0,0,0.5)'">‹</button>
+              <button onclick="changeSlide('${popupId}', 1)" 
+                      style="
+                        position: absolute; 
+                        right: 8px; 
+                        top: 50%; 
+                        transform: translateY(-50%);
+                        background: rgba(0,0,0,0.5); 
+                        color: white; 
+                        border: none; 
+                        border-radius: 50%; 
+                        width: 30px; 
+                        height: 30px; 
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 14px;
+                        z-index: 1000;
+                      "
+                      onmouseover="this.style.background='rgba(0,0,0,0.7)'"
+                      onmouseout="this.style.background='rgba(0,0,0,0.5)'">›</button>
+              <div style="
+                position: absolute; 
+                bottom: 8px; 
+                right: 8px; 
+                background: rgba(0,0,0,0.7); 
+                color: white; 
+                padding: 4px 8px; 
+                border-radius: 12px; 
+                font-size: 12px;
+                z-index: 1000;
+              ">
+                <span class="slide-counter">1</span> / ${images.length}
+              </div>
+            ` : ''}
+          </div>
+        ` : ''}
+        <div class="popup-content">
+          <h4 class="popup-title">${property.title}</h4>
+          <p class="popup-address">${property.address}</p>
+          <p class="popup-price">
+            ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
+          </p>
+          <div class="popup-details">
+            ${property.bedrooms ? `<span><i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} beds</span>` : ''} 
+            ${property.bathrooms ? `<span><i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
+            ${property.area ? `<span><i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
+          </div>
+          <div class="popup-buttons" style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="popup-button" 
+                    onclick="window.viewPropertyFromMap('${property.id}')"
+                    onmouseover="this.style.background='#e56600'"
+                    onmouseout="this.style.background='#FF7800'"
+                    style="flex: 1; min-width: 100px;">
+              View Property
+            </button>
+            <button class="popup-button" 
+                    onclick="window.open('tel:+9647501234567', '_self')"
+                    onmouseover="this.style.background='#0c7b00'"
+                    onmouseout="this.style.background='#16a34a'"
+                    style="background: #16a34a; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
+                    title="Call Now">
+              <i class="fas fa-phone"></i>
+            </button>
+            <button class="popup-button" 
+                    onclick="window.open('https://wa.me/9647501234567?text=Hi, I\\'m interested in this property: ${encodeURIComponent(property.title)} - ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}', '_blank')"
+                    onmouseover="this.style.background='#128C7E'"
+                    onmouseout="this.style.background='#25D366'"
+                    style="background: #25D366; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
+                    title="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    marker.bindPopup(popupContent, {
+      maxWidth: 350,
+      minWidth: 240,
+      className: 'custom-popup'
+    });
+
+    // Add click event without zoom behavior
     marker.on('click', () => {
-      // Show the property card with animation
-      setSelectedProperty(property);
-      setCardAnimation(true);
-      
-      // Trigger callback
+      // Trigger callback without zoom
       if (onPropertySelect) {
         onPropertySelect(property);
       }
@@ -480,36 +603,6 @@ export default function PropertyMap({
     // Immediately trigger parent filter change to call API
     onFilterChange?.(newFilters);
   };
-
-  // Property card handlers
-  const handleCloseCard = () => {
-    setCardAnimation(false);
-    setTimeout(() => setSelectedProperty(null), 300);
-  };
-
-  const nextImage = () => {
-    if (selectedProperty && selectedProperty.images && selectedProperty.images.length > 1) {
-      setCurrentImageIndex((prev) => (prev + 1) % selectedProperty.images.length);
-    }
-  };
-
-  const prevImage = () => {
-    if (selectedProperty && selectedProperty.images && selectedProperty.images.length > 1) {
-      setCurrentImageIndex((prev) => (prev - 1 + selectedProperty.images.length) % selectedProperty.images.length);
-    }
-  };
-
-  const formatPrice = (price: string, currency: string, listingType: string) => {
-    const amount = parseFloat(price);
-    const formattedAmount = new Intl.NumberFormat().format(amount);
-    const suffix = listingType === 'rent' ? '/mo' : '';
-    return `${currency === 'USD' ? '$' : currency}${formattedAmount}${suffix}`;
-  };
-
-  // Reset image index when property changes
-  useEffect(() => {
-    setCurrentImageIndex(0);
-  }, [selectedProperty]);
 
   // Geolocation function
   const handleGetMyLocation = () => {
@@ -700,142 +793,6 @@ export default function PropertyMap({
             </div>
           ) : null}
         </div>
-        
-        {/* Animated Property Card */}
-        {selectedProperty && (
-          <div 
-            className={`fixed inset-x-0 bottom-0 z-[1001] transform transition-all duration-500 ease-out ${
-              cardAnimation ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
-            }`}
-            style={{ 
-              background: 'linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 100%)',
-              backdropFilter: 'blur(10px)'
-            }}
-          >
-            <div className="mx-4 mb-4 md:mx-8 md:mb-8">
-              <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden max-w-md mx-auto">
-                {/* Property Image with Navigation */}
-                <div className="relative h-48 overflow-hidden">
-                  {selectedProperty.images && selectedProperty.images.length > 0 ? (
-                    <>
-                      <img 
-                        src={selectedProperty.images[currentImageIndex]}
-                        alt={selectedProperty.title}
-                        className="w-full h-48 object-cover transition-all duration-300"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
-                        }}
-                      />
-                      
-                      {/* Navigation arrows - only show if multiple images */}
-                      {selectedProperty.images.length > 1 && (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={prevImage}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
-                          >
-                            <ChevronLeft className="h-4 w-4" />
-                          </Button>
-                          
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={nextImage}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
-                          >
-                            <ChevronRight className="h-4 w-4" />
-                          </Button>
-                          
-                          {/* Image counter */}
-                          <div className="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                            {currentImageIndex + 1} / {selectedProperty.images.length}
-                          </div>
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                      <MapPin className="h-12 w-12 text-gray-400" />
-                    </div>
-                  )}
-                  
-                  {/* Close button */}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleCloseCard}
-                    className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                  
-                  {/* Listing Type Badge */}
-                  <Badge 
-                    className={`absolute top-2 left-2 ${
-                      selectedProperty.listingType === 'sale' 
-                        ? 'bg-red-500 text-white' 
-                        : 'bg-green-500 text-white'
-                    }`}
-                  >
-                    {selectedProperty.listingType === 'sale' ? 'For Sale' : 'For Rent'}
-                  </Badge>
-                </div>
-                
-                {/* Property Details */}
-                <div className="p-4">
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
-                    {selectedProperty.title}
-                  </h3>
-                  
-                  <div className="flex items-center text-gray-600 dark:text-gray-400 mb-2">
-                    <MapPin className="h-4 w-4 mr-1 text-red-500" />
-                    <span className="text-sm">{selectedProperty.address}</span>
-                  </div>
-                  
-                  <div className="text-2xl font-bold text-orange-600 mb-3">
-                    {formatPrice(selectedProperty.price, selectedProperty.currency, selectedProperty.listingType)}
-                  </div>
-                  
-                  {/* Property Features */}
-                  <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    {selectedProperty.bedrooms && (
-                      <span className="flex items-center bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded">
-                        <Bed className="h-4 w-4 mr-1 text-orange-600" />
-                        {selectedProperty.bedrooms} beds
-                      </span>
-                    )}
-                    {selectedProperty.bathrooms && (
-                      <span className="flex items-center bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded">
-                        <Bath className="h-4 w-4 mr-1 text-orange-600" />
-                        {selectedProperty.bathrooms} baths
-                      </span>
-                    )}
-                    {selectedProperty.area && (
-                      <span className="flex items-center bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded">
-                        <Square className="h-4 w-4 mr-1 text-orange-600" />
-                        {selectedProperty.area.toLocaleString()} sq ft
-                      </span>
-                    )}
-                  </div>
-                  
-                  {/* Action Button */}
-                  <Button
-                    onClick={() => {
-                      if (typeof window !== 'undefined') {
-                        window.open(`/property/${selectedProperty.id}`, '_blank');
-                      }
-                    }}
-                    className="w-full bg-orange-600 hover:bg-orange-700 text-white"
-                  >
-                    View Property
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
