@@ -58,7 +58,6 @@ export default function SearchBar({ onResults, placeholder, className }: SearchB
 
   return (
     <div className={`relative ${className}`}>
-      <div className="bg-white rounded-lg p-2 shadow-xl border border-border">
         <div className="flex items-center space-x-2">
           <div className="flex-1 relative" ref={inputRef}>
             <Bot className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary h-5 w-5" />
@@ -100,7 +99,6 @@ export default function SearchBar({ onResults, placeholder, className }: SearchB
             ))}
           </Card>
         )}
-      </div>
 
     </div>
   );
