@@ -35,35 +35,6 @@ export default function Navigation() {
           </Link>
 
 
-          {/* Language Selector */}
-          <div className="hidden md:block">
-            <Select value={language} onValueChange={changeLanguage}>
-              <SelectTrigger className="w-32">
-                <Globe className="h-4 w-4 mr-1" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">
-                  <span className="flex items-center gap-2">
-                    <span className="text-base">🇺🇸</span>
-                    EN
-                  </span>
-                </SelectItem>
-                <SelectItem value="ar">
-                  <span className="flex items-center gap-2">
-                    <span className="text-base">🇮🇶</span>
-                    AR
-                  </span>
-                </SelectItem>
-                <SelectItem value="ku">
-                  <span className="flex items-center gap-2">
-                    <span className="text-base">🟨🔴🟩</span>
-                    KU
-                  </span>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
 
           {/* Mobile Navigation */}
           <div className="md:hidden">
@@ -94,34 +65,6 @@ export default function Navigation() {
                       </Link>
                     );
                   })}
-                  <div className="pt-4 border-t border-gray-200">
-                    <Select value={language} onValueChange={changeLanguage}>
-                      <SelectTrigger className="w-full">
-                        <Languages className="h-4 w-4 mr-2" />
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="en">
-                          <span className="flex items-center gap-2">
-                            <span className="text-base">🇺🇸</span>
-                            English
-                          </span>
-                        </SelectItem>
-                        <SelectItem value="ar">
-                          <span className="flex items-center gap-2">
-                            <span className="text-base">🇮🇶</span>
-                            العربية
-                          </span>
-                        </SelectItem>
-                        <SelectItem value="ku">
-                          <span className="flex items-center gap-2">
-                            <span className="text-base">🟨🔴🟩</span>
-                            کوردی
-                          </span>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
                 </div>
               </SheetContent>
             </Sheet>
