@@ -106,10 +106,19 @@ export default function PropertyMap({
             return;
           }
           
-          // Initialize map centered on Erbil, Kurdistan with custom zoom control position
+          // Calculate dynamic zoom limits based on viewport
+          const viewportHeight = window.innerHeight;
+          const minZoom = viewportHeight < 600 ? 10 : 8; // Higher min zoom for smaller screens
+          const maxZoom = 18;
+          
+          // Initialize map centered on Erbil, Kurdistan with zoom restrictions
           mapInstanceRef.current = L.map(mapRef.current, {
             zoomControl: false, // Disable default zoom control
-            attributionControl: false // Disable attribution control
+            attributionControl: false, // Disable attribution control
+            minZoom: minZoom, // Prevent excessive zoom out
+            maxZoom: maxZoom, // Prevent excessive zoom in
+            zoomSnap: 0.5, // Allow half-zoom levels for smoother experience
+            zoomDelta: 0.5 // Smoother zoom steps
           }).setView([36.1911, 44.0093], 13);
           
           
