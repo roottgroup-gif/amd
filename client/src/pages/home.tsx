@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/lib/i18n";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
 import type { Property, AISearchResponse, PropertyFilters } from "@/types";
-import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath } from "lucide-react";
+import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu } from "lucide-react";
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -124,16 +124,28 @@ export default function HomePage() {
                 {(mapProperties || []).length} properties
               </Badge>
             </div>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => setShowFilters(!showFilters)}
-              className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2"
-              data-testid="toggle-filters"
-            >
-              <span className="hidden sm:inline">{showFilters ? 'Hide' : 'Show'} Filters</span>
-              <span className="sm:hidden">{showFilters ? 'Hide' : 'Show'}</span>
-            </Button>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => {/* Add menu functionality here */}}
+                className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2"
+                data-testid="menu-button"
+              >
+                <Menu className="h-4 w-4" />
+                <span className="hidden sm:inline ml-1">Menu</span>
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setShowFilters(!showFilters)}
+                className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2"
+                data-testid="toggle-filters"
+              >
+                <span className="hidden sm:inline">{showFilters ? 'Hide' : 'Show'} Filters</span>
+                <span className="sm:hidden">{showFilters ? 'Hide' : 'Show'}</span>
+              </Button>
+            </div>
           </div>
 
           {/* AI Search Bar */}
