@@ -118,9 +118,9 @@ export default function HomePage() {
           <div className={`bg-white/20 dark:bg-black/20 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl max-h-full overflow-y-auto ${showFilters ? 'p-3 sm:p-4 md:p-6' : 'p-2 sm:p-3'}`}>
             <div className={`flex items-center justify-between ${showFilters ? 'mb-3 sm:mb-4' : 'mb-1 sm:mb-2'}`}>
             <div className="flex items-center gap-1 sm:gap-2">
-              <Filter className="h-4 w-4 sm:h-5 sm:w-5" style={{color: '#bdd479'}} />
+              <Filter className="h-4 w-4 sm:h-5 sm:w-5" style={{color: '#FF7800'}} />
               <h2 className="text-sm sm:text-base md:text-lg font-semibold text-black dark:text-white">Property Filters</h2>
-              <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs hidden sm:inline-flex" style={{backgroundColor: '#bdd479', color: '#000'}}>
+              <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs hidden sm:inline-flex" style={{backgroundColor: '#FF7800', color: '#000'}}>
                 {(mapProperties || []).length} properties
               </Badge>
             </div>
@@ -308,7 +308,7 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-1 sm:gap-2">
                 <span className="text-xs sm:text-sm font-medium text-black dark:text-gray-300">Active filters:</span>
                 {mapFilters.listingType && (
-                  <Badge variant="secondary" className="text-xs" style={{backgroundColor: '#bdd479', color: '#000'}}>
+                  <Badge variant="secondary" className="text-xs" style={{backgroundColor: '#FF7800', color: '#000'}}>
                     {mapFilters.listingType === 'sale' ? 'For Sale' : 'For Rent'}
                   </Badge>
                 )}
