@@ -100,7 +100,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="h-screen w-full bg-background relative">
+    <div className="map-page h-screen w-full bg-background relative">
       {/* Full Screen Map Section */}
       <section className="h-full w-full relative">
         <PropertyMap 

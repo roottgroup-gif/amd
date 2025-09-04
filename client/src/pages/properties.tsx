@@ -83,7 +83,7 @@ export default function PropertiesPage() {
   const displayProperties = searchResults ? searchResults.results : properties || [];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="properties-page min-h-screen bg-background">
       <Navigation />
       
       {/* Header */}
