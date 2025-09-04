@@ -245,7 +245,7 @@ export default function PropertyMap({
     const clusterIcon = L.divIcon({
       html: `
         <div class="cluster-marker" style="
-          background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+          background: linear-gradient(135deg, #bdd479 0%, #a3c766 100%);
           width: 50px;
           height: 50px;
           border-radius: 50%;
@@ -271,7 +271,7 @@ export default function PropertyMap({
     
     const popupContent = `
       <div class="cluster-popup" style="width: 320px; max-width: 95vw;">
-        <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: white; padding: 12px 16px; margin: -8px -8px 12px -8px; border-radius: 12px 12px 0 0; font-weight: 600; text-align: center;">
+        <div style="background: linear-gradient(135deg, #bdd479 0%, #a3c766 100%); color: white; padding: 12px 16px; margin: -8px -8px 12px -8px; border-radius: 12px 12px 0 0; font-weight: 600; text-align: center;">
           ${count} Properties in this area
         </div>
         <div style="max-height: 300px; overflow-y: auto;">
@@ -279,7 +279,7 @@ export default function PropertyMap({
             <div style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; cursor: pointer;" onclick="window.viewPropertyFromMap('${property.id}')">
               <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">${property.title}</div>
               <div style="font-size: 11px; color: #666; margin-bottom: 4px;">${property.address}</div>
-              <div style="font-weight: 700; color: #2563eb; font-size: 12px;">
+              <div style="font-weight: 700; color: #bdd479; font-size: 12px;">
                 ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
               </div>
             </div>
@@ -355,14 +355,14 @@ export default function PropertyMap({
             ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
           </p>
           <div class="popup-details">
-            ${property.bedrooms ? `<span><i class="fas fa-bed" style="color: #3b82f6; margin-right: 4px;"></i>${property.bedrooms} beds</span>` : ''} 
-            ${property.bathrooms ? `<span><i class="fas fa-bath" style="color: #3b82f6; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
-            ${property.area ? `<span><i class="fas fa-ruler-combined" style="color: #3b82f6; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
+            ${property.bedrooms ? `<span><i class="fas fa-bed" style="color: #bdd479; margin-right: 4px;"></i>${property.bedrooms} beds</span>` : ''} 
+            ${property.bathrooms ? `<span><i class="fas fa-bath" style="color: #bdd479; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
+            ${property.area ? `<span><i class="fas fa-ruler-combined" style="color: #bdd479; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
           </div>
           <button class="popup-button" 
                   onclick="window.viewPropertyFromMap('${property.id}')"
-                  onmouseover="this.style.background='#1d4ed8'"
-                  onmouseout="this.style.background='#2563eb'">
+                  onmouseover="this.style.background='#a3c766'"
+                  onmouseout="this.style.background='#bdd479'">
             View Property
           </button>
         </div>
