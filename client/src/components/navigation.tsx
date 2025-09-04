@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useTranslation } from "@/lib/i18n";
-import { Menu, Home, Building2, Users, Info } from "lucide-react";
+import { Menu, Home, Building2, Users, Info, Globe, Languages } from "lucide-react";
 
 export default function Navigation() {
   const [location] = useLocation();
@@ -60,13 +60,29 @@ export default function Navigation() {
           {/* Language Selector */}
           <div className="hidden md:block">
             <Select value={language} onValueChange={changeLanguage}>
-              <SelectTrigger className="w-24">
+              <SelectTrigger className="w-32">
+                <Globe className="h-4 w-4 mr-1" />
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="en">EN</SelectItem>
-                <SelectItem value="ar">AR</SelectItem>
-                <SelectItem value="ku">KU</SelectItem>
+                <SelectItem value="en">
+                  <span className="flex items-center gap-2">
+                    <span className="text-base">🇺🇸</span>
+                    EN
+                  </span>
+                </SelectItem>
+                <SelectItem value="ar">
+                  <span className="flex items-center gap-2">
+                    <span className="text-base">🇮🇶</span>
+                    AR
+                  </span>
+                </SelectItem>
+                <SelectItem value="ku">
+                  <span className="flex items-center gap-2">
+                    <span className="text-base">🟨🔴🟩</span>
+                    KU
+                  </span>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -103,12 +119,28 @@ export default function Navigation() {
                   <div className="pt-4 border-t border-gray-200">
                     <Select value={language} onValueChange={changeLanguage}>
                       <SelectTrigger className="w-full">
+                        <Languages className="h-4 w-4 mr-2" />
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="en">English</SelectItem>
-                        <SelectItem value="ar">العربية</SelectItem>
-                        <SelectItem value="ku">کوردی</SelectItem>
+                        <SelectItem value="en">
+                          <span className="flex items-center gap-2">
+                            <span className="text-base">🇺🇸</span>
+                            English
+                          </span>
+                        </SelectItem>
+                        <SelectItem value="ar">
+                          <span className="flex items-center gap-2">
+                            <span className="text-base">🇮🇶</span>
+                            العربية
+                          </span>
+                        </SelectItem>
+                        <SelectItem value="ku">
+                          <span className="flex items-center gap-2">
+                            <span className="text-base">🟨🔴🟩</span>
+                            کوردی
+                          </span>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

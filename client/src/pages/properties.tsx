@@ -3,6 +3,7 @@ import Navigation from "@/components/navigation";
 import PropertyCard from "@/components/property-card";
 import SearchBar from "@/components/search-bar";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
