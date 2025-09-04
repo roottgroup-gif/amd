@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Property, PropertyFilters } from "@/types";
-import { Search, MapPin } from "lucide-react";
+import { Search, MapPin, Navigation } from "lucide-react";
 
 interface PropertyMapProps {
   properties: Property[];
@@ -27,6 +27,7 @@ export default function PropertyMap({
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
   const currentPropertiesRef = useRef<Property[]>([]);
+  const [isLocating, setIsLocating] = useState(false);
   
   // Local state for filters
   const [localFilters, setLocalFilters] = useState<PropertyFilters>(filters || {});
@@ -575,12 +576,101 @@ export default function PropertyMap({
     onFilterChange?.(newFilters);
   };
 
+  // Geolocation function
+  const handleGetMyLocation = () => {
+    if (!mapInstanceRef.current) return;
+    
+    setIsLocating(true);
+    
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const L = (window as any).L;
+          
+          if (mapInstanceRef.current && L) {
+            // Zoom to user's location
+            mapInstanceRef.current.setView([latitude, longitude], 15);
+            
+            // Add a marker for user's location
+            const userLocationIcon = L.divIcon({
+              html: `
+                <div style="
+                  background: #4285F4;
+                  width: 20px;
+                  height: 20px;
+                  border-radius: 50%;
+                  border: 3px solid white;
+                  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+                  position: relative;
+                ">
+                  <div style="
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 8px;
+                    height: 8px;
+                    background: white;
+                    border-radius: 50%;
+                  "></div>
+                </div>
+              `,
+              className: 'user-location-marker',
+              iconSize: [20, 20],
+              iconAnchor: [10, 10]
+            });
+            
+            // Remove any existing user location markers
+            markersRef.current.forEach(marker => {
+              if (marker.options && marker.options.icon && marker.options.icon.options.className === 'user-location-marker') {
+                mapInstanceRef.current.removeLayer(marker);
+              }
+            });
+            
+            const userMarker = L.marker([latitude, longitude], { icon: userLocationIcon }).addTo(mapInstanceRef.current);
+            userMarker.bindPopup('📍 Your Current Location');
+            markersRef.current.push(userMarker);
+          }
+          
+          setIsLocating(false);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          setIsLocating(false);
+          alert('Unable to get your location. Please check your browser permissions.');
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000
+        }
+      );
+    } else {
+      setIsLocating(false);
+      alert('Geolocation is not supported by your browser.');
+    }
+  };
+
   return (
     <div className={className}>
       <div className="relative">
         {/* Map Container - Full Size */}
         <div className="relative h-screen" data-testid="property-map">
           <div ref={mapRef} className="w-full h-full" />
+          
+          {/* Get My Location Button */}
+          <Button
+            onClick={handleGetMyLocation}
+            disabled={isLocating}
+            className="absolute top-4 right-4 z-[1000] bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-white/30 dark:border-white/10 shadow-2xl hover:bg-white dark:hover:bg-black/95 text-black dark:text-white p-3"
+            data-testid="get-location-button"
+          >
+            <Navigation 
+              className={`h-5 w-5 ${isLocating ? 'animate-spin' : ''}`} 
+              style={{color: '#FF7800'}} 
+            />
+          </Button>
           
           
           {/* Legend Overlay on Map */}
