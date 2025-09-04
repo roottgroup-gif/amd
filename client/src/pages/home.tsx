@@ -128,22 +128,22 @@ export default function HomePage() {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                onClick={() => {/* Add menu functionality here */}}
-                className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2"
-                data-testid="menu-button"
-              >
-                <Menu className="h-4 w-4" />
-                <span className="hidden sm:inline ml-1">Menu</span>
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
                 onClick={() => setShowFilters(!showFilters)}
                 className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2"
                 data-testid="toggle-filters"
               >
                 <span className="hidden sm:inline">{showFilters ? 'Hide' : 'Show'} Filters</span>
                 <span className="sm:hidden">{showFilters ? 'Hide' : 'Show'}</span>
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => {/* Add menu functionality here */}}
+                className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2"
+                data-testid="menu-button"
+              >
+                <Menu className="h-4 w-4" />
+                <span className="hidden sm:inline ml-1">Menu</span>
               </Button>
             </div>
           </div>
