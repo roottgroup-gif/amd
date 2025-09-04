@@ -26,6 +26,7 @@ export default function HomePage() {
   const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [cityInput, setCityInput] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load properties for the map with current filters
@@ -111,6 +112,7 @@ export default function HomePage() {
           onPropertyClick={(property) => {
             window.location.href = `/property/${property.id}`;
           }}
+          onPropertySelect={setSelectedProperty}
           className="h-full w-full"
         />
         
@@ -385,6 +387,26 @@ export default function HomePage() {
           </div>
         </div>
         
+        {/* Selected Property Card */}
+        {selectedProperty && (
+          <div className="absolute top-4 right-4 z-50 w-80 max-w-[90vw]">
+            <div className="bg-white/95 dark:bg-black/95 backdrop-blur-xl rounded-xl border border-white/30 dark:border-white/10 shadow-2xl p-2">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-sm font-semibold text-black dark:text-white">Property Details</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedProperty(null)}
+                  className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white h-6 w-6 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <PropertyCard property={selectedProperty} className="shadow-none border-0" />
+            </div>
+          </div>
+        )}
+
         {/* Search Results inside Map */}
         {searchResults && (
           <div className="absolute top-4 left-4 right-4 z-40 mt-64 max-h-[calc(100vh-300px)] max-h-[calc(100dvh-300px)] overflow-hidden">

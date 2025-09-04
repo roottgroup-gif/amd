@@ -11,6 +11,7 @@ interface PropertyMapProps {
   filters?: PropertyFilters;
   onFilterChange?: (filters: PropertyFilters) => void;
   onPropertyClick?: (property: Property) => void;
+  onPropertySelect?: (property: Property) => void;
   className?: string;
 }
 
@@ -19,6 +20,7 @@ export default function PropertyMap({
   filters = {}, 
   onFilterChange, 
   onPropertyClick,
+  onPropertySelect,
   className 
 }: PropertyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -383,6 +385,13 @@ export default function PropertyMap({
           animate: true,
           duration: 0.8
         });
+        
+        // Show property card after zoom animation completes
+        if (onPropertySelect) {
+          setTimeout(() => {
+            onPropertySelect(property);
+          }, 800); // Match the zoom animation duration
+        }
       }
     });
 
