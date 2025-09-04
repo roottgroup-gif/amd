@@ -377,21 +377,11 @@ export default function PropertyMap({
       className: 'custom-popup'
     });
 
-    // Add click event to zoom in on the property
+    // Add click event without zoom behavior
     marker.on('click', () => {
-      if (mapInstanceRef.current) {
-        // Zoom to level 16 (closer view) and center on the property
-        mapInstanceRef.current.setView([lat, lng], 16, {
-          animate: true,
-          duration: 0.8
-        });
-        
-        // Trigger callback for zoom action
-        if (onPropertySelect) {
-          setTimeout(() => {
-            onPropertySelect(property);
-          }, 800); // Match the zoom animation duration
-        }
+      // Trigger callback without zoom
+      if (onPropertySelect) {
+        onPropertySelect(property);
       }
     });
 
