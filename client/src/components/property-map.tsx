@@ -463,7 +463,7 @@ export default function PropertyMap({
                 </div>
                 <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
                   <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:scale-105">
-                    <i className="fas fa-home text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#bdd479'}}></i>
+                    <i className="fas fa-home text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
                     <span className="text-sm text-black font-medium drop-shadow-lg">Houses</span>
                   </div>
                   <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:scale-105">
@@ -485,14 +485,14 @@ export default function PropertyMap({
               <div className="text-center p-8 rounded-2xl bg-white/20 backdrop-blur-md shadow-2xl border border-white/30">
                 <div className="relative">
                   <MapPin className="mx-auto h-16 w-16 mb-6 animate-bounce drop-shadow-lg" style={{color: '#FF7800'}} />
-                  <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full animate-ping opacity-75" style={{backgroundColor: '#bdd479'}}></div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full animate-ping opacity-75" style={{backgroundColor: '#FF7800'}}></div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">Loading Interactive Map</h3>
                 <p className="text-gray-600 mb-4">Discovering amazing properties for you...</p>
                 <div className="flex items-center justify-center space-x-1 mb-4">
-                  <div className="w-2 h-2 rounded-full animate-pulse" style={{backgroundColor: '#bdd479'}}></div>
-                  <div className="w-2 h-2 rounded-full animate-pulse" style={{animationDelay: '0.2s', backgroundColor: '#bdd479'}}></div>
-                  <div className="w-2 h-2 rounded-full animate-pulse" style={{animationDelay: '0.4s', backgroundColor: '#bdd479'}}></div>
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{backgroundColor: '#FF7800'}}></div>
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{animationDelay: '0.2s', backgroundColor: '#FF7800'}}></div>
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{animationDelay: '0.4s', backgroundColor: '#FF7800'}}></div>
                 </div>
                 <p className="text-sm text-gray-500 font-medium">🗺️ Powered by OpenStreetMap & Leaflet.js</p>
               </div>
