@@ -39,6 +39,45 @@ export default function PropertyMap({
   // Properties are already filtered from the API, so we use them directly
   // The filtering happens on the server side when onFilterChange is called
 
+  // Add global slider function for popup
+  useEffect(() => {
+    // Define global function for changing slides in map popups
+    (window as any).changeSlide = (popupId: string, direction: number) => {
+      const popup = document.getElementById(popupId);
+      if (!popup) return;
+      
+      const slides = popup.querySelectorAll('.popup-slide');
+      const counter = popup.querySelector('.slide-counter');
+      if (!slides.length) return;
+      
+      // Find current active slide
+      let currentIndex = 0;
+      slides.forEach((slide, index) => {
+        if ((slide as HTMLElement).style.opacity === '1') {
+          currentIndex = index;
+        }
+      });
+      
+      // Calculate next index
+      let nextIndex = currentIndex + direction;
+      if (nextIndex >= slides.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = slides.length - 1;
+      
+      // Hide all slides
+      slides.forEach((slide) => {
+        (slide as HTMLElement).style.opacity = '0';
+      });
+      
+      // Show next slide
+      (slides[nextIndex] as HTMLElement).style.opacity = '1';
+      
+      // Update counter
+      if (counter) {
+        counter.textContent = (nextIndex + 1).toString();
+      }
+    };
+  }, []);
+
   // Initialize map
   useEffect(() => {
     if (!mapRef.current) return;
@@ -340,14 +379,90 @@ export default function PropertyMap({
     const customIcon = getPropertyIcon(property.type, property.listingType, property.isFeatured);
     const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstanceRef.current);
 
-    // Add popup
-    const firstImage = property.images && property.images.length > 0 ? property.images[0] : '';
+    // Add popup with image slider
+    const images = property.images && property.images.length > 0 ? property.images : ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'];
+    const hasMultipleImages = images.length > 1;
+    const popupId = `popup-${property.id}`;
+    
     const popupContent = `
-      <div class="property-popup responsive-popup">
-        ${firstImage ? `
-          <div class="popup-image">
-            <img src="${firstImage}" alt="${property.title}" 
-                 onerror="this.style.display='none'; this.parentNode.style.height='0'; this.parentNode.style.marginBottom='0';" />
+      <div class="property-popup responsive-popup" id="${popupId}">
+        ${images.length > 0 ? `
+          <div class="popup-image-container" style="position: relative;">
+            <div class="popup-image-slider" style="position: relative; height: 150px; overflow: hidden;">
+              ${images.map((img, index) => `
+                <img src="${img}" alt="${property.title} - Image ${index + 1}" 
+                     class="popup-slide" 
+                     style="
+                       width: 100%; 
+                       height: 150px; 
+                       object-fit: cover; 
+                       position: absolute; 
+                       top: 0; 
+                       left: 0;
+                       opacity: ${index === 0 ? '1' : '0'};
+                       transition: opacity 0.3s ease;
+                     "
+                     data-slide-index="${index}"
+                     onerror="this.style.display='none';" />
+              `).join('')}
+            </div>
+            ${hasMultipleImages ? `
+              <button onclick="changeSlide('${popupId}', -1)" 
+                      style="
+                        position: absolute; 
+                        left: 8px; 
+                        top: 50%; 
+                        transform: translateY(-50%);
+                        background: rgba(0,0,0,0.5); 
+                        color: white; 
+                        border: none; 
+                        border-radius: 50%; 
+                        width: 30px; 
+                        height: 30px; 
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 14px;
+                        z-index: 1000;
+                      "
+                      onmouseover="this.style.background='rgba(0,0,0,0.7)'"
+                      onmouseout="this.style.background='rgba(0,0,0,0.5)'">‹</button>
+              <button onclick="changeSlide('${popupId}', 1)" 
+                      style="
+                        position: absolute; 
+                        right: 8px; 
+                        top: 50%; 
+                        transform: translateY(-50%);
+                        background: rgba(0,0,0,0.5); 
+                        color: white; 
+                        border: none; 
+                        border-radius: 50%; 
+                        width: 30px; 
+                        height: 30px; 
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 14px;
+                        z-index: 1000;
+                      "
+                      onmouseover="this.style.background='rgba(0,0,0,0.7)'"
+                      onmouseout="this.style.background='rgba(0,0,0,0.5)'">›</button>
+              <div style="
+                position: absolute; 
+                bottom: 8px; 
+                right: 8px; 
+                background: rgba(0,0,0,0.7); 
+                color: white; 
+                padding: 4px 8px; 
+                border-radius: 12px; 
+                font-size: 12px;
+                z-index: 1000;
+              ">
+                <span class="slide-counter">1</span> / ${images.length}
+              </div>
+            ` : ''}
           </div>
         ` : ''}
         <div class="popup-content">
