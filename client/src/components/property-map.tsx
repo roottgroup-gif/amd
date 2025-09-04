@@ -109,7 +109,7 @@ export default function PropertyMap({
           
           // Calculate dynamic zoom limits based on viewport
           const viewportHeight = window.innerHeight;
-          const minZoom = viewportHeight < 600 ? 16 : 14; // Restrict zoom out to focus on local area
+          const minZoom = viewportHeight < 600 ? 6 : 4; // Allow more zoom out for better area coverage
           const maxZoom = 18;
           
           // Initialize map centered on Erbil, Kurdistan with zoom restrictions
