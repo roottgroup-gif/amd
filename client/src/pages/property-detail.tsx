@@ -160,7 +160,7 @@ export default function PropertyDetailPage() {
         </Link>
 
         {/* Image Gallery */}
-        <Card className="overflow-hidden mb-8">
+        <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 overflow-hidden mb-8">
           <div className="relative h-64 md:h-96">
             <img 
               src={images[currentImageIndex]}
@@ -288,7 +288,7 @@ export default function PropertyDetailPage() {
             </div>
 
             {/* Property Features */}
-            <Card className="mb-8">
+            <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 mb-8">
               <CardContent className="p-6">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   {property.bedrooms && (
@@ -323,7 +323,7 @@ export default function PropertyDetailPage() {
 
             {/* Description */}
             {property.description && (
-              <Card className="mb-8">
+              <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 mb-8">
                 <CardContent className="p-6">
                   <h3 className="text-lg font-semibold mb-4">Description</h3>
                   <p className="text-muted-foreground leading-relaxed" data-testid="property-description">
@@ -334,7 +334,7 @@ export default function PropertyDetailPage() {
             )}
 
             {/* Amenities & Features */}
-            <Card className="mb-8">
+            <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 mb-8">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Features & Amenities</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -406,7 +406,7 @@ export default function PropertyDetailPage() {
             </Card>
 
             {/* Property Stats */}
-            <Card>
+            <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Property Information</h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
