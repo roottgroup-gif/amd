@@ -139,8 +139,6 @@ export default function HomePage() {
                 data-testid="toggle-filters"
               >
                 {showFilters ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
-                <span className="hidden sm:inline ml-1">{showFilters ? 'Hide' : 'Show'} Filters</span>
-                <span className="sm:hidden ml-1"></span>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
