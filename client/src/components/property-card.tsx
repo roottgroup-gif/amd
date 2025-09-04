@@ -69,7 +69,7 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
 
   return (
     <Card 
-      className={`property-card bg-card rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${className}`}
+      className={`property-card bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${className}`}
       data-testid={`property-card-${property.id}`}
     >
       <div className="relative">
