@@ -23,7 +23,7 @@ export default function HomePage() {
   const [mapFilters, setMapFilters] = useState<PropertyFilters>({
     limit: 100 // Get more properties for the map
   });
-  const [priceRange, setPriceRange] = useState([0, 1000000]);
+  const [priceRange, setPriceRange] = useState([1, 10000000]);
   const [cityInput, setCityInput] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
@@ -327,20 +327,20 @@ export default function HomePage() {
                 <label className="text-xs sm:text-sm font-medium text-black dark:text-gray-300 flex items-center gap-1 flex-wrap">
                   <DollarSign className="h-3 w-3 sm:h-4 sm:w-4" />
                   <span className="hidden sm:inline">Price Range: ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}</span>
-                  <span className="sm:hidden">Price: ${priceRange[0] < 1000 ? priceRange[0] : Math.round(priceRange[0]/1000) + 'K'} - ${priceRange[1] < 1000 ? priceRange[1] : Math.round(priceRange[1]/1000) + 'K'}</span>
+                  <span className="sm:hidden">Price: ${priceRange[0] < 1000 ? priceRange[0] : priceRange[0] < 1000000 ? Math.round(priceRange[0]/1000) + 'K' : Math.round(priceRange[0]/1000000) + 'M'} - ${priceRange[1] < 1000 ? priceRange[1] : priceRange[1] < 1000000 ? Math.round(priceRange[1]/1000) + 'K' : Math.round(priceRange[1]/1000000) + 'M'}</span>
                 </label>
                 <Slider
                   value={priceRange}
                   onValueChange={handlePriceRangeChange}
-                  max={1000000}
-                  min={0}
-                  step={10000}
+                  max={10000000}
+                  min={1}
+                  step={50000}
                   className="w-full"
                   data-testid="price-range-slider"
                 />
                 <div className="flex justify-between text-xs text-black dark:text-gray-400">
-                  <span>$0</span>
-                  <span>$1M+</span>
+                  <span>$1</span>
+                  <span>$10M+</span>
                 </div>
               </div>
             </div>
@@ -378,7 +378,7 @@ export default function HomePage() {
                 )}
                 {(mapFilters.minPrice || mapFilters.maxPrice) && (
                   <Badge variant="secondary" className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs">
-                    ${mapFilters.minPrice ? mapFilters.minPrice.toLocaleString() : '0'} - ${mapFilters.maxPrice ? mapFilters.maxPrice.toLocaleString() : '1M+'}
+                    ${mapFilters.minPrice ? mapFilters.minPrice.toLocaleString() : '1'} - ${mapFilters.maxPrice ? mapFilters.maxPrice.toLocaleString() : '10M+'}
                   </Badge>
                 )}
               </div>
