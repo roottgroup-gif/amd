@@ -467,11 +467,11 @@ export default function PropertyMap({
                     <span className="text-sm text-black font-medium drop-shadow-lg">Houses</span>
                   </div>
                   <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:scale-105">
-                    <i className="fas fa-building text-purple-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
+                    <i className="fas fa-building text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
                     <span className="text-sm text-black font-medium drop-shadow-lg">Apartments</span>
                   </div>
                   <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:scale-105">
-                    <i className="fas fa-map-marked-alt text-orange-500 text-sm sm:text-base flex-shrink-0 drop-shadow-lg"></i>
+                    <i className="fas fa-map-marked-alt text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
                     <span className="text-sm text-black font-medium drop-shadow-lg">Land</span>
                   </div>
                 </div>
