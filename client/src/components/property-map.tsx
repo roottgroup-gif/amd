@@ -112,19 +112,33 @@ export default function PropertyMap({
           const minZoom = viewportHeight < 600 ? 6 : 4; // Allow more zoom out for better area coverage
           const maxZoom = 18;
           
-          // Initialize map centered on Erbil, Kurdistan with zoom restrictions
+          // Initialize map with smooth animations and transitions
           mapInstanceRef.current = L.map(mapRef.current, {
             zoomControl: false, // Disable default zoom control
             attributionControl: false, // Disable attribution control
             minZoom: minZoom, // Prevent excessive zoom out
             maxZoom: maxZoom, // Prevent excessive zoom in
-            zoomSnap: 0.5, // Allow half-zoom levels for smoother experience
-            zoomDelta: 0.5 // Smoother zoom steps
+            zoomSnap: 0.25, // Even smoother zoom levels
+            zoomDelta: 0.5, // Smoother zoom steps
+            zoomAnimation: true, // Enable zoom animation
+            fadeAnimation: true, // Enable tile fade animation
+            markerZoomAnimation: true, // Enable marker zoom animation
+            bounceAtZoomLimits: false, // Smoother zoom limit handling
+            worldCopyJump: false, // Smoother world wrap
+            inertia: true, // Enable kinetic dragging
+            inertiaDeceleration: 2400, // Smooth momentum deceleration
+            maxBoundsViscosity: 0.7 // Smooth boundary resistance
           }).setView([36.1911, 44.0093], 13);
           
           
-          // Add OpenStreetMap tiles
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstanceRef.current);
+          // Add OpenStreetMap tiles with smooth loading transitions
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            fadeAnimation: true,
+            zoomAnimation: true,
+            keepBuffer: 4, // Keep more tiles for smoother experience
+            updateWhenZooming: false, // Better performance during zoom
+            updateWhenIdle: true // Update after pan/zoom ends
+          }).addTo(mapInstanceRef.current);
 
           // Add zoom event listener to refresh markers on zoom
           mapInstanceRef.current.on('zoomend', () => {
@@ -387,7 +401,25 @@ export default function PropertyMap({
     };
 
     const customIcon = getPropertyIcon(property.type, property.listingType, property.isFeatured);
-    const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstanceRef.current);
+    const marker = L.marker([lat, lng], { icon: customIcon });
+    
+    // Add smooth entrance animation
+    marker.on('add', () => {
+      const markerElement = marker.getElement();
+      if (markerElement) {
+        markerElement.style.opacity = '0';
+        markerElement.style.transform = 'scale(0.5) translateY(20px)';
+        markerElement.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        
+        // Animate in after a brief delay
+        setTimeout(() => {
+          markerElement.style.opacity = '1';
+          markerElement.style.transform = 'scale(1) translateY(0px)';
+        }, 50);
+      }
+    });
+    
+    marker.addTo(mapInstanceRef.current);
 
     // Add popup with image slider
     const images = property.images && property.images.length > 0 ? property.images : ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800'];
@@ -399,7 +431,7 @@ export default function PropertyMap({
         ${images.length > 0 ? `
           <div class="popup-image-container" style="position: relative;">
             <div class="popup-image-slider" style="position: relative; height: 150px; overflow: hidden;">
-              ${images.map((img, index) => `
+              ${images.map((img: string, index: number) => `
                 <img src="${img}" alt="${property.title} - Image ${index + 1}" 
                      class="popup-slide" 
                      style="
@@ -561,10 +593,13 @@ export default function PropertyMap({
 
     const L = (window as any).L;
 
-    // Always show individual markers for all properties
-    propertiesToShow.forEach(property => {
+    // Show markers with staggered entrance animations
+    propertiesToShow.forEach((property, index) => {
       if (property.latitude && property.longitude) {
-        createSingleMarker(property, L);
+        // Add staggered delay for smooth appearance
+        setTimeout(() => {
+          createSingleMarker(property, L);
+        }, index * 80); // 80ms delay between each marker for smooth cascade effect
       }
     });
   };
@@ -617,11 +652,12 @@ export default function PropertyMap({
           const L = (window as any).L;
           
           if (mapInstanceRef.current && L) {
-            // Smoothly fly to user's location with animation
+            // Smoothly fly to user's location with enhanced animation
             mapInstanceRef.current.flyTo([latitude, longitude], 15, {
               animate: true,
-              duration: 2.5, // 2.5 seconds smooth animation
-              easeLinearity: 0.25
+              duration: 2.8, // Slightly longer for smoother feel
+              easeLinearity: 0.15, // More curved easing
+              noMoveStart: false // Fire movestart event for smoother experience
             });
             
             // Add a marker for user's location
@@ -722,7 +758,7 @@ export default function PropertyMap({
           <div className="fixed bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
             <div className="p-4 md:p-5 transition-all duration-300">
               <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-sm">
-                <div className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                <div className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-200/30 transform-gpu cursor-pointer ${
                       localFilters.listingType === 'sale' 
                         ? 'bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-600' 
                         : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
@@ -731,7 +767,7 @@ export default function PropertyMap({
                   <div className={`w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === 'sale' ? 'animate-pulse' : ''}`}></div>
                   <span className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === 'sale' ? 'text-red-700 dark:text-red-300' : 'text-black dark:text-white'}`}>🏷️ For Sale</span>
                 </div>
-                <div className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                <div className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-200/30 transform-gpu cursor-pointer ${
                       localFilters.listingType === 'rent' 
                         ? 'bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-600' 
                         : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
@@ -741,7 +777,7 @@ export default function PropertyMap({
                   <span className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === 'rent' ? 'text-green-700 dark:text-green-300' : 'text-black dark:text-white'}`}>🔑 For Rent</span>
                 </div>
                 <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
-                  <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                  <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-200/30 transform-gpu cursor-pointer ${
                         localFilters.type === 'house' 
                           ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
                           : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
@@ -750,7 +786,7 @@ export default function PropertyMap({
                     <i className="fas fa-home text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
                     <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'house' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Houses</span>
                   </div>
-                  <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                  <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-200/30 transform-gpu cursor-pointer ${
                         localFilters.type === 'apartment' 
                           ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
                           : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
@@ -759,7 +795,7 @@ export default function PropertyMap({
                     <i className="fas fa-building text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
                     <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'apartment' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Apartments</span>
                   </div>
-                  <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                  <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-200/30 transform-gpu cursor-pointer ${
                         localFilters.type === 'land' 
                           ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
                           : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
