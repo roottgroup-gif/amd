@@ -72,15 +72,6 @@ export default function SearchBar({ onResults, placeholder, className }: SearchB
               data-testid="ai-search-input"
             />
           </div>
-          <Button 
-            onClick={handleSearch}
-            disabled={aiSearch.isPending || !query.trim()}
-            className="px-6 py-3"
-            data-testid="search-button"
-          >
-            <Search className="mr-2 h-4 w-4" />
-            {aiSearch.isPending ? t('common.loading') : t('hero.search')}
-          </Button>
         </div>
         
         {/* AI Search Suggestions */}
