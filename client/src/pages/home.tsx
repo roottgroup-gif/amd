@@ -153,7 +153,7 @@ export default function HomePage() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  className="w-48 bg-white/95 dark:bg-black/95 backdrop-blur-xl border-white/30 dark:border-white/10 z-[10001]"
+                  className="w-48 bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 z-[10001]"
                 >
                   <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
                     <User className="h-4 w-4" />
