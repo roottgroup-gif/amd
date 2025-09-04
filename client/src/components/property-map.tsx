@@ -681,7 +681,7 @@ export default function PropertyMap({
           <Button
             onClick={handleGetMyLocation}
             disabled={isLocating}
-            className="fixed bottom-20 right-6 z-[1001] bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-white/30 dark:border-white/10 shadow-2xl hover:bg-white dark:hover:bg-black/95 text-black dark:text-white p-3 rounded-full"
+            className="fixed bottom-20 right-6 z-[1001] bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-white/30 dark:border-white/10 shadow-lg hover:shadow-xl hover:bg-white dark:hover:bg-black/95 text-black dark:text-white p-3 rounded-full transition-all duration-300"
             data-testid="footer-location-button"
           >
             <Navigation 
