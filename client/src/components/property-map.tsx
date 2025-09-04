@@ -71,59 +71,6 @@ export default function PropertyMap({
             attributionControl: false // Disable attribution control
           }).setView([36.1911, 44.0093], 13);
           
-          // Add styled zoom control at bottom right
-          const zoomControl = L.control.zoom({
-            position: 'bottomright'
-          }).addTo(mapInstanceRef.current);
-          
-          // Style the zoom controls with blur background and circular design
-          setTimeout(() => {
-            const zoomButtons = document.querySelectorAll('.leaflet-control-zoom a');
-            zoomButtons.forEach((button: any) => {
-              button.style.cssText = `
-                background: rgba(255, 255, 255, 0.15) !important;
-                backdrop-filter: blur(12px) !important;
-                border: 1px solid rgba(255, 255, 255, 0.2) !important;
-                border-radius: 50% !important;
-                width: 40px !important;
-                height: 40px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                color: #1e40af !important;
-                font-weight: bold !important;
-                font-size: 18px !important;
-                text-decoration: none !important;
-                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 8px 32px rgba(31, 38, 135, 0.15) !important;
-                transition: all 0.3s ease !important;
-                margin: 2px !important;
-              `;
-              
-              // Add hover effects
-              button.addEventListener('mouseenter', () => {
-                button.style.background = 'rgba(255, 255, 255, 0.25) !important';
-                button.style.transform = 'scale(1.1) !important';
-                button.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 12px 40px rgba(31, 38, 135, 0.25) !important';
-              });
-              
-              button.addEventListener('mouseleave', () => {
-                button.style.background = 'rgba(255, 255, 255, 0.15) !important';
-                button.style.transform = 'scale(1) !important';
-                button.style.boxShadow = 'inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 8px 32px rgba(31, 38, 135, 0.15) !important';
-              });
-            });
-            
-            // Style the zoom control container
-            const zoomContainer = document.querySelector('.leaflet-control-zoom');
-            if (zoomContainer) {
-              (zoomContainer as any).style.cssText = `
-                border: none !important;
-                border-radius: 25px !important;
-                box-shadow: none !important;
-                background: transparent !important;
-              `;
-            }
-          }, 100);
           
           // Add OpenStreetMap tiles
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstanceRef.current);
