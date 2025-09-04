@@ -506,13 +506,15 @@ export default function PropertyMap({
           <div className="fixed bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
             <div className="p-4 md:p-5 transition-all duration-300">
               <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-sm">
-                <div className="flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:scale-105">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg animate-pulse"></div>
-                  <span className="font-semibold text-sm text-black drop-shadow-lg">🏷️ For Sale</span>
-                </div>
-                <div className="flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:scale-105">
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0 shadow-lg animate-pulse"></div>
-                  <span className="font-semibold text-sm text-black drop-shadow-lg">🔑 For Rent</span>
+                <div className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:scale-105">
+                    <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg animate-pulse"></div>
+                    <span className="font-semibold text-sm text-black drop-shadow-lg">🏷️ For Sale</span>
+                  </div>
+                  <div className="flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:scale-105">
+                    <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0 shadow-lg animate-pulse"></div>
+                    <span className="font-semibold text-sm text-black drop-shadow-lg">🔑 For Rent</span>
+                  </div>
                 </div>
                 <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
                   <div className="flex items-center space-x-2 p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:scale-105">
