@@ -114,13 +114,13 @@ export default function HomePage() {
         />
         
         {/* Absolute Blurred Filter Section inside Map */}
-        <div className="absolute top-4 left-4 right-4 z-[9999]" style={{position: 'absolute'}}>
-          <div className={`bg-white/20 dark:bg-black/20 backdrop-blur-xl rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl ${showFilters ? 'p-6' : 'p-3'}`}>
-            <div className={`flex items-center justify-between ${showFilters ? 'mb-4' : 'mb-2'}`}>
-            <div className="flex items-center gap-2">
-              <Filter className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Property Filters</h2>
-              <Badge variant="secondary" className="ml-2">
+        <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-[9999]" style={{position: 'absolute'}}>
+          <div className={`bg-white/20 dark:bg-black/20 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/30 dark:border-white/10 shadow-2xl ${showFilters ? 'p-3 sm:p-4 md:p-6' : 'p-2 sm:p-3'}`}>
+            <div className={`flex items-center justify-between ${showFilters ? 'mb-3 sm:mb-4' : 'mb-1 sm:mb-2'}`}>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-400" />
+              <h2 className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 dark:text-white">Property Filters</h2>
+              <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs hidden sm:inline-flex">
                 {(mapProperties || []).length} properties
               </Badge>
             </div>
@@ -128,16 +128,17 @@ export default function HomePage() {
               variant="ghost" 
               size="sm" 
               onClick={() => setShowFilters(!showFilters)}
-              className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white"
+              className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2"
               data-testid="toggle-filters"
             >
-              {showFilters ? 'Hide' : 'Show'} Filters
+              <span className="hidden sm:inline">{showFilters ? 'Hide' : 'Show'} Filters</span>
+              <span className="sm:hidden">{showFilters ? 'Hide' : 'Show'}</span>
             </Button>
           </div>
 
           {/* AI Search Bar */}
           {showFilters && (
-            <div className="mb-4">
+            <div className="mb-3 sm:mb-4">
               <SearchBar 
                 onResults={handleSearchResults}
                 placeholder="Ask AI: 'Find me a 3-bedroom villa under $300k in Erbil'"
@@ -148,12 +149,13 @@ export default function HomePage() {
 
           {/* Filter Controls */}
           {showFilters && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 pt-4 border-t border-white/20 dark:border-white/10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 pt-3 sm:pt-4 border-t border-white/20 dark:border-white/10">
               {/* Listing Type */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                  <Tag className="h-4 w-4" />
-                  Listing Type
+                <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                  <Tag className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Listing Type</span>
+                  <span className="sm:hidden">Type</span>
                 </label>
                 <Select 
                   value={mapFilters.listingType || ''} 
@@ -172,9 +174,10 @@ export default function HomePage() {
 
               {/* Property Type */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                  <Home className="h-4 w-4" />
-                  Property Type
+                <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                  <Home className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Property Type</span>
+                  <span className="sm:hidden">Property</span>
                 </label>
                 <Select 
                   value={mapFilters.type || ''} 
@@ -195,9 +198,10 @@ export default function HomePage() {
 
               {/* Bedrooms */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                  <Bed className="h-4 w-4" />
-                  Bedrooms
+                <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                  <Bed className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Bedrooms</span>
+                  <span className="sm:hidden">Beds</span>
                 </label>
                 <Select 
                   value={mapFilters.bedrooms?.toString() || ''} 
@@ -219,9 +223,10 @@ export default function HomePage() {
 
               {/* Bathrooms */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                  <Bath className="h-4 w-4" />
-                  Bathrooms
+                <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                  <Bath className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Bathrooms</span>
+                  <span className="sm:hidden">Baths</span>
                 </label>
                 <Select 
                   value={mapFilters.bathrooms?.toString() || ''} 
@@ -242,8 +247,8 @@ export default function HomePage() {
 
               {/* City */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
+                <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
                   City
                 </label>
                 <Input
@@ -258,7 +263,7 @@ export default function HomePage() {
 
               {/* Clear Filters */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-transparent">Clear</label>
+                <label className="text-xs sm:text-sm font-medium text-transparent">Clear</label>
                 <Button 
                   variant="outline" 
                   onClick={clearFilters}
@@ -273,11 +278,12 @@ export default function HomePage() {
 
           {/* Price Range Slider */}
           {showFilters && (
-            <div className="mt-4 pt-4 border-t border-white/20 dark:border-white/10">
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                  <DollarSign className="h-4 w-4" />
-                  Price Range: ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}
+            <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 dark:border-white/10">
+              <div className="space-y-2 sm:space-y-3">
+                <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1 flex-wrap">
+                  <DollarSign className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Price Range: ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}</span>
+                  <span className="sm:hidden">Price: ${priceRange[0] < 1000 ? priceRange[0] : Math.round(priceRange[0]/1000) + 'K'} - ${priceRange[1] < 1000 ? priceRange[1] : Math.round(priceRange[1]/1000) + 'K'}</span>
                 </label>
                 <Slider
                   value={priceRange}
@@ -298,36 +304,36 @@ export default function HomePage() {
 
           {/* Active Filters */}
           {(mapFilters.listingType || mapFilters.type || mapFilters.bedrooms || mapFilters.bathrooms || mapFilters.city || mapFilters.minPrice || mapFilters.maxPrice) && (
-            <div className="mt-4 pt-4 border-t border-white/20 dark:border-white/10">
-              <div className="flex flex-wrap gap-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Active filters:</span>
+            <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 dark:border-white/10">
+              <div className="flex flex-wrap gap-1 sm:gap-2">
+                <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Active filters:</span>
                 {mapFilters.listingType && (
-                  <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                  <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs">
                     {mapFilters.listingType === 'sale' ? 'For Sale' : 'For Rent'}
                   </Badge>
                 )}
                 {mapFilters.type && (
-                  <Badge variant="secondary" className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                  <Badge variant="secondary" className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs">
                     {mapFilters.type.charAt(0).toUpperCase() + mapFilters.type.slice(1)}
                   </Badge>
                 )}
                 {mapFilters.bedrooms && (
-                  <Badge variant="secondary" className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200">
+                  <Badge variant="secondary" className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs">
                     {mapFilters.bedrooms}+ bed
                   </Badge>
                 )}
                 {mapFilters.bathrooms && (
-                  <Badge variant="secondary" className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200">
+                  <Badge variant="secondary" className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 text-xs">
                     {mapFilters.bathrooms}+ bath
                   </Badge>
                 )}
                 {mapFilters.city && (
-                  <Badge variant="secondary" className="bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200">
+                  <Badge variant="secondary" className="bg-pink-100 dark:bg-pink-900 text-pink-800 dark:text-pink-200 text-xs">
                     {mapFilters.city}
                   </Badge>
                 )}
                 {(mapFilters.minPrice || mapFilters.maxPrice) && (
-                  <Badge variant="secondary" className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
+                  <Badge variant="secondary" className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs">
                     ${mapFilters.minPrice ? mapFilters.minPrice.toLocaleString() : '0'} - ${mapFilters.maxPrice ? mapFilters.maxPrice.toLocaleString() : '1M+'}
                   </Badge>
                 )}
