@@ -118,7 +118,7 @@ export default function PropertyMap({
 
           // Add zoom event listener to refresh markers on zoom
           mapInstanceRef.current.on('zoomend', () => {
-            // Re-render markers using the current properties ref with clustering based on zoom level
+            // Re-render markers using the current properties ref
             updateMarkersForProperties(currentPropertiesRef.current);
           });
           
@@ -239,10 +239,7 @@ export default function PropertyMap({
   const createClustersForProperties = (propertiesToCluster: Property[]) => {
     const clusters: any[] = [];
     const processed = new Set<number>();
-    
-    // Dynamic cluster distance based on zoom level
-    const currentZoom = mapInstanceRef.current ? mapInstanceRef.current.getZoom() : 13;
-    const CLUSTER_DISTANCE = currentZoom < 10 ? 0.1 : currentZoom < 12 ? 0.05 : 0.02;
+    const CLUSTER_DISTANCE = 0.02;
 
     propertiesToCluster.forEach((property, index) => {
       if (processed.has(index) || !property.latitude || !property.longitude) return;
@@ -512,7 +509,7 @@ export default function PropertyMap({
     updateMarkersForProperties(properties);
   }, [properties]);
 
-  // Update markers function that accepts properties array - with clustering based on zoom level
+  // Update markers function that accepts properties array - always show all markers
   const updateMarkersForProperties = (propertiesToShow: Property[]) => {
     if (!mapInstanceRef.current || typeof window === 'undefined' || !(window as any).L) return;
     
@@ -534,29 +531,13 @@ export default function PropertyMap({
     }
 
     const L = (window as any).L;
-    const currentZoom = mapInstanceRef.current.getZoom();
-    
-    // Use clustering for zoom levels below 14, individual markers for zoom 14 and above
-    if (currentZoom < 14) {
-      // Create clusters for lower zoom levels
-      const clusters = createClustersForProperties(propertiesToShow);
-      clusters.forEach(cluster => {
-        if (cluster.properties.length === 1) {
-          // Single property, show individual marker
-          createSingleMarker(cluster.properties[0], L);
-        } else {
-          // Multiple properties, show cluster marker
-          createClusterMarker(cluster, L);
-        }
-      });
-    } else {
-      // Show individual markers for higher zoom levels
-      propertiesToShow.forEach(property => {
-        if (property.latitude && property.longitude) {
-          createSingleMarker(property, L);
-        }
-      });
-    }
+
+    // Always show individual markers for all properties
+    propertiesToShow.forEach(property => {
+      if (property.latitude && property.longitude) {
+        createSingleMarker(property, L);
+      }
+    });
   };
 
   const handleFilterChange = (key: string, value: string) => {
