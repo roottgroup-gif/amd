@@ -110,19 +110,19 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
         <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
           {property.bedrooms && (
             <span className="flex items-center">
-              <Bed className="h-4 w-4 mr-1 text-blue-600" />
+              <Bed className="h-4 w-4 mr-1" style={{color: '#bdd479'}} />
               {property.bedrooms} {t('property.beds')}
             </span>
           )}
           {property.bathrooms && (
             <span className="flex items-center">
-              <Bath className="h-4 w-4 mr-1 text-blue-600" />
+              <Bath className="h-4 w-4 mr-1" style={{color: '#bdd479'}} />
               {property.bathrooms} {t('property.baths')}
             </span>
           )}
           {property.area && (
             <span className="flex items-center">
-              <Square className="h-4 w-4 mr-1 text-blue-600" />
+              <Square className="h-4 w-4 mr-1" style={{color: '#bdd479'}} />
               {property.area.toLocaleString()} {t('property.sqft')}
             </span>
           )}
