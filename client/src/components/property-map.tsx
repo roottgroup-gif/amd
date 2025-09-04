@@ -673,6 +673,19 @@ export default function PropertyMap({
           </Button>
           
           
+          {/* My Location Button in Footer */}
+          <Button
+            onClick={handleGetMyLocation}
+            disabled={isLocating}
+            className="fixed bottom-20 right-6 z-[1001] bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-white/30 dark:border-white/10 shadow-2xl hover:bg-white dark:hover:bg-black/95 text-black dark:text-white p-3 rounded-full"
+            data-testid="footer-location-button"
+          >
+            <Navigation 
+              className={`h-6 w-6 ${isLocating ? 'animate-spin' : ''}`} 
+              style={{color: '#FF7800'}} 
+            />
+          </Button>
+
           {/* Legend Overlay on Map */}
           <div className="fixed bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
             <div className="p-4 md:p-5 transition-all duration-300">
