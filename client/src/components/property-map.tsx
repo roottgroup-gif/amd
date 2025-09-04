@@ -12,6 +12,7 @@ interface PropertyMapProps {
   onFilterChange?: (filters: PropertyFilters) => void;
   onPropertyClick?: (property: Property) => void;
   className?: string;
+  mapRef?: React.MutableRefObject<any>;
 }
 
 export default function PropertyMap({ 
@@ -19,7 +20,8 @@ export default function PropertyMap({
   filters = {}, 
   onFilterChange, 
   onPropertyClick,
-  className 
+  className,
+  mapRef: externalMapRef
 }: PropertyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -87,6 +89,11 @@ export default function PropertyMap({
               mapInstanceRef.current.invalidateSize();
             }
           }, 100);
+
+          // Expose map instance to external ref
+          if (externalMapRef) {
+            externalMapRef.current = mapInstanceRef.current;
+          }
           
           console.log('Map initialized successfully');
         } catch (error) {
@@ -373,6 +380,24 @@ export default function PropertyMap({
       maxWidth: 350,
       minWidth: 240,
       className: 'custom-popup'
+    });
+
+    // Add click handler for zoom and focus
+    marker.on('click', () => {
+      // Zoom in to the property location
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.flyTo([lat, lng], 16, {
+          duration: 1.5,
+          easeLinearity: 0.25
+        });
+        
+        // Trigger property click after a short delay to allow zoom animation
+        setTimeout(() => {
+          if (onPropertyClick) {
+            onPropertyClick(property);
+          }
+        }, 800);
+      }
     });
 
     markersRef.current.push(marker);
