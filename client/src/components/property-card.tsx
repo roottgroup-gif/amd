@@ -4,8 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { useTranslation } from "@/lib/i18n";
 import { useAddToFavorites, useRemoveFromFavorites, useIsFavorite } from "@/hooks/use-properties";
+import { useState } from "react";
 import type { Property } from "@/types";
-import { Heart, Bed, Bath, Square, MapPin, User } from "lucide-react";
+import { Heart, Bed, Bath, Square, MapPin, User, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PropertyCardProps {
   property: Property;
@@ -18,8 +19,16 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
   const addToFavorites = useAddToFavorites();
   const removeFromFavorites = useRemoveFromFavorites();
   const { data: favoriteData } = useIsFavorite(userId || "", property.id);
-
+  
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isFavorite = favoriteData?.isFavorite || false;
+  
+  // Get all images or use default if no images
+  const images = property.images && property.images.length > 0 
+    ? property.images 
+    : ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600'];
+  
+  const hasMultipleImages = images.length > 1;
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -38,6 +47,18 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
     }
   };
 
+  const nextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
   const formatPrice = (price: string, currency: string, listingType: string) => {
     const amount = parseFloat(price);
     const formattedAmount = new Intl.NumberFormat().format(amount);
@@ -45,7 +66,6 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
     return `${currency === 'USD' ? '$' : currency}${formattedAmount}${suffix}`;
   };
 
-  const primaryImage = property.images?.[0] || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
 
   return (
     <Card 
@@ -53,14 +73,44 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
       data-testid={`property-card-${property.id}`}
     >
       <div className="relative">
-        <img 
-          src={primaryImage}
-          alt={property.title}
-          className="w-full h-48 object-cover"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
-          }}
-        />
+        <div className="relative h-48 overflow-hidden">
+          <img 
+            src={images[currentImageIndex]}
+            alt={property.title}
+            className="w-full h-48 object-cover transition-transform duration-300"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
+            }}
+          />
+          
+          {/* Navigation arrows - only show if multiple images */}
+          {hasMultipleImages && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={prevImage}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={nextImage}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              
+              {/* Image counter */}
+              <div className="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                {currentImageIndex + 1} / {images.length}
+              </div>
+            </>
+          )}
+        </div>
         
         <Badge 
           className={`absolute top-4 left-4 ${
