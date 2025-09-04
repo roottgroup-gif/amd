@@ -24,6 +24,7 @@ export default function PropertyMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+  const currentPropertiesRef = useRef<Property[]>([]);
   
   // Local state for filters
   const [localFilters, setLocalFilters] = useState<PropertyFilters>(filters || {});
@@ -127,8 +128,11 @@ export default function PropertyMap({
           // Add OpenStreetMap tiles
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstanceRef.current);
 
-          // Add zoom event listener for clustering
-          mapInstanceRef.current.on('zoomend', () => updateMarkersForProperties(properties));
+          // Add zoom event listener to refresh markers on zoom
+          mapInstanceRef.current.on('zoomend', () => {
+            // Re-render markers using the current properties ref
+            updateMarkersForProperties(currentPropertiesRef.current);
+          });
           
           // Invalidate size to ensure proper rendering
           setTimeout(() => {
@@ -429,6 +433,7 @@ export default function PropertyMap({
 
   // Update markers when properties change (from API)
   useEffect(() => {
+    currentPropertiesRef.current = properties;
     updateMarkersForProperties(properties);
   }, [properties]);
 
