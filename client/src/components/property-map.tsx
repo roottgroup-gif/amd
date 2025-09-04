@@ -361,8 +361,8 @@ export default function PropertyMap({
           </div>
           <button class="popup-button" 
                   onclick="window.viewPropertyFromMap('${property.id}')"
-                  onmouseover="this.style.background='#a3c766'"
-                  onmouseout="this.style.background='#bdd479'">
+                  onmouseover="this.style.background='#e56600'"
+                  onmouseout="this.style.background='#FF7800'">
             View Property
           </button>
         </div>
