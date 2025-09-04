@@ -12,7 +12,6 @@ interface PropertyMapProps {
   onFilterChange?: (filters: PropertyFilters) => void;
   onPropertyClick?: (property: Property) => void;
   className?: string;
-  mapRef?: React.MutableRefObject<any>;
 }
 
 export default function PropertyMap({ 
@@ -20,8 +19,7 @@ export default function PropertyMap({
   filters = {}, 
   onFilterChange, 
   onPropertyClick,
-  className,
-  mapRef: externalMapRef
+  className 
 }: PropertyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -89,11 +87,6 @@ export default function PropertyMap({
               mapInstanceRef.current.invalidateSize();
             }
           }, 100);
-
-          // Expose map instance to external ref
-          if (externalMapRef) {
-            externalMapRef.current = mapInstanceRef.current;
-          }
           
           console.log('Map initialized successfully');
         } catch (error) {
@@ -345,58 +338,10 @@ export default function PropertyMap({
     const customIcon = getPropertyIcon(property.type, property.listingType, property.isFeatured);
     const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstanceRef.current);
 
-    // Add popup
-    const firstImage = property.images && property.images.length > 0 ? property.images[0] : '';
-    const popupContent = `
-      <div class="property-popup responsive-popup">
-        ${firstImage ? `
-          <div class="popup-image">
-            <img src="${firstImage}" alt="${property.title}" 
-                 onerror="this.style.display='none'; this.parentNode.style.height='0'; this.parentNode.style.marginBottom='0';" />
-          </div>
-        ` : ''}
-        <div class="popup-content">
-          <h4 class="popup-title">${property.title}</h4>
-          <p class="popup-address">${property.address}</p>
-          <p class="popup-price">
-            ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
-          </p>
-          <div class="popup-details">
-            ${property.bedrooms ? `<span><i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} beds</span>` : ''} 
-            ${property.bathrooms ? `<span><i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
-            ${property.area ? `<span><i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
-          </div>
-          <button class="popup-button" 
-                  onclick="window.viewPropertyFromMap('${property.id}')"
-                  onmouseover="this.style.background='#e56600'"
-                  onmouseout="this.style.background='#FF7800'">
-            View Property
-          </button>
-        </div>
-      </div>
-    `;
-    
-    marker.bindPopup(popupContent, {
-      maxWidth: 350,
-      minWidth: 240,
-      className: 'custom-popup'
-    });
-
-    // Add click handler for zoom and focus
+    // Add click handler to trigger onPropertyClick callback
     marker.on('click', () => {
-      // Zoom in to the property location
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.flyTo([lat, lng], 16, {
-          duration: 1.5,
-          easeLinearity: 0.25
-        });
-        
-        // Trigger property click after a short delay to allow zoom animation
-        setTimeout(() => {
-          if (onPropertyClick) {
-            onPropertyClick(property);
-          }
-        }, 800);
+      if (onPropertyClick) {
+        onPropertyClick(property);
       }
     });
 

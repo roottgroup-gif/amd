@@ -107,8 +107,6 @@ export default function HomePage() {
     setShowFocusedCard(true);
   };
 
-  const mapRef = useRef<any>(null);
-
   const closeFocusedCard = () => {
     setShowFocusedCard(false);
     setTimeout(() => setFocusedProperty(null), 300); // Wait for animation to complete
@@ -123,7 +121,6 @@ export default function HomePage() {
           filters={mapFilters}
           onFilterChange={handleMapFilterChange}
           onPropertyClick={handlePropertyFocus}
-          mapRef={mapRef}
           className="h-full w-full"
         />
         
