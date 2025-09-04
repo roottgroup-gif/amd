@@ -151,7 +151,6 @@ export default function HomePage() {
                     data-testid="menu-button"
                   >
                     <Menu className="h-4 w-4" />
-                    <span className="hidden sm:inline ml-1">Menu</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
