@@ -246,9 +246,9 @@ export default function HomePage() {
                     <SelectValue placeholder="All Types" />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="sale">For Sale</SelectItem>
-                    <SelectItem value="rent">For Rent</SelectItem>
+                    <SelectItem value="all"><span className="flex items-center gap-2"><Filter className="h-4 w-4" style={{color: '#FF7800'}} />All Types</span></SelectItem>
+                    <SelectItem value="sale"><span className="flex items-center gap-2"><Tag className="h-4 w-4" style={{color: '#FF7800'}} />For Sale</span></SelectItem>
+                    <SelectItem value="rent"><span className="flex items-center gap-2"><Key className="h-4 w-4" style={{color: '#FF7800'}} />For Rent</span></SelectItem>
                   </SelectContent>
                 </Select>
               </div>

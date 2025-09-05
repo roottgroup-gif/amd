@@ -17,7 +17,7 @@ import type { Property, Inquiry } from "@/types";
 import { 
   Home, TrendingUp, Mail, DollarSign, Plus, Edit, Trash2, 
   BarChart3, Eye, Clock, MessageSquare, Phone, User, MapPin,
-  Calendar, Building, University, Mountain
+  Calendar, Building, University, Mountain, Tag, Key
 } from "lucide-react";
 
 export default function AgentDashboard() {
@@ -238,8 +238,8 @@ export default function AgentDashboard() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="sale">For Sale</SelectItem>
-              <SelectItem value="rent">For Rent</SelectItem>
+              <SelectItem value="sale"><span className="flex items-center gap-2"><Tag className="h-4 w-4" style={{color: '#FF7800'}} />For Sale</span></SelectItem>
+              <SelectItem value="rent"><span className="flex items-center gap-2"><Key className="h-4 w-4" style={{color: '#FF7800'}} />For Rent</span></SelectItem>
             </SelectContent>
           </Select>
         </div>
