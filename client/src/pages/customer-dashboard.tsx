@@ -376,7 +376,7 @@ export default function CustomerDashboard() {
               </div>
               <div className="flex items-center space-x-4">
                 <Avatar>
-                  <AvatarImage src={user?.avatar || ''} />
+                  <AvatarImage src={user?.avatar || ''} alt="Profile photo" />
                   <AvatarFallback>
                     {user?.firstName?.[0]}{user?.lastName?.[0] || user?.username[0]}
                   </AvatarFallback>
