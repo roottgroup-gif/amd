@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/lib/i18n";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
 import type { Property, AISearchResponse, PropertyFilters } from "@/types";
-import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu, Search, X, User, Heart, Settings, LogOut } from "lucide-react";
+import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu, Search, X, User, Heart, Settings, LogOut, University } from "lucide-react";
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -234,7 +234,7 @@ export default function HomePage() {
                     <SelectItem value="all">All Properties</SelectItem>
                     <SelectItem value="house">House</SelectItem>
                     <SelectItem value="apartment">Apartment</SelectItem>
-                    <SelectItem value="villa">Villa</SelectItem>
+                    <SelectItem value="villa"><span className="flex items-center gap-2"><University className="h-4 w-4" style={{color: '#FF7800'}} />Villa</span></SelectItem>
                     <SelectItem value="land">Land</SelectItem>
                   </SelectContent>
                 </Select>
