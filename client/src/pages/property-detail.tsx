@@ -13,7 +13,7 @@ import type { Property } from "@/types";
 import { 
   Heart, Bed, Bath, Square, Car, MapPin, ArrowLeft, 
   Share2, ChevronLeft, ChevronRight, Check, Calendar,
-  Eye, Phone, MessageSquare, Mail
+  Eye, Phone, MessageSquare, Mail, Sun, Moon
 } from "lucide-react";
 
 export default function PropertyDetailPage() {
@@ -22,6 +22,12 @@ export default function PropertyDetailPage() {
   const { toast } = useToast();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [userId] = useState("demo-user-id"); // In real app, get from auth context
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    }
+    return 'light';
+  });
 
   const { data: property, isLoading, error } = useProperty(id!);
   const addToFavorites = useAddToFavorites();
@@ -35,6 +41,30 @@ export default function PropertyDetailPage() {
       document.title = `${property.title} - EstateAI`;
     }
   }, [property]);
+
+  // Load theme from localStorage on component mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', newTheme);
+  };
 
   const handleFavoriteClick = async () => {
     if (!property) return;
@@ -151,13 +181,30 @@ export default function PropertyDetailPage() {
       <Navigation />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Back Button */}
-        <Link href="/">
-          <Button variant="ghost" className="mb-6" data-testid="back-button">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
+        {/* Top Navigation with Back Button and Theme Toggle */}
+        <div className="flex items-center justify-between mb-6">
+          <Link href="/">
+            <Button variant="ghost" data-testid="back-button">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
+          
+          {/* Theme Toggle Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleTheme}
+            className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white"
+            data-testid="theme-toggle-button"
+          >
+            {theme === 'light' ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
           </Button>
-        </Link>
+        </div>
 
         {/* Image Gallery */}
         <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 overflow-hidden mb-8">
