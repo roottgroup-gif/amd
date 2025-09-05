@@ -175,7 +175,7 @@ export default function PropertyDetailPage() {
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black/90 text-gray-900 dark:text-white border border-white/20 dark:border-white/20"
                   onClick={prevImage}
                   data-testid="prev-image-button"
                 >
@@ -184,7 +184,7 @@ export default function PropertyDetailPage() {
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black/90 text-gray-900 dark:text-white border border-white/20 dark:border-white/20"
                   onClick={nextImage}
                   data-testid="next-image-button"
                 >
@@ -192,7 +192,7 @@ export default function PropertyDetailPage() {
                 </Button>
                 
                 {/* Image Counter */}
-                <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                <div className="absolute top-4 left-4 bg-black/70 dark:bg-white/80 text-white dark:text-gray-900 px-3 py-1 rounded-full text-sm font-medium border border-white/20 dark:border-black/20">
                   {currentImageIndex + 1} / {images.length}
                 </div>
               </>
@@ -204,7 +204,7 @@ export default function PropertyDetailPage() {
                 variant="secondary"
                 size="icon"
                 onClick={handleFavoriteClick}
-                className={`bg-white/80 hover:bg-white ${isFavorite ? 'text-red-500' : ''}`}
+                className={`bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black/90 border border-white/20 dark:border-white/20 ${isFavorite ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}
                 data-testid="favorite-button"
               >
                 <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
@@ -213,7 +213,7 @@ export default function PropertyDetailPage() {
                 variant="secondary"
                 size="icon"
                 onClick={handleShare}
-                className="bg-white/80 hover:bg-white"
+                className="bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black/90 text-gray-900 dark:text-white border border-white/20 dark:border-white/20"
                 data-testid="share-button"
               >
                 <Share2 className="h-4 w-4" />
@@ -223,7 +223,7 @@ export default function PropertyDetailPage() {
           
           {/* Thumbnail Gallery */}
           {images.length > 1 && (
-            <div className="p-4 bg-gray-50">
+            <div className="p-4 bg-gray-50 dark:bg-gray-900">
               <div className="flex gap-2 overflow-x-auto">
                 {images.map((image, index) => (
                   <div
@@ -231,7 +231,7 @@ export default function PropertyDetailPage() {
                     className={`flex-shrink-0 cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
                       index === currentImageIndex 
                         ? 'border-primary shadow-md' 
-                        : 'border-gray-200 hover:border-gray-300'
+                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                     }`}
                     onClick={() => setCurrentImageIndex(index)}
                     data-testid={`thumbnail-${index}`}
@@ -252,7 +252,7 @@ export default function PropertyDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Property Header */}
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 p-6 bg-white/10 dark:bg-black/10 backdrop-blur-sm rounded-xl border border-white/20 dark:border-white/10">
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
                   <Badge className={property.listingType === 'sale' 
