@@ -30,6 +30,7 @@ const createUserSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   phone: z.string().optional(),
+  avatar: z.string().optional(),
 });
 
 type CreateUserForm = z.infer<typeof createUserSchema>;
@@ -42,6 +43,8 @@ export default function AdminDashboard() {
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string>('');
 
   // Redirect if not admin
   useEffect(() => {
@@ -72,8 +75,31 @@ export default function AdminDashboard() {
       firstName: '',
       lastName: '',
       phone: '',
+      avatar: '',
     },
   });
+
+  // Handle avatar file selection
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setAvatarPreview(result);
+        form.setValue('avatar', result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Reset avatar when dialog closes
+  const resetAvatarUpload = () => {
+    setAvatarFile(null);
+    setAvatarPreview('');
+    form.setValue('avatar', '');
+  };
 
   // Fetch all users
   const { data: users = [], isLoading: usersLoading } = useQuery<User[]>({
@@ -91,6 +117,7 @@ export default function AdminDashboard() {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
       setIsCreateUserOpen(false);
       form.reset();
+      resetAvatarUpload();
       toast({
         title: 'Success',
         description: 'User created successfully',
@@ -266,7 +293,12 @@ export default function AdminDashboard() {
                   Manage real estate agencies, agents, and customers
                 </CardDescription>
               </div>
-              <Dialog open={isCreateUserOpen} onOpenChange={setIsCreateUserOpen}>
+              <Dialog open={isCreateUserOpen} onOpenChange={(open) => {
+                setIsCreateUserOpen(open);
+                if (!open) {
+                  resetAvatarUpload();
+                }
+              }}>
                 <DialogTrigger asChild>
                   <Button data-testid="button-create-user">
                     <UserPlus className="h-4 w-4 mr-2" />
@@ -308,6 +340,43 @@ export default function AdminDashboard() {
                           </FormItem>
                         )}
                       />
+                      
+                      {/* Avatar Upload Field */}
+                      <FormField
+                        control={form.control}
+                        name="avatar"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Profile Photo</FormLabel>
+                            <FormControl>
+                              <div className="space-y-4">
+                                <div className="flex items-center gap-4">
+                                  <Avatar className="h-16 w-16">
+                                    <AvatarImage src={avatarPreview} />
+                                    <AvatarFallback>
+                                      <UserPlus className="h-8 w-8 text-gray-400" />
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1">
+                                    <Input
+                                      type="file"
+                                      accept="image/*"
+                                      onChange={handleAvatarChange}
+                                      className="cursor-pointer"
+                                      data-testid="input-avatar"
+                                    />
+                                    <p className="text-sm text-gray-500 mt-1">
+                                      Upload a profile photo (optional)
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
                       <FormField
                         control={form.control}
                         name="password"
@@ -388,7 +457,10 @@ export default function AdminDashboard() {
                         <Button 
                           type="button" 
                           variant="outline" 
-                          onClick={() => setIsCreateUserOpen(false)}
+                          onClick={() => {
+                            setIsCreateUserOpen(false);
+                            resetAvatarUpload();
+                          }}
                           data-testid="button-cancel"
                         >
                           Cancel
