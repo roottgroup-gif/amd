@@ -101,7 +101,6 @@ export default function AgentDashboard() {
       const response = await apiRequest('POST', '/api/properties', {
         ...propertyData,
         agentId: user?.id,
-        price: parseFloat(propertyData.price),
       });
       return await response.json();
     },
@@ -127,10 +126,7 @@ export default function AgentDashboard() {
   // Update property mutation
   const updatePropertyMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<PropertyForm> }) => {
-      const response = await apiRequest('PUT', `/api/properties/${id}`, {
-        ...data,
-        price: data.price ? parseFloat(data.price) : undefined,
-      });
+      const response = await apiRequest('PUT', `/api/properties/${id}`, data);
       return await response.json();
     },
     onSuccess: () => {
@@ -751,7 +747,13 @@ function PropertyForm({
               <FormItem>
                 <FormLabel>Price</FormLabel>
                 <FormControl>
-                  <Input {...field} type="number" data-testid="input-price" />
+                  <Input 
+                    type="number" 
+                    placeholder="e.g., 150000"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    data-testid="input-price" 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -156,7 +156,6 @@ export default function CustomerDashboard() {
     mutationFn: async (propertyData: PropertyFormValues) => {
       const response = await apiRequest('POST', '/api/properties', {
         ...propertyData,
-        price: parseFloat(propertyData.price),
         agentId: user?.id, // Customer becomes the owner/contact person
       });
       return await response.json();
@@ -540,7 +539,13 @@ export default function CustomerDashboard() {
                             <FormItem>
                               <FormLabel>Price (USD) *</FormLabel>
                               <FormControl>
-                                <Input placeholder="e.g., 150000" type="number" {...field} data-testid="input-price" />
+                                <Input 
+                                  placeholder="e.g., 150000" 
+                                  type="number" 
+                                  {...field}
+                                  onChange={(e) => field.onChange(e.target.value)}
+                                  data-testid="input-price" 
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
