@@ -214,7 +214,14 @@ export default function CustomerDashboard() {
   };
 
   const onSubmitProperty = (data: PropertyFormValues) => {
-    createPropertyMutation.mutate(data);
+    // Convert data to match backend expectations (InsertProperty type)
+    const submitData: any = {
+      ...data,
+      price: data.price.toString(), // Convert to string as expected by backend
+      latitude: data.latitude ? data.latitude.toString() : undefined, // Convert to string if provided
+      longitude: data.longitude ? data.longitude.toString() : undefined, // Convert to string if provided
+    };
+    createPropertyMutation.mutate(submitData);
   };
 
   const handleLocationSelect = (lat: number, lng: number) => {
