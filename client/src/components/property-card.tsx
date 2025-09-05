@@ -84,7 +84,7 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
 
   return (
     <Card 
-      className={`property-card bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${className}`}
+      className={`property-card bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${className}`}
       data-testid={`property-card-${property.id}`}
     >
       <div className="relative">
@@ -154,25 +154,25 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
       
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-xl font-semibold text-foreground truncate" data-testid={`property-title-${property.id}`}>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white truncate" data-testid={`property-title-${property.id}`}>
             {property.title}
           </h3>
           <span 
-            className="text-2xl font-bold text-primary"
+            className="text-2xl font-bold text-orange-600 dark:text-orange-400"
             data-testid={`property-price-${property.id}`}
           >
             {formatPrice(property.price, property.currency, property.listingType)}
           </span>
         </div>
         
-        <div className="flex items-center text-muted-foreground mb-4">
+        <div className="flex items-center text-gray-600 dark:text-gray-300 mb-4">
           <MapPin className="h-4 w-4 mr-1" />
           <p className="truncate" data-testid={`property-address-${property.id}`}>
             {property.address}, {property.city}
           </p>
         </div>
         
-        <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
+        <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300 mb-4">
           {property.bedrooms && (
             <span className="flex items-center">
               <Bed className="h-4 w-4 mr-1" style={{color: '#FF7800'}} />
@@ -196,10 +196,10 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
         <div className="flex items-center justify-between">
           {property.agent && (
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-primary" />
+              <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
+                <User className="h-4 w-4 text-orange-600 dark:text-orange-400" />
               </div>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-gray-600 dark:text-gray-300">
                 {property.agent.firstName} {property.agent.lastName}
               </span>
             </div>

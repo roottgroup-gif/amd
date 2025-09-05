@@ -28,9 +28,28 @@ export default function PropertyMap({
   const markersRef = useRef<any[]>([]);
   const currentPropertiesRef = useRef<Property[]>([]);
   const [isLocating, setIsLocating] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   
   // Local state for filters
   const [localFilters, setLocalFilters] = useState<PropertyFilters>(filters || {});
+
+  // Check for dark mode
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
+    
+    checkDarkMode();
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+    
+    return () => observer.disconnect();
+  }, []);
 
   // Sync local filters with prop changes
   useEffect(() => {
@@ -320,16 +339,22 @@ export default function PropertyMap({
     
     const marker = L.marker([lat, lng], { icon: clusterIcon }).addTo(mapInstanceRef.current);
     
+    const isDark = document.documentElement.classList.contains('dark');
+    const popupBg = isDark ? '#1f2937' : '#ffffff';
+    const textColor = isDark ? '#ffffff' : '#000000';
+    const subTextColor = isDark ? '#d1d5db' : '#666666';
+    const borderColor = isDark ? '#374151' : '#e5e7eb';
+    
     const popupContent = `
-      <div class="cluster-popup" style="width: 320px; max-width: 95vw;">
+      <div class="cluster-popup" style="width: 320px; max-width: 95vw; background: ${popupBg}; color: ${textColor};">
         <div style="background: linear-gradient(135deg, #bdd479 0%, #a3c766 100%); color: white; padding: 12px 16px; margin: -8px -8px 12px -8px; border-radius: 12px 12px 0 0; font-weight: 600; text-align: center;">
           ${count} Properties in this area
         </div>
         <div style="max-height: 300px; overflow-y: auto;">
           ${cluster.properties.map((property: any) => `
-            <div style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; cursor: pointer;" onclick="window.viewPropertyFromMap('${property.id}')">
-              <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">${property.title}</div>
-              <div style="font-size: 11px; color: #666; margin-bottom: 4px;">${property.address}</div>
+            <div style="padding: 8px 0; border-bottom: 1px solid ${borderColor}; cursor: pointer; color: ${textColor};" onclick="window.viewPropertyFromMap('${property.id}')">
+              <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px; color: ${textColor};">${property.title}</div>
+              <div style="font-size: 11px; color: ${subTextColor}; margin-bottom: 4px;">${property.address}</div>
               <div style="font-weight: 700; color: #FF7800; font-size: 12px;">
                 ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
               </div>
@@ -394,8 +419,13 @@ export default function PropertyMap({
     const hasMultipleImages = images.length > 1;
     const popupId = `popup-${property.id}`;
     
+    const isDark = document.documentElement.classList.contains('dark');
+    const popupBg = isDark ? '#1f2937' : '#ffffff';
+    const textColor = isDark ? '#ffffff' : '#000000';
+    const subTextColor = isDark ? '#d1d5db' : '#666666';
+    
     const popupContent = `
-      <div class="property-popup responsive-popup" id="${popupId}">
+      <div class="property-popup responsive-popup" id="${popupId}" style="background: ${popupBg}; color: ${textColor};">
         ${images.length > 0 ? `
           <div class="popup-image-container" style="position: relative;">
             <div class="popup-image-slider" style="position: relative; height: 150px; overflow: hidden;">
@@ -475,16 +505,16 @@ export default function PropertyMap({
             ` : ''}
           </div>
         ` : ''}
-        <div class="popup-content">
-          <h4 class="popup-title">${property.title}</h4>
-          <p class="popup-address">${property.address}</p>
-          <p class="popup-price">
+        <div class="popup-content" style="padding: 16px; background: ${popupBg};">
+          <h4 class="popup-title" style="color: ${textColor}; font-weight: 600; font-size: 16px; margin-bottom: 8px;">${property.title}</h4>
+          <p class="popup-address" style="color: ${subTextColor}; font-size: 12px; margin-bottom: 8px;">${property.address}</p>
+          <p class="popup-price" style="color: #FF7800; font-weight: 700; font-size: 18px; margin-bottom: 12px;">
             ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === 'rent' ? '/mo' : ''}
           </p>
-          <div class="popup-details">
-            ${property.bedrooms ? `<span><i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} beds</span>` : ''} 
-            ${property.bathrooms ? `<span><i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
-            ${property.area ? `<span><i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
+          <div class="popup-details" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; font-size: 12px; color: ${subTextColor};">
+            ${property.bedrooms ? `<span style="color: ${subTextColor};"><i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} beds</span>` : ''} 
+            ${property.bathrooms ? `<span style="color: ${subTextColor};"><i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
+            ${property.area ? `<span style="color: ${subTextColor};"><i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
           </div>
           <div class="popup-buttons" style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button class="popup-button" 

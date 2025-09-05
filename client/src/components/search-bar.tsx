@@ -60,17 +60,42 @@ export default function SearchBar({ onResults, placeholder, className }: SearchB
     <div className={`relative ${className}`}>
         <div className="flex items-center space-x-2">
           <div className="flex-1 relative" ref={inputRef}>
+            <Input
+              type="text"
+              placeholder={placeholder || t('search.placeholder')}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyPress={handleKeyPress}
+              onFocus={() => setShowSuggestions(true)}
+              className="pr-10 bg-background dark:bg-gray-800 border-input dark:border-gray-600 text-foreground dark:text-white placeholder-muted-foreground dark:placeholder-gray-400"
+              data-testid="search-input"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={handleSearch}
+              disabled={aiSearch.isPending || !query.trim()}
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground dark:text-gray-400 hover:text-foreground dark:hover:text-white"
+              data-testid="search-button"
+            >
+              {aiSearch.isPending ? (
+                <Bot className="h-4 w-4 animate-pulse" />
+              ) : (
+                <Search className="h-4 w-4" />
+              )}
+            </Button>
           </div>
         </div>
         
         {/* AI Search Suggestions */}
         {showSuggestions && suggestions && suggestions.length > 0 && (
-          <Card className="absolute top-full left-0 right-0 mt-2 z-50 p-0 border border-border">
+          <Card className="absolute top-full left-0 right-0 mt-2 z-50 p-0 border border-border bg-card dark:bg-gray-800">
             {suggestions.map((suggestion, index) => (
               <div
                 key={index}
                 onClick={() => handleSuggestionClick(suggestion)}
-                className="p-3 hover:bg-muted cursor-pointer border-b border-border last:border-b-0 flex items-center"
+                className="p-3 hover:bg-muted dark:hover:bg-gray-700 cursor-pointer border-b border-border dark:border-gray-600 last:border-b-0 flex items-center text-foreground dark:text-white"
                 data-testid={`search-suggestion-${index}`}
               >
                 <Lightbulb className="text-yellow-500 mr-2 h-4 w-4" />
