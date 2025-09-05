@@ -388,18 +388,9 @@ export default function HomePage() {
           {/* Active Filters */}
           {(mapFilters.listingType || mapFilters.type || mapFilters.bedrooms || mapFilters.bathrooms || mapFilters.city || mapFilters.minPrice || mapFilters.maxPrice) && (
             <div className="mt-3 sm:mt-4 pt-1 sm:pt-2 border-t border-white/20 dark:border-white/10">
-              <div className="flex flex-wrap items-center gap-1 sm:gap-2">
-                <span className="text-xs sm:text-sm font-medium text-black dark:text-gray-300">Active filters:</span>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setMapFilters({ limit: 100 })}
-                  className="h-6 px-2 text-xs border-red-300 dark:border-red-600 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
-                  data-testid="clear-filters-button"
-                >
-                  <X className="h-3 w-3 mr-1" />
-                  Clear
-                </Button>
+              <div className="flex flex-wrap items-center justify-between gap-1 sm:gap-2">
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                  <span className="text-xs sm:text-sm font-medium text-black dark:text-gray-300">Active filters:</span>
                 {mapFilters.listingType && (
                   <Badge variant="secondary" className="text-xs" style={{backgroundColor: '#FF7800', color: '#000'}}>
                     {mapFilters.listingType === 'sale' ? 'For Sale' : 'For Rent'}
@@ -430,6 +421,17 @@ export default function HomePage() {
                     ${mapFilters.minPrice ? mapFilters.minPrice.toLocaleString() : '1'} - ${mapFilters.maxPrice ? mapFilters.maxPrice.toLocaleString() : '10M+'}
                   </Badge>
                 )}
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setMapFilters({ limit: 100 })}
+                  className="h-6 px-2 text-xs border-red-300 dark:border-red-600 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  data-testid="clear-filters-button"
+                >
+                  <X className="h-3 w-3 mr-1" />
+                  Clear
+                </Button>
               </div>
             </div>
           )}
