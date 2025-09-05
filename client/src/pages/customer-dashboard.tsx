@@ -230,15 +230,38 @@ export default function CustomerDashboard() {
     createPropertyMutation.mutate(submitData);
   };
 
-  const handleLocationSelect = (lat: number, lng: number) => {
+  const handleLocationSelect = (locationData: { lat: number; lng: number; address?: string; city?: string; country?: string }) => {
+    const { lat, lng, address, city, country } = locationData;
+    
     setSelectedLocation({ lat, lng });
     propertyForm.setValue('latitude', lat);
     propertyForm.setValue('longitude', lng);
     
-    // Auto-fill location details (basic reverse geocoding simulation)
-    // In a real app, you'd use a geocoding service here
-    if (!propertyForm.getValues('city') || !propertyForm.getValues('address')) {
-      // Default to Iraq/Kurdistan region coordinates if clicking in that area
+    // Auto-fill address fields from reverse geocoding
+    if (address && address.trim()) {
+      propertyForm.setValue('address', address.trim());
+      toast({
+        title: 'Address Auto-filled',
+        description: `Address set to: ${address}`,
+      });
+    }
+    
+    if (city && city.trim()) {
+      propertyForm.setValue('city', city.trim());
+    }
+    
+    if (country && country.trim()) {
+      propertyForm.setValue('country', country.trim());
+    }
+    
+    // Show success message if we got location data
+    if (address || city || country) {
+      toast({
+        title: 'Location Details Found',
+        description: 'Address fields have been automatically filled from the selected location.',
+      });
+    } else {
+      // Fallback for areas where geocoding might not work well
       if (lat > 35.0 && lat < 37.5 && lng > 43.0 && lng < 46.0) {
         if (!propertyForm.getValues('city')) {
           propertyForm.setValue('city', 'Erbil');
@@ -667,8 +690,19 @@ export default function CustomerDashboard() {
                         <div>
                           <h3 className="text-lg font-medium mb-2">📍 Select Property Location</h3>
                           <p className="text-sm text-muted-foreground mb-4">
-                            Click on the map to pinpoint your property's exact location. This helps buyers find your property easily.
+                            Click on the map to pinpoint your property's exact location. We'll automatically fill in the address, city, and country fields for you!
                           </p>
+                          <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800 mb-4">
+                            <div className="flex items-center space-x-2">
+                              <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></div>
+                              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                                Smart Auto-Fill Enabled
+                              </span>
+                            </div>
+                            <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                              Address details will be automatically detected and filled when you click on the map
+                            </p>
+                          </div>
                         </div>
                         
                         <div className="border rounded-lg overflow-hidden">

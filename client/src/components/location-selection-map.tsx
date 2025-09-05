@@ -1,7 +1,63 @@
 import { useEffect, useRef, useState } from 'react';
 
+// Reverse geocoding function using Nominatim (OpenStreetMap)
+const reverseGeocode = async (lat: number, lng: number): Promise<LocationData> => {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`
+    );
+    
+    if (!response.ok) {
+      throw new Error('Geocoding failed');
+    }
+    
+    const data = await response.json();
+    
+    // Extract address components
+    const address = data.display_name || '';
+    const addressParts = data.address || {};
+    
+    // Build a clean address string
+    const addressComponents = [];
+    if (addressParts.house_number) addressComponents.push(addressParts.house_number);
+    if (addressParts.road) addressComponents.push(addressParts.road);
+    if (addressParts.neighbourhood) addressComponents.push(addressParts.neighbourhood);
+    
+    const cleanAddress = addressComponents.length > 0 
+      ? addressComponents.join(' ')
+      : (addressParts.road || addressParts.suburb || address.split(',')[0] || '');
+    
+    const city = addressParts.city || 
+                 addressParts.town || 
+                 addressParts.village || 
+                 addressParts.municipality || 
+                 addressParts.state_district || '';
+    
+    const country = addressParts.country || '';
+    
+    return {
+      lat,
+      lng,
+      address: cleanAddress,
+      city,
+      country
+    };
+  } catch (error) {
+    console.warn('Reverse geocoding failed:', error);
+    return { lat, lng };
+  }
+};
+
+interface LocationData {
+  lat: number;
+  lng: number;
+  address?: string;
+  city?: string;
+  country?: string;
+}
+
 interface LocationSelectionMapProps {
-  onLocationSelect: (lat: number, lng: number) => void;
+  onLocationSelect: (data: LocationData) => void;
   selectedLocation?: { lat: number; lng: number } | null;
   className?: string;
 }
@@ -43,7 +99,7 @@ export default function LocationSelectionMap({
           }).addTo(map);
 
           // Add click event to map
-          map.on('click', (e: any) => {
+          map.on('click', async (e: any) => {
             try {
               const { lat, lng } = e.latlng;
               
@@ -52,13 +108,24 @@ export default function LocationSelectionMap({
                 map.removeLayer(markerRef.current);
               }
               
-              // Add new marker
+              // Add new marker with loading popup
               markerRef.current = L.marker([lat, lng]).addTo(map);
+              markerRef.current.bindPopup('Getting address...').openPopup();
               
-              // Call the callback
-              onLocationSelect(lat, lng);
+              // Perform reverse geocoding
+              const locationData = await reverseGeocode(lat, lng);
+              
+              // Update marker popup with address
+              if (locationData.address) {
+                markerRef.current.setPopupContent(`📍 ${locationData.address}`);
+              }
+              
+              // Call the callback with full location data
+              onLocationSelect(locationData);
             } catch (error) {
               console.warn('Error handling map click:', error);
+              // Fallback: still call with basic location data
+              onLocationSelect({ lat: e.latlng.lat, lng: e.latlng.lng });
             }
           });
 
