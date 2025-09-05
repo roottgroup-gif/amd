@@ -168,3 +168,21 @@ export type PropertyWithDetails = PropertyWithAgent & {
   inquiries: Inquiry[];
   favorites: Favorite[];
 };
+
+// Property filters type
+export interface PropertyFilters {
+  type?: string;
+  listingType?: "sale" | "rent";
+  minPrice?: number;
+  maxPrice?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  city?: string;
+  country?: string;
+  features?: string[];
+  search?: string;
+  sortBy?: "price" | "date" | "views";
+  sortOrder?: "asc" | "desc";
+  limit?: number;
+  offset?: number;
+}

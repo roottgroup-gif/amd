@@ -3,15 +3,15 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { Property, PropertyFilters } from "@/types";
+import type { PropertyWithAgent, PropertyFilters } from "@shared/schema";
 import { Search, MapPin, Navigation } from "lucide-react";
 
 interface PropertyMapProps {
-  properties: Property[];
+  properties: PropertyWithAgent[];
   filters?: PropertyFilters;
   onFilterChange?: (filters: PropertyFilters) => void;
-  onPropertyClick?: (property: Property) => void;
-  onPropertySelect?: (property: Property) => void;
+  onPropertyClick?: (property: PropertyWithAgent) => void;
+  onPropertySelect?: (property: PropertyWithAgent) => void;
   className?: string;
 }
 
@@ -26,7 +26,7 @@ export default function PropertyMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
-  const currentPropertiesRef = useRef<Property[]>([]);
+  const currentPropertiesRef = useRef<PropertyWithAgent[]>([]);
   const [isLocating, setIsLocating] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   
@@ -271,7 +271,7 @@ export default function PropertyMap({
   };
 
   // Function to create clusters for given properties
-  const createClustersForProperties = (propertiesToCluster: Property[]) => {
+  const createClustersForProperties = (propertiesToCluster: PropertyWithAgent[]) => {
     const clusters: any[] = [];
     const processed = new Set<number>();
     const CLUSTER_DISTANCE = 0.02;
@@ -597,7 +597,7 @@ export default function PropertyMap({
   }, [properties]);
 
   // Update markers function that accepts properties array - always show all markers
-  const updateMarkersForProperties = (propertiesToShow: Property[]) => {
+  const updateMarkersForProperties = (propertiesToShow: PropertyWithAgent[]) => {
     if (!mapInstanceRef.current || typeof window === 'undefined' || !(window as any).L) return;
     
     // Clear existing markers safely
