@@ -399,7 +399,7 @@ export default function PropertyMap({
         ${images.length > 0 ? `
           <div class="popup-image-container" style="position: relative;">
             <div class="popup-image-slider" style="position: relative; height: 150px; overflow: hidden;">
-              ${images.map((img, index) => `
+              ${images.map((img: string, index: number) => `
                 <img src="${img}" alt="${property.title} - Image ${index + 1}" 
                      class="popup-slide" 
                      style="
