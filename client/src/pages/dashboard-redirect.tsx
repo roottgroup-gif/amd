@@ -9,23 +9,30 @@ export default function DashboardRedirect() {
   useEffect(() => {
     if (!isLoading) {
       if (!user) {
+        console.log('DashboardRedirect: No user, redirecting to login');
         navigate('/admin/login');
         return;
       }
 
+      console.log('DashboardRedirect: User role:', user.role);
+      
       // Redirect based on user role
       switch (user.role) {
         case 'admin':
         case 'super_admin':
+          console.log('DashboardRedirect: Redirecting admin to /admin/dashboard');
           navigate('/admin/dashboard');
           break;
         case 'agent':
+          console.log('DashboardRedirect: Redirecting agent to /agent/dashboard');
           navigate('/agent/dashboard');
           break;
         case 'user':
+          console.log('DashboardRedirect: Redirecting user to /customer/dashboard');
           navigate('/customer/dashboard');
           break;
         default:
+          console.log('DashboardRedirect: Unknown role, redirecting to login');
           navigate('/admin/login');
       }
     }
