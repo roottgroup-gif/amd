@@ -74,18 +74,18 @@ export default function ContactForm({ property, agent, className }: ContactFormP
     'Real Estate Agent';
 
   return (
-    <Card className={`sticky top-6 bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 ${className}`} data-testid="contact-form">
+    <Card className={`sticky top-6 ${className}`} data-testid="contact-form">
       <CardHeader className="text-center pb-4">
-        <Avatar className="w-20 h-20 mx-auto mb-4 ring-2 ring-primary/20 dark:ring-primary/40">
+        <Avatar className="w-20 h-20 mx-auto mb-4">
           <AvatarImage src={agent?.avatar} alt={agentName} />
-          <AvatarFallback className="text-lg bg-primary/10 dark:bg-primary/20 text-primary">{agentInitials}</AvatarFallback>
+          <AvatarFallback className="text-lg">{agentInitials}</AvatarFallback>
         </Avatar>
         
-        <CardTitle className="text-lg text-foreground" data-testid="agent-name">{agentName}</CardTitle>
+        <CardTitle className="text-lg" data-testid="agent-name">{agentName}</CardTitle>
         <p className="text-sm text-muted-foreground">Licensed Real Estate Agent</p>
         
         <div className="flex items-center justify-center mt-2">
-          <div className="flex text-yellow-400 dark:text-yellow-300">
+          <div className="flex text-yellow-400">
             {[...Array(5)].map((_, i) => (
               <Star key={i} className="h-4 w-4 fill-current" />
             ))}
@@ -106,7 +106,7 @@ export default function ContactForm({ property, agent, className }: ContactFormP
           </Button>
           
           <Button 
-            className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 text-white"
+            className="w-full bg-green-600 hover:bg-green-700"
             data-testid="whatsapp-button"
           >
             <MessageSquare className="mr-2 h-4 w-4" />
