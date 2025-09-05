@@ -193,7 +193,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/properties", requireAnyRole(["agent", "admin"]), async (req, res) => {
+  app.post("/api/properties", requireAnyRole(["user", "agent", "admin"]), async (req, res) => {
     try {
       const validatedData = insertPropertySchema.parse(req.body);
       const property = await storage.createProperty(validatedData);

@@ -7,18 +7,42 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import PropertyMap from '@/components/property-map';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { apiRequest } from '@/lib/queryClient';
 import type { PropertyWithAgent, PropertyFilters } from '@shared/schema';
 import { 
   Heart, Search, Filter, LogOut, MapPin, DollarSign,
   Home, Eye, Bed, Bath, Maximize, Phone, Mail, Calendar,
-  Star, Bookmark, MessageSquare, User, Settings
+  Star, Bookmark, MessageSquare, User, Settings, Plus,
+  Building, University, Mountain, Tag, Key
 } from 'lucide-react';
+
+// Property form schema for validation
+const propertyFormSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
+  type: z.enum(['house', 'apartment', 'villa', 'land']),
+  listingType: z.enum(['sale', 'rent']),
+  price: z.string().min(1, 'Price is required'),
+  currency: z.string().default('USD'),
+  bedrooms: z.number().min(0).optional(),
+  bathrooms: z.number().min(0).optional(),
+  area: z.number().min(1, 'Area is required'),
+  address: z.string().min(1, 'Address is required'),
+  city: z.string().min(1, 'City is required'),
+  country: z.string().default('Iraq'),
+});
+
+type PropertyFormValues = z.infer<typeof propertyFormSchema>;
 
 export default function CustomerDashboard() {
   const { user, logout } = useAuth();
@@ -28,6 +52,25 @@ export default function CustomerDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [mapFilters, setMapFilters] = useState<PropertyFilters>({ limit: 100 });
   const [activeTab, setActiveTab] = useState('browse');
+
+  // Property form
+  const propertyForm = useForm<PropertyFormValues>({
+    resolver: zodResolver(propertyFormSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+      type: 'house',
+      listingType: 'sale',
+      price: '',
+      currency: 'USD',
+      bedrooms: 0,
+      bathrooms: 0,
+      area: 0,
+      address: '',
+      city: '',
+      country: 'Iraq',
+    },
+  });
 
   // Fetch all properties
   const { data: allProperties = [], isLoading: propertiesLoading } = useQuery<PropertyWithAgent[]>({
@@ -102,6 +145,34 @@ export default function CustomerDashboard() {
     },
   });
 
+  // Create property mutation for customers
+  const createPropertyMutation = useMutation({
+    mutationFn: async (propertyData: PropertyFormValues) => {
+      const response = await apiRequest('POST', '/api/properties', {
+        ...propertyData,
+        price: parseFloat(propertyData.price),
+        agentId: user?.id, // Customer becomes the owner/contact person
+      });
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
+      propertyForm.reset();
+      toast({
+        title: 'Success',
+        description: 'Property added successfully! It will appear on the map.',
+      });
+      setActiveTab('map'); // Switch to map view to see the new property
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to add property',
+        variant: 'destructive',
+      });
+    },
+  });
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -134,6 +205,10 @@ export default function CustomerDashboard() {
   const handlePropertyInquiry = (property: PropertyWithAgent) => {
     // Open inquiry modal or navigate to property detail
     navigate(`/property/${property.id}`);
+  };
+
+  const onSubmitProperty = (data: PropertyFormValues) => {
+    createPropertyMutation.mutate(data);
   };
 
   // Filter properties based on search
@@ -194,9 +269,13 @@ export default function CustomerDashboard() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="browse">Browse Properties</TabsTrigger>
               <TabsTrigger value="map">Map View</TabsTrigger>
+              <TabsTrigger value="add-property">
+                <Plus className="h-4 w-4 mr-1" />
+                Add Property
+              </TabsTrigger>
               <TabsTrigger value="favorites">
                 Favorites ({favorites.length})
               </TabsTrigger>
@@ -315,6 +394,267 @@ export default function CustomerDashboard() {
                       className="h-full w-full rounded-lg"
                     />
                   </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="add-property" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Add New Property</CardTitle>
+                  <CardDescription>
+                    Share your property with others by adding it to our platform
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Form {...propertyForm}>
+                    <form onSubmit={propertyForm.handleSubmit(onSubmitProperty)} className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField
+                          control={propertyForm.control}
+                          name="title"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Property Title *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g., Beautiful 3-bedroom villa" {...field} data-testid="input-property-title" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="type"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Property Type *</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-property-type">
+                                    <SelectValue placeholder="Select property type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="house">
+                                    <span className="flex items-center gap-2">
+                                      <Home className="h-4 w-4 text-blue-600" />
+                                      House
+                                    </span>
+                                  </SelectItem>
+                                  <SelectItem value="apartment">
+                                    <span className="flex items-center gap-2">
+                                      <Building className="h-4 w-4 text-blue-600" />
+                                      Apartment
+                                    </span>
+                                  </SelectItem>
+                                  <SelectItem value="villa">
+                                    <span className="flex items-center gap-2">
+                                      <University className="h-4 w-4 text-blue-600" />
+                                      Villa
+                                    </span>
+                                  </SelectItem>
+                                  <SelectItem value="land">
+                                    <span className="flex items-center gap-2">
+                                      <Mountain className="h-4 w-4 text-blue-600" />
+                                      Land
+                                    </span>
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="listingType"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Listing Type *</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-listing-type">
+                                    <SelectValue placeholder="Select listing type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="sale">
+                                    <span className="flex items-center gap-2">
+                                      <Tag className="h-4 w-4 text-green-600" />
+                                      For Sale
+                                    </span>
+                                  </SelectItem>
+                                  <SelectItem value="rent">
+                                    <span className="flex items-center gap-2">
+                                      <Key className="h-4 w-4 text-orange-600" />
+                                      For Rent
+                                    </span>
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="price"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Price (USD) *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g., 150000" type="number" {...field} data-testid="input-price" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="area"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Area (sq ft) *</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  placeholder="e.g., 1200" 
+                                  type="number" 
+                                  {...field}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                  data-testid="input-area"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="bedrooms"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Bedrooms</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  placeholder="e.g., 3" 
+                                  type="number" 
+                                  {...field}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                  data-testid="input-bedrooms"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="bathrooms"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Bathrooms</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  placeholder="e.g., 2" 
+                                  type="number" 
+                                  {...field}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                  data-testid="input-bathrooms"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="address"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Address *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g., 123 Main Street" {...field} data-testid="input-address" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="city"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>City *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g., Erbil" {...field} data-testid="input-city" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="country"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Country *</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g., Iraq" {...field} data-testid="input-country" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <FormField
+                        control={propertyForm.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Description *</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Describe your property in detail..."
+                                className="min-h-[100px]"
+                                {...field}
+                                data-testid="textarea-description"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className="flex justify-end space-x-4">
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={() => propertyForm.reset()}
+                          data-testid="button-reset"
+                        >
+                          Reset Form
+                        </Button>
+                        <Button 
+                          type="submit" 
+                          disabled={createPropertyMutation.isPending}
+                          data-testid="button-submit-property"
+                        >
+                          {createPropertyMutation.isPending ? 'Adding Property...' : 'Add Property'}
+                        </Button>
+                      </div>
+                    </form>
+                  </Form>
                 </CardContent>
               </Card>
             </TabsContent>
