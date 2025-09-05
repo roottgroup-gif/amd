@@ -576,6 +576,9 @@ export default function PropertyMap({
             }
             
             if (contactPhone) {
+              // Format phone number for display (remove spaces and format cleanly)
+              const displayPhone = contactPhone.replace(/\s+/g, '');
+              
               const isCustomer = customerContact && customerContact.phone;
               const bgColor = isCustomer ? 'rgba(59, 130, 246, 0.1)' : 'rgba(37, 211, 102, 0.1)';
               const borderColor = isCustomer ? '#3b82f6' : '#25D366';
@@ -587,7 +590,7 @@ export default function PropertyMap({
                   <div style="color: ${textColor}; font-size: 12px; font-weight: 600; margin-bottom: 2px;">Contact ${contactType} - ${contactName}</div>
                   <div style="color: ${subTextColor}; font-size: 11px; display: flex; align-items: center;">
                     <i class="fas fa-phone" style="color: ${iconColor}; margin-right: 6px;"></i>
-                    ${contactPhone}
+                    ${displayPhone}
                   </div>
                 </div>
               `;
@@ -621,6 +624,8 @@ export default function PropertyMap({
               
               if (contactPhone) {
                 const cleanPhone = contactPhone.replace(/[^+0-9]/g, '');
+                // Format phone number for display (remove spaces and format cleanly)
+                const displayPhone = contactPhone.replace(/\s+/g, '');
                 const callBtnColor = isCustomer ? '#3b82f6' : '#16a34a';
                 const callBtnHoverColor = isCustomer ? '#2563eb' : '#0c7b00';
                 const whatsappBtnColor = '#25D366';
@@ -633,7 +638,7 @@ export default function PropertyMap({
                           onmouseover="this.style.background='${callBtnHoverColor}'"
                           onmouseout="this.style.background='${callBtnColor}'"
                           style="background: ${callBtnColor}; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
-                          title="Call ${contactType} - ${contactName} (${contactPhone})">
+                          title="Call ${contactType} - ${contactName} (${displayPhone})">
                     <i class="fas fa-phone" style="color: white;"></i>
                   </button>
                   <button class="popup-button" 
@@ -641,7 +646,7 @@ export default function PropertyMap({
                           onmouseover="this.style.background='${whatsappBtnHoverColor}'"
                           onmouseout="this.style.background='${whatsappBtnColor}'"
                           style="background: ${whatsappBtnColor}; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
-                          title="WhatsApp ${contactType} - ${contactName} (${contactPhone})">
+                          title="WhatsApp ${contactType} - ${contactName} (${displayPhone})">
                     <i class="fab fa-whatsapp" style="color: white;"></i>
                   </button>
                 `;
