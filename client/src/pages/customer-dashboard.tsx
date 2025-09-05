@@ -12,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import PropertyMap from '@/components/property-map';
 import LocationSelectionMap from '@/components/location-selection-map';
+import ImageUpload from '@/components/image-upload';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -43,6 +44,9 @@ const propertyFormSchema = z.object({
   country: z.string().default('Iraq'),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
+  images: z.array(z.string()).default([]),
+  amenities: z.array(z.string()).default([]),
+  features: z.array(z.string()).default([]),
 });
 
 type PropertyFormValues = z.infer<typeof propertyFormSchema>;
@@ -75,6 +79,9 @@ export default function CustomerDashboard() {
       country: 'Iraq',
       latitude: undefined,
       longitude: undefined,
+      images: [],
+      amenities: [],
+      features: [],
     },
   });
 
@@ -685,6 +692,105 @@ export default function CustomerDashboard() {
                             </p>
                           </div>
                         )}
+                      </div>
+
+                      {/* Property Images Upload */}
+                      <div className="space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium mb-2">📷 Property Images</h3>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            Upload high-quality images of your property. The first image will be used as the main photo.
+                          </p>
+                        </div>
+                        
+                        <FormField
+                          control={propertyForm.control}
+                          name="images"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <ImageUpload
+                                  value={field.value || []}
+                                  onChange={field.onChange}
+                                  maxFiles={10}
+                                  maxSize={5}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      {/* Amenities and Features */}
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <FormField
+                          control={propertyForm.control}
+                          name="amenities"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Amenities</FormLabel>
+                              <div className="grid grid-cols-2 gap-2 mt-2">
+                                {[
+                                  'Swimming Pool', 'Garden', 'Parking', 'Security System',
+                                  'Elevator', 'Gym', 'Balcony', 'Terrace'
+                                ].map((amenity) => (
+                                  <label key={amenity} className="flex items-center space-x-2 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={field.value?.includes(amenity) || false}
+                                      onChange={(e) => {
+                                        const current = field.value || [];
+                                        if (e.target.checked) {
+                                          field.onChange([...current, amenity]);
+                                        } else {
+                                          field.onChange(current.filter(item => item !== amenity));
+                                        }
+                                      }}
+                                      className="rounded border-gray-300"
+                                    />
+                                    <span className="text-sm">{amenity}</span>
+                                  </label>
+                                ))}
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="features"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Features</FormLabel>
+                              <div className="grid grid-cols-2 gap-2 mt-2">
+                                {[
+                                  'Air Conditioning', 'Heating', 'Furnished', 'Pet Friendly',
+                                  'Fireplace', 'High Ceilings', 'Modern Kitchen', 'Storage Room'
+                                ].map((feature) => (
+                                  <label key={feature} className="flex items-center space-x-2 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={field.value?.includes(feature) || false}
+                                      onChange={(e) => {
+                                        const current = field.value || [];
+                                        if (e.target.checked) {
+                                          field.onChange([...current, feature]);
+                                        } else {
+                                          field.onChange(current.filter(item => item !== feature));
+                                        }
+                                      }}
+                                      className="rounded border-gray-300"
+                                    />
+                                    <span className="text-sm">{feature}</span>
+                                  </label>
+                                ))}
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       </div>
 
                       <FormField
