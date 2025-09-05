@@ -131,15 +131,6 @@ export default function HomePage() {
               </Badge>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowFilters(!showFilters)}
-                className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2"
-                data-testid="toggle-filters"
-              >
-                {showFilters ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
-              </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
@@ -152,7 +143,7 @@ export default function HomePage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
-                  align="end" 
+                  align="start" 
                   className="w-48 bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 z-[10001]"
                 >
                   <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
@@ -177,6 +168,15 @@ export default function HomePage() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setShowFilters(!showFilters)}
+                className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2"
+                data-testid="toggle-filters"
+              >
+                {showFilters ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
+              </Button>
             </div>
           </div>
 
