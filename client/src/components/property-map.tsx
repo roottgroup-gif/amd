@@ -318,29 +318,28 @@ export default function PropertyMap({
     const count = cluster.properties.length;
     const { lat, lng } = cluster.center;
     
-    // Get theme-aware colors
+    // White background with white border for all themes
     const isDark = document.documentElement.classList.contains('dark');
-    const bgGradient = isDark 
-      ? 'linear-gradient(135deg, #059669 0%, #047857 100%)' 
-      : 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-    const shadowColor = isDark ? 'rgba(16, 185, 129, 0.4)' : 'rgba(5, 150, 105, 0.4)';
+    const bgColor = '#ffffff';
+    const shadowColor = isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.2)';
     const borderColor = '#ffffff';
+    const iconColor = '#10b981';
     
     const clusterIcon = L.divIcon({
       html: `
         <div class="cluster-marker" style="
-          background: ${bgGradient};
+          background: ${bgColor};
           width: 56px;
           height: 56px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 6px 20px ${shadowColor}, 0 0 0 2px ${borderColor};
+          box-shadow: 0 6px 20px ${shadowColor};
           border: 3px solid ${borderColor};
           cursor: pointer;
           font-weight: 700;
-          color: white;
+          color: ${iconColor};
           font-size: 14px;
           position: relative;
           z-index: 1000;
@@ -348,7 +347,7 @@ export default function PropertyMap({
         "
         onmouseover="this.style.transform='scale(1.1)'"
         onmouseout="this.style.transform='scale(1)'">
-          <i class="fas fa-home" style="margin-right: 4px; font-size: 12px;"></i>${count}
+          <i class="fas fa-home" style="margin-right: 4px; font-size: 12px; color: ${iconColor};"></i>${count}
         </div>
       `,
       className: 'custom-cluster-marker',
@@ -397,15 +396,14 @@ export default function PropertyMap({
 
     // Create custom icon based on property type and listing type
     const getPropertyIcon = (type: string, listingType: string, isFeatured: boolean = false) => {
-      // Get theme-aware colors
+      // White background for all markers with colored icons
       const isDark = document.documentElement.classList.contains('dark');
       
-      // Main colors for sale/rent with better contrast
-      let bgColor = listingType === 'sale' ? '#dc2626' : '#059669';
+      // White background with colored icons for visibility
+      let bgColor = '#ffffff';
       let markerBorderColor = '#ffffff';
-      let shadowColor = listingType === 'sale' 
-        ? (isDark ? 'rgba(220, 38, 38, 0.4)' : 'rgba(220, 38, 38, 0.3)')
-        : (isDark ? 'rgba(5, 150, 105, 0.4)' : 'rgba(5, 150, 105, 0.3)');
+      let shadowColor = isDark ? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.2)';
+      let iconColor = listingType === 'sale' ? '#dc2626' : '#059669';
         
       let animationClass = isFeatured ? 'premium-marker' : '';
       let iconType = type === 'apartment' ? 'fa-building' : type === 'land' ? 'fa-map-marked-alt' : type === 'villa' ? 'fa-university' : 'fa-home';
@@ -420,7 +418,7 @@ export default function PropertyMap({
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 16px ${shadowColor}, 0 0 0 2px ${markerBorderColor};
+            box-shadow: 0 6px 16px ${shadowColor};
             border: 3px solid ${markerBorderColor};
             cursor: pointer;
             position: relative;
@@ -429,7 +427,7 @@ export default function PropertyMap({
           "
           onmouseover="this.style.transform='scale(1.1)'; this.style.zIndex='1001'"
           onmouseout="this.style.transform='scale(1)'; this.style.zIndex='1000'">
-            <i class="fas ${iconType}" style="color: white; font-size: 18px; pointer-events: none;"></i>
+            <i class="fas ${iconType}" style="color: ${iconColor}; font-size: 18px; pointer-events: none;"></i>
             ${isFeatured ? '<div class="premium-ring" style="position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; border: 2px solid #fbbf24; animation: pulse 2s infinite;"></div>' : ''}
           </div>
         `,
