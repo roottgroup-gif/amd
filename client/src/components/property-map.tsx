@@ -33,10 +33,16 @@ export default function PropertyMap({
   // Local state for filters
   const [localFilters, setLocalFilters] = useState<PropertyFilters>(filters || {});
 
-  // Check for dark mode
+  // Check for dark mode and update markers when theme changes
   useEffect(() => {
     const checkDarkMode = () => {
-      setIsDarkMode(document.documentElement.classList.contains('dark'));
+      const newIsDarkMode = document.documentElement.classList.contains('dark');
+      setIsDarkMode(newIsDarkMode);
+      
+      // Re-render markers when theme changes to update their styling
+      if (currentPropertiesRef.current.length > 0) {
+        updateMarkersForProperties(currentPropertiesRef.current);
+      }
     };
     
     checkDarkMode();
@@ -312,38 +318,50 @@ export default function PropertyMap({
     const count = cluster.properties.length;
     const { lat, lng } = cluster.center;
     
+    // Get theme-aware colors
+    const isDark = document.documentElement.classList.contains('dark');
+    const bgGradient = isDark 
+      ? 'linear-gradient(135deg, #059669 0%, #047857 100%)' 
+      : 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+    const shadowColor = isDark ? 'rgba(16, 185, 129, 0.4)' : 'rgba(5, 150, 105, 0.4)';
+    const borderColor = '#ffffff';
+    
     const clusterIcon = L.divIcon({
       html: `
         <div class="cluster-marker" style="
-          background: linear-gradient(135deg, #bdd479 0%, #a3c766 100%);
-          width: 50px;
-          height: 50px;
+          background: ${bgGradient};
+          width: 56px;
+          height: 56px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-          border: 4px solid white;
+          box-shadow: 0 6px 20px ${shadowColor}, 0 0 0 2px ${borderColor};
+          border: 3px solid ${borderColor};
           cursor: pointer;
           font-weight: 700;
           color: white;
           font-size: 14px;
-        ">
-          ${count}
+          position: relative;
+          z-index: 1000;
+          transition: all 0.2s ease;
+        "
+        onmouseover="this.style.transform='scale(1.1)'"
+        onmouseout="this.style.transform='scale(1)'">
+          <i class="fas fa-home" style="margin-right: 4px; font-size: 12px;"></i>${count}
         </div>
       `,
       className: 'custom-cluster-marker',
-      iconSize: [50, 50],
-      iconAnchor: [25, 25]
+      iconSize: [56, 56],
+      iconAnchor: [28, 28]
     });
     
     const marker = L.marker([lat, lng], { icon: clusterIcon }).addTo(mapInstanceRef.current);
     
-    const isDark = document.documentElement.classList.contains('dark');
     const popupBg = isDark ? '#1f2937' : '#ffffff';
     const textColor = isDark ? '#ffffff' : '#000000';
     const subTextColor = isDark ? '#d1d5db' : '#666666';
-    const borderColor = isDark ? '#374151' : '#e5e7eb';
+    const popupBorderColor = isDark ? '#374151' : '#e5e7eb';
     
     const popupContent = `
       <div class="cluster-popup" style="width: 320px; max-width: 95vw; background: ${popupBg}; color: ${textColor};">
@@ -352,7 +370,7 @@ export default function PropertyMap({
         </div>
         <div style="max-height: 300px; overflow-y: auto;">
           ${cluster.properties.map((property: any) => `
-            <div style="padding: 8px 0; border-bottom: 1px solid ${borderColor}; cursor: pointer; color: ${textColor};" onclick="window.viewPropertyFromMap('${property.id}')">
+            <div style="padding: 8px 0; border-bottom: 1px solid ${popupBorderColor}; cursor: pointer; color: ${textColor};" onclick="window.viewPropertyFromMap('${property.id}')">
               <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px; color: ${textColor};">${property.title}</div>
               <div style="font-size: 11px; color: ${subTextColor}; margin-bottom: 4px;">${property.address}</div>
               <div style="font-weight: 700; color: #FF7800; font-size: 12px;">
@@ -379,8 +397,16 @@ export default function PropertyMap({
 
     // Create custom icon based on property type and listing type
     const getPropertyIcon = (type: string, listingType: string, isFeatured: boolean = false) => {
-      let bgColor = listingType === 'sale' ? '#dc2626' : '#16a34a';
-      let borderColor = listingType === 'sale' ? '#fef2f2' : '#f0fdf4';
+      // Get theme-aware colors
+      const isDark = document.documentElement.classList.contains('dark');
+      
+      // Main colors for sale/rent with better contrast
+      let bgColor = listingType === 'sale' ? '#dc2626' : '#059669';
+      let markerBorderColor = '#ffffff';
+      let shadowColor = listingType === 'sale' 
+        ? (isDark ? 'rgba(220, 38, 38, 0.4)' : 'rgba(220, 38, 38, 0.3)')
+        : (isDark ? 'rgba(5, 150, 105, 0.4)' : 'rgba(5, 150, 105, 0.3)');
+        
       let animationClass = isFeatured ? 'premium-marker' : '';
       let iconType = type === 'apartment' ? 'fa-building' : type === 'land' ? 'fa-map-marked-alt' : type === 'villa' ? 'fa-university' : 'fa-home';
 
@@ -388,26 +414,28 @@ export default function PropertyMap({
         html: `
           <div class="property-marker-icon ${animationClass}" style="
             background: ${bgColor};
-            border-color: ${borderColor};
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-            border: 4px solid ${borderColor};
+            box-shadow: 0 6px 16px ${shadowColor}, 0 0 0 2px ${markerBorderColor};
+            border: 3px solid ${markerBorderColor};
             cursor: pointer;
             position: relative;
-            z-index: 100;
-          ">
+            z-index: 1000;
+            transition: all 0.2s ease;
+          "
+          onmouseover="this.style.transform='scale(1.1)'; this.style.zIndex='1001'"
+          onmouseout="this.style.transform='scale(1)'; this.style.zIndex='1000'">
             <i class="fas ${iconType}" style="color: white; font-size: 18px; pointer-events: none;"></i>
-            ${isFeatured ? '<div class="premium-ring"></div>' : ''}
+            ${isFeatured ? '<div class="premium-ring" style="position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; border: 2px solid #fbbf24; animation: pulse 2s infinite;"></div>' : ''}
           </div>
         `,
         className: 'custom-property-marker clickable-marker',
-        iconSize: [44, 44],
-        iconAnchor: [22, 22]
+        iconSize: [48, 48],
+        iconAnchor: [24, 24]
       });
     };
 
