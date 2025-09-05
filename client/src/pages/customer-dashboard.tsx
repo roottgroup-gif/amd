@@ -13,6 +13,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 import PropertyMap from '@/components/property-map';
 import LocationSelectionMap from '@/components/location-selection-map';
 import ImageUpload from '@/components/image-upload';
+import ProfilePhotoUpload from '@/components/profile-photo-upload';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -1043,6 +1044,25 @@ export default function CustomerDashboard() {
                           onSubmit={profileForm.handleSubmit(onSubmitProfile)} 
                           className="space-y-6"
                         >
+                          {/* Profile Photo Upload */}
+                          <FormField
+                            control={profileForm.control}
+                            name="avatar"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <ProfilePhotoUpload
+                                    value={field.value || ''}
+                                    onChange={field.onChange}
+                                    currentUser={user || undefined}
+                                    maxSize={2}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Editable Fields */}
                             <FormField
@@ -1092,24 +1112,6 @@ export default function CustomerDashboard() {
                                       placeholder="Enter your phone number" 
                                       {...field} 
                                       data-testid="input-phone"
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
-                            <FormField
-                              control={profileForm.control}
-                              name="avatar"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Profile Photo URL</FormLabel>
-                                  <FormControl>
-                                    <Input 
-                                      placeholder="Enter photo URL" 
-                                      {...field} 
-                                      data-testid="input-avatar"
                                     />
                                   </FormControl>
                                   <FormMessage />
