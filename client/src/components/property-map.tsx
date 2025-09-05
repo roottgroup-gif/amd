@@ -357,7 +357,7 @@ export default function PropertyMap({
       let bgColor = listingType === 'sale' ? '#dc2626' : '#16a34a';
       let borderColor = listingType === 'sale' ? '#fef2f2' : '#f0fdf4';
       let animationClass = isFeatured ? 'premium-marker' : '';
-      let iconType = type === 'apartment' ? 'fa-building' : type === 'land' ? 'fa-map-marked-alt' : 'fa-home';
+      let iconType = type === 'apartment' ? 'fa-building' : type === 'land' ? 'fa-map-marked-alt' : type === 'villa' ? 'fa-crown' : 'fa-home';
 
       return L.divIcon({
         html: `
