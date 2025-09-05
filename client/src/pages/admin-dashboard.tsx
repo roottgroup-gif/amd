@@ -792,7 +792,7 @@ export default function AdminDashboard() {
                   <SelectItem value="admin">Admins</SelectItem>
                 </SelectContent>
               </Select>
-              {user?.role === 'super_admin' && (
+              {(user?.role === 'admin' || user?.role === 'super_admin') && (
                 <Button
                   variant={showPasswords ? "default" : "outline"}
                   onClick={() => setShowPasswords(!showPasswords)}
@@ -831,7 +831,7 @@ export default function AdminDashboard() {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Status
                         </th>
-                        {user?.role === 'super_admin' && showPasswords && (
+                        {(user?.role === 'admin' || user?.role === 'super_admin') && showPasswords && (
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Password
                           </th>
@@ -880,7 +880,7 @@ export default function AdminDashboard() {
                               {u.isVerified ? 'Verified' : 'Unverified'}
                             </Badge>
                           </td>
-                          {user?.role === 'super_admin' && showPasswords && (
+                          {(user?.role === 'admin' || user?.role === 'super_admin') && showPasswords && (
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-xs">
                                 {usersWithPasswords.find(up => up.id === u.id)?.password || '••••••••'}
@@ -892,7 +892,7 @@ export default function AdminDashboard() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div className="flex gap-2 justify-end">
-                              {user?.role === 'super_admin' && (
+                              {(user?.role === 'admin' || user?.role === 'super_admin') && (
                                 <Button
                                   variant="outline"
                                   size="sm"
