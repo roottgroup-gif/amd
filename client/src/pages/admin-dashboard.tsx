@@ -83,6 +83,29 @@ export default function AdminDashboard() {
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Check file size (limit to 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        toast({
+          title: 'File too large',
+          description: 'Please select an image smaller than 5MB',
+          variant: 'destructive',
+        });
+        event.target.value = ''; // Clear the input
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: 'Invalid file type',
+          description: 'Please select an image file',
+          variant: 'destructive',
+        });
+        event.target.value = ''; // Clear the input
+        return;
+      }
+
       setAvatarFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -366,7 +389,7 @@ export default function AdminDashboard() {
                                       data-testid="input-avatar"
                                     />
                                     <p className="text-sm text-gray-500 mt-1">
-                                      Upload a profile photo (optional)
+                                      Upload a profile photo (optional, max 5MB)
                                     </p>
                                   </div>
                                 </div>
