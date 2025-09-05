@@ -357,7 +357,8 @@ export default function PropertyMap({
       let bgColor = listingType === 'sale' ? '#dc2626' : '#16a34a';
       let borderColor = listingType === 'sale' ? '#fef2f2' : '#f0fdf4';
       let animationClass = isFeatured ? 'premium-marker' : '';
-      let iconType = type === 'apartment' ? 'fa-building' : type === 'land' ? 'fa-map-marked-alt' : type === 'villa' ? 'fa-crown' : 'fa-home';
+      let iconType = type === 'apartment' ? 'fa-building' : type === 'land' ? 'fa-map-marked-alt' : 'fa-home';
+      let isVilla = type === 'villa';
 
       return L.divIcon({
         html: `
@@ -376,7 +377,12 @@ export default function PropertyMap({
             position: relative;
             z-index: 100;
           ">
-            <i class="fas ${iconType}" style="color: white; font-size: 18px; pointer-events: none;"></i>
+${isVilla ? 
+              `<img src="/attached_assets/generated_images/Villa_house_icon_14d057c0.png" 
+                   style="width: 24px; height: 24px; filter: brightness(0) invert(1); pointer-events: none;" 
+                   alt="Villa" />` : 
+              `<i class="fas ${iconType}" style="color: white; font-size: 18px; pointer-events: none;"></i>`
+            }
             ${isFeatured ? '<div class="premium-ring"></div>' : ''}
           </div>
         `,
