@@ -270,7 +270,7 @@ export default function PropertyDetailPage() {
           
           {/* Thumbnail Gallery */}
           {images.length > 1 && (
-            <div className="p-4 bg-gray-50">
+            <div className="p-4 bg-gray-50 dark:bg-gray-800">
               <div className="flex gap-2 overflow-x-auto">
                 {images.map((image, index) => (
                   <div
@@ -278,7 +278,7 @@ export default function PropertyDetailPage() {
                     className={`flex-shrink-0 cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
                       index === currentImageIndex 
                         ? 'border-primary shadow-md' 
-                        : 'border-gray-200 hover:border-gray-300'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                     }`}
                     onClick={() => setCurrentImageIndex(index)}
                     data-testid={`thumbnail-${index}`}
