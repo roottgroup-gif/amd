@@ -83,6 +83,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Super admin only - get users with passwords
+  app.get("/api/admin/users/with-passwords", requireRole("super_admin"), async (req, res) => {
+    try {
+      const users = await storage.getAllUsers();
+      // Only super admin can see passwords
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch users with passwords" });
+    }
+  });
+
   app.post("/api/admin/users", requireRole("admin"), async (req, res) => {
     try {
       const validatedData = insertUserSchema.parse(req.body);
@@ -102,6 +113,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid user data", errors: error.errors });
       }
       res.status(500).json({ message: "Failed to create user" });
+    }
+  });
+
+  app.put("/api/admin/users/:id", requireRole("admin"), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const validatedData = insertUserSchema.partial().parse(req.body);
+      
+      // Hash password if provided
+      if (validatedData.password) {
+        validatedData.password = await hashPassword(validatedData.password);
+      }
+      
+      const updatedUser = await storage.updateUser(id, validatedData);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const { password: _, ...userWithoutPassword } = updatedUser;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid user data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update user" });
     }
   });
 

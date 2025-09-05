@@ -33,7 +33,19 @@ const createUserSchema = z.object({
   avatar: z.string().optional(),
 });
 
+const editUserSchema = z.object({
+  username: z.string().min(3, 'Username must be at least 3 characters'),
+  email: z.string().email('Please enter a valid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters').optional(),
+  role: z.enum(['user', 'agent', 'admin']),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  phone: z.string().optional(),
+  avatar: z.string().optional(),
+});
+
 type CreateUserForm = z.infer<typeof createUserSchema>;
+type EditUserForm = z.infer<typeof editUserSchema>;
 
 export default function AdminDashboard() {
   const [, navigate] = useLocation();
@@ -41,14 +53,17 @@ export default function AdminDashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
+  const [isEditUserOpen, setIsEditUserOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>('');
+  const [showPasswords, setShowPasswords] = useState(false);
 
-  // Redirect if not admin
+  // Redirect if not admin or super admin
   useEffect(() => {
-    if (user && user.role !== 'admin') {
+    if (user && user.role !== 'admin' && user.role !== 'super_admin') {
       toast({
         title: 'Access Denied',
         description: 'You do not have permission to access this page.',
@@ -67,6 +82,20 @@ export default function AdminDashboard() {
 
   const form = useForm<CreateUserForm>({
     resolver: zodResolver(createUserSchema),
+    defaultValues: {
+      username: '',
+      email: '',
+      password: '',
+      role: 'user',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      avatar: '',
+    },
+  });
+
+  const editForm = useForm<EditUserForm>({
+    resolver: zodResolver(editUserSchema),
     defaultValues: {
       username: '',
       email: '',
@@ -127,7 +156,14 @@ export default function AdminDashboard() {
   // Fetch all users
   const { data: users = [], isLoading: usersLoading } = useQuery<User[]>({
     queryKey: ['/api/admin/users'],
-    enabled: user?.role === 'admin',
+    enabled: user?.role === 'admin' || user?.role === 'super_admin',
+  });
+
+  // Fetch users with passwords for super admin
+  const { data: usersWithPasswords = [], isLoading: usersWithPasswordsLoading } = useQuery<any[]>({
+    queryKey: ['/api/admin/users/with-passwords'],
+    enabled: user?.role === 'super_admin' && showPasswords,
+    retry: false,
   });
 
   // Create user mutation
@@ -150,6 +186,32 @@ export default function AdminDashboard() {
       toast({
         title: 'Error',
         description: error.message || 'Failed to create user',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Edit user mutation
+  const editUserMutation = useMutation({
+    mutationFn: async ({ id, userData }: { id: string; userData: EditUserForm }) => {
+      const response = await apiRequest('PUT', `/api/admin/users/${id}`, userData);
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
+      setIsEditUserOpen(false);
+      setEditingUser(null);
+      editForm.reset();
+      resetAvatarUpload();
+      toast({
+        title: 'Success',
+        description: 'User updated successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update user',
         variant: 'destructive',
       });
     },
@@ -192,6 +254,28 @@ export default function AdminDashboard() {
 
   const onCreateUser = async (data: CreateUserForm) => {
     await createUserMutation.mutateAsync(data);
+  };
+
+  const onEditUser = async (data: EditUserForm) => {
+    if (editingUser) {
+      await editUserMutation.mutateAsync({ id: editingUser.id, userData: data });
+    }
+  };
+
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    editForm.reset({
+      username: user.username,
+      email: user.email,
+      password: '', // Don't pre-fill password for security
+      role: user.role as 'user' | 'agent' | 'admin',
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      phone: user.phone || '',
+      avatar: user.avatar || '',
+    });
+    setAvatarPreview(user.avatar || '');
+    setIsEditUserOpen(true);
   };
 
   const handleDeleteUser = async (userId: string, username: string) => {
@@ -500,6 +584,188 @@ export default function AdminDashboard() {
                   </Form>
                 </DialogContent>
               </Dialog>
+              
+              {/* Edit User Dialog */}
+              <Dialog open={isEditUserOpen} onOpenChange={(open) => {
+                setIsEditUserOpen(open);
+                if (!open) {
+                  setEditingUser(null);
+                  resetAvatarUpload();
+                }
+              }}>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Edit User</DialogTitle>
+                    <DialogDescription>
+                      Update user information
+                    </DialogDescription>
+                  </DialogHeader>
+                  <Form {...editForm}>
+                    <form onSubmit={editForm.handleSubmit(onEditUser)} className="space-y-4">
+                      <FormField
+                        control={editForm.control}
+                        name="username"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Username</FormLabel>
+                            <FormControl>
+                              <Input {...field} data-testid="edit-input-username" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={editForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="email" data-testid="edit-input-email" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      {/* Avatar Upload Field */}
+                      <FormField
+                        control={editForm.control}
+                        name="avatar"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Profile Photo</FormLabel>
+                            <FormControl>
+                              <div className="space-y-4">
+                                <div className="flex items-center gap-4">
+                                  <Avatar className="h-16 w-16">
+                                    <AvatarImage src={avatarPreview} />
+                                    <AvatarFallback>
+                                      <UserPlus className="h-8 w-8 text-gray-400" />
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1">
+                                    <Input
+                                      type="file"
+                                      accept="image/*"
+                                      onChange={handleAvatarChange}
+                                      className="cursor-pointer"
+                                      data-testid="edit-input-avatar"
+                                    />
+                                    <p className="text-sm text-gray-500 mt-1">
+                                      Upload a profile photo (optional, max 5MB)
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={editForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Password (Leave blank to keep current)</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="password" data-testid="edit-input-password" placeholder="Enter new password" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={editForm.control}
+                        name="role"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Role</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger data-testid="edit-select-role">
+                                  <SelectValue placeholder="Select a role" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="user">Customer</SelectItem>
+                                <SelectItem value="agent">Real Estate Agent</SelectItem>
+                                <SelectItem value="admin">Administrator</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={editForm.control}
+                          name="firstName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>First Name</FormLabel>
+                              <FormControl>
+                                <Input {...field} data-testid="edit-input-firstname" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={editForm.control}
+                          name="lastName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Last Name</FormLabel>
+                              <FormControl>
+                                <Input {...field} data-testid="edit-input-lastname" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <FormField
+                        control={editForm.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Phone</FormLabel>
+                            <FormControl>
+                              <Input {...field} data-testid="edit-input-phone" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="flex justify-end space-x-2 pt-4">
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={() => {
+                            setIsEditUserOpen(false);
+                            setEditingUser(null);
+                            resetAvatarUpload();
+                          }}
+                          data-testid="edit-button-cancel"
+                        >
+                          Cancel
+                        </Button>
+                        <Button 
+                          type="submit" 
+                          disabled={editUserMutation.isPending}
+                          data-testid="edit-button-submit"
+                        >
+                          {editUserMutation.isPending ? 'Updating...' : 'Update User'}
+                        </Button>
+                      </div>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
             </div>
           </CardHeader>
           <CardContent>
@@ -526,6 +792,17 @@ export default function AdminDashboard() {
                   <SelectItem value="admin">Admins</SelectItem>
                 </SelectContent>
               </Select>
+              {user?.role === 'super_admin' && (
+                <Button
+                  variant={showPasswords ? "default" : "outline"}
+                  onClick={() => setShowPasswords(!showPasswords)}
+                  className="flex items-center gap-2"
+                  data-testid="button-toggle-passwords"
+                >
+                  <Key className="h-4 w-4" />
+                  {showPasswords ? 'Hide Passwords' : 'Show Passwords'}
+                </Button>
+              )}
             </div>
 
             {/* Users Table */}
@@ -554,6 +831,11 @@ export default function AdminDashboard() {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Status
                         </th>
+                        {user?.role === 'super_admin' && showPasswords && (
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Password
+                          </th>
+                        )}
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Created
                         </th>
@@ -598,21 +880,41 @@ export default function AdminDashboard() {
                               {u.isVerified ? 'Verified' : 'Unverified'}
                             </Badge>
                           </td>
+                          {user?.role === 'super_admin' && showPasswords && (
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-xs">
+                                {usersWithPasswords.find(up => up.id === u.id)?.password || '••••••••'}
+                              </code>
+                            </td>
+                          )}
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            {u.id !== user.id && (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleDeleteUser(u.id, u.username)}
-                                className="text-red-600 hover:text-red-700"
-                                data-testid={`button-delete-${u.id}`}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            )}
+                            <div className="flex gap-2 justify-end">
+                              {user?.role === 'super_admin' && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleEditUser(u)}
+                                  className="text-blue-600 hover:text-blue-700"
+                                  data-testid={`button-edit-${u.id}`}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                              )}
+                              {u.id !== user.id && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleDeleteUser(u.id, u.username)}
+                                  className="text-red-600 hover:text-red-700"
+                                  data-testid={`button-delete-${u.id}`}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       ))}
