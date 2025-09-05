@@ -65,22 +65,22 @@ export interface PropertyFilters {
 export class DatabaseStorage implements IStorage {
   // Users
   async getUser(id: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
+    const [user] = await db().select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
+    const [user] = await db().select().from(users).where(eq(users.username, username));
     return user || undefined;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.email, email));
+    const [user] = await db().select().from(users).where(eq(users.email, email));
     return user || undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db
+    const [user] = await db()
       .insert(users)
       .values(insertUser)
       .returning();
@@ -88,7 +88,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUser(id: string, updateUser: Partial<InsertUser>): Promise<User | undefined> {
-    const [user] = await db
+    const [user] = await db()
       .update(users)
       .set(updateUser)
       .where(eq(users.id, id))
@@ -98,7 +98,7 @@ export class DatabaseStorage implements IStorage {
 
   // Properties
   async getProperty(id: string): Promise<PropertyWithAgent | undefined> {
-    const [property] = await db
+    const [property] = await db()
       .select()
       .from(properties)
       .leftJoin(users, eq(properties.agentId, users.id))
@@ -148,7 +148,7 @@ export class DatabaseStorage implements IStorage {
     conditions.push(eq(properties.status, "active"));
 
     // Build base query
-    const baseQuery = db
+    const baseQuery = db()
       .select()
       .from(properties)
       .leftJoin(users, eq(properties.agentId, users.id))
@@ -185,7 +185,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getPropertiesByAgent(agentId: string): Promise<PropertyWithAgent[]> {
-    const results = await db
+    const results = await db()
       .select()
       .from(properties)
       .leftJoin(users, eq(properties.agentId, users.id))
@@ -199,7 +199,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getFeaturedProperties(): Promise<PropertyWithAgent[]> {
-    const results = await db
+    const results = await db()
       .select()
       .from(properties)
       .leftJoin(users, eq(properties.agentId, users.id))
@@ -214,7 +214,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
-    const [property] = await db
+    const [property] = await db()
       .insert(properties)
       .values(insertProperty as any)
       .returning();
@@ -223,7 +223,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateProperty(id: string, updateProperty: Partial<InsertProperty>): Promise<Property | undefined> {
     const updateData = { ...updateProperty, updatedAt: new Date() } as any;
-    const [property] = await db
+    const [property] = await db()
       .update(properties)
       .set(updateData)
       .where(eq(properties.id, id))
@@ -232,14 +232,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteProperty(id: string): Promise<boolean> {
-    const result = await db
+    const result = await db()
       .delete(properties)
       .where(eq(properties.id, id));
     return (result.rowCount ?? 0) > 0;
   }
 
   async incrementPropertyViews(id: string): Promise<void> {
-    await db
+    await db()
       .update(properties)
       .set({ views: sql`${properties.views} + 1` })
       .where(eq(properties.id, id));
@@ -247,12 +247,12 @@ export class DatabaseStorage implements IStorage {
 
   // Inquiries
   async getInquiry(id: string): Promise<Inquiry | undefined> {
-    const [inquiry] = await db.select().from(inquiries).where(eq(inquiries.id, id));
+    const [inquiry] = await db().select().from(inquiries).where(eq(inquiries.id, id));
     return inquiry || undefined;
   }
 
   async getInquiriesForProperty(propertyId: string): Promise<Inquiry[]> {
-    return await db
+    return await db()
       .select()
       .from(inquiries)
       .where(eq(inquiries.propertyId, propertyId))
@@ -260,7 +260,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getInquiriesForAgent(agentId: string): Promise<Inquiry[]> {
-    const results = await db
+    const results = await db()
       .select({
         inquiry: inquiries,
         property: properties,
@@ -274,7 +274,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createInquiry(insertInquiry: InsertInquiry): Promise<Inquiry> {
-    const [inquiry] = await db
+    const [inquiry] = await db()
       .insert(inquiries)
       .values(insertInquiry)
       .returning();
@@ -282,7 +282,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateInquiryStatus(id: string, status: string): Promise<Inquiry | undefined> {
-    const [inquiry] = await db
+    const [inquiry] = await db()
       .update(inquiries)
       .set({ status })
       .where(eq(inquiries.id, id))
@@ -292,7 +292,7 @@ export class DatabaseStorage implements IStorage {
 
   // Favorites
   async getFavoritesByUser(userId: string): Promise<PropertyWithAgent[]> {
-    const results = await db
+    const results = await db()
       .select()
       .from(favorites)
       .innerJoin(properties, eq(favorites.propertyId, properties.id))
@@ -307,7 +307,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async addToFavorites(favorite: InsertFavorite): Promise<Favorite> {
-    const [fav] = await db
+    const [fav] = await db()
       .insert(favorites)
       .values(favorite)
       .returning();
@@ -315,14 +315,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async removeFromFavorites(userId: string, propertyId: string): Promise<boolean> {
-    const result = await db
+    const result = await db()
       .delete(favorites)
       .where(and(eq(favorites.userId, userId), eq(favorites.propertyId, propertyId)));
     return (result.rowCount ?? 0) > 0;
   }
 
   async isFavorite(userId: string, propertyId: string): Promise<boolean> {
-    const [favorite] = await db
+    const [favorite] = await db()
       .select()
       .from(favorites)
       .where(and(eq(favorites.userId, userId), eq(favorites.propertyId, propertyId)));
@@ -331,7 +331,7 @@ export class DatabaseStorage implements IStorage {
 
   // Search History
   async addSearchHistory(search: InsertSearchHistory): Promise<SearchHistory> {
-    const [history] = await db
+    const [history] = await db()
       .insert(searchHistory)
       .values(search)
       .returning();
@@ -339,7 +339,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getSearchHistoryByUser(userId: string): Promise<SearchHistory[]> {
-    return await db
+    return await db()
       .select()
       .from(searchHistory)
       .where(eq(searchHistory.userId, userId))
