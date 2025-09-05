@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import SearchBar from "@/components/search-bar";
 import PropertyCard from "@/components/property-card";
@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/lib/i18n";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
 import type { Property, AISearchResponse, PropertyFilters } from "@/types";
-import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu, Search, X, User, Heart, Settings, LogOut, University } from "lucide-react";
+import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu, Search, X, User, Heart, Settings, LogOut, University, Sun, Moon } from "lucide-react";
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -29,9 +29,28 @@ export default function HomePage() {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [cardPosition, setCardPosition] = useState<{x: number, y: number} | null>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    }
+    return 'light';
+  });
 
   // Load properties for the map with current filters
   const { data: mapProperties } = useProperties(mapFilters);
+
+  // Load theme from localStorage on component mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+  }, []);
 
   const handleSearchResults = (results: AISearchResponse) => {
     setSearchResults(results);
@@ -102,6 +121,16 @@ export default function HomePage() {
     setCityInput('');
   };
 
+  const toggleTheme = (newTheme: 'light' | 'dark') => {
+    setTheme(newTheme);
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', newTheme);
+  };
+
   return (
     <div className="map-page h-screen w-full bg-background relative">
       {/* Full Screen Map Section */}
@@ -154,6 +183,20 @@ export default function HomePage() {
                   <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
                     <Settings className="h-4 w-4" />
                     <span>Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    className="flex items-center gap-2 cursor-pointer" 
+                    onClick={() => toggleTheme('light')}
+                  >
+                    <Sun className="h-4 w-4" />
+                    <span>Light Mode</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    className="flex items-center gap-2 cursor-pointer" 
+                    onClick={() => toggleTheme('dark')}
+                  >
+                    <Moon className="h-4 w-4" />
+                    <span>Dark Mode</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 dark:text-red-400">
                     <LogOut className="h-4 w-4" />
