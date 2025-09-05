@@ -49,7 +49,16 @@ const propertyFormSchema = z.object({
   features: z.array(z.string()).default([]),
 });
 
+// Profile form schema for validation
+const profileFormSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  phone: z.string().optional(),
+  avatar: z.string().optional(),
+});
+
 type PropertyFormValues = z.infer<typeof propertyFormSchema>;
+type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export default function CustomerDashboard() {
   const { user, logout } = useAuth();
@@ -60,6 +69,7 @@ export default function CustomerDashboard() {
   const [mapFilters, setMapFilters] = useState<PropertyFilters>({ limit: 100 });
   const [activeTab, setActiveTab] = useState('browse');
   const [selectedLocation, setSelectedLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   // Property form
   const propertyForm = useForm<PropertyFormValues>({
@@ -84,6 +94,29 @@ export default function CustomerDashboard() {
       features: [],
     },
   });
+
+  // Profile form
+  const profileForm = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      phone: user?.phone || '',
+      avatar: user?.avatar || '',
+    },
+  });
+
+  // Update profile form when user data changes
+  useEffect(() => {
+    if (user) {
+      profileForm.reset({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        phone: user.phone || '',
+        avatar: user.avatar || '',
+      });
+    }
+  }, [user, profileForm]);
 
   // Fetch all properties
   const { data: allProperties = [], isLoading: propertiesLoading } = useQuery<PropertyWithAgent[]>({
@@ -185,6 +218,29 @@ export default function CustomerDashboard() {
     },
   });
 
+  // Update profile mutation
+  const updateProfileMutation = useMutation({
+    mutationFn: async (profileData: ProfileFormValues) => {
+      const response = await apiRequest('PUT', '/api/profile', profileData);
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+      setIsEditingProfile(false);
+      toast({
+        title: 'Success',
+        description: 'Profile updated successfully!',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update profile',
+        variant: 'destructive',
+      });
+    },
+  });
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -228,6 +284,21 @@ export default function CustomerDashboard() {
       longitude: data.longitude ? data.longitude.toString() : undefined, // Convert to string if provided
     };
     createPropertyMutation.mutate(submitData);
+  };
+
+  const onSubmitProfile = (data: ProfileFormValues) => {
+    updateProfileMutation.mutate(data);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingProfile(false);
+    // Reset form to current user data
+    profileForm.reset({
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      phone: user?.phone || '',
+      avatar: user?.avatar || '',
+    });
   };
 
   const handleLocationSelect = (locationData: { lat: number; lng: number; address?: string; city?: string; country?: string }) => {
@@ -917,6 +988,7 @@ export default function CustomerDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
+                    {/* Profile Picture and Basic Info */}
                     <div className="flex items-center space-x-4">
                       <Avatar className="h-20 w-20">
                         <AvatarImage src={user?.avatar || ''} />
@@ -924,41 +996,178 @@ export default function CustomerDashboard() {
                           {user?.firstName?.[0]}{user?.lastName?.[0] || user?.username[0]}
                         </AvatarFallback>
                       </Avatar>
-                      <div>
+                      <div className="flex-1">
                         <h3 className="text-lg font-semibold">
                           {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.username}
                         </h3>
                         <p className="text-sm text-muted-foreground">{user?.email}</p>
                         <Badge variant="secondary" className="mt-1">Customer</Badge>
                       </div>
+                      <div className="flex space-x-2">
+                        {!isEditingProfile ? (
+                          <Button 
+                            variant="outline" 
+                            onClick={() => setIsEditingProfile(true)}
+                            data-testid="button-edit-profile"
+                          >
+                            <Settings className="h-4 w-4 mr-2" />
+                            Edit Profile
+                          </Button>
+                        ) : (
+                          <>
+                            <Button 
+                              variant="outline" 
+                              onClick={handleCancelEdit}
+                              data-testid="button-cancel-edit"
+                            >
+                              Cancel
+                            </Button>
+                            <Button 
+                              form="profile-form"
+                              type="submit" 
+                              disabled={updateProfileMutation.isPending}
+                              data-testid="button-save-profile"
+                            >
+                              {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
+                            </Button>
+                          </>
+                        )}
+                      </div>
                     </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Username</label>
-                        <Input value={user?.username || ''} disabled />
+
+                    {/* Profile Form */}
+                    {isEditingProfile ? (
+                      <Form {...profileForm}>
+                        <form 
+                          id="profile-form"
+                          onSubmit={profileForm.handleSubmit(onSubmitProfile)} 
+                          className="space-y-6"
+                        >
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Editable Fields */}
+                            <FormField
+                              control={profileForm.control}
+                              name="firstName"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>First Name *</FormLabel>
+                                  <FormControl>
+                                    <Input 
+                                      placeholder="Enter your first name" 
+                                      {...field} 
+                                      data-testid="input-first-name"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={profileForm.control}
+                              name="lastName"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Last Name *</FormLabel>
+                                  <FormControl>
+                                    <Input 
+                                      placeholder="Enter your last name" 
+                                      {...field} 
+                                      data-testid="input-last-name"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={profileForm.control}
+                              name="phone"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Phone Number</FormLabel>
+                                  <FormControl>
+                                    <Input 
+                                      placeholder="Enter your phone number" 
+                                      {...field} 
+                                      data-testid="input-phone"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={profileForm.control}
+                              name="avatar"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Profile Photo URL</FormLabel>
+                                  <FormControl>
+                                    <Input 
+                                      placeholder="Enter photo URL" 
+                                      {...field} 
+                                      data-testid="input-avatar"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+
+                          {/* Read-only Fields */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t">
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium">Username</label>
+                              <Input value={user?.username || ''} disabled />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium">Email</label>
+                              <Input value={user?.email || ''} disabled />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium">Member Since</label>
+                              <Input value={user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : ''} disabled />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium">Account Type</label>
+                              <Input value="Customer" disabled />
+                            </div>
+                          </div>
+                        </form>
+                      </Form>
+                    ) : (
+                      /* Read-only View */
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">First Name</label>
+                          <Input value={user?.firstName || 'Not provided'} disabled />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Last Name</label>
+                          <Input value={user?.lastName || 'Not provided'} disabled />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Phone</label>
+                          <Input value={user?.phone || 'Not provided'} disabled />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Username</label>
+                          <Input value={user?.username || ''} disabled />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Email</label>
+                          <Input value={user?.email || ''} disabled />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium">Member Since</label>
+                          <Input value={user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : ''} disabled />
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Email</label>
-                        <Input value={user?.email || ''} disabled />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">First Name</label>
-                        <Input value={user?.firstName || ''} disabled />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Last Name</label>
-                        <Input value={user?.lastName || ''} disabled />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Phone</label>
-                        <Input value={user?.phone || ''} disabled />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Member Since</label>
-                        <Input value={user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : ''} disabled />
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>

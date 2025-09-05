@@ -162,6 +162,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to delete user" });
     }
   });
+
+  // Customer profile update route (users can update their own profile)
+  app.put("/api/profile", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      
+      // Allow only specific fields to be updated by customers
+      const allowedFields = ['firstName', 'lastName', 'phone', 'avatar'];
+      const updateData: any = {};
+      
+      // Filter only allowed fields from request body
+      Object.keys(req.body).forEach(key => {
+        if (allowedFields.includes(key) && req.body[key] !== undefined) {
+          updateData[key] = req.body[key];
+        }
+      });
+      
+      if (Object.keys(updateData).length === 0) {
+        return res.status(400).json({ message: "No valid fields to update" });
+      }
+      
+      const updatedUser = await storage.updateUser(userId, updateData);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const { password: _, ...userWithoutPassword } = updatedUser;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      console.error("Profile update error:", error);
+      res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
   // Properties routes (protected for agents and admins)
   app.get("/api/properties", async (req, res) => {
     try {
