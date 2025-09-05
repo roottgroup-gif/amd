@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import PropertyMap from '@/components/property-map';
+import LocationSelectionMap from '@/components/location-selection-map';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -40,6 +41,8 @@ const propertyFormSchema = z.object({
   address: z.string().min(1, 'Address is required'),
   city: z.string().min(1, 'City is required'),
   country: z.string().default('Iraq'),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
 });
 
 type PropertyFormValues = z.infer<typeof propertyFormSchema>;
@@ -52,6 +55,7 @@ export default function CustomerDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [mapFilters, setMapFilters] = useState<PropertyFilters>({ limit: 100 });
   const [activeTab, setActiveTab] = useState('browse');
+  const [selectedLocation, setSelectedLocation] = useState<{lat: number, lng: number} | null>(null);
 
   // Property form
   const propertyForm = useForm<PropertyFormValues>({
@@ -69,6 +73,8 @@ export default function CustomerDashboard() {
       address: '',
       city: '',
       country: 'Iraq',
+      latitude: undefined,
+      longitude: undefined,
     },
   });
 
@@ -209,6 +215,26 @@ export default function CustomerDashboard() {
 
   const onSubmitProperty = (data: PropertyFormValues) => {
     createPropertyMutation.mutate(data);
+  };
+
+  const handleLocationSelect = (lat: number, lng: number) => {
+    setSelectedLocation({ lat, lng });
+    propertyForm.setValue('latitude', lat);
+    propertyForm.setValue('longitude', lng);
+    
+    // Auto-fill location details (basic reverse geocoding simulation)
+    // In a real app, you'd use a geocoding service here
+    if (!propertyForm.getValues('city') || !propertyForm.getValues('address')) {
+      // Default to Iraq/Kurdistan region coordinates if clicking in that area
+      if (lat > 35.0 && lat < 37.5 && lng > 43.0 && lng < 46.0) {
+        if (!propertyForm.getValues('city')) {
+          propertyForm.setValue('city', 'Erbil');
+        }
+        if (!propertyForm.getValues('country')) {
+          propertyForm.setValue('country', 'Iraq');
+        }
+      }
+    }
   };
 
   // Filter properties based on search
@@ -615,6 +641,38 @@ export default function CustomerDashboard() {
                             </FormItem>
                           )}
                         />
+                      </div>
+
+                      {/* Location Selection Map */}
+                      <div className="space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium mb-2">📍 Select Property Location</h3>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            Click on the map to pinpoint your property's exact location. This helps buyers find your property easily.
+                          </p>
+                        </div>
+                        
+                        <div className="border rounded-lg overflow-hidden">
+                          <LocationSelectionMap 
+                            onLocationSelect={handleLocationSelect}
+                            selectedLocation={selectedLocation}
+                            className="h-[400px] w-full"
+                          />
+                        </div>
+                        
+                        {selectedLocation && (
+                          <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800">
+                            <div className="flex items-center space-x-2">
+                              <div className="h-2 w-2 bg-green-500 rounded-full"></div>
+                              <span className="text-sm font-medium text-green-700 dark:text-green-300">
+                                Location Selected
+                              </span>
+                            </div>
+                            <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                              Coordinates: {selectedLocation.lat.toFixed(6)}, {selectedLocation.lng.toFixed(6)}
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       <FormField
