@@ -121,7 +121,8 @@ export default function HomePage() {
     setCityInput('');
   };
 
-  const toggleTheme = (newTheme: 'light' | 'dark') => {
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -186,16 +187,9 @@ export default function HomePage() {
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="flex items-center gap-2 cursor-pointer" 
-                    onClick={() => toggleTheme('light')}
+                    onClick={toggleTheme}
                   >
-                    <Sun className="h-4 w-4" />
-                    <span>Light Mode</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    className="flex items-center gap-2 cursor-pointer" 
-                    onClick={() => toggleTheme('dark')}
-                  >
-                    <Moon className="h-4 w-4" />
+                    {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
                     <span>Dark Mode</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 dark:text-red-400">
