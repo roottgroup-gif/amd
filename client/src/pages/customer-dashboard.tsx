@@ -48,6 +48,7 @@ const propertyFormSchema = z.object({
   images: z.array(z.string()).default([]),
   amenities: z.array(z.string()).default([]),
   features: z.array(z.string()).default([]),
+  contactPhone: z.string().optional(),
 });
 
 // Profile form schema for validation
@@ -93,6 +94,7 @@ export default function CustomerDashboard() {
       images: [],
       amenities: [],
       features: [],
+      contactPhone: user?.phone || '',
     },
   });
 
@@ -118,6 +120,13 @@ export default function CustomerDashboard() {
       });
     }
   }, [user, profileForm]);
+
+  // Update property form contact phone when user data changes
+  useEffect(() => {
+    if (user?.phone && propertyForm.getValues('contactPhone') !== user.phone) {
+      propertyForm.setValue('contactPhone', user.phone);
+    }
+  }, [user, propertyForm]);
 
   // Fetch all properties
   const { data: allProperties = [], isLoading: propertiesLoading } = useQuery<PropertyWithAgent[]>({
@@ -752,6 +761,31 @@ export default function CustomerDashboard() {
                                 <Input placeholder="e.g., Iraq" {...field} data-testid="input-country" />
                               </FormControl>
                               <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={propertyForm.control}
+                          name="contactPhone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Contact Phone</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                  <Input 
+                                    placeholder="e.g., +964 750 123 4567" 
+                                    {...field} 
+                                    className="pl-10"
+                                    data-testid="input-contact-phone" 
+                                  />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                              <p className="text-xs text-muted-foreground">
+                                This phone number will be shown to interested buyers for WhatsApp and calls
+                              </p>
                             </FormItem>
                           )}
                         />

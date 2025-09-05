@@ -559,6 +559,15 @@ export default function PropertyMap({
             ${property.bathrooms ? `<span style="color: ${subTextColor};"><i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ''}
             ${property.area ? `<span style="color: ${subTextColor};"><i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
           </div>
+          ${property.contactPhone ? `
+            <div style="margin-bottom: 12px; padding: 8px; background: rgba(37, 211, 102, 0.1); border-radius: 8px; border-left: 3px solid #25D366;">
+              <div style="color: ${textColor}; font-size: 12px; font-weight: 600; margin-bottom: 2px;">Contact Owner</div>
+              <div style="color: ${subTextColor}; font-size: 11px; display: flex; align-items: center;">
+                <i class="fas fa-phone" style="color: #25D366; margin-right: 6px;"></i>
+                ${property.contactPhone}
+              </div>
+            </div>
+          ` : ''}
           <div class="popup-buttons" style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button class="popup-button" 
                     onclick="window.viewPropertyFromMap('${property.id}')"
@@ -567,22 +576,26 @@ export default function PropertyMap({
                     style="flex: 1; min-width: 100px;">
               View Property
             </button>
-            <button class="popup-button" 
-                    onclick="window.open('tel:+9647501234567', '_self')"
-                    onmouseover="this.style.background='#0c7b00'"
-                    onmouseout="this.style.background='#16a34a'"
-                    style="background: #16a34a; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
-                    title="Call Now">
-              <i class="fas fa-phone"></i>
-            </button>
-            <button class="popup-button" 
-                    onclick="window.open('https://wa.me/9647501234567?text=Hi, I\\'m interested in this property: ${encodeURIComponent(property.title)} - ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}', '_blank')"
-                    onmouseover="this.style.background='#128C7E'"
-                    onmouseout="this.style.background='#25D366'"
-                    style="background: #25D366; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
-                    title="WhatsApp">
-              <i class="fab fa-whatsapp"></i>
-            </button>
+            ${property.contactPhone ? `
+              <button class="popup-button" 
+                      onclick="window.open('tel:${property.contactPhone}', '_self')"
+                      onmouseover="this.style.background='#0c7b00'"
+                      onmouseout="this.style.background='#16a34a'"
+                      style="background: #16a34a; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
+                      title="Call ${property.contactPhone}">
+                <i class="fas fa-phone"></i>
+              </button>
+              <button class="popup-button" 
+                      onclick="window.open('https://wa.me/${property.contactPhone.replace(/[^+0-9]/g, '')}?text=Hi, I\\'m interested in this property: ${encodeURIComponent(property.title)} - ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}', '_blank')"
+                      onmouseover="this.style.background='#128C7E'"
+                      onmouseout="this.style.background='#25D366'"
+                      style="background: #25D366; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
+                      title="WhatsApp ${property.contactPhone}">
+                <i class="fab fa-whatsapp"></i>
+              </button>
+            ` : `
+              <span style="color: ${subTextColor}; font-size: 12px; font-style: italic;">Contact info not available</span>
+            `}
           </div>
         </div>
       </div>
