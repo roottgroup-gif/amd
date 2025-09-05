@@ -378,9 +378,9 @@ export default function PropertyMap({
             z-index: 100;
           ">
 ${isVilla ? 
-              `<img src="/attached_assets/generated_images/Villa_house_icon_14d057c0.png" 
+              `<img src="/attached_assets/generated_images/Modern_house_icon_db826a6a.png" 
                    style="width: 24px; height: 24px; filter: brightness(0) invert(1); pointer-events: none;" 
-                   alt="Villa" />` : 
+                   alt="Modern Villa" />` : 
               `<i class="fas ${iconType}" style="color: white; font-size: 18px; pointer-events: none;"></i>`
             }
             ${isFeatured ? '<div class="premium-ring"></div>' : ''}
