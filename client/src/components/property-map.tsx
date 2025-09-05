@@ -560,15 +560,33 @@ export default function PropertyMap({
             ${property.area ? `<span style="color: ${subTextColor};"><i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} sq ft</span>` : ''}
           </div>
           ${(() => {
-            const contactPhone = property.contactPhone || (property.agent && property.agent.phone);
-            const contactName = property.agent ? `${property.agent.firstName || ''} ${property.agent.lastName || ''}`.trim() || 'Agent' : 'Owner';
+            // Priority: Customer contact (from inquiries) > Property contact phone > Agent phone
+            const customerContact = property.customerContact;
+            let contactPhone, contactName;
+            
+            if (customerContact && customerContact.phone) {
+              contactPhone = customerContact.phone;
+              contactName = customerContact.name;
+            } else if (property.contactPhone) {
+              contactPhone = property.contactPhone;
+              contactName = property.agent ? `${property.agent.firstName || ''} ${property.agent.lastName || ''}`.trim() || 'Agent' : 'Owner';
+            } else if (property.agent && property.agent.phone) {
+              contactPhone = property.agent.phone;
+              contactName = property.agent ? `${property.agent.firstName || ''} ${property.agent.lastName || ''}`.trim() || 'Agent' : 'Owner';
+            }
             
             if (contactPhone) {
+              const isCustomer = customerContact && customerContact.phone;
+              const bgColor = isCustomer ? 'rgba(59, 130, 246, 0.1)' : 'rgba(37, 211, 102, 0.1)';
+              const borderColor = isCustomer ? '#3b82f6' : '#25D366';
+              const iconColor = isCustomer ? '#3b82f6' : '#25D366';
+              const contactType = isCustomer ? 'Customer' : 'Agent';
+              
               return `
-                <div style="margin-bottom: 12px; padding: 8px; background: rgba(37, 211, 102, 0.1); border-radius: 8px; border-left: 3px solid #25D366;">
-                  <div style="color: ${textColor}; font-size: 12px; font-weight: 600; margin-bottom: 2px;">Contact ${contactName}</div>
+                <div style="margin-bottom: 12px; padding: 8px; background: ${bgColor}; border-radius: 8px; border-left: 3px solid ${borderColor};">
+                  <div style="color: ${textColor}; font-size: 12px; font-weight: 600; margin-bottom: 2px;">Contact ${contactType} - ${contactName}</div>
                   <div style="color: ${subTextColor}; font-size: 11px; display: flex; align-items: center;">
-                    <i class="fas fa-phone" style="color: #25D366; margin-right: 6px;"></i>
+                    <i class="fas fa-phone" style="color: ${iconColor}; margin-right: 6px;"></i>
                     ${contactPhone}
                   </div>
                 </div>
@@ -585,26 +603,45 @@ export default function PropertyMap({
               View Property
             </button>
             ${(() => {
-              const contactPhone = property.contactPhone || (property.agent && property.agent.phone);
-              const contactName = property.agent ? `${property.agent.firstName || ''} ${property.agent.lastName || ''}`.trim() || 'Agent' : 'Owner';
+              // Priority: Customer contact (from inquiries) > Property contact phone > Agent phone
+              const customerContact = property.customerContact;
+              let contactPhone, contactName, isCustomer = false;
+              
+              if (customerContact && customerContact.phone) {
+                contactPhone = customerContact.phone;
+                contactName = customerContact.name;
+                isCustomer = true;
+              } else if (property.contactPhone) {
+                contactPhone = property.contactPhone;
+                contactName = property.agent ? `${property.agent.firstName || ''} ${property.agent.lastName || ''}`.trim() || 'Agent' : 'Owner';
+              } else if (property.agent && property.agent.phone) {
+                contactPhone = property.agent.phone;
+                contactName = property.agent ? `${property.agent.firstName || ''} ${property.agent.lastName || ''}`.trim() || 'Agent' : 'Owner';
+              }
               
               if (contactPhone) {
                 const cleanPhone = contactPhone.replace(/[^+0-9]/g, '');
+                const callBtnColor = isCustomer ? '#3b82f6' : '#16a34a';
+                const callBtnHoverColor = isCustomer ? '#2563eb' : '#0c7b00';
+                const whatsappBtnColor = '#25D366';
+                const whatsappBtnHoverColor = '#128C7E';
+                const contactType = isCustomer ? 'Customer' : 'Agent';
+                
                 return `
                   <button class="popup-button" 
                           onclick="window.open('tel:${contactPhone}', '_self')"
-                          onmouseover="this.style.background='#0c7b00'"
-                          onmouseout="this.style.background='#16a34a'"
-                          style="background: #16a34a; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
-                          title="Call ${contactName} (${contactPhone})">
+                          onmouseover="this.style.background='${callBtnHoverColor}'"
+                          onmouseout="this.style.background='${callBtnColor}'"
+                          style="background: ${callBtnColor}; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
+                          title="Call ${contactType} - ${contactName} (${contactPhone})">
                     <i class="fas fa-phone" style="color: white;"></i>
                   </button>
                   <button class="popup-button" 
                           onclick="window.open('https://wa.me/${cleanPhone}?text=Hi, I\\'m interested in this property: ${encodeURIComponent(property.title)} - ${property.currency === 'USD' ? '$' : property.currency}${parseFloat(property.price).toLocaleString()}', '_blank')"
-                          onmouseover="this.style.background='#128C7E'"
-                          onmouseout="this.style.background='#25D366'"
-                          style="background: #25D366; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
-                          title="WhatsApp ${contactName} (${contactPhone})">
+                          onmouseover="this.style.background='${whatsappBtnHoverColor}'"
+                          onmouseout="this.style.background='${whatsappBtnColor}'"
+                          style="background: ${whatsappBtnColor}; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
+                          title="WhatsApp ${contactType} - ${contactName} (${contactPhone})">
                     <i class="fab fa-whatsapp" style="color: white;"></i>
                   </button>
                 `;

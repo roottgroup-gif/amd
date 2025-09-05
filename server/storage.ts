@@ -172,11 +172,33 @@ export class DatabaseStorage implements IStorage {
 
     conditions.push(eq(properties.status, "active"));
 
-    // Build base query
+    // Build base query with latest inquiry that has a phone number
     const baseQuery = db()
-      .select()
+      .select({
+        properties: properties,
+        users: users,
+        latestInquiry: {
+          id: inquiries.id,
+          name: inquiries.name,
+          phone: inquiries.phone,
+          email: inquiries.email,
+          createdAt: inquiries.createdAt
+        }
+      })
       .from(properties)
       .leftJoin(users, eq(properties.agentId, users.id))
+      .leftJoin(
+        inquiries, 
+        sql`${inquiries.propertyId} = ${properties.id} AND ${inquiries.phone} IS NOT NULL AND ${inquiries.phone} != '' AND ${inquiries.id} = (
+          SELECT i2.id 
+          FROM ${inquiries} i2 
+          WHERE i2.property_id = ${properties.id} 
+          AND i2.phone IS NOT NULL 
+          AND i2.phone != ''
+          ORDER BY i2.created_at DESC 
+          LIMIT 1
+        )`
+      )
       .where(conditions.length > 0 ? and(...conditions) : undefined);
 
     // Determine sorting
@@ -206,6 +228,11 @@ export class DatabaseStorage implements IStorage {
     return results.map(row => ({
       ...row.properties,
       agent: row.users,
+      customerContact: row.latestInquiry ? {
+        name: row.latestInquiry.name,
+        phone: row.latestInquiry.phone,
+        email: row.latestInquiry.email
+      } : null,
     }));
   }
 

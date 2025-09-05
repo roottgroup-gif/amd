@@ -163,6 +163,11 @@ export type InsertSearchHistory = z.infer<typeof insertSearchHistorySchema>;
 // Property with relations
 export type PropertyWithAgent = Property & {
   agent: User | null;
+  customerContact?: {
+    name: string;
+    phone: string | null;
+    email: string;
+  } | null;
 };
 
 export type PropertyWithDetails = PropertyWithAgent & {
