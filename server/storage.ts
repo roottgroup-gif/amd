@@ -16,6 +16,11 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: string, user: Partial<InsertUser>): Promise<User | undefined>;
+  
+  // Authentication
+  authenticateUser(username: string, password: string): Promise<User | null>;
+  getAllUsers(): Promise<User[]>;
+  deleteUser(id: string): Promise<boolean>;
 
   // Properties
   getProperty(id: string): Promise<PropertyWithAgent | undefined>;
@@ -94,6 +99,26 @@ export class DatabaseStorage implements IStorage {
       .where(eq(users.id, id))
       .returning();
     return user || undefined;
+  }
+
+  // Authentication
+  async authenticateUser(username: string, password: string): Promise<User | null> {
+    const bcrypt = await import('bcryptjs');
+    const user = await this.getUserByUsername(username);
+    
+    if (!user) return null;
+    
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    return isPasswordValid ? user : null;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await db().select().from(users).orderBy(users.createdAt);
+  }
+
+  async deleteUser(id: string): Promise<boolean> {
+    const result = await db().delete(users).where(eq(users.id, id));
+    return (result.rowCount ?? 0) > 0;
   }
 
   // Properties

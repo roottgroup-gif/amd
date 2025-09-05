@@ -3,10 +3,13 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider } from "@/components/AuthProvider";
 import Home from "@/pages/home.tsx";
 import Properties from "@/pages/properties.tsx";
 import PropertyDetail from "@/pages/property-detail.tsx";
 import AgentDashboard from "@/pages/agent-dashboard.tsx";
+import AdminLogin from "@/pages/admin-login.tsx";
+import AdminDashboard from "@/pages/admin-dashboard";
 import NotFound from "@/pages/not-found.tsx";
 
 function Router() {
@@ -16,6 +19,8 @@ function Router() {
       <Route path="/properties" component={Properties} />
       <Route path="/property/:id" component={PropertyDetail} />
       <Route path="/agent-dashboard" component={AgentDashboard} />
+      <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin/dashboard" component={AdminDashboard} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
@@ -25,10 +30,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
