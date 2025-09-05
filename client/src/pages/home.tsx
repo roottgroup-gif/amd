@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/lib/i18n";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
 import type { Property, AISearchResponse, PropertyFilters } from "@/types";
-import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu, Search, X, User, Heart, Settings, LogOut, University, Sun, Moon } from "lucide-react";
+import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu, Search, X, User, Heart, Settings, LogOut, University, Sun, Moon, Building, Mountain } from "lucide-react";
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -268,11 +268,11 @@ export default function HomePage() {
                     <SelectValue placeholder="All Properties" />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
-                    <SelectItem value="all">All Properties</SelectItem>
-                    <SelectItem value="house">House</SelectItem>
-                    <SelectItem value="apartment">Apartment</SelectItem>
+                    <SelectItem value="all"><span className="flex items-center gap-2"><Home className="h-4 w-4" style={{color: '#FF7800'}} />All Properties</span></SelectItem>
+                    <SelectItem value="house"><span className="flex items-center gap-2"><Home className="h-4 w-4" style={{color: '#FF7800'}} />House</span></SelectItem>
+                    <SelectItem value="apartment"><span className="flex items-center gap-2"><Building className="h-4 w-4" style={{color: '#FF7800'}} />Apartment</span></SelectItem>
                     <SelectItem value="villa"><span className="flex items-center gap-2"><University className="h-4 w-4" style={{color: '#FF7800'}} />Villa</span></SelectItem>
-                    <SelectItem value="land">Land</SelectItem>
+                    <SelectItem value="land"><span className="flex items-center gap-2"><Mountain className="h-4 w-4" style={{color: '#FF7800'}} />Land</span></SelectItem>
                   </SelectContent>
                 </Select>
               </div>
