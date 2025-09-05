@@ -992,7 +992,7 @@ export default function CustomerDashboard() {
                     {/* Profile Picture and Basic Info */}
                     <div className="flex items-center space-x-4">
                       <Avatar className="h-20 w-20">
-                        <AvatarImage src={user?.avatar || ''} />
+                        <AvatarImage src={user?.avatar || ''} alt="Profile photo" />
                         <AvatarFallback className="text-lg">
                           {user?.firstName?.[0]}{user?.lastName?.[0] || user?.username[0]}
                         </AvatarFallback>
