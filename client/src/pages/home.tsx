@@ -190,7 +190,7 @@ export default function HomePage() {
                     onClick={toggleTheme}
                   >
                     {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-                    <span>Dark Mode</span>
+                    <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 dark:text-red-400">
                     <LogOut className="h-4 w-4" />
