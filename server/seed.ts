@@ -6,7 +6,7 @@ async function seedData() {
     console.log("🌱 Seeding database...");
 
     // Create a sample agent
-    const [agent] = await db.insert(users).values([{
+    const [agent] = await db().insert(users).values([{
       username: "john_agent",
       email: "john@estateai.com",
       password: "hashedpassword123",
@@ -273,7 +273,7 @@ async function seedData() {
       }
     ];
 
-    await db.insert(properties).values(sampleProperties);
+    await db().insert(properties).values(sampleProperties);
     
     console.log("✅ Created", sampleProperties.length, "sample properties");
     console.log("🎉 Database seeded successfully!");
