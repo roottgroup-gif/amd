@@ -41,7 +41,8 @@ export default function AdminLogin() {
         title: 'Success',
         description: 'Login successful',
       });
-      navigate('/admin/dashboard');
+      // Use the dashboard redirect to handle role-based navigation
+      navigate('/dashboard');
     } catch (error: any) {
       toast({
         title: 'Error',

@@ -16,6 +16,7 @@ export default function DashboardRedirect() {
       // Redirect based on user role
       switch (user.role) {
         case 'admin':
+        case 'super_admin':
           navigate('/admin/dashboard');
           break;
         case 'agent':

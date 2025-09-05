@@ -35,7 +35,7 @@ export function ProtectedRoute({
           });
           
           // Redirect based on user role
-          if (user.role === 'admin') {
+          if (user.role === 'admin' || user.role === 'super_admin') {
             navigate('/admin/dashboard');
           } else if (user.role === 'agent') {
             navigate('/agent/dashboard');
