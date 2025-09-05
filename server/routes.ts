@@ -453,6 +453,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Seed users endpoint
+  app.post("/api/seed/users", async (req, res) => {
+    try {
+      // Check if users already exist
+      const existingSuperAdmin = await storage.getUserByUsername("superadmin");
+      const existingUser = await storage.getUserByUsername("john_doe");
+
+      const createdUsers = [];
+
+      if (!existingSuperAdmin) {
+        // Create super admin
+        const hashedPassword = await hashPassword("SuperAdmin123!");
+        const superAdmin = await storage.createUser({
+          username: "superadmin",
+          email: "superadmin@estateai.com",
+          password: hashedPassword,
+          role: "super_admin",
+          firstName: "Super",
+          lastName: "Admin",
+          phone: "+964-750-123-4567",
+          isVerified: true,
+        });
+        createdUsers.push({ username: superAdmin.username, role: superAdmin.role });
+      } else {
+        createdUsers.push({ username: "superadmin", role: "super_admin", status: "already_exists" });
+      }
+
+      if (!existingUser) {
+        // Create regular user
+        const hashedPassword = await hashPassword("User123!");
+        const regularUser = await storage.createUser({
+          username: "john_doe",
+          email: "john.doe@example.com",
+          password: hashedPassword,
+          role: "user",
+          firstName: "John",
+          lastName: "Doe",
+          phone: "+964-750-987-6543",
+          isVerified: true,
+        });
+        createdUsers.push({ username: regularUser.username, role: regularUser.role });
+      } else {
+        createdUsers.push({ username: "john_doe", role: "user", status: "already_exists" });
+      }
+
+      res.json({ 
+        message: "Seed operation completed",
+        users: createdUsers 
+      });
+    } catch (error) {
+      console.error("Seed error:", error);
+      res.status(500).json({ message: "Failed to seed users" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

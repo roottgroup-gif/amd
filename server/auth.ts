@@ -48,7 +48,7 @@ export const requireRole = (role: string) => {
 
     try {
       const user = await storage.getUser(req.session.userId);
-      if (!user || user.role !== role) {
+      if (!user || (user.role !== role && user.role !== 'super_admin')) {
         return res.status(403).json({ message: 'Forbidden: Insufficient privileges' });
       }
       
@@ -69,7 +69,7 @@ export const requireAnyRole = (roles: string[]) => {
 
     try {
       const user = await storage.getUser(req.session.userId);
-      if (!user || !roles.includes(user.role)) {
+      if (!user || (!roles.includes(user.role) && user.role !== 'super_admin')) {
         return res.status(403).json({ message: 'Forbidden: Insufficient privileges' });
       }
       
