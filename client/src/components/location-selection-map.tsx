@@ -19,37 +19,63 @@ export default function LocationSelectionMap({
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
+    let checkLeafletInterval: NodeJS.Timeout | null = null;
+    let timeoutRef: NodeJS.Timeout | null = null;
+
     // Initialize the map
     const initMap = () => {
-      if (typeof window !== 'undefined' && (window as any).L) {
+      if (typeof window !== 'undefined' && (window as any).L && mapRef.current) {
         const L = (window as any).L;
         
-        // Center on Kurdistan/Iraq region
-        const map = L.map(mapRef.current).setView([36.1911, 44.0094], 8);
-
-        // Add OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Add click event to map
-        map.on('click', (e: any) => {
-          const { lat, lng } = e.latlng;
-          
-          // Remove existing marker
-          if (markerRef.current) {
-            map.removeLayer(markerRef.current);
+        try {
+          // Ensure container is ready
+          if (!mapRef.current.offsetParent) {
+            setTimeout(initMap, 100);
+            return;
           }
-          
-          // Add new marker
-          markerRef.current = L.marker([lat, lng]).addTo(map);
-          
-          // Call the callback
-          onLocationSelect(lat, lng);
-        });
 
-        mapInstanceRef.current = map;
-        setIsMapLoaded(true);
+          // Center on Kurdistan/Iraq region
+          const map = L.map(mapRef.current).setView([36.1911, 44.0094], 8);
+
+          // Add OpenStreetMap tiles
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+          }).addTo(map);
+
+          // Add click event to map
+          map.on('click', (e: any) => {
+            try {
+              const { lat, lng } = e.latlng;
+              
+              // Remove existing marker
+              if (markerRef.current) {
+                map.removeLayer(markerRef.current);
+              }
+              
+              // Add new marker
+              markerRef.current = L.marker([lat, lng]).addTo(map);
+              
+              // Call the callback
+              onLocationSelect(lat, lng);
+            } catch (error) {
+              console.warn('Error handling map click:', error);
+            }
+          });
+
+          mapInstanceRef.current = map;
+          setIsMapLoaded(true);
+
+          // Invalidate size to ensure proper rendering
+          setTimeout(() => {
+            if (mapInstanceRef.current) {
+              mapInstanceRef.current.invalidateSize();
+            }
+          }, 100);
+
+        } catch (error) {
+          console.error('Error initializing location selection map:', error);
+          setIsMapLoaded(false);
+        }
       }
     };
 
@@ -58,22 +84,46 @@ export default function LocationSelectionMap({
       initMap();
     } else {
       // Wait for Leaflet to load
-      const checkLeaflet = setInterval(() => {
+      checkLeafletInterval = setInterval(() => {
         if ((window as any).L) {
-          clearInterval(checkLeaflet);
+          if (checkLeafletInterval) {
+            clearInterval(checkLeafletInterval);
+            checkLeafletInterval = null;
+          }
           initMap();
         }
       }, 100);
 
       // Cleanup interval after 10 seconds
-      setTimeout(() => clearInterval(checkLeaflet), 10000);
+      timeoutRef = setTimeout(() => {
+        if (checkLeafletInterval) {
+          clearInterval(checkLeafletInterval);
+          checkLeafletInterval = null;
+        }
+        console.warn('Leaflet failed to load within 10 seconds');
+      }, 10000);
     }
 
     // Cleanup function
     return () => {
+      if (checkLeafletInterval) {
+        clearInterval(checkLeafletInterval);
+      }
+      if (timeoutRef) {
+        clearTimeout(timeoutRef);
+      }
+      
       if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
+        try {
+          mapInstanceRef.current.remove();
+        } catch (error) {
+          console.warn('Error cleaning up location selection map:', error);
+        }
         mapInstanceRef.current = null;
+      }
+      
+      if (markerRef.current) {
+        markerRef.current = null;
       }
     };
   }, [onLocationSelect]);

@@ -69,37 +69,52 @@ export default function PropertyMap({
   useEffect(() => {
     // Define global function for changing slides in map popups
     (window as any).changeSlide = (popupId: string, direction: number) => {
-      const popup = document.getElementById(popupId);
-      if (!popup) return;
-      
-      const slides = popup.querySelectorAll('.popup-slide');
-      const counter = popup.querySelector('.slide-counter');
-      if (!slides.length) return;
-      
-      // Find current active slide
-      let currentIndex = 0;
-      slides.forEach((slide, index) => {
-        if ((slide as HTMLElement).style.opacity === '1') {
-          currentIndex = index;
+      try {
+        const popup = document.getElementById(popupId);
+        if (!popup) return;
+        
+        const slides = popup.querySelectorAll('.popup-slide');
+        const counter = popup.querySelector('.slide-counter');
+        if (!slides || slides.length === 0) return;
+        
+        // Find current active slide
+        let currentIndex = 0;
+        slides.forEach((slide, index) => {
+          if (slide && (slide as HTMLElement).style.opacity === '1') {
+            currentIndex = index;
+          }
+        });
+        
+        // Calculate next index
+        let nextIndex = currentIndex + direction;
+        if (nextIndex >= slides.length) nextIndex = 0;
+        if (nextIndex < 0) nextIndex = slides.length - 1;
+        
+        // Hide all slides
+        slides.forEach((slide) => {
+          if (slide) {
+            (slide as HTMLElement).style.opacity = '0';
+          }
+        });
+        
+        // Show next slide
+        if (slides[nextIndex]) {
+          (slides[nextIndex] as HTMLElement).style.opacity = '1';
         }
-      });
-      
-      // Calculate next index
-      let nextIndex = currentIndex + direction;
-      if (nextIndex >= slides.length) nextIndex = 0;
-      if (nextIndex < 0) nextIndex = slides.length - 1;
-      
-      // Hide all slides
-      slides.forEach((slide) => {
-        (slide as HTMLElement).style.opacity = '0';
-      });
-      
-      // Show next slide
-      (slides[nextIndex] as HTMLElement).style.opacity = '1';
-      
-      // Update counter
-      if (counter) {
-        counter.textContent = (nextIndex + 1).toString();
+        
+        // Update counter
+        if (counter) {
+          counter.textContent = (nextIndex + 1).toString();
+        }
+      } catch (error) {
+        console.warn('Error in changeSlide function:', error);
+      }
+    };
+
+    // Cleanup global function on unmount
+    return () => {
+      if ((window as any).changeSlide) {
+        delete (window as any).changeSlide;
       }
     };
   }, []);
