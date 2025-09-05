@@ -124,6 +124,13 @@ export default function HomePage() {
           <div className={`bg-white/90 dark:bg-black/90 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/30 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 max-h-full overflow-y-auto ${showFilters ? 'p-3 sm:p-4 md:p-6' : 'p-2 sm:p-3'}`}>
             <div className={`flex items-center justify-between ${showFilters ? 'mb-3 sm:mb-4' : 'mb-1 sm:mb-2'}`}>
             <div className="flex items-center gap-1 sm:gap-2">
+              <Filter className="h-4 w-4 sm:h-5 sm:w-5" style={{color: '#FF7800'}} />
+              <h2 className="text-sm sm:text-base md:text-lg font-semibold text-black dark:text-white">Property Filters</h2>
+              <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs hidden sm:inline-flex" style={{backgroundColor: '#FF7800', color: '#fff'}}>
+                {(mapProperties || []).length} properties
+              </Badge>
+            </div>
+            <div className="flex items-center gap-1 sm:gap-2">
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -133,13 +140,6 @@ export default function HomePage() {
               >
                 {showFilters ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
               </Button>
-              <Filter className="h-4 w-4 sm:h-5 sm:w-5" style={{color: '#FF7800'}} />
-              <h2 className="text-sm sm:text-base md:text-lg font-semibold text-black dark:text-white">Property Filters</h2>
-              <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs hidden sm:inline-flex" style={{backgroundColor: '#FF7800', color: '#fff'}}>
-                {(mapProperties || []).length} properties
-              </Badge>
-            </div>
-            <div className="flex items-center gap-1 sm:gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button 
