@@ -41,8 +41,8 @@ export default function AdminLogin() {
         title: 'Success',
         description: 'Login successful',
       });
-      // Redirect directly to admin dashboard
-      navigate('/admin/dashboard');
+      // Redirect to dashboard based on role
+      navigate('/dashboard');
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -65,10 +65,10 @@ export default function AdminLogin() {
               </div>
             </div>
             <CardTitle className="text-2xl font-bold text-center text-slate-900 dark:text-slate-100">
-              Admin Portal
+              EstateAI Login
             </CardTitle>
             <CardDescription className="text-center text-slate-600 dark:text-slate-400">
-              Sign in to access the admin dashboard
+              Sign in to access your dashboard
             </CardDescription>
           </CardHeader>
           <CardContent>
