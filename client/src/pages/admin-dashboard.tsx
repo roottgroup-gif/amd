@@ -141,6 +141,7 @@ export default function AdminDashboard() {
         const result = reader.result as string;
         setAvatarPreview(result);
         form.setValue('avatar', result);
+        editForm.setValue('avatar', result);
       };
       reader.readAsDataURL(file);
     }
@@ -151,6 +152,7 @@ export default function AdminDashboard() {
     setAvatarFile(null);
     setAvatarPreview('');
     form.setValue('avatar', '');
+    editForm.setValue('avatar', '');
   };
 
   // Fetch all users
@@ -159,10 +161,10 @@ export default function AdminDashboard() {
     enabled: user?.role === 'admin' || user?.role === 'super_admin',
   });
 
-  // Fetch users with passwords for super admin
+  // Fetch users with passwords for admins
   const { data: usersWithPasswords = [], isLoading: usersWithPasswordsLoading } = useQuery<any[]>({
     queryKey: ['/api/admin/users/with-passwords'],
-    enabled: user?.role === 'super_admin' && showPasswords,
+    enabled: (user?.role === 'admin' || user?.role === 'super_admin') && showPasswords,
     retry: false,
   });
 
@@ -264,10 +266,15 @@ export default function AdminDashboard() {
 
   const handleEditUser = (user: User) => {
     setEditingUser(user);
+    
+    // Get the current password if available
+    const userWithPassword = usersWithPasswords.find(u => u.id === user.id);
+    const currentPassword = userWithPassword?.password || '';
+    
     editForm.reset({
       username: user.username,
       email: user.email,
-      password: '', // Don't pre-fill password for security
+      password: currentPassword, // Show current password if available
       role: user.role as 'user' | 'agent' | 'admin',
       firstName: user.firstName || '',
       lastName: user.lastName || '',

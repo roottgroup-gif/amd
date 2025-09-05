@@ -83,11 +83,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Super admin only - get users with passwords
-  app.get("/api/admin/users/with-passwords", requireRole("super_admin"), async (req, res) => {
+  // Admin and super admin - get users with passwords
+  app.get("/api/admin/users/with-passwords", requireRole("admin"), async (req, res) => {
     try {
       const users = await storage.getAllUsers();
-      // Only super admin can see passwords
+      // Admin and super admin can see passwords
       res.json(users);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch users with passwords" });
