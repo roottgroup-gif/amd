@@ -350,7 +350,7 @@ export default function HomePage() {
 
           {/* Active Filters */}
           {(mapFilters.listingType || mapFilters.type || mapFilters.bedrooms || mapFilters.bathrooms || mapFilters.city || mapFilters.minPrice || mapFilters.maxPrice) && (
-            <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 dark:border-white/10">
+            <div className="mt-3 sm:mt-4 pt-1 sm:pt-2 border-t border-white/20 dark:border-white/10">
               <div className="flex flex-wrap gap-1 sm:gap-2">
                 <span className="text-xs sm:text-sm font-medium text-black dark:text-gray-300">Active filters:</span>
                 {mapFilters.listingType && (
