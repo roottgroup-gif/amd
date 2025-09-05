@@ -97,8 +97,25 @@ export default function ContactForm({ property, agent, className }: ContactFormP
       <CardContent className="space-y-4">
         {/* Quick Contact Buttons */}
         <div className="space-y-3">
+          {/* Show contact phone if available */}
+          {((property as any).contactPhone || agent?.phone) && (
+            <div className="text-center mb-3">
+              <p className="text-sm text-muted-foreground mb-1">Contact Number</p>
+              <p className="font-semibold text-lg">
+                {(property as any).contactPhone || agent?.phone}
+              </p>
+            </div>
+          )}
+          
           <Button 
             className="w-full"
+            onClick={() => {
+              const phone = (property as any).contactPhone || agent?.phone;
+              if (phone) {
+                window.open(`tel:${phone}`, '_self');
+              }
+            }}
+            disabled={!((property as any).contactPhone || agent?.phone)}
             data-testid="call-button"
           >
             <Phone className="mr-2 h-4 w-4" />
@@ -107,6 +124,15 @@ export default function ContactForm({ property, agent, className }: ContactFormP
           
           <Button 
             className="w-full bg-green-600 hover:bg-green-700"
+            onClick={() => {
+              const phone = (property as any).contactPhone || agent?.phone;
+              if (phone) {
+                const whatsappPhone = phone.replace(/[^\d+]/g, '');
+                const message = encodeURIComponent(`Hi! I'm interested in the property: ${property.title}. Could you please provide more information?`);
+                window.open(`https://wa.me/${whatsappPhone}?text=${message}`, '_blank');
+              }
+            }}
+            disabled={!((property as any).contactPhone || agent?.phone)}
             data-testid="whatsapp-button"
           >
             <MessageSquare className="mr-2 h-4 w-4" />

@@ -40,6 +40,7 @@ const propertySchema = z.object({
   address: z.string().min(1, 'Address is required'),
   city: z.string().min(1, 'City is required'),
   country: z.string().default('Iraq'),
+  contactPhone: z.string().optional(),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
   amenities: z.array(z.string()).default([]),
@@ -74,10 +75,18 @@ export default function AgentDashboard() {
       address: '',
       city: '',
       country: 'Iraq',
+      contactPhone: user?.phone || '', // Auto-populate with user's phone number
       amenities: [],
       features: [],
     },
   });
+
+  // Auto-populate contact phone when user data is available
+  useEffect(() => {
+    if (user?.phone) {
+      form.setValue('contactPhone', user.phone);
+    }
+  }, [user?.phone, form]);
 
   // Fetch agent's properties
   const { data: agentProperties = [], isLoading: propertiesLoading } = useQuery<PropertyWithAgent[]>({
@@ -213,6 +222,7 @@ export default function AgentDashboard() {
       address: property.address,
       city: property.city,
       country: property.country,
+      contactPhone: (property as any).contactPhone || user?.phone || '', // Use existing or fallback to user's phone
       latitude: property.latitude ? parseFloat(property.latitude) : undefined,
       longitude: property.longitude ? parseFloat(property.longitude) : undefined,
       amenities: property.amenities || [],
@@ -881,6 +891,27 @@ function PropertyForm({
                 <FormLabel>Country</FormLabel>
                 <FormControl>
                   <Input {...field} data-testid="input-country" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="contactPhone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contact Phone (WhatsApp & Calls)</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Input 
+                      {...field} 
+                      placeholder="e.g., +964 123 456 7890"
+                      className="pl-10"
+                      data-testid="input-contact-phone" 
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

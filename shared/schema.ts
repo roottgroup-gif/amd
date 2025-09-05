@@ -38,6 +38,7 @@ export const properties = pgTable("properties", {
   features: jsonb("features").$type<string[]>().default([]),
   status: text("status").default("active"), // "active" | "sold" | "rented" | "pending"
   agentId: varchar("agent_id").references(() => users.id),
+  contactPhone: text("contact_phone"), // Contact phone number for this property (WhatsApp and calls)
   views: integer("views").default(0),
   isFeatured: boolean("is_featured").default(false),
   createdAt: timestamp("created_at").defaultNow(),
