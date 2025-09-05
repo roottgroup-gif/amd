@@ -765,7 +765,7 @@ export default function PropertyMap({
                           : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
                       }`}
                        onClick={() => handleFilterChange('type', 'villa')}>
-                    <i className="fas fa-crown text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
+                    <i className="fas fa-university text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
                     <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'villa' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Villas</span>
                   </div>
                   <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
