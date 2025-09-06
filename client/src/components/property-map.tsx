@@ -834,18 +834,6 @@ export default function PropertyMap({
         <div className="relative h-screen" data-testid="property-map">
           <div ref={mapRef} className="w-full h-full" />
           
-          {/* Get My Location Button */}
-          <Button
-            onClick={handleGetMyLocation}
-            disabled={isLocating}
-            className="absolute top-4 right-4 z-[1000] bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-white/30 dark:border-white/10 shadow-2xl hover:bg-white dark:hover:bg-black/95 text-black dark:text-white p-3"
-            data-testid="get-location-button"
-          >
-            <Navigation 
-              className={`h-5 w-5 ${isLocating ? 'animate-spin' : ''}`} 
-              style={{color: '#FF7800'}} 
-            />
-          </Button>
 
           {/* Legend Overlay on Map */}
           <div className="fixed bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
