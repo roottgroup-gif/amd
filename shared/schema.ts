@@ -75,12 +75,34 @@ export const searchHistory = pgTable("search_history", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const customerActivity = pgTable("customer_activity", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  activityType: text("activity_type").notNull(), // "property_view" | "search" | "favorite_add" | "favorite_remove" | "inquiry_sent" | "login" | "profile_update"
+  propertyId: varchar("property_id").references(() => properties.id),
+  metadata: jsonb("metadata").$type<Record<string, any>>().default({}),
+  points: integer("points").default(0), // Points earned for this activity
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const customerPoints = pgTable("customer_points", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id).notNull().unique(),
+  totalPoints: integer("total_points").default(0),
+  currentLevel: text("current_level").default("Bronze"), // Bronze, Silver, Gold, Platinum
+  pointsThisMonth: integer("points_this_month").default(0),
+  lastActivity: timestamp("last_activity").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   properties: many(properties),
   inquiries: many(inquiries),
   favorites: many(favorites),
   searchHistory: many(searchHistory),
+  customerActivity: many(customerActivity),
+  customerPoints: one(customerPoints),
 }));
 
 export const propertiesRelations = relations(properties, ({ one, many }) => ({
@@ -121,6 +143,24 @@ export const searchHistoryRelations = relations(searchHistory, ({ one }) => ({
   }),
 }));
 
+export const customerActivityRelations = relations(customerActivity, ({ one }) => ({
+  user: one(users, {
+    fields: [customerActivity.userId],
+    references: [users.id],
+  }),
+  property: one(properties, {
+    fields: [customerActivity.propertyId],
+    references: [properties.id],
+  }),
+}));
+
+export const customerPointsRelations = relations(customerPoints, ({ one }) => ({
+  user: one(users, {
+    fields: [customerPoints.userId],
+    references: [users.id],
+  }),
+}));
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -151,6 +191,17 @@ export const insertSearchHistorySchema = createInsertSchema(searchHistory).omit(
   createdAt: true,
 });
 
+export const insertCustomerActivitySchema = createInsertSchema(customerActivity).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertCustomerPointsSchema = createInsertSchema(customerPoints).omit({
+  id: true,
+  lastActivity: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -162,6 +213,10 @@ export type Favorite = typeof favorites.$inferSelect;
 export type InsertFavorite = z.infer<typeof insertFavoriteSchema>;
 export type SearchHistory = typeof searchHistory.$inferSelect;
 export type InsertSearchHistory = z.infer<typeof insertSearchHistorySchema>;
+export type CustomerActivity = typeof customerActivity.$inferSelect;
+export type InsertCustomerActivity = z.infer<typeof insertCustomerActivitySchema>;
+export type CustomerPoints = typeof customerPoints.$inferSelect;
+export type InsertCustomerPoints = z.infer<typeof insertCustomerPointsSchema>;
 
 // Property with relations
 export type PropertyWithAgent = Property & {
