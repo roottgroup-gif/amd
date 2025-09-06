@@ -1,10 +1,12 @@
 import { 
-  users, properties, inquiries, favorites, searchHistory,
+  users, properties, inquiries, favorites, searchHistory, customerActivity, customerPoints,
   type User, type InsertUser,
   type Property, type InsertProperty, type PropertyWithAgent,
   type Inquiry, type InsertInquiry,
   type Favorite, type InsertFavorite,
-  type SearchHistory, type InsertSearchHistory
+  type SearchHistory, type InsertSearchHistory,
+  type CustomerActivity, type InsertCustomerActivity,
+  type CustomerPoints, type InsertCustomerPoints
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, like, gte, lte, desc, asc, sql, inArray } from "drizzle-orm";
@@ -46,6 +48,18 @@ export interface IStorage {
   // Search History
   addSearchHistory(search: InsertSearchHistory): Promise<SearchHistory>;
   getSearchHistoryByUser(userId: string): Promise<SearchHistory[]>;
+
+  // Customer Analytics
+  addCustomerActivity(activity: InsertCustomerActivity): Promise<CustomerActivity>;
+  getCustomerActivities(userId: string, limit?: number): Promise<CustomerActivity[]>;
+  getCustomerPoints(userId: string): Promise<CustomerPoints | undefined>;
+  updateCustomerPoints(userId: string, points: Partial<InsertCustomerPoints>): Promise<CustomerPoints>;
+  getCustomerAnalytics(userId: string): Promise<{
+    totalActivities: number;
+    activitiesByType: { activityType: string; count: number; points: number }[];
+    pointsHistory: { date: string; points: number }[];
+    monthlyActivity: { month: string; activities: number }[];
+  }>;
 }
 
 export interface PropertyFilters {
@@ -369,6 +383,171 @@ export class DatabaseStorage implements IStorage {
       .where(eq(searchHistory.userId, userId))
       .orderBy(desc(searchHistory.createdAt))
       .limit(10);
+  }
+
+  // Customer Analytics
+  async addCustomerActivity(activity: InsertCustomerActivity): Promise<CustomerActivity> {
+    const [newActivity] = await db()
+      .insert(customerActivity)
+      .values(activity)
+      .returning();
+    
+    // Update customer points
+    await this.updateCustomerPointsAfterActivity(activity.userId, activity.points || 0);
+    
+    return newActivity;
+  }
+
+  async getCustomerActivities(userId: string, limit: number = 50): Promise<CustomerActivity[]> {
+    return await db()
+      .select()
+      .from(customerActivity)
+      .where(eq(customerActivity.userId, userId))
+      .orderBy(desc(customerActivity.createdAt))
+      .limit(limit);
+  }
+
+  async getCustomerPoints(userId: string): Promise<CustomerPoints | undefined> {
+    const [points] = await db()
+      .select()
+      .from(customerPoints)
+      .where(eq(customerPoints.userId, userId));
+    return points || undefined;
+  }
+
+  async updateCustomerPoints(userId: string, pointsData: Partial<InsertCustomerPoints>): Promise<CustomerPoints> {
+    const existing = await this.getCustomerPoints(userId);
+    
+    if (existing) {
+      const [updated] = await db()
+        .update(customerPoints)
+        .set({ ...pointsData, updatedAt: new Date() })
+        .where(eq(customerPoints.userId, userId))
+        .returning();
+      return updated;
+    } else {
+      const [created] = await db()
+        .insert(customerPoints)
+        .values({ userId, ...pointsData })
+        .returning();
+      return created;
+    }
+  }
+
+  private async updateCustomerPointsAfterActivity(userId: string, activityPoints: number): Promise<void> {
+    const existing = await this.getCustomerPoints(userId);
+    const currentMonth = new Date().toISOString().substring(0, 7); // YYYY-MM format
+    
+    if (existing) {
+      const newTotal = existing.totalPoints + activityPoints;
+      const newLevel = this.calculateLevel(newTotal);
+      
+      await db()
+        .update(customerPoints)
+        .set({
+          totalPoints: newTotal,
+          currentLevel: newLevel,
+          pointsThisMonth: existing.pointsThisMonth + activityPoints,
+          lastActivity: new Date(),
+          updatedAt: new Date()
+        })
+        .where(eq(customerPoints.userId, userId));
+    } else {
+      const newLevel = this.calculateLevel(activityPoints);
+      
+      await db()
+        .insert(customerPoints)
+        .values({
+          userId,
+          totalPoints: activityPoints,
+          currentLevel: newLevel,
+          pointsThisMonth: activityPoints,
+          lastActivity: new Date(),
+          updatedAt: new Date()
+        });
+    }
+  }
+
+  private calculateLevel(totalPoints: number): string {
+    if (totalPoints >= 1000) return "Platinum";
+    if (totalPoints >= 500) return "Gold";
+    if (totalPoints >= 200) return "Silver";
+    return "Bronze";
+  }
+
+  async getCustomerAnalytics(userId: string): Promise<{
+    totalActivities: number;
+    activitiesByType: { activityType: string; count: number; points: number }[];
+    pointsHistory: { date: string; points: number }[];
+    monthlyActivity: { month: string; activities: number }[];
+  }> {
+    // Get total activities count
+    const [totalResult] = await db()
+      .select({ count: sql<number>`count(*)` })
+      .from(customerActivity)
+      .where(eq(customerActivity.userId, userId));
+
+    // Get activities by type
+    const activitiesByType = await db()
+      .select({
+        activityType: customerActivity.activityType,
+        count: sql<number>`count(*)`,
+        points: sql<number>`sum(${customerActivity.points})`
+      })
+      .from(customerActivity)
+      .where(eq(customerActivity.userId, userId))
+      .groupBy(customerActivity.activityType);
+
+    // Get points history (last 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const pointsHistory = await db()
+      .select({
+        date: sql<string>`date(${customerActivity.createdAt})`,
+        points: sql<number>`sum(${customerActivity.points})`
+      })
+      .from(customerActivity)
+      .where(and(
+        eq(customerActivity.userId, userId),
+        gte(customerActivity.createdAt, thirtyDaysAgo)
+      ))
+      .groupBy(sql`date(${customerActivity.createdAt})`)
+      .orderBy(sql`date(${customerActivity.createdAt})`);
+
+    // Get monthly activity (last 12 months)
+    const twelveMonthsAgo = new Date();
+    twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+    
+    const monthlyActivity = await db()
+      .select({
+        month: sql<string>`to_char(${customerActivity.createdAt}, 'YYYY-MM')`,
+        activities: sql<number>`count(*)`
+      })
+      .from(customerActivity)
+      .where(and(
+        eq(customerActivity.userId, userId),
+        gte(customerActivity.createdAt, twelveMonthsAgo)
+      ))
+      .groupBy(sql`to_char(${customerActivity.createdAt}, 'YYYY-MM')`)
+      .orderBy(sql`to_char(${customerActivity.createdAt}, 'YYYY-MM')`);
+
+    return {
+      totalActivities: totalResult?.count || 0,
+      activitiesByType: activitiesByType.map(row => ({
+        activityType: row.activityType,
+        count: row.count,
+        points: row.points || 0
+      })),
+      pointsHistory: pointsHistory.map(row => ({
+        date: row.date,
+        points: row.points || 0
+      })),
+      monthlyActivity: monthlyActivity.map(row => ({
+        month: row.month,
+        activities: row.activities
+      }))
+    };
   }
 }
 
