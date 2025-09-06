@@ -14,6 +14,8 @@ export const users = pgTable("users", {
   phone: text("phone"),
   avatar: text("avatar"),
   isVerified: boolean("is_verified").default(false),
+  expiresAt: timestamp("expires_at"), // User account expiration date
+  isExpired: boolean("is_expired").default(false), // Computed or manual flag for expiration status
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -123,6 +125,7 @@ export const searchHistoryRelations = relations(searchHistory, ({ one }) => ({
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
+  isExpired: true, // This will be computed based on expiresAt
 });
 
 export const insertPropertySchema = createInsertSchema(properties).omit({
