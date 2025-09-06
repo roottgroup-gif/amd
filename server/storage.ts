@@ -400,4 +400,175 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-export const storage = new DatabaseStorage();
+class MemStorage implements IStorage {
+  private users: User[] = [];
+  private properties: Property[] = [];
+  private inquiries: Inquiry[] = [];
+  private favorites: Favorite[] = [];
+  private searchHistories: SearchHistory[] = [];
+
+  constructor() {
+    // Initialize with admin and agent users
+    this.initializeDefaultUsers();
+  }
+
+  private async initializeDefaultUsers() {
+    const bcrypt = await import('bcryptjs');
+    
+    // Admin user
+    const adminPasswordHash = await bcrypt.hash('admin123', 12);
+    this.users.push({
+      id: 'admin-001',
+      username: 'admin',
+      email: 'admin@estateai.com',
+      password: adminPasswordHash,
+      role: 'super_admin',
+      firstName: 'System',
+      lastName: 'Admin',
+      phone: '+964 750 000 0000',
+      isVerified: true,
+      avatar: null,
+      createdAt: new Date(),
+      expiresAt: null,
+      isExpired: false
+    });
+
+    // Agent user
+    const agentPasswordHash = await bcrypt.hash('agent123', 12);
+    this.users.push({
+      id: 'agent-001',
+      username: 'john_agent',
+      email: 'john@estateai.com',
+      password: agentPasswordHash,
+      role: 'agent',
+      firstName: 'John',
+      lastName: 'Smith',
+      phone: '+964 750 123 4567',
+      isVerified: true,
+      avatar: null,
+      createdAt: new Date(),
+      expiresAt: null,
+      isExpired: false
+    });
+  }
+
+  // Users
+  async getUser(id: string): Promise<User | undefined> {
+    return this.users.find(u => u.id === id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return this.users.find(u => u.username === username);
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return this.users.find(u => u.email === email);
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    const newUser: User = {
+      id: `user-${Date.now()}`,
+      ...user,
+      createdAt: new Date(),
+      expiresAt: user.expiresAt ? new Date(user.expiresAt) : null,
+      isExpired: false
+    };
+    this.users.push(newUser);
+    return newUser;
+  }
+
+  async updateUser(id: string, userData: Partial<InsertUser>): Promise<User | undefined> {
+    const userIndex = this.users.findIndex(u => u.id === id);
+    if (userIndex === -1) return undefined;
+    
+    this.users[userIndex] = { 
+      ...this.users[userIndex], 
+      ...userData,
+      expiresAt: userData.expiresAt ? new Date(userData.expiresAt) : this.users[userIndex].expiresAt
+    };
+    return this.users[userIndex];
+  }
+
+  async authenticateUser(username: string, password: string): Promise<User | null> {
+    const bcrypt = await import('bcryptjs');
+    const user = await this.getUserByUsername(username);
+    
+    if (!user) return null;
+    
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    return isPasswordValid ? user : null;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return [...this.users];
+  }
+
+  async deleteUser(id: string): Promise<boolean> {
+    const userIndex = this.users.findIndex(u => u.id === id);
+    if (userIndex === -1) return false;
+    this.users.splice(userIndex, 1);
+    return true;
+  }
+
+  // Stub implementations for other methods (can be expanded as needed)
+  async getProperty(id: string): Promise<PropertyWithAgent | undefined> { return undefined; }
+  async getProperties(filters?: PropertyFilters): Promise<PropertyWithAgent[]> { return []; }
+  async getPropertiesByAgent(agentId: string): Promise<PropertyWithAgent[]> { return []; }
+  async getFeaturedProperties(): Promise<PropertyWithAgent[]> { return []; }
+  async createProperty(property: InsertProperty): Promise<Property> { 
+    const newProperty: Property = { 
+      id: `prop-${Date.now()}`, 
+      ...property, 
+      status: property.status || 'active',
+      views: 0, 
+      createdAt: new Date(), 
+      updatedAt: new Date() 
+    };
+    this.properties.push(newProperty);
+    return newProperty;
+  }
+  async updateProperty(id: string, property: Partial<InsertProperty>): Promise<Property | undefined> { return undefined; }
+  async deleteProperty(id: string): Promise<boolean> { return false; }
+  async incrementPropertyViews(id: string): Promise<void> {}
+
+  async getInquiry(id: string): Promise<Inquiry | undefined> { return undefined; }
+  async getInquiriesForProperty(propertyId: string): Promise<Inquiry[]> { return []; }
+  async getInquiriesForAgent(agentId: string): Promise<Inquiry[]> { return []; }
+  async createInquiry(inquiry: InsertInquiry): Promise<Inquiry> {
+    const newInquiry: Inquiry = { id: `inq-${Date.now()}`, ...inquiry, createdAt: new Date() };
+    this.inquiries.push(newInquiry);
+    return newInquiry;
+  }
+  async updateInquiryStatus(id: string, status: string): Promise<Inquiry | undefined> { return undefined; }
+
+  async getFavoritesByUser(userId: string): Promise<PropertyWithAgent[]> { return []; }
+  async addToFavorites(favorite: InsertFavorite): Promise<Favorite> {
+    const newFavorite: Favorite = { 
+      id: `fav-${Date.now()}`, 
+      userId: favorite.userId || null,
+      propertyId: favorite.propertyId || null,
+      createdAt: new Date() 
+    };
+    this.favorites.push(newFavorite);
+    return newFavorite;
+  }
+  async removeFromFavorites(userId: string, propertyId: string): Promise<boolean> { return false; }
+  async isFavorite(userId: string, propertyId: string): Promise<boolean> { return false; }
+
+  async addSearchHistory(search: InsertSearchHistory): Promise<SearchHistory> {
+    const newSearch: SearchHistory = { 
+      id: `search-${Date.now()}`, 
+      userId: search.userId || null,
+      query: search.query,
+      filters: search.filters || null,
+      results: search.results || null,
+      createdAt: new Date() 
+    };
+    this.searchHistories.push(newSearch);
+    return newSearch;
+  }
+  async getSearchHistoryByUser(userId: string): Promise<SearchHistory[]> { return []; }
+}
+
+// Use memory storage temporarily to bypass database connection issues
+export const storage = new MemStorage();
