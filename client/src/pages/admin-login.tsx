@@ -46,13 +46,16 @@ export default function AdminLogin() {
   }, [toast]);
 
   const onSubmit = async (data: LoginForm) => {
+    if (isLoading) return; // Prevent multiple submissions
+    
     setIsLoading(true);
     try {
       const response = await login(data.username, data.password);
+      console.log('Login response:', response); // Debug log
       
-      // Navigate to admin dashboard first for super admin
-      if (response.user?.role === 'super_admin') {
-        setIsLoading(false);
+      // Check if user is super_admin and navigate immediately
+      if (response?.user?.role === 'super_admin') {
+        console.log('Navigating to admin dashboard'); // Debug log
         navigate('/admin/dashboard');
         
         // Show success toast for super admin after navigation
@@ -61,14 +64,16 @@ export default function AdminLogin() {
             title: 'Success',
             description: 'Login successful admin super',
           });
-        }, 200);
+          setIsLoading(false);
+        }, 100);
       } else {
         // For other roles, go to regular dashboard
-        setIsLoading(false);
         navigate('/dashboard');
+        setIsLoading(false);
       }
       
     } catch (error: any) {
+      console.error('Login error:', error); // Debug log
       setIsLoading(false);
       toast({
         title: 'Error',
