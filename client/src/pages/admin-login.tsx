@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,19 +25,7 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Redirect if user is already logged in
-  if (!authLoading && user) {
-    const userRole = user.role;
-    if (userRole === 'admin' || userRole === 'super_admin') {
-      navigate('/admin/dashboard');
-    } else if (userRole === 'user') {
-      navigate('/customer/dashboard');
-    } else {
-      navigate('/dashboard');
-    }
-    return null;
-  }
-
+  // Always call useForm hook at top level
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -45,6 +33,34 @@ export default function AdminLogin() {
       password: '',
     },
   });
+
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (!authLoading && user) {
+      const userRole = user.role;
+      if (userRole === 'admin' || userRole === 'super_admin') {
+        navigate('/admin/dashboard');
+      } else if (userRole === 'user') {
+        navigate('/customer/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
+    }
+  }, [user, authLoading, navigate]);
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800">
+        <div className="animate-spin h-8 w-8 border-4 border-orange-600 border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
+
+  // Don't render the login form if user is already authenticated
+  if (user) {
+    return null;
+  }
 
 
   const onSubmit = async (data: LoginForm) => {
