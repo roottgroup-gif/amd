@@ -19,7 +19,8 @@ import type { User } from '@shared/schema';
 import { 
   Shield, Users, Building2, Settings, Plus, Edit, Trash2, 
   LogOut, UserPlus, Key, BarChart3, Activity, Calendar,
-  Search, Filter, MoreVertical, AlertTriangle
+  Search, Filter, MoreVertical, AlertTriangle, Eye, MapPin,
+  Home, DollarSign, ImageIcon
 } from 'lucide-react';
 
 const createUserSchema = z.object({
@@ -93,6 +94,8 @@ export default function AdminDashboard() {
   const [showPasswords, setShowPasswords] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [selectedCustomer, setSelectedCustomer] = useState<User | null>(null);
+  const [isCustomerDetailsOpen, setIsCustomerDetailsOpen] = useState(false);
 
   // Redirect if not admin or super admin
   useEffect(() => {
@@ -200,6 +203,13 @@ export default function AdminDashboard() {
   const { data: usersWithPasswords = [], isLoading: usersWithPasswordsLoading } = useQuery<any[]>({
     queryKey: ['/api/admin/users/with-passwords'],
     enabled: (user?.role === 'admin' || user?.role === 'super_admin') && showPasswords,
+    retry: false,
+  });
+
+  // Fetch customer properties when a customer is selected
+  const { data: customerProperties = [], isLoading: customerPropertiesLoading } = useQuery<any[]>({
+    queryKey: ['/api/users', selectedCustomer?.id, 'properties'],
+    enabled: !!selectedCustomer?.id,
     retry: false,
   });
 
