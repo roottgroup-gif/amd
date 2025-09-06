@@ -587,7 +587,6 @@ export default function PropertyMap({
               
               return `
                 <div style="margin-bottom: 12px; padding: 8px; background: ${bgColor}; border-radius: 8px; border-left: 3px solid ${borderColor};">
-                  <div style="color: ${textColor}; font-size: 12px; font-weight: 600; margin-bottom: 2px;">Contact ${contactType} - ${contactName}</div>
                   <div style="color: ${subTextColor}; font-size: 11px; display: flex; align-items: center;">
                     <i class="fas fa-phone" style="color: ${iconColor}; margin-right: 6px;"></i>
                     ${displayPhone}
