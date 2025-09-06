@@ -26,7 +26,7 @@ import {
   Heart, Search, Filter, LogOut, MapPin, DollarSign,
   Home, Eye, Bed, Bath, Maximize, Phone, Mail, Calendar,
   Star, Bookmark, MessageSquare, User, Settings, Plus,
-  Building, University, Mountain, Tag, Key
+  Building, University, Mountain, Tag, Key, Edit, Trash2
 } from 'lucide-react';
 
 // Property form schema for validation
