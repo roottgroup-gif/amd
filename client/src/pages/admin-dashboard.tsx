@@ -312,7 +312,7 @@ export default function AdminDashboard() {
     admins: users.filter(u => u.role === 'admin').length,
   };
 
-  if (!user || user.role !== 'admin') {
+  if (!user || (user.role !== 'admin' && user.role !== 'super_admin')) {
     return null;
   }
 
