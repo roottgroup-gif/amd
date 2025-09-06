@@ -72,6 +72,7 @@ export default function CustomerDashboard() {
   const [activeTab, setActiveTab] = useState('browse');
   const [selectedLocation, setSelectedLocation] = useState<{lat: number, lng: number} | null>(null);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [editingProperty, setEditingProperty] = useState<PropertyWithAgent | null>(null);
 
   // Property form
   const propertyForm = useForm<PropertyFormValues>({
@@ -151,6 +152,18 @@ export default function CustomerDashboard() {
     enabled: !!user?.id,
   });
 
+  // Fetch user's own properties
+  const { data: userProperties = [], isLoading: userPropertiesLoading } = useQuery<PropertyWithAgent[]>({
+    queryKey: ['/api/users', user?.id, 'properties'],
+    queryFn: async () => {
+      if (!user?.id) return [];
+      const response = await fetch(`/api/users/${user.id}/properties`);
+      if (!response.ok) throw new Error('Failed to fetch user properties');
+      return response.json();
+    },
+    enabled: !!user?.id,
+  });
+
   // Add to favorites mutation
   const addToFavoritesMutation = useMutation({
     mutationFn: async (propertyId: string) => {
@@ -212,6 +225,7 @@ export default function CustomerDashboard() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/users', user?.id, 'properties'] });
       propertyForm.reset();
       toast({
         title: 'Success',
@@ -223,6 +237,56 @@ export default function CustomerDashboard() {
       toast({
         title: 'Error',
         description: error.message || 'Failed to add property',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Edit property mutation
+  const editPropertyMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: PropertyFormValues }) => {
+      const response = await apiRequest('PUT', `/api/properties/${id}`, data);
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/users', user?.id, 'properties'] });
+      setEditingProperty(null);
+      propertyForm.reset();
+      setSelectedLocation(null);
+      toast({
+        title: 'Success',
+        description: 'Property updated successfully',
+      });
+      setActiveTab('my-properties');
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update property',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Delete property mutation
+  const deletePropertyMutation = useMutation({
+    mutationFn: async (propertyId: string) => {
+      const response = await apiRequest('DELETE', `/api/properties/${propertyId}`);
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/users', user?.id, 'properties'] });
+      toast({
+        title: 'Success',
+        description: 'Property deleted successfully',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to delete property',
         variant: 'destructive',
       });
     },
@@ -293,11 +357,57 @@ export default function CustomerDashboard() {
       latitude: data.latitude ? data.latitude.toString() : undefined, // Convert to string if provided
       longitude: data.longitude ? data.longitude.toString() : undefined, // Convert to string if provided
     };
-    createPropertyMutation.mutate(submitData);
+    
+    if (editingProperty) {
+      editPropertyMutation.mutate({ id: editingProperty.id, data: submitData });
+    } else {
+      createPropertyMutation.mutate(submitData);
+    }
   };
 
   const onSubmitProfile = (data: ProfileFormValues) => {
     updateProfileMutation.mutate(data);
+  };
+
+  const handleEditProperty = (property: PropertyWithAgent) => {
+    setEditingProperty(property);
+    propertyForm.reset({
+      title: property.title,
+      description: property.description || '',
+      type: property.type as 'house' | 'apartment' | 'villa' | 'land',
+      listingType: property.listingType as 'sale' | 'rent',
+      price: property.price.toString(),
+      currency: property.currency || 'USD',
+      bedrooms: property.bedrooms || 0,
+      bathrooms: property.bathrooms || 0,
+      area: property.area || 0,
+      address: property.address,
+      city: property.city,
+      country: property.country,
+      contactPhone: (property as any).contactPhone || user?.phone || '',
+      amenities: property.amenities || [],
+      features: property.features || [],
+      images: property.images || [],
+    });
+    if (property.latitude && property.longitude) {
+      setSelectedLocation({
+        lat: parseFloat(property.latitude),
+        lng: parseFloat(property.longitude),
+      });
+    }
+    setActiveTab('add-property');
+  };
+
+  const handleDeleteProperty = async (propertyId: string, title: string) => {
+    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
+      deletePropertyMutation.mutate(propertyId);
+    }
+  };
+
+  const handleCancelPropertyEdit = () => {
+    setEditingProperty(null);
+    propertyForm.reset();
+    setSelectedLocation(null);
   };
 
   const handleCancelEdit = () => {
@@ -975,6 +1085,157 @@ export default function CustomerDashboard() {
                       </div>
                     </form>
                   </Form>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="my-properties" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>My Properties</CardTitle>
+                  <CardDescription>
+                    Manage the properties you've posted ({userProperties.length} total)
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {userPropertiesLoading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <Card key={i} className="animate-pulse">
+                          <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-t-lg"></div>
+                          <CardContent className="p-4">
+                            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : userProperties.length === 0 ? (
+                    <div className="p-8 text-center text-gray-500">
+                      <Building className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                      <p>You haven't posted any properties yet.</p>
+                      <Button 
+                        variant="outline" 
+                        className="mt-4"
+                        onClick={() => setActiveTab('add-property')}
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Your First Property
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {userProperties.map((property) => (
+                        <Card key={property.id} className="group relative">
+                          <CardContent className="p-0">
+                            <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-t-lg relative overflow-hidden">
+                              {property.images && property.images.length > 0 ? (
+                                <img 
+                                  src={property.images[0]} 
+                                  alt={property.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <Home className="h-12 w-12 text-gray-400" />
+                                </div>
+                              )}
+                              <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  onClick={() => handleEditProperty(property)}
+                                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                                  data-testid={`button-edit-${property.id}`}
+                                >
+                                  <Edit className="h-3 w-3" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="destructive"
+                                  onClick={() => handleDeleteProperty(property.id, property.title)}
+                                  data-testid={`button-delete-${property.id}`}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                              <div className="absolute top-2 left-2">
+                                <Badge variant={property.listingType === 'sale' ? 'default' : 'secondary'}>
+                                  {property.listingType === 'sale' ? 'For Sale' : 'For Rent'}
+                                </Badge>
+                              </div>
+                              <div className="absolute bottom-2 left-2">
+                                <Badge variant="outline" className="text-xs bg-white/90">
+                                  {property.status}
+                                </Badge>
+                              </div>
+                            </div>
+                            <div className="p-4">
+                              <div className="flex items-start justify-between mb-2">
+                                <h3 className="font-semibold text-lg line-clamp-1">{property.title}</h3>
+                                <Badge variant="outline" className="text-xs">
+                                  {property.type}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+                                {property.description}
+                              </p>
+                              <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
+                                <span className="flex items-center">
+                                  <MapPin className="h-3 w-3 mr-1" />
+                                  {property.city}, {property.country}
+                                </span>
+                                <span className="flex items-center">
+                                  <Eye className="h-3 w-3 mr-1" />
+                                  {property.views || 0} views
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
+                                {property.bedrooms && (
+                                  <span className="flex items-center">
+                                    <Bed className="h-3 w-3 mr-1" />
+                                    {property.bedrooms}
+                                  </span>
+                                )}
+                                {property.bathrooms && (
+                                  <span className="flex items-center">
+                                    <Bath className="h-3 w-3 mr-1" />
+                                    {property.bathrooms}
+                                  </span>
+                                )}
+                                {property.area && (
+                                  <span className="flex items-center">
+                                    <Maximize className="h-3 w-3 mr-1" />
+                                    {property.area} ft²
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <div className="text-left">
+                                  <p className="text-lg font-bold text-green-600">
+                                    ${parseFloat(property.price).toLocaleString()}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    Posted {new Date(property.createdAt || '').toLocaleDateString()}
+                                  </p>
+                                </div>
+                                <Button 
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => navigate(`/property/${property.id}`)}
+                                  data-testid={`button-view-${property.id}`}
+                                >
+                                  <Eye className="h-3 w-3 mr-1" />
+                                  View
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
