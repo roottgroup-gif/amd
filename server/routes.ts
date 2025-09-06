@@ -396,22 +396,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Agent properties
-  app.get("/api/agents/:agentId/properties", async (req, res) => {
-    try {
-      const { agentId } = req.params;
-      const properties = await storage.getPropertiesByAgent(agentId);
-      res.json(properties);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch agent properties" });
-    }
-  });
 
   // User's own properties
   app.get("/api/users/:userId/properties", async (req, res) => {
     try {
       const { userId } = req.params;
-      const properties = await storage.getPropertiesByAgent(userId); // Reuse agent properties function since it works for any user
+      // Get all properties and filter by agentId since we removed getPropertiesByAgent
+      const allProperties = await storage.getProperties();
+      const properties = allProperties.filter(p => p.agentId === userId);
       res.json(properties);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch user properties" });
@@ -442,15 +434,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/agents/:agentId/inquiries", async (req, res) => {
-    try {
-      const { agentId } = req.params;
-      const inquiries = await storage.getInquiriesForAgent(agentId);
-      res.json(inquiries);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch agent inquiries" });
-    }
-  });
 
   app.put("/api/inquiries/:id/status", async (req, res) => {
     try {

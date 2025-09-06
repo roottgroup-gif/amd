@@ -35,12 +35,6 @@ export function useProperty(id: string) {
   });
 }
 
-export function useAgentProperties(agentId: string) {
-  return useQuery<Property[]>({
-    queryKey: ["/api/agents", agentId, "properties"],
-    enabled: !!agentId,
-  });
-}
 
 export function useCreateProperty() {
   const queryClient = useQueryClient();
@@ -114,12 +108,6 @@ export function useCreateInquiry() {
   });
 }
 
-export function useAgentInquiries(agentId: string) {
-  return useQuery<Inquiry[]>({
-    queryKey: ["/api/agents", agentId, "inquiries"],
-    enabled: !!agentId,
-  });
-}
 
 export function useUpdateInquiryStatus() {
   const queryClient = useQueryClient();
