@@ -72,6 +72,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Database initialization route (temporary for setup)
+  app.post("/api/init-db", async (req, res) => {
+    try {
+      // Check if any users exist
+      const existingUsers = await storage.getAllUsers();
+      if (existingUsers.length > 0) {
+        return res.status(400).json({ message: "Database already initialized" });
+      }
+
+      // Create admin user
+      const hashedAdminPassword = await hashPassword("admin123");
+      const admin = await storage.createUser({
+        username: "admin",
+        email: "admin@estateai.com",
+        password: hashedAdminPassword,
+        role: "super_admin",
+        firstName: "System",
+        lastName: "Admin",
+        phone: "+964 750 000 0000",
+        isVerified: true
+      });
+
+      // Create sample agent
+      const hashedAgentPassword = await hashPassword("agent123");
+      const agent = await storage.createUser({
+        username: "john_agent",
+        email: "john@estateai.com",
+        password: hashedAgentPassword,
+        role: "agent",
+        firstName: "John",
+        lastName: "Smith",
+        phone: "+964 750 123 4567",
+        isVerified: true
+      });
+
+      res.json({
+        message: "Database initialized successfully",
+        users: [
+          { username: "admin", password: "admin123", role: "super_admin" },
+          { username: "john_agent", password: "agent123", role: "agent" }
+        ]
+      });
+    } catch (error) {
+      console.error("Database initialization error:", error);
+      res.status(500).json({ message: "Failed to initialize database" });
+    }
+  });
+
   // Admin routes - User management
   app.get("/api/admin/users", requireRole("admin"), async (req, res) => {
     try {
