@@ -480,94 +480,135 @@ export default function CustomerDashboard() {
 
   return (
     <ProtectedRoute requiredRole={['user', 'admin']}>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-slate-50 dark:bg-gray-900">
         {/* Header */}
-        <header className="bg-white dark:bg-gray-800 shadow-sm border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-6">
-              <div className="flex items-center space-x-4">
+        <header className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900 shadow-lg border-b border-blue-800">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 sm:py-6 space-y-3 sm:space-y-0">
+              <div className="flex items-center justify-center sm:justify-start space-x-2 sm:space-x-4">
                 <div className="flex items-center space-x-2">
-                  <Home className="h-8 w-8 text-blue-600" />
-                  <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                    Property Portal
-                  </h1>
+                  <div className="p-2 bg-white/10 rounded-lg">
+                    <Home className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-xl sm:text-2xl font-bold text-white">
+                      Property Portal
+                    </h1>
+                    <p className="text-xs sm:text-sm text-blue-100 hidden sm:block">Find Your Dream Home</p>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <Avatar>
-                  <AvatarImage src={user?.avatar || ''} alt="Profile photo" />
-                  <AvatarFallback>
-                    {user?.firstName?.[0]}{user?.lastName?.[0] || user?.username[0]}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="hidden md:block">
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.username}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Customer</p>
+              <div className="flex items-center justify-center sm:justify-end space-x-2 sm:space-x-4">
+                <div className="flex items-center space-x-2 sm:space-x-3 bg-white/10 rounded-lg px-2 sm:px-3 py-1 sm:py-2">
+                  <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
+                    <AvatarImage src={user?.avatar || ''} alt="Profile photo" />
+                    <AvatarFallback className="bg-white text-blue-600 font-medium">
+                      {user?.firstName?.[0]}{user?.lastName?.[0] || user?.username[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="hidden sm:block">
+                    <p className="text-sm font-medium text-white">
+                      {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.username}
+                    </p>
+                    <p className="text-xs text-blue-100">Customer</p>
+                  </div>
                 </div>
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={handleLogout}
+                  className="bg-white/10 border-white/20 text-white hover:bg-white hover:text-blue-600 transition-all duration-200"
                   data-testid="button-logout"
                 >
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
+                  <LogOut className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Logout</span>
                 </Button>
               </div>
             </div>
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-6">
-              <TabsTrigger value="browse">Browse Properties</TabsTrigger>
-              <TabsTrigger value="map">Map View</TabsTrigger>
-              <TabsTrigger value="add-property">
-                <Plus className="h-4 w-4 mr-1" />
-                Add Property
-              </TabsTrigger>
-              <TabsTrigger value="my-properties">
-                <Building className="h-4 w-4 mr-1" />
-                My Properties
-              </TabsTrigger>
-              <TabsTrigger value="favorites">
-                Favorites ({favorites.length})
-              </TabsTrigger>
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-            </TabsList>
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-slate-200 dark:border-gray-700">
+              <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 h-auto bg-transparent gap-1 p-2">
+                <TabsTrigger 
+                  value="browse" 
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200"
+                >
+                  <Search className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Browse</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="map" 
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200"
+                >
+                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Map</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="add-property" 
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200"
+                >
+                  <Plus className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Add</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="my-properties" 
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
+                >
+                  <Building className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                  <span className="hidden sm:inline">My Properties</span>
+                  <span className="sm:hidden">Mine</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="favorites" 
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
+                >
+                  <Heart className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Favorites</span>
+                  <span className="sm:hidden">Fav</span>
+                  <span className="ml-1 text-xs bg-blue-100 text-blue-700 px-1 rounded-full">{favorites.length}</span>
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="profile" 
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
+                >
+                  <User className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Profile</span>
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-            <TabsContent value="browse" className="space-y-6">
+            <TabsContent value="browse" className="space-y-4 sm:space-y-6">
               {/* Search and Filter */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Find Your Perfect Property</CardTitle>
-                  <CardDescription>
+              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+                <CardHeader className="border-b border-slate-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-white dark:from-gray-800 dark:to-gray-800">
+                  <CardTitle className="text-lg sm:text-xl text-blue-800 dark:text-blue-200 font-bold">Find Your Perfect Property</CardTitle>
+                  <CardDescription className="text-blue-600 dark:text-blue-300">
                     Search through our extensive property listings
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4">
-                    <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <CardContent className="p-4 sm:p-6">
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 h-4 w-4" />
                       <Input
-                        placeholder="Search properties..."
+                        placeholder="Search properties, locations, or keywords..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
+                        className="pl-10 border-blue-200 focus:border-blue-500 focus:ring-blue-500 h-12 text-base"
                         data-testid="input-search"
                       />
                     </div>
-                    <div className="flex space-x-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <Select 
                         value={mapFilters.type || 'all'} 
                         onValueChange={(value) => 
                           setMapFilters(prev => ({ ...prev, type: value === 'all' ? undefined : value }))
                         }
                       >
-                        <SelectTrigger className="w-48" data-testid="select-type-filter">
+                        <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 h-11" data-testid="select-type-filter">
                           <SelectValue placeholder="Property Type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -585,7 +626,7 @@ export default function CustomerDashboard() {
                           setMapFilters(prev => ({ ...prev, listingType: value === 'all' ? undefined : value as 'sale' | 'rent' }))
                         }
                       >
-                        <SelectTrigger className="w-48" data-testid="select-listing-filter">
+                        <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 h-11" data-testid="select-listing-filter">
                           <SelectValue placeholder="Listing Type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -600,22 +641,48 @@ export default function CustomerDashboard() {
               </Card>
 
               {/* Properties Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                 {propertiesLoading ? (
-                  Array.from({ length: 6 }).map((_, i) => (
-                    <Card key={i} className="animate-pulse">
-                      <div className="aspect-video bg-gray-200 dark:bg-gray-700 rounded-t-lg"></div>
-                      <CardContent className="p-4">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-                        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  Array.from({ length: 8 }).map((_, i) => (
+                    <Card key={i} className="animate-pulse shadow-lg">
+                      <div className="aspect-[4/3] bg-gradient-to-br from-slate-200 to-slate-300 dark:from-gray-700 dark:to-gray-600 rounded-t-lg"></div>
+                      <CardContent className="p-3 sm:p-4">
+                        <div className="h-4 bg-slate-200 dark:bg-gray-700 rounded mb-2"></div>
+                        <div className="h-3 bg-slate-200 dark:bg-gray-700 rounded mb-2 w-3/4"></div>
+                        <div className="h-3 bg-slate-200 dark:bg-gray-700 rounded w-1/2"></div>
+                        <div className="flex justify-between items-center mt-3">
+                          <div className="h-4 bg-slate-200 dark:bg-gray-700 rounded w-20"></div>
+                          <div className="h-6 bg-slate-200 dark:bg-gray-700 rounded w-16"></div>
+                        </div>
                       </CardContent>
                     </Card>
                   ))
                 ) : filteredProperties.length === 0 ? (
-                  <div className="col-span-full p-8 text-center text-gray-500">
-                    <Home className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                    <p>No properties found matching your criteria.</p>
+                  <div className="col-span-full p-8 sm:p-12 text-center">
+                    <div className="max-w-md mx-auto">
+                      <div className="w-20 h-20 mx-auto mb-6 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                        <Home className="h-10 w-10 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                        {searchTerm ? 'No Properties Found' : 'No Properties Available'}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400 mb-6">
+                        {searchTerm 
+                          ? `No properties match your search for "${searchTerm}". Try adjusting your filters.`
+                          : 'There are no properties available at the moment. Check back later for new listings.'
+                        }
+                      </p>
+                      {searchTerm && (
+                        <Button 
+                          variant="outline" 
+                          className="border-blue-200 text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                          onClick={() => setSearchTerm('')}
+                        >
+                          <Search className="h-4 w-4 mr-2" />
+                          Clear Search
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 ) : (
                   filteredProperties.map((property) => (
