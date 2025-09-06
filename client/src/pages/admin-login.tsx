@@ -33,6 +33,14 @@ export default function AdminLogin() {
     },
   });
 
+  // Clean up URL parameters on component mount
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('unauthorized')) {
+      url.searchParams.delete('unauthorized');
+      window.history.replaceState({}, '', url.pathname);
+    }
+  }, []);
 
   const onSubmit = async (data: LoginForm) => {
     if (isLoading) return; // Prevent multiple submissions
