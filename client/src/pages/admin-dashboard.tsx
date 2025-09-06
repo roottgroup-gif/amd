@@ -204,11 +204,13 @@ export default function AdminDashboard() {
   // Create user mutation
   const createUserMutation = useMutation({
     mutationFn: async (userData: CreateUserForm) => {
-      // Convert expiresAt string to Date if provided
-      const transformedData = {
-        ...userData,
-        expiresAt: userData.expiresAt ? new Date(userData.expiresAt) : null,
-      };
+      // Convert expiresAt string to Date if provided, omit if empty
+      const transformedData: any = { ...userData };
+      if (userData.expiresAt && userData.expiresAt.trim() !== '') {
+        transformedData.expiresAt = new Date(userData.expiresAt);
+      } else {
+        delete transformedData.expiresAt;
+      }
       const response = await apiRequest('POST', '/api/admin/users', transformedData);
       return await response.json();
     },
@@ -234,11 +236,13 @@ export default function AdminDashboard() {
   // Edit user mutation
   const editUserMutation = useMutation({
     mutationFn: async ({ id, userData }: { id: string; userData: EditUserForm }) => {
-      // Convert expiresAt string to Date if provided
-      const transformedData = {
-        ...userData,
-        expiresAt: userData.expiresAt ? new Date(userData.expiresAt) : null,
-      };
+      // Convert expiresAt string to Date if provided, omit if empty
+      const transformedData: any = { ...userData };
+      if (userData.expiresAt && userData.expiresAt.trim() !== '') {
+        transformedData.expiresAt = new Date(userData.expiresAt);
+      } else {
+        delete transformedData.expiresAt;
+      }
       const response = await apiRequest('PUT', `/api/admin/users/${id}`, transformedData);
       return await response.json();
     },
