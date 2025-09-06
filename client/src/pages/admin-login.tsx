@@ -73,15 +73,7 @@ export default function AdminLogin() {
       }
       
       navigate(redirectPath);
-      
-      // Show success toast after navigation
-      setTimeout(() => {
-        toast({
-          title: 'Success',
-          description: successMessage,
-        });
-        setIsLoading(false);
-      }, 100);
+      setIsLoading(false);
       
     } catch (error: any) {
       setIsLoading(false);
