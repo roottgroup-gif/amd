@@ -412,12 +412,16 @@ export default function CustomerDashboard() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="browse">Browse Properties</TabsTrigger>
               <TabsTrigger value="map">Map View</TabsTrigger>
               <TabsTrigger value="add-property">
                 <Plus className="h-4 w-4 mr-1" />
                 Add Property
+              </TabsTrigger>
+              <TabsTrigger value="my-properties">
+                <Building className="h-4 w-4 mr-1" />
+                My Properties
               </TabsTrigger>
               <TabsTrigger value="favorites">
                 Favorites ({favorites.length})

@@ -324,6 +324,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User's own properties
+  app.get("/api/users/:userId/properties", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const properties = await storage.getPropertiesByAgent(userId); // Reuse agent properties function since it works for any user
+      res.json(properties);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch user properties" });
+    }
+  });
+
   // Inquiries routes
   app.post("/api/inquiries", async (req, res) => {
     try {
