@@ -91,6 +91,8 @@ export default function AdminDashboard() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>('');
   const [showPasswords, setShowPasswords] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
   // Redirect if not admin or super admin
   useEffect(() => {
@@ -365,6 +367,11 @@ export default function AdminDashboard() {
     }
   };
 
+  // Reset page to 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, roleFilter]);
+
   // Filter users based on search and role
   const filteredUsers = users.filter(u => {
     const matchesSearch = !searchTerm || 
@@ -377,6 +384,13 @@ export default function AdminDashboard() {
     
     return matchesSearch && matchesRole;
   });
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+  const showPagination = filteredUsers.length > itemsPerPage;
 
   // Statistics
   const stats = {
@@ -972,7 +986,7 @@ export default function AdminDashboard() {
                   <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
                   <p>Loading users...</p>
                 </div>
-              ) : filteredUsers.length === 0 ? (
+              ) : paginatedUsers.length === 0 ? (
                 <div className="p-8 text-center text-gray-500">
                   <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
                   <p>No users found</p>
@@ -1008,7 +1022,7 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                      {filteredUsers.map((u) => (
+                      {paginatedUsers.map((u) => (
                         <tr key={u.id} data-testid={`user-row-${u.id}`} className="hover:bg-orange-50/50 dark:hover:bg-gray-800/50 transition-colors duration-150">
                           <td className="px-3 sm:px-6 py-4">
                             <div className="flex items-center space-x-2 sm:space-x-3">
@@ -1124,6 +1138,72 @@ export default function AdminDashboard() {
                 </div>
               )}
             </div>
+
+            {/* Pagination */}
+            {showPagination && (
+              <div className="mt-6 px-4 py-3 bg-white dark:bg-gray-800 border-t border-orange-200 dark:border-gray-700 rounded-b-lg">
+                <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+                  <div className="text-sm text-gray-700 dark:text-gray-300">
+                    Showing {startIndex + 1} to {Math.min(endIndex, filteredUsers.length)} of {filteredUsers.length} users
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                      disabled={currentPage === 1}
+                      className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                      data-testid="button-prev-page"
+                    >
+                      Previous
+                    </Button>
+                    
+                    <div className="flex items-center space-x-1">
+                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                        let pageNumber;
+                        if (totalPages <= 5) {
+                          pageNumber = i + 1;
+                        } else if (currentPage <= 3) {
+                          pageNumber = i + 1;
+                        } else if (currentPage >= totalPages - 2) {
+                          pageNumber = totalPages - 4 + i;
+                        } else {
+                          pageNumber = currentPage - 2 + i;
+                        }
+                        
+                        return (
+                          <Button
+                            key={pageNumber}
+                            variant={currentPage === pageNumber ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setCurrentPage(pageNumber)}
+                            className={`w-8 h-8 p-0 ${
+                              currentPage === pageNumber
+                                ? 'bg-orange-600 text-white hover:bg-orange-700'
+                                : 'text-orange-600 border-orange-200 hover:bg-orange-50'
+                            }`}
+                            data-testid={`button-page-${pageNumber}`}
+                          >
+                            {pageNumber}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                    
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                      disabled={currentPage === totalPages}
+                      className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                      data-testid="button-next-page"
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
