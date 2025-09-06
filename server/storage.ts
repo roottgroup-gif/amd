@@ -482,10 +482,86 @@ class MemStorage implements IStorage {
     return true;
   }
 
-  // Stub implementations for other methods (can be expanded as needed)
-  async getProperty(id: string): Promise<PropertyWithAgent | undefined> { return undefined; }
-  async getProperties(filters?: PropertyFilters): Promise<PropertyWithAgent[]> { return []; }
-  async getFeaturedProperties(): Promise<PropertyWithAgent[]> { return []; }
+  // Property implementations
+  async getProperty(id: string): Promise<PropertyWithAgent | undefined> { 
+    const property = this.properties.find(p => p.id === id);
+    if (!property) return undefined;
+    
+    const agent = this.users.find(u => u.id === property.agentId);
+    return {
+      ...property,
+      agent: agent || null
+    };
+  }
+  
+  async getProperties(filters?: PropertyFilters): Promise<PropertyWithAgent[]> { 
+    let filteredProperties = [...this.properties];
+    
+    // Apply filters if provided
+    if (filters) {
+      if (filters.type) {
+        filteredProperties = filteredProperties.filter(p => p.type === filters.type);
+      }
+      if (filters.listingType) {
+        filteredProperties = filteredProperties.filter(p => p.listingType === filters.listingType);
+      }
+      if (filters.minPrice) {
+        filteredProperties = filteredProperties.filter(p => parseFloat(p.price) >= filters.minPrice!);
+      }
+      if (filters.maxPrice) {
+        filteredProperties = filteredProperties.filter(p => parseFloat(p.price) <= filters.maxPrice!);
+      }
+      if (filters.bedrooms) {
+        filteredProperties = filteredProperties.filter(p => (p.bedrooms || 0) >= filters.bedrooms!);
+      }
+      if (filters.bathrooms) {
+        filteredProperties = filteredProperties.filter(p => (p.bathrooms || 0) >= filters.bathrooms!);
+      }
+      if (filters.city) {
+        filteredProperties = filteredProperties.filter(p => p.city.toLowerCase().includes(filters.city!.toLowerCase()));
+      }
+      if (filters.country) {
+        filteredProperties = filteredProperties.filter(p => p.country === filters.country);
+      }
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase();
+        filteredProperties = filteredProperties.filter(p => 
+          p.title.toLowerCase().includes(searchTerm) ||
+          (p.description && p.description.toLowerCase().includes(searchTerm)) ||
+          p.address.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      // Only show active properties
+      filteredProperties = filteredProperties.filter(p => p.status === 'active');
+      
+      // Apply limit
+      if (filters.limit) {
+        filteredProperties = filteredProperties.slice(0, filters.limit);
+      }
+    }
+    
+    // Add agent information
+    return filteredProperties.map(property => {
+      const agent = this.users.find(u => u.id === property.agentId);
+      return {
+        ...property,
+        agent: agent || null
+      };
+    });
+  }
+  
+  async getFeaturedProperties(): Promise<PropertyWithAgent[]> { 
+    const featuredProperties = this.properties.filter(p => p.isFeatured && p.status === 'active').slice(0, 6);
+    
+    return featuredProperties.map(property => {
+      const agent = this.users.find(u => u.id === property.agentId);
+      return {
+        ...property,
+        agent: agent || null
+      };
+    });
+  }
   async createProperty(property: InsertProperty): Promise<Property> { 
     const newProperty: Property = { 
       id: `prop-${Date.now()}`, 
@@ -519,7 +595,20 @@ class MemStorage implements IStorage {
   }
   async updateInquiryStatus(id: string, status: string): Promise<Inquiry | undefined> { return undefined; }
 
-  async getFavoritesByUser(userId: string): Promise<PropertyWithAgent[]> { return []; }
+  async getFavoritesByUser(userId: string): Promise<PropertyWithAgent[]> { 
+    const userFavorites = this.favorites.filter(f => f.userId === userId);
+    const favoriteProperties = userFavorites.map(fav => 
+      this.properties.find(p => p.id === fav.propertyId)
+    ).filter(Boolean) as Property[];
+    
+    return favoriteProperties.map(property => {
+      const agent = this.users.find(u => u.id === property.agentId);
+      return {
+        ...property,
+        agent: agent || null
+      };
+    });
+  }
   async addToFavorites(favorite: InsertFavorite): Promise<Favorite> {
     const newFavorite: Favorite = { 
       id: `fav-${Date.now()}`, 
