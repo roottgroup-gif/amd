@@ -849,67 +849,9 @@ export default function PropertyMap({
 
           {/* Legend Overlay on Map */}
           <div className="fixed bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
-            <div className="p-4 md:p-5 transition-all duration-300">
-              <div className="flex items-center justify-between gap-3 sm:gap-4 md:gap-6">
-                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-sm">
-                  <div className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
-                        localFilters.listingType === 'sale' 
-                          ? 'bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-600' 
-                          : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
-                      }`}
-                       onClick={() => handleFilterChange('listingType', 'sale')}>
-                    <div className={`w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === 'sale' ? 'animate-pulse' : ''}`}></div>
-                    <span className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === 'sale' ? 'text-red-700 dark:text-red-300' : 'text-black dark:text-white'}`}>🏷️ For Sale</span>
-                  </div>
-                  <div className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
-                        localFilters.listingType === 'rent' 
-                          ? 'bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-600' 
-                          : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
-                      }`}
-                       onClick={() => handleFilterChange('listingType', 'rent')}>
-                    <div className={`w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === 'rent' ? 'animate-pulse' : ''}`}></div>
-                    <span className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === 'rent' ? 'text-green-700 dark:text-green-300' : 'text-black dark:text-white'}`}>🔑 For Rent</span>
-                  </div>
-                  <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
-                    <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
-                          localFilters.type === 'house' 
-                            ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
-                            : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
-                        }`}
-                         onClick={() => handleFilterChange('type', 'house')}>
-                      <i className="fas fa-home text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
-                      <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'house' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Houses</span>
-                    </div>
-                    <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
-                          localFilters.type === 'apartment' 
-                            ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
-                            : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
-                        }`}
-                         onClick={() => handleFilterChange('type', 'apartment')}>
-                      <i className="fas fa-building text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
-                      <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'apartment' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Apartments</span>
-                    </div>
-                    <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
-                          localFilters.type === 'villa' 
-                            ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
-                            : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
-                        }`}
-                         onClick={() => handleFilterChange('type', 'villa')}>
-                      <i className="fas fa-university text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
-                      <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'villa' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Villas</span>
-                    </div>
-                    <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
-                          localFilters.type === 'land' 
-                            ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
-                            : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
-                        }`}
-                         onClick={() => handleFilterChange('type', 'land')}>
-                      <i className="fas fa-map-marked-alt text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
-                      <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'land' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Land</span>
-                    </div>
-                  </div>
-                </div>
-                {/* Get My Location Icon Button - Positioned on the right */}
+            <div className="p-4 md:p-5 transition-all duration-300 space-y-4">
+              {/* Get My Location Icon Button - Positioned above filters */}
+              <div className="flex justify-end">
                 <Button
                   onClick={handleGetMyLocation}
                   disabled={isLocating}
@@ -921,6 +863,66 @@ export default function PropertyMap({
                     style={{color: '#FF7800'}} 
                   />
                 </Button>
+              </div>
+              
+              {/* Filter buttons row */}
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-sm">
+                <div className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                      localFilters.listingType === 'sale' 
+                        ? 'bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-600' 
+                        : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
+                    }`}
+                     onClick={() => handleFilterChange('listingType', 'sale')}>
+                  <div className={`w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === 'sale' ? 'animate-pulse' : ''}`}></div>
+                  <span className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === 'sale' ? 'text-red-700 dark:text-red-300' : 'text-black dark:text-white'}`}>🏷️ For Sale</span>
+                </div>
+                <div className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                      localFilters.listingType === 'rent' 
+                        ? 'bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-600' 
+                        : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
+                    }`}
+                     onClick={() => handleFilterChange('listingType', 'rent')}>
+                  <div className={`w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === 'rent' ? 'animate-pulse' : ''}`}></div>
+                  <span className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === 'rent' ? 'text-green-700 dark:text-green-300' : 'text-black dark:text-white'}`}>🔑 For Rent</span>
+                </div>
+                <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
+                  <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                        localFilters.type === 'house' 
+                          ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
+                          : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
+                      }`}
+                       onClick={() => handleFilterChange('type', 'house')}>
+                    <i className="fas fa-home text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
+                    <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'house' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Houses</span>
+                  </div>
+                  <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                        localFilters.type === 'apartment' 
+                          ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
+                          : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
+                      }`}
+                       onClick={() => handleFilterChange('type', 'apartment')}>
+                    <i className="fas fa-building text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
+                    <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'apartment' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Apartments</span>
+                  </div>
+                  <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                        localFilters.type === 'villa' 
+                          ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
+                          : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
+                      }`}
+                       onClick={() => handleFilterChange('type', 'villa')}>
+                    <i className="fas fa-university text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
+                    <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'villa' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Villas</span>
+                  </div>
+                  <div className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                        localFilters.type === 'land' 
+                          ? 'bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600' 
+                          : 'bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30'
+                      }`}
+                       onClick={() => handleFilterChange('type', 'land')}>
+                    <i className="fas fa-map-marked-alt text-sm sm:text-base flex-shrink-0 drop-shadow-lg" style={{color: '#FF7800'}}></i>
+                    <span className={`text-sm font-medium drop-shadow-lg ${localFilters.type === 'land' ? 'text-orange-700 dark:text-orange-300' : 'text-black dark:text-white'}`}>Land</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
