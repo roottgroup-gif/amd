@@ -831,7 +831,7 @@ export default function PropertyMap({
     <div className={className}>
       <div className="relative">
         {/* Map Container - Full Size */}
-        <div className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] lg:h-[75vh] xl:h-[80vh]" data-testid="property-map">
+        <div className="relative h-screen" data-testid="property-map">
           <div ref={mapRef} className="w-full h-full" />
           
           {/* Get My Location Button */}
