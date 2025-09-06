@@ -482,7 +482,7 @@ export default function CustomerDashboard() {
     <ProtectedRoute requiredRole={['user', 'admin']}>
       <div className="min-h-screen bg-slate-50 dark:bg-gray-900">
         {/* Header */}
-        <header className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900 shadow-lg border-b border-blue-800">
+        <header className="bg-gradient-to-r from-orange-600 to-orange-700 dark:from-orange-800 dark:to-orange-900 shadow-lg border-b border-orange-800">
           <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 sm:py-6 space-y-3 sm:space-y-0">
               <div className="flex items-center justify-center sm:justify-start space-x-2 sm:space-x-4">
@@ -494,7 +494,7 @@ export default function CustomerDashboard() {
                     <h1 className="text-xl sm:text-2xl font-bold text-white">
                       Property Portal
                     </h1>
-                    <p className="text-xs sm:text-sm text-blue-100 hidden sm:block">Find Your Dream Home</p>
+                    <p className="text-xs sm:text-sm text-orange-100 hidden sm:block">Find Your Dream Home</p>
                   </div>
                 </div>
               </div>
@@ -502,7 +502,7 @@ export default function CustomerDashboard() {
                 <div className="flex items-center space-x-2 sm:space-x-3 bg-white/10 rounded-lg px-2 sm:px-3 py-1 sm:py-2">
                   <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
                     <AvatarImage src={user?.avatar || ''} alt="Profile photo" />
-                    <AvatarFallback className="bg-white text-blue-600 font-medium">
+                    <AvatarFallback className="bg-white text-orange-600 font-medium">
                       {user?.firstName?.[0]}{user?.lastName?.[0] || user?.username[0]}
                     </AvatarFallback>
                   </Avatar>
@@ -510,14 +510,14 @@ export default function CustomerDashboard() {
                     <p className="text-sm font-medium text-white">
                       {user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : user?.username}
                     </p>
-                    <p className="text-xs text-blue-100">Customer</p>
+                    <p className="text-xs text-orange-100">Customer</p>
                   </div>
                 </div>
                 <Button 
                   variant="outline" 
                   size="sm" 
                   onClick={handleLogout}
-                  className="bg-white/10 border-white/20 text-white hover:bg-white hover:text-blue-600 transition-all duration-200"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white hover:text-orange-600 transition-all duration-200"
                   data-testid="button-logout"
                 >
                   <LogOut className="h-4 w-4 sm:mr-2" />
@@ -534,28 +534,28 @@ export default function CustomerDashboard() {
               <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 h-auto bg-transparent gap-1 p-2">
                 <TabsTrigger 
                   value="browse" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200"
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200"
                 >
                   <Search className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
                   <span className="hidden sm:inline">Browse</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="map" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200"
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200"
                 >
                   <MapPin className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
                   <span className="hidden sm:inline">Map</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="add-property" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200"
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200"
                 >
                   <Plus className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
                   <span className="hidden sm:inline">Add</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="my-properties" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
                 >
                   <Building className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
                   <span className="hidden sm:inline">My Properties</span>
@@ -563,16 +563,16 @@ export default function CustomerDashboard() {
                 </TabsTrigger>
                 <TabsTrigger 
                   value="favorites" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
                 >
                   <Heart className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
                   <span className="hidden sm:inline">Favorites</span>
                   <span className="sm:hidden">Fav</span>
-                  <span className="ml-1 text-xs bg-blue-100 text-blue-700 px-1 rounded-full">{favorites.length}</span>
+                  <span className="ml-1 text-xs bg-orange-100 text-orange-700 px-1 rounded-full">{favorites.length}</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="profile" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
                 >
                   <User className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
                   <span className="hidden sm:inline">Profile</span>
@@ -583,21 +583,21 @@ export default function CustomerDashboard() {
             <TabsContent value="browse" className="space-y-4 sm:space-y-6">
               {/* Search and Filter */}
               <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
-                <CardHeader className="border-b border-slate-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-white dark:from-gray-800 dark:to-gray-800">
-                  <CardTitle className="text-lg sm:text-xl text-blue-800 dark:text-blue-200 font-bold">Find Your Perfect Property</CardTitle>
-                  <CardDescription className="text-blue-600 dark:text-blue-300">
+                <CardHeader className="border-b border-slate-200 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-white dark:from-gray-800 dark:to-gray-800">
+                  <CardTitle className="text-lg sm:text-xl text-orange-800 dark:text-orange-200 font-bold">Find Your Perfect Property</CardTitle>
+                  <CardDescription className="text-orange-600 dark:text-orange-300">
                     Search through our extensive property listings
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-4 sm:p-6">
                   <div className="space-y-4">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 h-4 w-4" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 h-4 w-4" />
                       <Input
                         placeholder="Search properties, locations, or keywords..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 border-blue-200 focus:border-blue-500 focus:ring-blue-500 h-12 text-base"
+                        className="pl-10 border-orange-200 focus:border-orange-500 focus:ring-orange-500 h-12 text-base"
                         data-testid="input-search"
                       />
                     </div>
@@ -608,7 +608,7 @@ export default function CustomerDashboard() {
                           setMapFilters(prev => ({ ...prev, type: value === 'all' ? undefined : value }))
                         }
                       >
-                        <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 h-11" data-testid="select-type-filter">
+                        <SelectTrigger className="border-orange-200 focus:border-orange-500 focus:ring-orange-500 h-11" data-testid="select-type-filter">
                           <SelectValue placeholder="Property Type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -626,7 +626,7 @@ export default function CustomerDashboard() {
                           setMapFilters(prev => ({ ...prev, listingType: value === 'all' ? undefined : value as 'sale' | 'rent' }))
                         }
                       >
-                        <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-500 h-11" data-testid="select-listing-filter">
+                        <SelectTrigger className="border-orange-200 focus:border-orange-500 focus:ring-orange-500 h-11" data-testid="select-listing-filter">
                           <SelectValue placeholder="Listing Type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -660,8 +660,8 @@ export default function CustomerDashboard() {
                 ) : filteredProperties.length === 0 ? (
                   <div className="col-span-full p-8 sm:p-12 text-center">
                     <div className="max-w-md mx-auto">
-                      <div className="w-20 h-20 mx-auto mb-6 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                        <Home className="h-10 w-10 text-blue-600 dark:text-blue-400" />
+                      <div className="w-20 h-20 mx-auto mb-6 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
+                        <Home className="h-10 w-10 text-orange-600 dark:text-orange-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                         {searchTerm ? 'No Properties Found' : 'No Properties Available'}
@@ -675,7 +675,7 @@ export default function CustomerDashboard() {
                       {searchTerm && (
                         <Button 
                           variant="outline" 
-                          className="border-blue-200 text-blue-600 hover:bg-blue-50 transition-all duration-200"
+                          className="border-orange-200 text-orange-600 hover:bg-orange-50 transition-all duration-200"
                           onClick={() => setSearchTerm('')}
                         >
                           <Search className="h-4 w-4 mr-2" />
@@ -763,25 +763,25 @@ export default function CustomerDashboard() {
                                 <SelectContent>
                                   <SelectItem value="house">
                                     <span className="flex items-center gap-2">
-                                      <Home className="h-4 w-4 text-blue-600" />
+                                      <Home className="h-4 w-4 text-orange-600" />
                                       House
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="apartment">
                                     <span className="flex items-center gap-2">
-                                      <Building className="h-4 w-4 text-blue-600" />
+                                      <Building className="h-4 w-4 text-orange-600" />
                                       Apartment
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="villa">
                                     <span className="flex items-center gap-2">
-                                      <University className="h-4 w-4 text-blue-600" />
+                                      <University className="h-4 w-4 text-orange-600" />
                                       Villa
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="land">
                                     <span className="flex items-center gap-2">
-                                      <Mountain className="h-4 w-4 text-blue-600" />
+                                      <Mountain className="h-4 w-4 text-orange-600" />
                                       Land
                                     </span>
                                   </SelectItem>
@@ -979,14 +979,14 @@ export default function CustomerDashboard() {
                           <p className="text-sm text-muted-foreground mb-4">
                             Click on the map to pinpoint your property's exact location. We'll automatically fill in the address, city, and country fields for you!
                           </p>
-                          <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800 mb-4">
+                          <div className="bg-orange-50 dark:bg-orange-900/20 p-3 rounded-lg border border-orange-200 dark:border-orange-800 mb-4">
                             <div className="flex items-center space-x-2">
-                              <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></div>
-                              <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                              <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
+                              <span className="text-sm font-medium text-orange-700 dark:text-orange-300">
                                 Smart Auto-Fill Enabled
                               </span>
                             </div>
-                            <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                            <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
                               Address details will be automatically detected and filled when you click on the map
                             </p>
                           </div>
@@ -1213,7 +1213,7 @@ export default function CustomerDashboard() {
                                   size="sm"
                                   variant="secondary"
                                   onClick={() => handleEditProperty(property)}
-                                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                                  className="bg-orange-600 hover:bg-orange-700 text-white"
                                   data-testid={`button-edit-${property.id}`}
                                 >
                                   <Edit className="h-3 w-3" />
