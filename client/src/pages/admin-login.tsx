@@ -52,23 +52,40 @@ export default function AdminLogin() {
     try {
       const response = await login(data.username, data.password);
       
-      // Check if user is super_admin and navigate immediately
-      if (response?.user?.role === 'super_admin') {
-        navigate('/admin/dashboard');
-        
-        // Show success toast for super admin after navigation
-        setTimeout(() => {
-          toast({
-            title: 'Success',
-            description: 'Login successful admin super',
-          });
-          setIsLoading(false);
-        }, 100);
-      } else {
-        // For other roles, go to regular dashboard
-        navigate('/dashboard');
-        setIsLoading(false);
+      // Navigate based on user role
+      const userRole = response?.user?.role;
+      let redirectPath = '/dashboard'; // fallback
+      let successMessage = 'Login successful';
+      
+      switch (userRole) {
+        case 'super_admin':
+        case 'admin':
+          redirectPath = '/admin/dashboard';
+          successMessage = 'Login successful - Welcome Admin';
+          break;
+        case 'agent':
+          redirectPath = '/agent/dashboard';
+          successMessage = 'Login successful - Welcome Agent';
+          break;
+        case 'user':
+          redirectPath = '/customer/dashboard';
+          successMessage = 'Login successful - Welcome Customer';
+          break;
+        default:
+          redirectPath = '/dashboard';
+          break;
       }
+      
+      navigate(redirectPath);
+      
+      // Show success toast after navigation
+      setTimeout(() => {
+        toast({
+          title: 'Success',
+          description: successMessage,
+        });
+        setIsLoading(false);
+      }, 100);
       
     } catch (error: any) {
       setIsLoading(false);
