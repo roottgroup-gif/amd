@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import PropertyMap from '@/components/property-map';
 import LocationSelectionMap from '@/components/location-selection-map';
@@ -1783,6 +1784,34 @@ export default function CustomerDashboard() {
           </Tabs>
         </div>
       </div>
+
+      {/* Loading Modal for Property Creation */}
+      <Dialog open={createPropertyMutation.isPending || editPropertyMutation.isPending} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md">
+          <div className="flex flex-col items-center justify-center p-6 text-center">
+            <div className="mb-4">
+              <div className="animate-spin h-12 w-12 border-4 border-orange-600 border-t-transparent rounded-full mx-auto"></div>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              {editingProperty ? 'Updating Property...' : 'Adding Property...'}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              {editingProperty 
+                ? 'Please wait while we update your property details.'
+                : 'Please wait while we add your property to our platform.'
+              }
+            </p>
+            <div className="flex items-center justify-center space-x-2 text-xs text-gray-500">
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-orange-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-orange-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-2 h-2 bg-orange-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+              </div>
+              <span>Processing your request</span>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </ProtectedRoute>
   );
 }
