@@ -64,6 +64,77 @@ const profileFormSchema = z.object({
 type PropertyFormValues = z.infer<typeof propertyFormSchema>;
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
+// Helper functions for expiration
+const calculateDaysUntilExpiration = (expiresAt: string | Date | null): number | null => {
+  if (!expiresAt) return null;
+  const now = new Date();
+  const expiration = expiresAt instanceof Date ? expiresAt : new Date(expiresAt);
+  const diffInMs = expiration.getTime() - now.getTime();
+  return Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+};
+
+const getExpirationStatus = (daysUntilExpiration: number | null): { 
+  status: string; 
+  color: string; 
+  bgColor: string;
+  icon: string;
+  title: string;
+  description: string;
+} => {
+  if (daysUntilExpiration === null) {
+    return { 
+      status: 'Active', 
+      color: 'text-green-600', 
+      bgColor: 'bg-green-100',
+      icon: '✓',
+      title: 'Account Active',
+      description: 'Your account has no expiration date.'
+    };
+  }
+  
+  if (daysUntilExpiration < 0) {
+    return { 
+      status: 'Expired', 
+      color: 'text-red-600', 
+      bgColor: 'bg-red-100',
+      icon: '⚠️',
+      title: 'Account Expired',
+      description: 'Your account has expired. Please contact support to renew.'
+    };
+  }
+  
+  if (daysUntilExpiration <= 3) {
+    return { 
+      status: `${daysUntilExpiration} days left`, 
+      color: 'text-red-600', 
+      bgColor: 'bg-red-100',
+      icon: '🚨',
+      title: 'Account Expiring Soon',
+      description: `Your account expires in ${daysUntilExpiration} day${daysUntilExpiration === 1 ? '' : 's'}. Please contact support to extend it.`
+    };
+  }
+  
+  if (daysUntilExpiration <= 7) {
+    return { 
+      status: `${daysUntilExpiration} days left`, 
+      color: 'text-yellow-600', 
+      bgColor: 'bg-yellow-100',
+      icon: '⚡',
+      title: 'Account Expiring',
+      description: `Your account expires in ${daysUntilExpiration} days. Consider contacting support to extend it.`
+    };
+  }
+  
+  return { 
+    status: `${daysUntilExpiration} days left`, 
+    color: 'text-green-600', 
+    bgColor: 'bg-green-100',
+    icon: '✓',
+    title: 'Account Active',
+    description: `Your account expires in ${daysUntilExpiration} days.`
+  };
+};
+
 export default function CustomerDashboard() {
   const { user, logout } = useAuth();
   const [, navigate] = useLocation();
@@ -1544,6 +1615,32 @@ export default function CustomerDashboard() {
                         )}
                       </div>
                     </div>
+
+                    {/* Account Expiration Notice */}
+                    {(() => {
+                      const daysUntilExpiration = calculateDaysUntilExpiration(user?.expiresAt);
+                      const { status, color, bgColor, icon, title, description } = getExpirationStatus(daysUntilExpiration);
+                      
+                      return (
+                        <div className={`rounded-lg border p-4 ${bgColor} border-opacity-50`}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                              <div className="text-2xl">{icon}</div>
+                              <div>
+                                <h4 className={`font-semibold ${color}`}>{title}</h4>
+                                <p className="text-sm text-gray-600">{description}</p>
+                              </div>
+                            </div>
+                            <Badge 
+                              className={`${color} ${bgColor} border-0 font-medium`}
+                              data-testid="badge-user-expiration"
+                            >
+                              {status}
+                            </Badge>
+                          </div>
+                        </div>
+                      );
+                    })()}
 
                     {/* Profile Form */}
                     {isEditingProfile ? (
