@@ -406,7 +406,27 @@ export default function CustomerDashboard() {
 
   const handleCancelPropertyEdit = () => {
     setEditingProperty(null);
-    propertyForm.reset();
+    // Reset form to completely empty values
+    propertyForm.reset({
+      title: '',
+      description: '',
+      type: 'house',
+      listingType: 'sale',
+      price: '',
+      currency: 'USD',
+      bedrooms: 0,
+      bathrooms: 0,
+      area: 0,
+      address: '',
+      city: '',
+      country: 'Iraq',
+      latitude: undefined,
+      longitude: undefined,
+      images: [],
+      amenities: [],
+      features: [],
+      contactPhone: user?.phone || '',
+    });
     setSelectedLocation(null);
     setActiveTab('my-properties'); // Navigate back to properties list
   };
