@@ -19,9 +19,6 @@ export default function DashboardRedirect() {
         case 'super_admin':
           navigate('/admin/dashboard');
           break;
-        case 'agent':
-          navigate('/agent/dashboard');
-          break;
         case 'user':
           navigate('/customer/dashboard');
           break;

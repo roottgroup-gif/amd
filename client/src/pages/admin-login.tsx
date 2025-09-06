@@ -63,10 +63,6 @@ export default function AdminLogin() {
           redirectPath = '/admin/dashboard';
           successMessage = 'Login successful - Welcome Admin';
           break;
-        case 'agent':
-          redirectPath = '/agent/dashboard';
-          successMessage = 'Login successful - Welcome Agent';
-          break;
         case 'user':
           redirectPath = '/customer/dashboard';
           successMessage = 'Login successful - Welcome Customer';
