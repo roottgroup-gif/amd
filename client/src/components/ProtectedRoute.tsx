@@ -21,11 +21,7 @@ export function ProtectedRoute({
   useEffect(() => {
     if (!isLoading) {
       if (!user) {
-        // Add unauthorized parameter when redirecting to admin login
-        const redirectPath = fallbackPath === '/admin/login' 
-          ? '/admin/login?unauthorized=true' 
-          : fallbackPath;
-        navigate(redirectPath);
+        navigate(fallbackPath);
         return;
       }
 

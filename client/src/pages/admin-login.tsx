@@ -39,26 +39,10 @@ export default function AdminLogin() {
     
     setIsLoading(true);
     try {
-      const response = await login(data.username, data.password);
+      await login(data.username, data.password);
       
-      // Navigate based on user role
-      const userRole = response?.user?.role;
-      let redirectPath = '/dashboard'; // fallback
-      
-      switch (userRole) {
-        case 'super_admin':
-        case 'admin':
-          redirectPath = '/admin/dashboard';
-          break;
-        case 'user':
-          redirectPath = '/customer/dashboard';
-          break;
-        default:
-          redirectPath = '/dashboard';
-          break;
-      }
-      
-      navigate(redirectPath);
+      // Always redirect to /dashboard and let DashboardRedirect handle role-based routing
+      navigate('/dashboard');
       setIsLoading(false);
       
     } catch (error: any) {
