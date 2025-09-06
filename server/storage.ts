@@ -25,7 +25,6 @@ export interface IStorage {
   // Properties
   getProperty(id: string): Promise<PropertyWithAgent | undefined>;
   getProperties(filters?: PropertyFilters): Promise<PropertyWithAgent[]>;
-  getPropertiesByAgent(agentId: string): Promise<PropertyWithAgent[]>;
   getFeaturedProperties(): Promise<PropertyWithAgent[]>;
   createProperty(property: InsertProperty): Promise<Property>;
   updateProperty(id: string, property: Partial<InsertProperty>): Promise<Property | undefined>;
@@ -35,7 +34,6 @@ export interface IStorage {
   // Inquiries
   getInquiry(id: string): Promise<Inquiry | undefined>;
   getInquiriesForProperty(propertyId: string): Promise<Inquiry[]>;
-  getInquiriesForAgent(agentId: string): Promise<Inquiry[]>;
   createInquiry(inquiry: InsertInquiry): Promise<Inquiry>;
   updateInquiryStatus(id: string, status: string): Promise<Inquiry | undefined>;
 
@@ -236,19 +234,6 @@ export class DatabaseStorage implements IStorage {
     }));
   }
 
-  async getPropertiesByAgent(agentId: string): Promise<PropertyWithAgent[]> {
-    const results = await db()
-      .select()
-      .from(properties)
-      .leftJoin(users, eq(properties.agentId, users.id))
-      .where(eq(properties.agentId, agentId))
-      .orderBy(desc(properties.createdAt));
-
-    return results.map(row => ({
-      ...row.properties,
-      agent: row.users,
-    }));
-  }
 
   async getFeaturedProperties(): Promise<PropertyWithAgent[]> {
     const results = await db()
@@ -311,19 +296,6 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(inquiries.createdAt));
   }
 
-  async getInquiriesForAgent(agentId: string): Promise<Inquiry[]> {
-    const results = await db()
-      .select({
-        inquiry: inquiries,
-        property: properties,
-      })
-      .from(inquiries)
-      .innerJoin(properties, eq(inquiries.propertyId, properties.id))
-      .where(eq(properties.agentId, agentId))
-      .orderBy(desc(inquiries.createdAt));
-
-    return results.map(row => row.inquiry);
-  }
 
   async createInquiry(insertInquiry: InsertInquiry): Promise<Inquiry> {
     const [inquiry] = await db()
@@ -422,7 +394,7 @@ class MemStorage implements IStorage {
       username: 'admin',
       email: 'admin@estateai.com',
       password: adminPasswordHash,
-      role: 'super_admin',
+      role: 'super_admin' as const,
       firstName: 'System',
       lastName: 'Admin',
       phone: '+964 750 000 0000',
@@ -440,7 +412,7 @@ class MemStorage implements IStorage {
       username: 'Jutyar',
       email: 'jutyar@estateai.com',
       password: customerPasswordHash,
-      role: 'user',
+      role: 'user' as const,
       firstName: 'Jutyar',
       lastName: 'Customer',
       phone: '+964 750 111 2222',
@@ -513,12 +485,13 @@ class MemStorage implements IStorage {
   // Stub implementations for other methods (can be expanded as needed)
   async getProperty(id: string): Promise<PropertyWithAgent | undefined> { return undefined; }
   async getProperties(filters?: PropertyFilters): Promise<PropertyWithAgent[]> { return []; }
-  async getPropertiesByAgent(agentId: string): Promise<PropertyWithAgent[]> { return []; }
   async getFeaturedProperties(): Promise<PropertyWithAgent[]> { return []; }
   async createProperty(property: InsertProperty): Promise<Property> { 
     const newProperty: Property = { 
       id: `prop-${Date.now()}`, 
-      ...property, 
+      ...property,
+      description: property.description || null,
+      currency: property.currency || 'USD',
       status: property.status || 'active',
       views: 0, 
       createdAt: new Date(), 
@@ -533,9 +506,14 @@ class MemStorage implements IStorage {
 
   async getInquiry(id: string): Promise<Inquiry | undefined> { return undefined; }
   async getInquiriesForProperty(propertyId: string): Promise<Inquiry[]> { return []; }
-  async getInquiriesForAgent(agentId: string): Promise<Inquiry[]> { return []; }
   async createInquiry(inquiry: InsertInquiry): Promise<Inquiry> {
-    const newInquiry: Inquiry = { id: `inq-${Date.now()}`, ...inquiry, createdAt: new Date() };
+    const newInquiry: Inquiry = { 
+      id: `inq-${Date.now()}`, 
+      ...inquiry,
+      phone: inquiry.phone || null,
+      status: 'pending',
+      createdAt: new Date() 
+    };
     this.inquiries.push(newInquiry);
     return newInquiry;
   }
