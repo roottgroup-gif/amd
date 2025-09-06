@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,6 +32,18 @@ export default function AdminLogin() {
       password: '',
     },
   });
+
+  // Check for unauthorized access and show alert
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('unauthorized') === 'true') {
+      toast({
+        title: 'Please login first',
+        description: 'You need to be logged in to access the admin area.',
+        variant: 'destructive',
+      });
+    }
+  }, [toast]);
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);

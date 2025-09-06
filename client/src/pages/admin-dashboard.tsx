@@ -76,7 +76,7 @@ export default function AdminDashboard() {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!user) {
-      navigate('/admin/login');
+      navigate('/admin/login?unauthorized=true');
     }
   }, [user, navigate]);
 
