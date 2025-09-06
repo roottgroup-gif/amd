@@ -317,93 +317,113 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-orange-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center space-x-4">
+      <header className="bg-gradient-to-r from-orange-600 to-orange-700 dark:from-orange-800 dark:to-orange-900 shadow-lg border-b border-orange-800">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-4 sm:py-6 space-y-3 sm:space-y-0">
+            <div className="flex items-center justify-center sm:justify-start space-x-2 sm:space-x-4">
               <div className="flex items-center space-x-2">
-                <Shield className="h-8 w-8 text-blue-600" />
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Admin Dashboard</h1>
+                <div className="p-2 bg-white/10 rounded-lg">
+                  <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-white">Admin Dashboard</h1>
+                  <p className="text-xs sm:text-sm text-orange-100 hidden sm:block">Estate Management System</p>
+                </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Avatar>
-                <AvatarImage src={user.avatar || ''} />
-                <AvatarFallback>
-                  {user.firstName?.[0]}{user.lastName?.[0] || user.username[0]}
-                </AvatarFallback>
-              </Avatar>
-              <div className="hidden md:block">
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{user.username}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Super Administrator</p>
+            <div className="flex items-center justify-center sm:justify-end space-x-2 sm:space-x-4">
+              <div className="flex items-center space-x-2 sm:space-x-3 bg-white/10 rounded-lg px-2 sm:px-3 py-1 sm:py-2">
+                <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
+                  <AvatarImage src={user.avatar || ''} />
+                  <AvatarFallback className="bg-white text-orange-600 font-medium">
+                    {user.firstName?.[0]}{user.lastName?.[0] || user.username[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="hidden sm:block">
+                  <p className="text-sm font-medium text-white">{user.username}</p>
+                  <p className="text-xs text-orange-100">Super Administrator</p>
+                </div>
               </div>
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={handleLogout}
+                className="bg-white/10 border-white/20 text-white hover:bg-white hover:text-orange-600 transition-all duration-200"
                 data-testid="button-logout"
               >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
+                <LogOut className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Logout</span>
               </Button>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+          <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-4">
+              <CardTitle className="text-xs sm:text-sm font-medium text-orange-100">Total Users</CardTitle>
+              <div className="p-1 sm:p-2 bg-white/20 rounded-lg">
+                <Users className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalUsers}</div>
+            <CardContent className="p-3 sm:p-4 pt-0">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{stats.totalUsers}</div>
+              <p className="text-xs text-orange-100 mt-1 hidden sm:block">Active accounts</p>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Real Estate Agents</CardTitle>
-              <Building2 className="h-4 w-4 text-muted-foreground" />
+          <Card className="bg-gradient-to-br from-orange-400 to-orange-500 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-4">
+              <CardTitle className="text-xs sm:text-sm font-medium text-orange-100">Agents</CardTitle>
+              <div className="p-1 sm:p-2 bg-white/20 rounded-lg">
+                <Building2 className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.agents}</div>
+            <CardContent className="p-3 sm:p-4 pt-0">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{stats.agents}</div>
+              <p className="text-xs text-orange-100 mt-1 hidden sm:block">Real estate professionals</p>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Customers</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+          <Card className="bg-gradient-to-br from-orange-300 to-orange-400 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-4">
+              <CardTitle className="text-xs sm:text-sm font-medium text-orange-100">Customers</CardTitle>
+              <div className="p-1 sm:p-2 bg-white/20 rounded-lg">
+                <Users className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.customers}</div>
+            <CardContent className="p-3 sm:p-4 pt-0">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{stats.customers}</div>
+              <p className="text-xs text-orange-100 mt-1 hidden sm:block">Property seekers</p>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Administrators</CardTitle>
-              <Shield className="h-4 w-4 text-muted-foreground" />
+          <Card className="bg-gradient-to-br from-orange-600 to-orange-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-4">
+              <CardTitle className="text-xs sm:text-sm font-medium text-orange-100">Admins</CardTitle>
+              <div className="p-1 sm:p-2 bg-white/20 rounded-lg">
+                <Shield className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.admins}</div>
+            <CardContent className="p-3 sm:p-4 pt-0">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{stats.admins}</div>
+              <p className="text-xs text-orange-100 mt-1 hidden sm:block">System administrators</p>
             </CardContent>
           </Card>
         </div>
 
         {/* User Management Section */}
-        <Card>
-          <CardHeader>
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+        <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+          <CardHeader className="border-b border-orange-100 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-white dark:from-gray-800 dark:to-gray-800">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
               <div>
-                <CardTitle>User Management</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-lg sm:text-xl text-orange-800 dark:text-orange-200 font-bold">User Management</CardTitle>
+                <CardDescription className="text-orange-600 dark:text-orange-300 mt-1">
                   Manage real estate agencies, agents, and customers
                 </CardDescription>
               </div>
@@ -414,7 +434,10 @@ export default function AdminDashboard() {
                 }
               }}>
                 <DialogTrigger asChild>
-                  <Button data-testid="button-create-user">
+                  <Button 
+                    className="bg-orange-600 hover:bg-orange-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto"
+                    data-testid="button-create-user"
+                  >
                     <UserPlus className="h-4 w-4 mr-2" />
                     Create User
                   </Button>
@@ -777,43 +800,51 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             {/* Filters */}
-            <div className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4 mb-6">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search users..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                  data-testid="input-search"
-                />
+            <div className="space-y-3 sm:space-y-4 mb-6">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-400 h-4 w-4" />
+                  <Input
+                    placeholder="Search users..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 border-orange-200 focus:border-orange-500 focus:ring-orange-500"
+                    data-testid="input-search"
+                  />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                  <Select value={roleFilter} onValueChange={setRoleFilter}>
+                    <SelectTrigger className="w-full sm:w-48 border-orange-200 focus:border-orange-500 focus:ring-orange-500" data-testid="select-role-filter">
+                      <SelectValue placeholder="Filter by role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Roles</SelectItem>
+                      <SelectItem value="user">Customers</SelectItem>
+                      <SelectItem value="agent">Agents</SelectItem>
+                      <SelectItem value="admin">Admins</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {(user?.role === 'admin' || user?.role === 'super_admin') && (
+                    <Button
+                      variant={showPasswords ? "default" : "outline"}
+                      onClick={() => setShowPasswords(!showPasswords)}
+                      className={`flex items-center gap-2 w-full sm:w-auto transition-all duration-200 ${
+                        showPasswords 
+                          ? 'bg-orange-600 hover:bg-orange-700 text-white' 
+                          : 'border-orange-300 text-orange-600 hover:bg-orange-50'
+                      }`}
+                      data-testid="button-toggle-passwords"
+                    >
+                      <Key className="h-4 w-4" />
+                      <span className="text-sm">{showPasswords ? 'Hide Passwords' : 'Show Passwords'}</span>
+                    </Button>
+                  )}
+                </div>
               </div>
-              <Select value={roleFilter} onValueChange={setRoleFilter}>
-                <SelectTrigger className="w-full md:w-48" data-testid="select-role-filter">
-                  <SelectValue placeholder="Filter by role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="user">Customers</SelectItem>
-                  <SelectItem value="agent">Agents</SelectItem>
-                  <SelectItem value="admin">Admins</SelectItem>
-                </SelectContent>
-              </Select>
-              {(user?.role === 'admin' || user?.role === 'super_admin') && (
-                <Button
-                  variant={showPasswords ? "default" : "outline"}
-                  onClick={() => setShowPasswords(!showPasswords)}
-                  className="flex items-center gap-2"
-                  data-testid="button-toggle-passwords"
-                >
-                  <Key className="h-4 w-4" />
-                  {showPasswords ? 'Hide Passwords' : 'Show Passwords'}
-                </Button>
-              )}
             </div>
 
             {/* Users Table */}
-            <div className="border rounded-lg">
+            <div className="border border-orange-200 rounded-lg overflow-hidden shadow-sm">
               {usersLoading ? (
                 <div className="p-8 text-center">
                   <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
@@ -827,87 +858,111 @@ export default function AdminDashboard() {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50 dark:bg-gray-800">
+                    <thead className="bg-gradient-to-r from-orange-100 to-orange-50 dark:from-gray-800 dark:to-gray-800">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-orange-800 dark:text-orange-200 uppercase tracking-wider">
                           User
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-orange-800 dark:text-orange-200 uppercase tracking-wider hidden sm:table-cell">
                           Role
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-orange-800 dark:text-orange-200 uppercase tracking-wider hidden md:table-cell">
                           Status
                         </th>
                         {(user?.role === 'admin' || user?.role === 'super_admin') && showPasswords && (
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-orange-800 dark:text-orange-200 uppercase tracking-wider hidden lg:table-cell">
                             Password
                           </th>
                         )}
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-orange-800 dark:text-orange-200 uppercase tracking-wider hidden lg:table-cell">
                           Created
                         </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-3 sm:px-6 py-3 text-right text-xs font-semibold text-orange-800 dark:text-orange-200 uppercase tracking-wider">
                           Actions
                         </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                       {filteredUsers.map((u) => (
-                        <tr key={u.id} data-testid={`user-row-${u.id}`}>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <Avatar className="h-10 w-10">
+                        <tr key={u.id} data-testid={`user-row-${u.id}`} className="hover:bg-orange-50/50 dark:hover:bg-gray-800/50 transition-colors duration-150">
+                          <td className="px-3 sm:px-6 py-4">
+                            <div className="flex items-center space-x-2 sm:space-x-3">
+                              <Avatar className="h-8 w-8 sm:h-10 sm:w-10 ring-2 ring-orange-200">
                                 <AvatarImage src={u.avatar || ''} />
-                                <AvatarFallback>
+                                <AvatarFallback className="bg-orange-100 text-orange-700 font-medium">
                                   {u.firstName?.[0]}{u.lastName?.[0] || u.username[0]}
                                 </AvatarFallback>
                               </Avatar>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                              <div className="min-w-0 flex-1">
+                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                                   {u.firstName && u.lastName ? `${u.firstName} ${u.lastName}` : u.username}
                                 </div>
-                                <div className="text-sm text-gray-500">{u.email}</div>
+                                <div className="text-xs sm:text-sm text-gray-500 truncate">{u.email}</div>
+                                <div className="sm:hidden mt-1 flex items-center space-x-2">
+                                  <Badge 
+                                    variant={u.role === 'admin' ? 'destructive' : u.role === 'agent' ? 'default' : 'secondary'}
+                                    className="text-xs"
+                                    data-testid={`badge-role-${u.id}`}
+                                  >
+                                    {u.role === 'agent' ? 'Agent' : u.role === 'admin' ? 'Admin' : 'Customer'}
+                                  </Badge>
+                                  <Badge 
+                                    variant={u.isVerified ? 'default' : 'secondary'}
+                                    className="text-xs md:hidden"
+                                    data-testid={`badge-status-${u.id}`}
+                                  >
+                                    {u.isVerified ? 'Verified' : 'Unverified'}
+                                  </Badge>
+                                </div>
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-3 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                             <Badge 
                               variant={u.role === 'admin' ? 'destructive' : u.role === 'agent' ? 'default' : 'secondary'}
+                              className="bg-gradient-to-r text-xs font-medium"
                               data-testid={`badge-role-${u.id}`}
                             >
                               {u.role === 'agent' ? 'Real Estate Agent' : 
                                u.role === 'admin' ? 'Administrator' : 'Customer'}
                             </Badge>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-3 sm:px-6 py-4 whitespace-nowrap hidden md:table-cell">
                             <Badge 
                               variant={u.isVerified ? 'default' : 'secondary'}
+                              className={`text-xs font-medium ${
+                                u.isVerified 
+                                  ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                                  : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+                              }`}
                               data-testid={`badge-status-${u.id}`}
                             >
-                              {u.isVerified ? 'Verified' : 'Unverified'}
+                              {u.isVerified ? 'Verified' : 'Pending'}
                             </Badge>
                           </td>
                           {(user?.role === 'admin' || user?.role === 'super_admin') && showPasswords && (
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-xs">
+                            <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
+                              <code className="bg-orange-50 dark:bg-gray-800 text-orange-700 dark:text-orange-300 px-2 py-1 rounded text-xs border border-orange-200">
                                 {usersWithPasswords.find(up => up.id === u.id)?.password || '••••••••'}
                               </code>
                             </td>
                           )}
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}
+                          <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
+                            <div className="text-xs">
+                              {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}
+                            </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div className="flex gap-2 justify-end">
+                          <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div className="flex gap-1 sm:gap-2 justify-end">
                               {(user?.role === 'admin' || user?.role === 'super_admin') && (
                                 <Button
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleEditUser(u)}
-                                  className="text-blue-600 hover:text-blue-700"
+                                  className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 border-orange-200 p-1 sm:p-2"
                                   data-testid={`button-edit-${u.id}`}
                                 >
-                                  <Edit className="h-4 w-4" />
+                                  <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
                                 </Button>
                               )}
                               {u.id !== user.id && (
@@ -915,10 +970,10 @@ export default function AdminDashboard() {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleDeleteUser(u.id, u.username)}
-                                  className="text-red-600 hover:text-red-700"
+                                  className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 p-1 sm:p-2"
                                   data-testid={`button-delete-${u.id}`}
                                 >
-                                  <Trash2 className="h-4 w-4" />
+                                  <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                                 </Button>
                               )}
                             </div>
