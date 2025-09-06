@@ -49,6 +49,35 @@ const editUserSchema = z.object({
 type CreateUserForm = z.infer<typeof createUserSchema>;
 type EditUserForm = z.infer<typeof editUserSchema>;
 
+// Helper functions for expiration
+const calculateDaysUntilExpiration = (expiresAt: string | Date | null): number | null => {
+  if (!expiresAt) return null;
+  const now = new Date();
+  const expiration = expiresAt instanceof Date ? expiresAt : new Date(expiresAt);
+  const diffInMs = expiration.getTime() - now.getTime();
+  return Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
+};
+
+const getExpirationStatus = (daysUntilExpiration: number | null): { status: string; color: string; bgColor: string } => {
+  if (daysUntilExpiration === null) {
+    return { status: 'No Expiration', color: 'text-green-600', bgColor: 'bg-green-100' };
+  }
+  
+  if (daysUntilExpiration < 0) {
+    return { status: 'Expired', color: 'text-red-600', bgColor: 'bg-red-100' };
+  }
+  
+  if (daysUntilExpiration <= 3) {
+    return { status: `${daysUntilExpiration} days left`, color: 'text-red-600', bgColor: 'bg-red-100' };
+  }
+  
+  if (daysUntilExpiration <= 7) {
+    return { status: `${daysUntilExpiration} days left`, color: 'text-yellow-600', bgColor: 'bg-yellow-100' };
+  }
+  
+  return { status: `${daysUntilExpiration} days left`, color: 'text-green-600', bgColor: 'bg-green-100' };
+};
+
 export default function AdminDashboard() {
   const [, navigate] = useLocation();
   const { user, logout } = useAuth();
@@ -921,6 +950,9 @@ export default function AdminDashboard() {
                         <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-orange-800 dark:text-orange-200 uppercase tracking-wider hidden md:table-cell">
                           Status
                         </th>
+                        <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-orange-800 dark:text-orange-200 uppercase tracking-wider hidden lg:table-cell">
+                          Expiration
+                        </th>
                         {(user?.role === 'admin' || user?.role === 'super_admin') && showPasswords && (
                           <th className="px-3 sm:px-6 py-3 text-left text-xs font-semibold text-orange-800 dark:text-orange-200 uppercase tracking-wider hidden lg:table-cell">
                             Password
@@ -991,6 +1023,20 @@ export default function AdminDashboard() {
                             >
                               {u.isVerified ? 'Verified' : 'Pending'}
                             </Badge>
+                          </td>
+                          <td className="px-3 sm:px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+                            {(() => {
+                              const daysUntilExpiration = calculateDaysUntilExpiration(u.expiresAt);
+                              const { status, color, bgColor } = getExpirationStatus(daysUntilExpiration);
+                              return (
+                                <Badge 
+                                  className={`text-xs font-medium ${color} ${bgColor} border-0`}
+                                  data-testid={`badge-expiration-${u.id}`}
+                                >
+                                  {status}
+                                </Badge>
+                              );
+                            })()}
                           </td>
                           {(user?.role === 'admin' || user?.role === 'super_admin') && showPasswords && (
                             <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">
