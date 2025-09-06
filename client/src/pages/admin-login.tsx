@@ -55,17 +55,14 @@ export default function AdminLogin() {
       // Navigate based on user role
       const userRole = response?.user?.role;
       let redirectPath = '/dashboard'; // fallback
-      let successMessage = 'Login successful';
       
       switch (userRole) {
         case 'super_admin':
         case 'admin':
           redirectPath = '/admin/dashboard';
-          successMessage = 'Login successful - Welcome Admin';
           break;
         case 'user':
           redirectPath = '/customer/dashboard';
-          successMessage = 'Login successful - Welcome Customer';
           break;
         default:
           redirectPath = '/dashboard';
