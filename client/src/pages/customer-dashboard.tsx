@@ -450,13 +450,23 @@ export default function CustomerDashboard() {
   };
 
   const onSubmitProperty = (data: PropertyFormValues) => {
+    console.log('Form data before processing:', data);
+    
     // Convert data to match backend expectations (InsertProperty type)
     const submitData: any = {
       ...data,
-      price: data.price.toString(), // Convert to string as expected by backend
+      price: data.price, // Keep as string since backend expects decimal strings
       latitude: data.latitude ? data.latitude.toString() : undefined, // Convert to string if provided
       longitude: data.longitude ? data.longitude.toString() : undefined, // Convert to string if provided
+      // Ensure required fields are not empty
+      country: data.country || 'Iraq',
+      currency: data.currency || 'USD',
+      images: data.images || [],
+      amenities: data.amenities || [],
+      features: data.features || [],
     };
+
+    console.log('Processed data for submission:', submitData);
     
     if (editingProperty) {
       editPropertyMutation.mutate({ id: editingProperty.id, data: submitData });
