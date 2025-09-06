@@ -31,6 +31,7 @@ const createUserSchema = z.object({
   lastName: z.string().optional(),
   phone: z.string().optional(),
   avatar: z.string().optional(),
+  expiresAt: z.string().optional(),
 });
 
 const editUserSchema = z.object({
@@ -42,6 +43,7 @@ const editUserSchema = z.object({
   lastName: z.string().optional(),
   phone: z.string().optional(),
   avatar: z.string().optional(),
+  expiresAt: z.string().optional(),
 });
 
 type CreateUserForm = z.infer<typeof createUserSchema>;
@@ -91,6 +93,7 @@ export default function AdminDashboard() {
       lastName: '',
       phone: '',
       avatar: '',
+      expiresAt: '',
     },
   });
 
@@ -105,6 +108,7 @@ export default function AdminDashboard() {
       lastName: '',
       phone: '',
       avatar: '',
+      expiresAt: '',
     },
   });
 
@@ -590,6 +594,30 @@ export default function AdminDashboard() {
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={form.control}
+                        name="expiresAt"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4 text-orange-500" />
+                              Account Expiration Date
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                type="datetime-local" 
+                                data-testid="input-expires-at"
+                                className="border-orange-200 focus:border-orange-500 focus:ring-orange-500"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                            <p className="text-sm text-gray-500">
+                              Leave empty for no expiration. User account will be automatically disabled after this date.
+                            </p>
+                          </FormItem>
+                        )}
+                      />
                       <div className="flex justify-end space-x-2 pt-4">
                         <Button 
                           type="button" 
@@ -768,6 +796,30 @@ export default function AdminDashboard() {
                               <Input {...field} data-testid="edit-input-phone" />
                             </FormControl>
                             <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={editForm.control}
+                        name="expiresAt"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4 text-orange-500" />
+                              Account Expiration Date
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                type="datetime-local" 
+                                data-testid="edit-input-expires-at"
+                                className="border-orange-200 focus:border-orange-500 focus:ring-orange-500"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                            <p className="text-sm text-gray-500">
+                              Leave empty for no expiration. User account will be automatically disabled after this date.
+                            </p>
                           </FormItem>
                         )}
                       />
