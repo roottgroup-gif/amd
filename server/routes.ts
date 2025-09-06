@@ -621,6 +621,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Customer Analytics Routes
+  app.post("/api/customers/:userId/activity", requireRole("admin"), async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { activityType, propertyId, metadata, points } = req.body;
+      
+      const activity = await storage.addCustomerActivity({
+        userId,
+        activityType,
+        propertyId: propertyId || null,
+        metadata: metadata || {},
+        points: points || 0
+      });
+      
+      res.status(201).json(activity);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to add customer activity" });
+    }
+  });
+
+  app.get("/api/customers/:userId/activities", requireRole("admin"), async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+      
+      const activities = await storage.getCustomerActivities(userId, limit);
+      res.json(activities);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch customer activities" });
+    }
+  });
+
+  app.get("/api/customers/:userId/points", requireRole("admin"), async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const points = await storage.getCustomerPoints(userId);
+      
+      if (!points) {
+        return res.json({
+          userId,
+          totalPoints: 0,
+          currentLevel: "Bronze",
+          pointsThisMonth: 0,
+          lastActivity: null
+        });
+      }
+      
+      res.json(points);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch customer points" });
+    }
+  });
+
+  app.get("/api/customers/:userId/analytics", requireRole("admin"), async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const analytics = await storage.getCustomerAnalytics(userId);
+      res.json(analytics);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch customer analytics" });
+    }
+  });
+
+  app.put("/api/customers/:userId/points", requireRole("admin"), async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { totalPoints, currentLevel, pointsThisMonth } = req.body;
+      
+      const points = await storage.updateCustomerPoints(userId, {
+        totalPoints,
+        currentLevel,
+        pointsThisMonth
+      });
+      
+      res.json(points);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update customer points" });
+    }
+  });
+
   // Seed users endpoint
   app.post("/api/seed/users", async (req, res) => {
     try {
