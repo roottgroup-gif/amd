@@ -980,7 +980,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Users Table */}
-            <div className="border border-orange-200 rounded-lg overflow-hidden shadow-sm">
+            <div className="border border-orange-200 rounded-lg overflow-hidden">
               {usersLoading ? (
                 <div className="p-8 text-center">
                   <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
