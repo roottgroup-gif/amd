@@ -204,7 +204,12 @@ export default function AdminDashboard() {
   // Create user mutation
   const createUserMutation = useMutation({
     mutationFn: async (userData: CreateUserForm) => {
-      const response = await apiRequest('POST', '/api/admin/users', userData);
+      // Convert expiresAt string to Date if provided
+      const transformedData = {
+        ...userData,
+        expiresAt: userData.expiresAt ? new Date(userData.expiresAt) : null,
+      };
+      const response = await apiRequest('POST', '/api/admin/users', transformedData);
       return await response.json();
     },
     onSuccess: () => {
@@ -229,7 +234,12 @@ export default function AdminDashboard() {
   // Edit user mutation
   const editUserMutation = useMutation({
     mutationFn: async ({ id, userData }: { id: string; userData: EditUserForm }) => {
-      const response = await apiRequest('PUT', `/api/admin/users/${id}`, userData);
+      // Convert expiresAt string to Date if provided
+      const transformedData = {
+        ...userData,
+        expiresAt: userData.expiresAt ? new Date(userData.expiresAt) : null,
+      };
+      const response = await apiRequest('PUT', `/api/admin/users/${id}`, transformedData);
       return await response.json();
     },
     onSuccess: () => {
@@ -304,6 +314,14 @@ export default function AdminDashboard() {
     const userWithPassword = usersWithPasswords.find(u => u.id === user.id);
     const currentPassword = userWithPassword?.password || '';
     
+    // Format expiresAt date for datetime-local input
+    let formattedExpiresAt = '';
+    if (user.expiresAt) {
+      const date = new Date(user.expiresAt);
+      // Format as YYYY-MM-DDTHH:MM for datetime-local input
+      formattedExpiresAt = date.toISOString().slice(0, 16);
+    }
+    
     editForm.reset({
       username: user.username,
       email: user.email,
@@ -313,6 +331,7 @@ export default function AdminDashboard() {
       lastName: user.lastName || '',
       phone: user.phone || '',
       avatar: user.avatar || '',
+      expiresAt: formattedExpiresAt,
     });
     setAvatarPreview(user.avatar || '');
     setIsEditUserOpen(true);
