@@ -148,11 +148,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const processedBody = { ...req.body };
       
       // Convert expiresAt string to Date if provided and not empty
-      if (processedBody.expiresAt && typeof processedBody.expiresAt === 'string' && processedBody.expiresAt.trim() !== '') {
-        processedBody.expiresAt = new Date(processedBody.expiresAt);
-      } else if (processedBody.expiresAt === '' || processedBody.expiresAt === null) {
-        // Remove empty or null expiresAt to avoid validation errors
-        delete processedBody.expiresAt;
+      if (processedBody.expiresAt) {
+        if (typeof processedBody.expiresAt === 'string' && processedBody.expiresAt.trim() !== '') {
+          const dateObj = new Date(processedBody.expiresAt);
+          if (!isNaN(dateObj.getTime())) {
+            processedBody.expiresAt = dateObj;
+          } else {
+            delete processedBody.expiresAt;
+          }
+        } else {
+          delete processedBody.expiresAt;
+        }
       }
       
       const validatedData = insertUserSchema.parse(processedBody);
@@ -183,11 +189,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const processedBody = { ...req.body };
       
       // Convert expiresAt string to Date if provided and not empty
-      if (processedBody.expiresAt && typeof processedBody.expiresAt === 'string' && processedBody.expiresAt.trim() !== '') {
-        processedBody.expiresAt = new Date(processedBody.expiresAt);
-      } else if (processedBody.expiresAt === '' || processedBody.expiresAt === null) {
-        // Remove empty or null expiresAt to avoid validation errors
-        delete processedBody.expiresAt;
+      if (processedBody.expiresAt) {
+        if (typeof processedBody.expiresAt === 'string' && processedBody.expiresAt.trim() !== '') {
+          const dateObj = new Date(processedBody.expiresAt);
+          if (!isNaN(dateObj.getTime())) {
+            processedBody.expiresAt = dateObj;
+          } else {
+            delete processedBody.expiresAt;
+          }
+        } else {
+          delete processedBody.expiresAt;
+        }
       }
       
       const validatedData = insertUserSchema.partial().parse(processedBody);
