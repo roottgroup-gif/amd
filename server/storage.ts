@@ -408,7 +408,7 @@ class MemStorage implements IStorage {
   private searchHistories: SearchHistory[] = [];
 
   constructor() {
-    // Initialize with admin and agent users
+    // Initialize with admin and customer users
     this.initializeDefaultUsers();
   }
 
@@ -433,17 +433,17 @@ class MemStorage implements IStorage {
       isExpired: false
     });
 
-    // Agent user
-    const agentPasswordHash = await bcrypt.hash('agent123', 12);
+    // Customer user
+    const customerPasswordHash = await bcrypt.hash('customer123', 12);
     this.users.push({
-      id: 'agent-001',
-      username: 'john_agent',
-      email: 'john@estateai.com',
-      password: agentPasswordHash,
-      role: 'agent',
-      firstName: 'John',
-      lastName: 'Smith',
-      phone: '+964 750 123 4567',
+      id: 'customer-001',
+      username: 'Jutyar',
+      email: 'jutyar@estateai.com',
+      password: customerPasswordHash,
+      role: 'user',
+      firstName: 'Jutyar',
+      lastName: 'Customer',
+      phone: '+964 750 111 2222',
       isVerified: true,
       avatar: null,
       createdAt: new Date(),
