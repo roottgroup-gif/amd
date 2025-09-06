@@ -349,7 +349,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/properties", requireAnyRole(["user", "agent", "admin"]), async (req, res) => {
+  app.post("/api/properties", requireAnyRole(["user", "admin"]), async (req, res) => {
     try {
       const validatedData = insertPropertySchema.parse(req.body);
       const property = await storage.createProperty(validatedData);
@@ -362,7 +362,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/properties/:id", requireAnyRole(["user", "agent", "admin"]), async (req, res) => {
+  app.put("/api/properties/:id", requireAnyRole(["user", "admin"]), async (req, res) => {
     try {
       const { id } = req.params;
       const validatedData = insertPropertySchema.partial().parse(req.body);
@@ -381,7 +381,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/properties/:id", requireAnyRole(["agent", "admin"]), async (req, res) => {
+  app.delete("/api/properties/:id", requireAnyRole(["admin"]), async (req, res) => {
     try {
       const { id } = req.params;
       const deleted = await storage.deleteProperty(id);
