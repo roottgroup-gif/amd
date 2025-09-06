@@ -851,6 +851,18 @@ export default function PropertyMap({
           <div className="fixed bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 z-[1000] transition-all duration-500 ease-out">
             <div className="p-4 md:p-5 transition-all duration-300">
               <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-sm">
+                {/* Get My Location Icon Button */}
+                <Button
+                  onClick={handleGetMyLocation}
+                  disabled={isLocating}
+                  className="p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl bg-blue-100 dark:bg-blue-900/40 border-blue-300 dark:border-blue-600 hover:bg-blue-200 dark:hover:bg-blue-800/60"
+                  data-testid="footer-location-button"
+                >
+                  <Navigation 
+                    className={`h-4 w-4 ${isLocating ? 'animate-spin' : ''}`} 
+                    style={{color: '#4285F4'}} 
+                  />
+                </Button>
                 <div className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.listingType === 'sale' 
                         ? 'bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-600' 
