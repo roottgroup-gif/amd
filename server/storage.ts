@@ -576,8 +576,25 @@ class MemStorage implements IStorage {
     this.properties.push(newProperty);
     return newProperty;
   }
-  async updateProperty(id: string, property: Partial<InsertProperty>): Promise<Property | undefined> { return undefined; }
-  async deleteProperty(id: string): Promise<boolean> { return false; }
+  async updateProperty(id: string, property: Partial<InsertProperty>): Promise<Property | undefined> {
+    const propertyIndex = this.properties.findIndex(p => p.id === id);
+    if (propertyIndex === -1) return undefined;
+    
+    this.properties[propertyIndex] = {
+      ...this.properties[propertyIndex],
+      ...property,
+      updatedAt: new Date()
+    };
+    return this.properties[propertyIndex];
+  }
+  
+  async deleteProperty(id: string): Promise<boolean> {
+    const propertyIndex = this.properties.findIndex(p => p.id === id);
+    if (propertyIndex === -1) return false;
+    
+    this.properties.splice(propertyIndex, 1);
+    return true;
+  }
   async incrementPropertyViews(id: string): Promise<void> {}
 
   async getInquiry(id: string): Promise<Inquiry | undefined> { return undefined; }

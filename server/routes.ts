@@ -381,9 +381,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/properties/:id", requireAnyRole(["admin"]), async (req, res) => {
+  app.delete("/api/properties/:id", requireAnyRole(["user", "admin"]), async (req, res) => {
     try {
       const { id } = req.params;
+      
+      // Get the property first to check ownership
+      const property = await storage.getProperty(id);
+      if (!property) {
+        return res.status(404).json({ message: "Property not found" });
+      }
+      
+      // Check if user owns the property or is admin
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
+      // Allow deletion if user is admin or owns the property
+      if (user.role !== 'admin' && user.role !== 'super_admin' && property.agentId !== user.id) {
+        return res.status(403).json({ message: "Forbidden: You can only delete your own properties" });
+      }
+      
       const deleted = await storage.deleteProperty(id);
       
       if (!deleted) {
