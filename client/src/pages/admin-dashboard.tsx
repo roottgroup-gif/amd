@@ -377,6 +377,11 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleViewCustomerDetails = (customer: User) => {
+    setSelectedCustomer(customer);
+    setIsCustomerDetailsOpen(true);
+  };
+
   // Reset page to 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
@@ -1117,6 +1122,15 @@ export default function AdminDashboard() {
                           </td>
                           <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div className="flex gap-1 sm:gap-2 justify-end">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleViewCustomerDetails(u)}
+                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-blue-200 p-1 sm:p-2"
+                                data-testid={`button-view-${u.id}`}
+                              >
+                                <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
+                              </Button>
                               {(user?.role === 'admin' || user?.role === 'super_admin') && (
                                 <Button
                                   variant="outline"
@@ -1216,6 +1230,210 @@ export default function AdminDashboard() {
             )}
           </CardContent>
         </Card>
+
+        {/* Customer Details Modal */}
+        <Dialog open={isCustomerDetailsOpen} onOpenChange={setIsCustomerDetailsOpen}>
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center space-x-3">
+                <Avatar className="h-12 w-12 ring-2 ring-orange-200">
+                  <AvatarImage src={selectedCustomer?.avatar || ''} />
+                  <AvatarFallback className="bg-orange-100 text-orange-700 font-medium text-lg">
+                    {selectedCustomer?.firstName?.[0]}{selectedCustomer?.lastName?.[0] || selectedCustomer?.username[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h2 className="text-2xl font-bold">
+                    {selectedCustomer?.firstName && selectedCustomer?.lastName 
+                      ? `${selectedCustomer.firstName} ${selectedCustomer.lastName}` 
+                      : selectedCustomer?.username}
+                  </h2>
+                  <p className="text-gray-600">{selectedCustomer?.email}</p>
+                </div>
+              </DialogTitle>
+              <DialogDescription>
+                Complete customer profile and property portfolio
+              </DialogDescription>
+            </DialogHeader>
+
+            {selectedCustomer && (
+              <div className="space-y-6">
+                {/* Customer Information Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Basic Info */}
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium flex items-center">
+                        <Users className="h-4 w-4 mr-2" />
+                        Customer Details
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Username:</span>
+                        <span className="font-medium">{selectedCustomer.username}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Role:</span>
+                        <Badge variant={selectedCustomer.role === 'admin' ? 'destructive' : 'secondary'}>
+                          {selectedCustomer.role === 'agent' ? 'Agent' : selectedCustomer.role === 'admin' ? 'Admin' : 'Customer'}
+                        </Badge>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Status:</span>
+                        <Badge variant={selectedCustomer.isVerified ? 'default' : 'secondary'}>
+                          {selectedCustomer.isVerified ? 'Verified' : 'Pending'}
+                        </Badge>
+                      </div>
+                      {selectedCustomer.phone && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Phone:</span>
+                          <span className="font-medium">{selectedCustomer.phone}</span>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Statistics */}
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium flex items-center">
+                        <BarChart3 className="h-4 w-4 mr-2" />
+                        Portfolio Stats
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Total Properties:</span>
+                        <span className="font-bold text-lg text-orange-600">{customerProperties.length}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">For Sale:</span>
+                        <span className="font-medium">{customerProperties.filter(p => p.listingType === 'sale').length}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">For Rent:</span>
+                        <span className="font-medium">{customerProperties.filter(p => p.listingType === 'rent').length}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Total Value:</span>
+                        <span className="font-medium text-green-600">
+                          ${customerProperties.reduce((sum, p) => sum + (p.price || 0), 0).toLocaleString()}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Account Info */}
+                  <Card>
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm font-medium flex items-center">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Account Info
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Joined:</span>
+                        <span className="font-medium">
+                          {selectedCustomer.createdAt ? new Date(selectedCustomer.createdAt).toLocaleDateString() : 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Expiration:</span>
+                        <span className="font-medium">
+                          {(() => {
+                            const daysUntilExpiration = calculateDaysUntilExpiration(selectedCustomer.expiresAt);
+                            const { status, color } = getExpirationStatus(daysUntilExpiration);
+                            return <span className={color}>{status}</span>;
+                          })()}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Properties Section */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span className="flex items-center">
+                        <Building2 className="h-5 w-5 mr-2" />
+                        Properties Portfolio ({customerProperties.length})
+                      </span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {customerPropertiesLoading ? (
+                      <div className="flex items-center justify-center py-8">
+                        <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+                        <span className="ml-3">Loading properties...</span>
+                      </div>
+                    ) : customerProperties.length === 0 ? (
+                      <div className="text-center py-8 text-gray-500">
+                        <Building2 className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                        <p>No properties found for this customer</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {customerProperties.map((property) => (
+                          <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                            <div className="relative">
+                              {property.images && property.images.length > 0 ? (
+                                <img
+                                  src={property.images[0]}
+                                  alt={property.title}
+                                  className="w-full h-32 object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-32 bg-gray-200 flex items-center justify-center">
+                                  <ImageIcon className="h-8 w-8 text-gray-400" />
+                                </div>
+                              )}
+                              <Badge 
+                                className={`absolute top-2 right-2 ${
+                                  property.listingType === 'sale' 
+                                    ? 'bg-red-500 hover:bg-red-600' 
+                                    : 'bg-green-500 hover:bg-green-600'
+                                }`}
+                              >
+                                {property.listingType === 'sale' ? 'For Sale' : 'For Rent'}
+                              </Badge>
+                            </div>
+                            <CardContent className="p-4">
+                              <h3 className="font-semibold text-sm mb-2 line-clamp-1">{property.title}</h3>
+                              <div className="space-y-1 text-xs text-gray-600">
+                                <div className="flex items-center">
+                                  <MapPin className="h-3 w-3 mr-1" />
+                                  <span className="line-clamp-1">{property.location}</span>
+                                </div>
+                                <div className="flex items-center">
+                                  <Home className="h-3 w-3 mr-1" />
+                                  <span>{property.type}</span>
+                                </div>
+                                <div className="flex items-center justify-between mt-2">
+                                  <div className="flex items-center">
+                                    <DollarSign className="h-3 w-3 mr-1" />
+                                    <span className="font-bold text-green-600">
+                                      ${property.price?.toLocaleString()}
+                                    </span>
+                                  </div>
+                                  <div className="text-xs text-gray-500">
+                                    {property.bedrooms}bd • {property.bathrooms}ba
+                                  </div>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
