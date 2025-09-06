@@ -69,7 +69,8 @@ export default function AdminLogin() {
           break;
       }
       
-      navigate(redirectPath);
+      // Force navigation to dashboard
+      window.location.href = redirectPath;
       setIsLoading(false);
       
     } catch (error: any) {
