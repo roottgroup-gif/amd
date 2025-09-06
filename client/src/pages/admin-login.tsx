@@ -20,10 +20,23 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function AdminLogin() {
   const [, navigate] = useLocation();
-  const { login } = useAuth();
+  const { login, user, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect if user is already logged in
+  if (!authLoading && user) {
+    const userRole = user.role;
+    if (userRole === 'admin' || userRole === 'super_admin') {
+      navigate('/admin/dashboard');
+    } else if (userRole === 'user') {
+      navigate('/customer/dashboard');
+    } else {
+      navigate('/dashboard');
+    }
+    return null;
+  }
 
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -39,19 +52,26 @@ export default function AdminLogin() {
     
     setIsLoading(true);
     try {
-      await login(data.username, data.password);
+      const response = await login(data.username, data.password);
       
-      // Always redirect to /dashboard and let DashboardRedirect handle role-based routing
-      navigate('/dashboard');
-      setIsLoading(false);
+      // Navigate directly to the appropriate dashboard based on user role
+      const userRole = response?.user?.role;
+      if (userRole === 'admin' || userRole === 'super_admin') {
+        navigate('/admin/dashboard');
+      } else if (userRole === 'user') {
+        navigate('/customer/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
       
     } catch (error: any) {
-      setIsLoading(false);
       toast({
         title: 'Error',
         description: error.message || 'Login failed',
         variant: 'destructive',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
