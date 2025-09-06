@@ -550,3 +550,57 @@ class MemStorage implements IStorage {
 
 // Use memory storage temporarily to bypass database connection issues
 export const storage = new MemStorage();
+
+// Add example properties for demonstration
+async function addExampleProperties() {
+  // Example Property 1
+  await storage.createProperty({
+    title: "Modern Apartment in Erbil City Center",
+    description: "Beautiful 2-bedroom apartment located in the heart of Erbil. Perfect for young professionals or small families. Features modern amenities and easy access to shopping centers and restaurants.",
+    type: "apartment",
+    listingType: "rent",
+    price: "800",
+    currency: "USD",
+    bedrooms: 2,
+    bathrooms: 1,
+    area: 85,
+    address: "Gulan Street, Downtown",
+    city: "Erbil",
+    country: "Iraq",
+    latitude: "36.1911",
+    longitude: "44.0093",
+    images: [],
+    amenities: ["Air Conditioning", "Parking", "Security System"],
+    features: ["Furnished", "Modern Kitchen", "High Ceilings"],
+    contactPhone: "+964 750 123 4567",
+    status: "active",
+    agentId: "customer-001"
+  });
+
+  // Example Property 2
+  await storage.createProperty({
+    title: "Spacious Villa in Ainkawa",
+    description: "Luxurious 4-bedroom villa in the prestigious Ainkawa area. This property features a large garden, swimming pool, and high-end finishes throughout. Perfect for families looking for comfort and privacy.",
+    type: "villa",
+    listingType: "sale",
+    price: "450000",
+    currency: "USD",
+    bedrooms: 4,
+    bathrooms: 3,
+    area: 350,
+    address: "Ainkawa Main Road",
+    city: "Erbil",
+    country: "Iraq",
+    latitude: "36.2181",
+    longitude: "44.0089",
+    images: [],
+    amenities: ["Swimming Pool", "Garden", "Parking", "Security System", "Gym"],
+    features: ["Air Conditioning", "Heating", "Fireplace", "High Ceilings", "Storage Room"],
+    contactPhone: "+964 750 987 6543",
+    status: "active",
+    agentId: "customer-001"
+  });
+}
+
+// Initialize example properties
+addExampleProperties().catch(console.error);

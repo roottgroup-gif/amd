@@ -453,8 +453,6 @@ export default function CustomerDashboard() {
   };
 
   const onSubmitProperty = (data: PropertyFormValues) => {
-    console.log('Form data before processing:', data);
-    
     // Convert data to match backend expectations (InsertProperty type)
     const submitData: any = {
       ...data,
@@ -468,8 +466,6 @@ export default function CustomerDashboard() {
       amenities: data.amenities || [],
       features: data.features || [],
     };
-
-    console.log('Processed data for submission:', submitData);
     
     if (editingProperty) {
       editPropertyMutation.mutate({ id: editingProperty.id, data: submitData });
