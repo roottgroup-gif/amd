@@ -51,11 +51,9 @@ export default function AdminLogin() {
     setIsLoading(true);
     try {
       const response = await login(data.username, data.password);
-      console.log('Login response:', response); // Debug log
       
       // Check if user is super_admin and navigate immediately
       if (response?.user?.role === 'super_admin') {
-        console.log('Navigating to admin dashboard'); // Debug log
         navigate('/admin/dashboard');
         
         // Show success toast for super admin after navigation
@@ -73,7 +71,6 @@ export default function AdminLogin() {
       }
       
     } catch (error: any) {
-      console.error('Login error:', error); // Debug log
       setIsLoading(false);
       toast({
         title: 'Error',

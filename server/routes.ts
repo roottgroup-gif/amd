@@ -144,7 +144,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/admin/users", requireRole("admin"), async (req, res) => {
     try {
-      const validatedData = insertUserSchema.parse(req.body);
+      // Preprocess the request body to handle date conversion
+      const processedBody = { ...req.body };
+      
+      // Convert expiresAt string to Date if provided and not empty
+      if (processedBody.expiresAt && typeof processedBody.expiresAt === 'string' && processedBody.expiresAt.trim() !== '') {
+        processedBody.expiresAt = new Date(processedBody.expiresAt);
+      } else if (processedBody.expiresAt === '' || processedBody.expiresAt === null) {
+        // Remove empty or null expiresAt to avoid validation errors
+        delete processedBody.expiresAt;
+      }
+      
+      const validatedData = insertUserSchema.parse(processedBody);
       
       // Hash password
       const hashedPassword = await hashPassword(validatedData.password);
@@ -167,7 +178,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/admin/users/:id", requireRole("admin"), async (req, res) => {
     try {
       const { id } = req.params;
-      const validatedData = insertUserSchema.partial().parse(req.body);
+      
+      // Preprocess the request body to handle date conversion
+      const processedBody = { ...req.body };
+      
+      // Convert expiresAt string to Date if provided and not empty
+      if (processedBody.expiresAt && typeof processedBody.expiresAt === 'string' && processedBody.expiresAt.trim() !== '') {
+        processedBody.expiresAt = new Date(processedBody.expiresAt);
+      } else if (processedBody.expiresAt === '' || processedBody.expiresAt === null) {
+        // Remove empty or null expiresAt to avoid validation errors
+        delete processedBody.expiresAt;
+      }
+      
+      const validatedData = insertUserSchema.partial().parse(processedBody);
       
       // Hash password if provided
       if (validatedData.password) {
