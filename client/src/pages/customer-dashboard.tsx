@@ -299,14 +299,17 @@ export default function CustomerDashboard() {
       return await response.json();
     },
     onSuccess: () => {
+      // Force fresh cache invalidation
       queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
       queryClient.invalidateQueries({ queryKey: ['/api/users', user?.id, 'properties'] });
+      queryClient.refetchQueries({ queryKey: ['/api/users', user?.id, 'properties'] });
       propertyForm.reset();
+      setSelectedLocation(null);
       toast({
         title: 'Success',
-        description: 'Property added successfully! It will appear on the map.',
+        description: 'Property added successfully! Check the "My Properties" tab to see it.',
       });
-      setActiveTab('map'); // Switch to map view to see the new property
+      setActiveTab('my-properties'); // Switch to properties view to see the new property
     },
     onError: (error: any) => {
       toast({
