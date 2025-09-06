@@ -703,7 +703,7 @@ export default function AdminDashboard() {
                   resetAvatarUpload();
                 }
               }}>
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="w-[95vw] max-w-[95vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>Edit User</DialogTitle>
                     <DialogDescription>
