@@ -52,17 +52,19 @@ export default function AdminLogin() {
       
       // Navigate to admin dashboard first for super admin
       if (response.user?.role === 'super_admin') {
+        setIsLoading(false);
         navigate('/admin/dashboard');
         
-        // Show success toast only for super admin after navigation
+        // Show success toast for super admin after navigation
         setTimeout(() => {
           toast({
             title: 'Success',
-            description: 'Login successful',
+            description: 'Login successful admin super',
           });
-        }, 100);
+        }, 200);
       } else {
         // For other roles, go to regular dashboard
+        setIsLoading(false);
         navigate('/dashboard');
       }
       
