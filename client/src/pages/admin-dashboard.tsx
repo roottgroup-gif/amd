@@ -204,13 +204,22 @@ export default function AdminDashboard() {
   // Create user mutation
   const createUserMutation = useMutation({
     mutationFn: async (userData: CreateUserForm) => {
-      // Convert expiresAt string to Date if provided, omit if empty
+      // Prepare data for backend - keep expiresAt as string or remove if empty
       const transformedData: any = { ...userData };
+      
+      // Handle expiresAt field properly
       if (userData.expiresAt && userData.expiresAt.trim() !== '') {
-        transformedData.expiresAt = new Date(userData.expiresAt);
+        // Ensure it's a valid date string in ISO format
+        const dateObj = new Date(userData.expiresAt);
+        if (!isNaN(dateObj.getTime())) {
+          transformedData.expiresAt = userData.expiresAt; // Keep as string for backend processing
+        } else {
+          delete transformedData.expiresAt; // Invalid date, remove it
+        }
       } else {
-        delete transformedData.expiresAt;
+        delete transformedData.expiresAt; // Empty or null, remove it
       }
+      
       const response = await apiRequest('POST', '/api/admin/users', transformedData);
       return await response.json();
     },
@@ -236,13 +245,22 @@ export default function AdminDashboard() {
   // Edit user mutation
   const editUserMutation = useMutation({
     mutationFn: async ({ id, userData }: { id: string; userData: EditUserForm }) => {
-      // Convert expiresAt string to Date if provided, omit if empty
+      // Prepare data for backend - keep expiresAt as string or remove if empty
       const transformedData: any = { ...userData };
+      
+      // Handle expiresAt field properly
       if (userData.expiresAt && userData.expiresAt.trim() !== '') {
-        transformedData.expiresAt = new Date(userData.expiresAt);
+        // Ensure it's a valid date string in ISO format
+        const dateObj = new Date(userData.expiresAt);
+        if (!isNaN(dateObj.getTime())) {
+          transformedData.expiresAt = userData.expiresAt; // Keep as string for backend processing
+        } else {
+          delete transformedData.expiresAt; // Invalid date, remove it
+        }
       } else {
-        delete transformedData.expiresAt;
+        delete transformedData.expiresAt; // Empty or null, remove it
       }
+      
       const response = await apiRequest('PUT', `/api/admin/users/${id}`, transformedData);
       return await response.json();
     },
