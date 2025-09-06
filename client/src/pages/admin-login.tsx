@@ -49,20 +49,25 @@ export default function AdminLogin() {
     setIsLoading(true);
     try {
       await login(data.username, data.password);
-      toast({
-        title: 'Success',
-        description: 'Login successful',
-      });
-      // Redirect to dashboard based on role
+      
+      // Navigate to dashboard immediately after successful login
       navigate('/dashboard');
+      
+      // Show success toast after navigation
+      setTimeout(() => {
+        toast({
+          title: 'Success',
+          description: 'Login successful',
+        });
+      }, 100);
+      
     } catch (error: any) {
+      setIsLoading(false);
       toast({
         title: 'Error',
         description: error.message || 'Login failed',
         variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
