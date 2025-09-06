@@ -913,12 +913,12 @@ export default function PropertyMap({
                 <Button
                   onClick={handleGetMyLocation}
                   disabled={isLocating}
-                  className="p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl bg-blue-100 dark:bg-blue-900/40 border-blue-300 dark:border-blue-600 hover:bg-blue-200 dark:hover:bg-blue-800/60 flex-shrink-0"
+                  className="p-2 rounded-full backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl bg-white dark:bg-white border-gray-300 dark:border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-100 flex-shrink-0"
                   data-testid="footer-location-button"
                 >
                   <Navigation 
                     className={`h-4 w-4 ${isLocating ? 'animate-spin' : ''}`} 
-                    style={{color: '#4285F4'}} 
+                    style={{color: '#FF7800'}} 
                   />
                 </Button>
               </div>
