@@ -48,18 +48,23 @@ export default function AdminLogin() {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      await login(data.username, data.password);
+      const response = await login(data.username, data.password);
       
-      // Navigate to dashboard immediately after successful login
-      navigate('/dashboard');
-      
-      // Show success toast after navigation
-      setTimeout(() => {
-        toast({
-          title: 'Success',
-          description: 'Login successful',
-        });
-      }, 100);
+      // Navigate to admin dashboard first for super admin
+      if (response.user?.role === 'super_admin') {
+        navigate('/admin/dashboard');
+        
+        // Show success toast only for super admin after navigation
+        setTimeout(() => {
+          toast({
+            title: 'Success',
+            description: 'Login successful',
+          });
+        }, 100);
+      } else {
+        // For other roles, go to regular dashboard
+        navigate('/dashboard');
+      }
       
     } catch (error: any) {
       setIsLoading(false);

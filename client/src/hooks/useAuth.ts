@@ -7,7 +7,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<any>;
   logout: () => Promise<void>;
 }
 
@@ -53,7 +53,8 @@ export function useAuthProvider() {
   });
 
   const login = async (username: string, password: string) => {
-    await loginMutation.mutateAsync({ username, password });
+    const response = await loginMutation.mutateAsync({ username, password });
+    return response;
   };
 
   const logout = async () => {
