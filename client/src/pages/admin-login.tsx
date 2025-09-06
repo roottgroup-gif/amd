@@ -33,14 +33,17 @@ export default function AdminLogin() {
     },
   });
 
-  // Clean up URL parameters on component mount
+  // Check for unauthorized access and show alert
   useEffect(() => {
-    const url = new URL(window.location.href);
-    if (url.searchParams.has('unauthorized')) {
-      url.searchParams.delete('unauthorized');
-      window.history.replaceState({}, '', url.pathname);
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('unauthorized') === 'true') {
+      toast({
+        title: 'Please login first',
+        description: 'You need to be logged in to access the admin area.',
+        variant: 'destructive',
+      });
     }
-  }, []);
+  }, [toast]);
 
   const onSubmit = async (data: LoginForm) => {
     if (isLoading) return; // Prevent multiple submissions
@@ -69,8 +72,7 @@ export default function AdminLogin() {
           break;
       }
       
-      // Force navigation to dashboard
-      window.location.href = redirectPath;
+      navigate(redirectPath);
       setIsLoading(false);
       
     } catch (error: any) {
