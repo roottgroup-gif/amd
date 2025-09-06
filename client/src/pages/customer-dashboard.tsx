@@ -65,7 +65,7 @@ type PropertyFormValues = z.infer<typeof propertyFormSchema>;
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 // Helper functions for expiration
-const calculateDaysUntilExpiration = (expiresAt: string | Date | null): number | null => {
+const calculateDaysUntilExpiration = (expiresAt: string | Date | null | undefined): number | null => {
   if (!expiresAt) return null;
   const now = new Date();
   const expiration = expiresAt instanceof Date ? expiresAt : new Date(expiresAt);
