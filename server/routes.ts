@@ -279,7 +279,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/properties/:id", requireAnyRole(["agent", "admin"]), async (req, res) => {
+  app.put("/api/properties/:id", requireAnyRole(["user", "agent", "admin"]), async (req, res) => {
     try {
       const { id } = req.params;
       const validatedData = insertPropertySchema.partial().parse(req.body);

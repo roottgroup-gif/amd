@@ -725,9 +725,9 @@ export default function CustomerDashboard() {
             <TabsContent value="add-property" className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Add New Property</CardTitle>
+                  <CardTitle>{editingProperty ? 'Update Property' : 'Add New Property'}</CardTitle>
                   <CardDescription>
-                    Share your property with others by adding it to our platform
+                    {editingProperty ? 'Update your property details' : 'Share your property with others by adding it to our platform'}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -1134,6 +1134,16 @@ export default function CustomerDashboard() {
                       />
 
                       <div className="flex justify-end space-x-4">
+                        {editingProperty && (
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            onClick={handleCancelPropertyEdit}
+                            data-testid="button-cancel-edit"
+                          >
+                            Cancel
+                          </Button>
+                        )}
                         <Button 
                           type="button" 
                           variant="outline" 
@@ -1144,10 +1154,13 @@ export default function CustomerDashboard() {
                         </Button>
                         <Button 
                           type="submit" 
-                          disabled={createPropertyMutation.isPending}
+                          disabled={createPropertyMutation.isPending || editPropertyMutation.isPending}
                           data-testid="button-submit-property"
                         >
-                          {createPropertyMutation.isPending ? 'Adding Property...' : 'Add Property'}
+                          {editingProperty ? 
+                            (editPropertyMutation.isPending ? 'Updating Property...' : 'Update Property') : 
+                            (createPropertyMutation.isPending ? 'Adding Property...' : 'Add Property')
+                          }
                         </Button>
                       </div>
                     </form>
