@@ -33,17 +33,6 @@ export default function AdminLogin() {
     },
   });
 
-  // Check for unauthorized access and show alert
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('unauthorized') === 'true') {
-      toast({
-        title: 'Please login first',
-        description: 'You need to be logged in to access the admin area.',
-        variant: 'destructive',
-      });
-    }
-  }, [toast]);
 
   const onSubmit = async (data: LoginForm) => {
     if (isLoading) return; // Prevent multiple submissions
