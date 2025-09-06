@@ -408,6 +408,7 @@ export default function CustomerDashboard() {
     setEditingProperty(null);
     propertyForm.reset();
     setSelectedLocation(null);
+    setActiveTab('my-properties'); // Navigate back to properties list
   };
 
   const handleCancelEdit = () => {
