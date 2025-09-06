@@ -26,7 +26,8 @@ import {
   Heart, Search, Filter, LogOut, MapPin, DollarSign,
   Home, Eye, Bed, Bath, Maximize, Phone, Mail, Calendar,
   Star, Bookmark, MessageSquare, User, Settings, Plus,
-  Building, University, Mountain, Tag, Key, Edit, Trash2
+  Building, University, Mountain, Tag, Key, Edit, Trash2,
+  EyeOff, ToggleLeft, ToggleRight
 } from 'lucide-react';
 
 // Property form schema for validation
@@ -49,6 +50,7 @@ const propertyFormSchema = z.object({
   amenities: z.array(z.string()).default([]),
   features: z.array(z.string()).default([]),
   contactPhone: z.string().optional(),
+  status: z.enum(['active', 'inactive']).default('active'),
 });
 
 // Profile form schema for validation
@@ -96,6 +98,7 @@ export default function CustomerDashboard() {
       amenities: [],
       features: [],
       contactPhone: user?.phone || '',
+      status: 'active',
     },
   });
 
@@ -292,6 +295,31 @@ export default function CustomerDashboard() {
     },
   });
 
+  // Toggle property visibility mutation
+  const toggleVisibilityMutation = useMutation({
+    mutationFn: async ({ propertyId, newStatus }: { propertyId: string; newStatus: 'active' | 'inactive' }) => {
+      const response = await apiRequest('PUT', `/api/properties/${propertyId}`, { status: newStatus });
+      return await response.json();
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/users', user?.id, 'properties'] });
+      toast({
+        title: 'Success',
+        description: variables.newStatus === 'active' 
+          ? 'Property is now visible on the map' 
+          : 'Property is now hidden from the map',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to update property visibility',
+        variant: 'destructive',
+      });
+    },
+  });
+
   // Update profile mutation
   const updateProfileMutation = useMutation({
     mutationFn: async (profileData: ProfileFormValues) => {
@@ -388,6 +416,7 @@ export default function CustomerDashboard() {
       amenities: property.amenities || [],
       features: property.features || [],
       images: property.images || [],
+      status: property.status === 'active' ? 'active' : 'inactive',
     });
     if (property.latitude && property.longitude) {
       setSelectedLocation({
@@ -402,6 +431,11 @@ export default function CustomerDashboard() {
     if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
       deletePropertyMutation.mutate(propertyId);
     }
+  };
+
+  const handleToggleVisibility = (propertyId: string, currentStatus: string) => {
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    toggleVisibilityMutation.mutate({ propertyId, newStatus });
   };
 
   const handleCancelPropertyEdit = () => {
@@ -426,6 +460,7 @@ export default function CustomerDashboard() {
       amenities: [],
       features: [],
       contactPhone: user?.phone || '',
+      status: 'active',
     });
     setSelectedLocation(null);
     setActiveTab('my-properties'); // Navigate back to properties list
@@ -1154,6 +1189,63 @@ export default function CustomerDashboard() {
                         )}
                       />
 
+                      {/* Property Visibility Control */}
+                      <div className="space-y-4">
+                        <div>
+                          <h3 className="text-lg font-medium mb-2">👁️ Property Visibility</h3>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            Control whether your property appears on the public map and search results.
+                          </p>
+                        </div>
+                        
+                        <FormField
+                          control={propertyForm.control}
+                          name="status"
+                          render={({ field }) => (
+                            <FormItem>
+                              <div className="flex items-center justify-between p-4 border rounded-lg bg-slate-50 dark:bg-gray-800">
+                                <div className="flex-1">
+                                  <FormLabel className="text-base font-medium">
+                                    {field.value === 'active' ? 'Visible on Map' : 'Hidden from Map'}
+                                  </FormLabel>
+                                  <p className="text-sm text-muted-foreground mt-1">
+                                    {field.value === 'active' 
+                                      ? 'Your property will be visible to other users on the map and in search results'
+                                      : 'Your property will be hidden from the public map and search results'
+                                    }
+                                  </p>
+                                </div>
+                                <div className="flex items-center space-x-3 ml-4">
+                                  <FormControl>
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => field.onChange(field.value === 'active' ? 'inactive' : 'active')}
+                                      className={`transition-all ${field.value === 'active' ? 'bg-green-100 text-green-700 border-green-300' : 'bg-gray-100 text-gray-700 border-gray-300'}`}
+                                      data-testid="button-toggle-property-visibility"
+                                    >
+                                      {field.value === 'active' ? (
+                                        <>
+                                          <Eye className="h-4 w-4 mr-2" />
+                                          Visible
+                                        </>
+                                      ) : (
+                                        <>
+                                          <EyeOff className="h-4 w-4 mr-2" />
+                                          Hidden
+                                        </>
+                                      )}
+                                    </Button>
+                                  </FormControl>
+                                </div>
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
                       <div className="flex justify-end space-x-4">
                         {editingProperty && (
                           <Button 
@@ -1245,6 +1337,16 @@ export default function CustomerDashboard() {
                               <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <Button
                                   size="sm"
+                                  variant={property.status === 'active' ? 'default' : 'secondary'}
+                                  onClick={() => handleToggleVisibility(property.id, property.status || 'inactive')}
+                                  className={property.status === 'active' ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-600 hover:bg-gray-700 text-white'}
+                                  data-testid={`button-toggle-visibility-${property.id}`}
+                                  title={property.status === 'active' ? 'Hide from map' : 'Show on map'}
+                                >
+                                  {property.status === 'active' ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+                                </Button>
+                                <Button
+                                  size="sm"
                                   variant="secondary"
                                   onClick={() => handleEditProperty(property)}
                                   className="bg-orange-600 hover:bg-orange-700 text-white"
@@ -1266,9 +1368,16 @@ export default function CustomerDashboard() {
                                   {property.listingType === 'sale' ? 'For Sale' : 'For Rent'}
                                 </Badge>
                               </div>
-                              <div className="absolute bottom-2 left-2">
-                                <Badge variant="outline" className="text-xs bg-white/90">
-                                  {property.status}
+                              <div className="absolute bottom-2 left-2 flex space-x-1">
+                                <Badge 
+                                  variant={property.status === 'active' ? 'default' : 'secondary'} 
+                                  className={`text-xs ${property.status === 'active' ? 'bg-green-100 text-green-700 border-green-300' : 'bg-gray-100 text-gray-700 border-gray-300'}`}
+                                >
+                                  {property.status === 'active' ? (
+                                    <><Eye className="h-3 w-3 mr-1" />Visible</>
+                                  ) : (
+                                    <><EyeOff className="h-3 w-3 mr-1" />Hidden</>
+                                  )}
                                 </Badge>
                               </div>
                             </div>
