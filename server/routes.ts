@@ -75,6 +75,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Wave balance information
+  app.get("/api/auth/wave-balance", requireAuth, async (req, res) => {
+    try {
+      const userId = req.session.userId!;
+      const [currentUsage, remainingWaves] = await Promise.all([
+        storage.getUserWaveUsage(userId),
+        storage.getUserRemainingWaves(userId)
+      ]);
+
+      const user = await storage.getUser(userId);
+      const totalBalance = user?.waveBalance || 0;
+
+      res.json({
+        totalBalance,
+        currentUsage,
+        remainingWaves,
+        hasUnlimited: user?.role === 'admin' || user?.role === 'super_admin'
+      });
+    } catch (error) {
+      console.error("Failed to get wave balance:", error);
+      res.status(500).json({ message: "Failed to get wave balance" });
+    }
+  });
+
   // Database initialization route (temporary for setup)
   app.post("/api/init-db", async (req, res) => {
     try {

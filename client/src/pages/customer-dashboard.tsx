@@ -238,6 +238,13 @@ export default function CustomerDashboard() {
     enabled: !!user?.id,
   });
 
+  // Fetch user's wave balance information
+  const { data: waveBalance, isLoading: waveBalanceLoading } = useQuery({
+    queryKey: ['/api/auth/wave-balance'],
+    enabled: !!user?.id,
+    refetchOnWindowFocus: true,
+  });
+
   // Fetch property statistics for charts
   const { data: propertyStats } = useQuery({
     queryKey: ['/api/properties', { limit: 1000 }],
@@ -865,6 +872,67 @@ export default function CustomerDashboard() {
                         <div className="text-xs sm:text-sm text-purple-500 dark:text-purple-400">Total Market</div>
                       </div>
                     </div>
+
+                    {/* Wave Balance Information */}
+                    {!waveBalanceLoading && waveBalance && (
+                      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 p-4 rounded-lg border border-blue-200 dark:border-blue-700 mb-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 flex items-center">
+                            <Activity className="h-5 w-5 mr-2" />
+                            Wave Balance
+                          </h3>
+                          {waveBalance.hasUnlimited && (
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200">
+                              Unlimited
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-blue-600 dark:text-blue-300">
+                              {waveBalance.hasUnlimited ? '∞' : waveBalance.totalBalance}
+                            </div>
+                            <div className="text-sm text-blue-500 dark:text-blue-400">Total Balance</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-orange-600 dark:text-orange-300">
+                              {waveBalance.currentUsage}
+                            </div>
+                            <div className="text-sm text-orange-500 dark:text-orange-400">In Use</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-green-600 dark:text-green-300">
+                              {waveBalance.hasUnlimited ? '∞' : waveBalance.remainingWaves}
+                            </div>
+                            <div className="text-sm text-green-500 dark:text-green-400">Remaining</div>
+                          </div>
+                        </div>
+
+                        {!waveBalance.hasUnlimited && waveBalance.totalBalance > 0 && (
+                          <div className="mt-4">
+                            <div className="flex items-center justify-between text-sm mb-2">
+                              <span className="text-gray-600 dark:text-gray-400">Wave Usage</span>
+                              <span className="font-medium">{waveBalance.currentUsage} / {waveBalance.totalBalance}</span>
+                            </div>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div 
+                                className={`h-2 rounded-full transition-all duration-300 ${
+                                  waveBalance.remainingWaves <= 0 ? 'bg-red-500' : 
+                                  waveBalance.remainingWaves <= 2 ? 'bg-yellow-500' : 'bg-green-500'
+                                }`}
+                                style={{ width: `${Math.min(100, (waveBalance.currentUsage / waveBalance.totalBalance) * 100)}%` }}
+                              ></div>
+                            </div>
+                            {waveBalance.remainingWaves <= 0 && (
+                              <p className="text-sm text-red-600 dark:text-red-400 mt-2">
+                                ⚠️ No waves remaining. Contact an admin to increase your balance.
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>
@@ -1467,11 +1535,60 @@ export default function CustomerDashboard() {
                           name="waveId"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Property Wave (Optional)</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormLabel className="flex items-center gap-2">
+                                <Activity className="h-4 w-4 text-blue-500" />
+                                Property Wave
+                                {waveBalance && !waveBalance.hasUnlimited && (
+                                  <span className={`text-xs px-2 py-1 rounded-full ${
+                                    waveBalance.remainingWaves <= 0 ? 'bg-red-100 text-red-700' :
+                                    waveBalance.remainingWaves <= 2 ? 'bg-yellow-100 text-yellow-700' :
+                                    'bg-green-100 text-green-700'
+                                  }`}>
+                                    {waveBalance.remainingWaves} remaining
+                                  </span>
+                                )}
+                                {waveBalance?.hasUnlimited && (
+                                  <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">
+                                    Unlimited
+                                  </span>
+                                )}
+                              </FormLabel>
+                              
+                              {waveBalance && !waveBalance.hasUnlimited && waveBalance.remainingWaves <= 0 && (
+                                <div className="bg-red-50 border border-red-200 p-3 rounded-lg mb-3">
+                                  <div className="flex items-center gap-2 text-red-700 mb-1">
+                                    <AlertTriangle className="h-4 w-4" />
+                                    <span className="font-medium">No Waves Remaining</span>
+                                  </div>
+                                  <p className="text-sm text-red-600">
+                                    You have used all {waveBalance.totalBalance} of your wave assignments. 
+                                    Contact an admin to increase your wave balance.
+                                  </p>
+                                </div>
+                              )}
+                              
+                              <Select 
+                                onValueChange={(value) => {
+                                  // Validate wave assignment before allowing change
+                                  if (value !== "no-wave" && waveBalance && !waveBalance.hasUnlimited && waveBalance.remainingWaves <= 0) {
+                                    // Don't allow wave assignment if no remaining waves
+                                    return;
+                                  }
+                                  field.onChange(value);
+                                }} 
+                                defaultValue={field.value}
+                                disabled={waveBalance && !waveBalance.hasUnlimited && waveBalance.remainingWaves <= 0}
+                              >
                                 <FormControl>
-                                  <SelectTrigger data-testid="select-wave">
-                                    <SelectValue placeholder="Select a wave for this property" />
+                                  <SelectTrigger 
+                                    data-testid="select-wave"
+                                    className={waveBalance && !waveBalance.hasUnlimited && waveBalance.remainingWaves <= 0 ? 'opacity-50 cursor-not-allowed' : ''}
+                                  >
+                                    <SelectValue placeholder={
+                                      waveBalance && !waveBalance.hasUnlimited && waveBalance.remainingWaves <= 0 
+                                        ? "No waves available" 
+                                        : "Select a wave for this property"
+                                    } />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
