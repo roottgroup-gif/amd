@@ -12,11 +12,13 @@ import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { useTranslation } from "@/lib/i18n";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
+import { useAuth } from "@/hooks/useAuth";
 import type { Property, AISearchResponse, PropertyFilters } from "@/types";
 import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu, Search, X, User, Heart, Settings, LogOut, University, Sun, Moon, Building, Mountain } from "lucide-react";
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { data: featuredProperties, isLoading: featuredLoading } = useFeaturedProperties();
   const [searchResults, setSearchResults] = useState<AISearchResponse | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>('sale');
@@ -137,7 +139,7 @@ export default function HomePage() {
       {/* Full Screen Map Section */}
       <section className="h-full w-full relative">
         <PropertyMap 
-          properties={mapProperties || []}
+          properties={(mapProperties || []) as any}
           filters={mapFilters}
           onFilterChange={handleMapFilterChange}
           onPropertyClick={(property) => {
@@ -146,6 +148,7 @@ export default function HomePage() {
           onPropertySelect={(property) => {
             // Just trigger zoom, use built-in marker popup
           }}
+          userId={user?.id}
           className="h-full w-full"
         />
         
