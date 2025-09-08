@@ -200,12 +200,6 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
         {/* Contact Information */}
         {((property as any).contactPhone || property.agent?.phone) && (
           <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-            <div className="flex items-center space-x-2">
-              <Phone className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-              <span className="text-sm font-medium text-gray-900 dark:text-white">
-                {(property as any).contactPhone || property.agent?.phone}
-              </span>
-            </div>
             <div className="flex space-x-2">
               <Button 
                 size="sm" 
