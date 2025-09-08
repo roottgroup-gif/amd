@@ -1063,8 +1063,17 @@ class MemStorage implements IStorage {
     this.favorites.push(newFavorite);
     return newFavorite;
   }
-  async removeFromFavorites(userId: string, propertyId: string): Promise<boolean> { return false; }
-  async isFavorite(userId: string, propertyId: string): Promise<boolean> { return false; }
+  async removeFromFavorites(userId: string, propertyId: string): Promise<boolean> {
+    const index = this.favorites.findIndex(f => f.userId === userId && f.propertyId === propertyId);
+    if (index !== -1) {
+      this.favorites.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+  async isFavorite(userId: string, propertyId: string): Promise<boolean> {
+    return this.favorites.some(f => f.userId === userId && f.propertyId === propertyId);
+  }
 
   async addSearchHistory(search: InsertSearchHistory): Promise<SearchHistory> {
     const newSearch: SearchHistory = { 
