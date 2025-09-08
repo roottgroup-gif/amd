@@ -172,7 +172,7 @@ export function useRemoveFromFavorites() {
         ["/api/favorites/check", { userId, propertyId }],
         { isFavorite: false }
       );
-      // Also invalidate the user's favorites list
+      // Also invalidate the user's favorites list to refresh the favorites page
       queryClient.invalidateQueries({ queryKey: ["/api/users", userId, "favorites"] });
     },
   });
