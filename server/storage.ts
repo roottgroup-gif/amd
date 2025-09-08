@@ -1261,6 +1261,25 @@ async function initializeDatabase() {
 
     console.log("✅ Created customer user:", customer.username);
 
+    // Create default waves for customers to use
+    const defaultWaves = [
+      { name: "High Priority", description: "Important properties that need immediate attention", color: "#EF4444" },
+      { name: "Luxury Properties", description: "Premium and high-end properties", color: "#F59E0B" },
+      { name: "Best Deals", description: "Properties with great value for money", color: "#10B981" },
+      { name: "New Listings", description: "Recently added properties", color: "#3B82F6" },
+      { name: "Investment", description: "Properties suitable for investment purposes", color: "#8B5CF6" }
+    ];
+
+    console.log("Creating default waves...");
+    for (const wave of defaultWaves) {
+      await db().insert(waves).values({
+        ...wave,
+        createdBy: admin.id,
+        isActive: true
+      });
+    }
+    console.log("✅ Created default waves");
+
   } catch (error) {
     console.error("Failed to initialize database:", error);
   }
@@ -1317,7 +1336,48 @@ async function addExampleProperties() {
   });
 }
 
+// Create default waves if they don't exist
+async function initializeWaves() {
+  try {
+    // Check if waves already exist
+    const existingWaves = await db().select({ count: sql<number>`count(*)` }).from(waves);
+    
+    if (existingWaves[0]?.count > 0) {
+      console.log("Waves already exist, skipping wave initialization");
+      return;
+    }
+
+    console.log("Creating default waves...");
+
+    // Get admin user to set as creator
+    const adminUser = await db().select().from(users).where(eq(users.role, 'super_admin')).limit(1);
+    const adminId = adminUser[0]?.id;
+
+    const defaultWaves = [
+      { name: "High Priority", description: "Important properties that need immediate attention", color: "#EF4444" },
+      { name: "Luxury Properties", description: "Premium and high-end properties", color: "#F59E0B" },
+      { name: "Best Deals", description: "Properties with great value for money", color: "#10B981" },
+      { name: "New Listings", description: "Recently added properties", color: "#3B82F6" },
+      { name: "Investment", description: "Properties suitable for investment purposes", color: "#8B5CF6" }
+    ];
+
+    for (const wave of defaultWaves) {
+      await db().insert(waves).values({
+        ...wave,
+        createdBy: adminId,
+        isActive: true
+      });
+    }
+    console.log("✅ Created default waves for customers to use");
+
+  } catch (error) {
+    console.error("Failed to initialize waves:", error);
+  }
+}
+
 // Initialize database and example properties
 initializeDatabase().then(() => {
+  return initializeWaves();
+}).then(() => {
   addExampleProperties().catch(console.error);
 }).catch(console.error);
