@@ -161,9 +161,9 @@ export default function CustomerDashboard() {
       listingType: 'sale',
       price: '',
       currency: 'USD',
-      bedrooms: 0,
-      bathrooms: 0,
-      area: 0,
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 1,
       address: '',
       city: '',
       country: 'Iraq',
@@ -566,9 +566,9 @@ export default function CustomerDashboard() {
       listingType: 'sale',
       price: '',
       currency: 'USD',
-      bedrooms: 0,
-      bathrooms: 0,
-      area: 0,
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 1,
       address: '',
       city: '',
       country: 'Iraq',
@@ -1325,8 +1325,9 @@ export default function CustomerDashboard() {
                                 <Input 
                                   placeholder="e.g., 1200" 
                                   type="number" 
+                                  min="1"
                                   {...field}
-                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
                                   data-testid="input-area"
                                 />
                               </FormControl>
@@ -1345,8 +1346,9 @@ export default function CustomerDashboard() {
                                 <Input 
                                   placeholder="e.g., 3" 
                                   type="number" 
+                                  min="1"
                                   {...field}
-                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
                                   data-testid="input-bedrooms"
                                 />
                               </FormControl>
@@ -1365,8 +1367,9 @@ export default function CustomerDashboard() {
                                 <Input 
                                   placeholder="e.g., 2" 
                                   type="number" 
+                                  min="1"
                                   {...field}
-                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                  onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
                                   data-testid="input-bathrooms"
                                 />
                               </FormControl>
