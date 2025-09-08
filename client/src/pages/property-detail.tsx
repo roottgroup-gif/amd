@@ -251,10 +251,16 @@ export default function PropertyDetailPage() {
                 variant="secondary"
                 size="icon"
                 onClick={handleFavoriteClick}
-                className={`bg-white/80 hover:bg-white ${isFavorite ? 'text-red-500' : ''}`}
+                className={`transition-all duration-200 ${
+                  isFavorite 
+                    ? 'bg-red-50 hover:bg-red-100 text-red-500 border-red-200' 
+                    : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700'
+                }`}
                 data-testid="favorite-button"
               >
-                <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
+                <Heart className={`h-4 w-4 transition-all duration-200 ${
+                  isFavorite ? 'fill-current scale-110' : 'hover:scale-105'
+                }`} />
               </Button>
               <Button
                 variant="secondary"

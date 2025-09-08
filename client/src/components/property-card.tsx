@@ -142,12 +142,16 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
             variant="ghost"
             size="icon"
             onClick={handleFavoriteClick}
-            className={`absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 ${
-              isFavorite ? 'text-red-500' : 'text-white'
+            className={`absolute top-4 right-4 rounded-full p-2 transition-all duration-200 ${
+              isFavorite 
+                ? 'bg-red-50 hover:bg-red-100 text-red-500 border border-red-200' 
+                : 'bg-black/50 hover:bg-black/70 text-white'
             }`}
             data-testid={`favorite-button-${property.id}`}
           >
-            <Heart className={`h-4 w-4 ${isFavorite ? 'fill-current' : ''}`} />
+            <Heart className={`h-4 w-4 transition-all duration-200 ${
+              isFavorite ? 'fill-current scale-110' : 'hover:scale-105'
+            }`} />
           </Button>
         )}
       </div>
