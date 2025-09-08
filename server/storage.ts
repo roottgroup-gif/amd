@@ -1317,6 +1317,94 @@ async function addExampleProperties() {
     status: "active",
     agentId: "customer-001"
   });
+
+  // Add 3 new properties with 3 photos each
+  // Property 3: Elegant Townhouse in Duhok
+  await storage.createProperty({
+    title: "Elegant Townhouse in Duhok",
+    description: "A stunning 3-bedroom townhouse in Duhok's premium residential area. Features include spacious living areas, modern finishes, private garden, and excellent location near schools and shopping centers. Perfect for families seeking comfort and style.",
+    type: "house",
+    listingType: "sale",
+    price: "220000",
+    currency: "USD",
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 180,
+    address: "Nakhoshkhana Road, Premium District",
+    city: "Duhok",
+    country: "Iraq",
+    latitude: "36.8677",
+    longitude: "42.9944",
+    images: [
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Private Garden", "Garage", "Central Heating", "Security System"],
+    features: ["Hardwood Floors", "Granite Countertops", "Walk-in Closets", "Patio"],
+    contactPhone: "+964 750 456 7890",
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: true
+  });
+
+  // Property 4: Luxury Penthouse in Zakho
+  await storage.createProperty({
+    title: "Luxury Penthouse in Zakho",
+    description: "Exclusive penthouse apartment with panoramic city views in Zakho's most prestigious building. Features high-end finishes, spacious terraces, and premium amenities. This is sophisticated urban living at its finest.",
+    type: "apartment",
+    listingType: "rent",
+    price: "1200",
+    currency: "USD",
+    bedrooms: 2,
+    bathrooms: 2,
+    area: 120,
+    address: "City Center Tower, Main Boulevard",
+    city: "Zakho",
+    country: "Iraq",
+    latitude: "37.1433",
+    longitude: "42.6816",
+    images: [
+      "https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Rooftop Terrace", "Concierge Service", "Gym Access", "Valet Parking"],
+    features: ["Floor-to-Ceiling Windows", "Designer Kitchen", "Smart Home Technology", "City Views"],
+    contactPhone: "+964 750 789 0123",
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: true
+  });
+
+  // Property 5: Countryside Villa in Amedi
+  await storage.createProperty({
+    title: "Countryside Villa in Amedi",
+    description: "Magnificent villa surrounded by nature in the beautiful mountain town of Amedi. This 4-bedroom property offers tranquility, fresh mountain air, and breathtaking views. Perfect retreat for those seeking peace and natural beauty.",
+    type: "villa",
+    listingType: "sale",
+    price: "380000",
+    currency: "USD",
+    bedrooms: 4,
+    bathrooms: 3,
+    area: 280,
+    address: "Mountain View Road, Amedi Heights",
+    city: "Amedi",
+    country: "Iraq",
+    latitude: "37.0897",
+    longitude: "43.4905",
+    images: [
+      "https://images.unsplash.com/photo-1576941089067-2de3c901e126?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Mountain Views", "Large Garden", "Fireplace", "Outdoor Kitchen"],
+    features: ["Stone Construction", "Wooden Beams", "Multiple Terraces", "Wine Cellar"],
+    contactPhone: "+964 750 234 5678",
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: true
+  });
 }
 
 // Create default waves if they don't exist
