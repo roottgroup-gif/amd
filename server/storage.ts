@@ -1323,6 +1323,11 @@ async function addExampleProperties() {
 async function initializeWaves() {
   try {
     // Clear existing waves and create only the orange premium wave
+    // First, remove wave assignments from properties
+    await db().update(properties).set({ waveId: null });
+    console.log("Cleared wave assignments from properties");
+    
+    // Then delete all waves
     await db().delete(waves);
     console.log("Cleared existing waves");
 

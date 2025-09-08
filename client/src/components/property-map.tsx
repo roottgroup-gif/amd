@@ -411,7 +411,7 @@ export default function PropertyMap({
     const lng = parseFloat(property.longitude || '0');
 
     // Create custom icon based on property type and listing type
-    const getPropertyIcon = (type: string, listingType: string, isFeatured: boolean = false) => {
+    const getPropertyIcon = (type: string, listingType: string, isFeatured: boolean = false, hasWave: boolean = false) => {
       // Get theme-aware colors
       const isDark = document.documentElement.classList.contains('dark');
       
@@ -424,6 +424,54 @@ export default function PropertyMap({
         
       let animationClass = isFeatured ? 'premium-marker' : '';
       let iconType = type === 'apartment' ? 'fa-building' : type === 'land' ? 'fa-map-marked-alt' : type === 'villa' ? 'fa-university' : 'fa-home';
+
+      // Premium wave animation circles
+      const waveAnimation = hasWave ? `
+        <div class="wave-circle" style="
+          position: absolute;
+          top: -8px;
+          left: -8px;
+          right: -8px;
+          bottom: -8px;
+          border-radius: 50%;
+          border: 3px solid #F59E0B;
+          animation: wave-pulse 2s ease-in-out infinite;
+        "></div>
+        <div class="wave-circle" style="
+          position: absolute;
+          top: -16px;
+          left: -16px;
+          right: -16px;
+          bottom: -16px;
+          border-radius: 50%;
+          border: 2px solid #F59E0B;
+          animation: wave-pulse 2s ease-in-out infinite 0.5s;
+          opacity: 0.7;
+        "></div>
+        <div class="wave-circle" style="
+          position: absolute;
+          top: -24px;
+          left: -24px;
+          right: -24px;
+          bottom: -24px;
+          border-radius: 50%;
+          border: 1px solid #F59E0B;
+          animation: wave-pulse 2s ease-in-out infinite 1s;
+          opacity: 0.4;
+        "></div>
+        <style>
+          @keyframes wave-pulse {
+            0% {
+              transform: scale(0.8);
+              opacity: 1;
+            }
+            100% {
+              transform: scale(1.5);
+              opacity: 0;
+            }
+          }
+        </style>
+      ` : '';
 
       return L.divIcon({
         html: `
@@ -446,6 +494,7 @@ export default function PropertyMap({
           onmouseout="this.style.transform='scale(1)'; this.style.zIndex='1000'">
             <i class="fas ${iconType}" style="color: white; font-size: 18px; pointer-events: none;"></i>
             ${isFeatured ? '<div class="premium-ring" style="position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; border: 2px solid #fbbf24; animation: pulse 2s infinite;"></div>' : ''}
+            ${waveAnimation}
           </div>
         `,
         className: 'custom-property-marker clickable-marker',
@@ -454,7 +503,9 @@ export default function PropertyMap({
       });
     };
 
-    const customIcon = getPropertyIcon(property.type, property.listingType, property.isFeatured);
+    // Check if property has a wave assigned (not 'no-wave' and not null/undefined)
+    const hasWave = property.waveId && property.waveId !== 'no-wave';
+    const customIcon = getPropertyIcon(property.type, property.listingType, property.isFeatured, hasWave);
     const marker = L.marker([lat, lng], { icon: customIcon }).addTo(mapInstanceRef.current);
 
     // Add popup with image slider
