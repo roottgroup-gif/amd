@@ -34,6 +34,7 @@ const createUserSchema = z.object({
   lastName: z.string().optional(),
   phone: z.string().optional(),
   avatar: z.string().optional(),
+  waveBalance: z.number().min(0, 'Wave balance must be 0 or greater').default(0),
   expiresAt: z.string().optional(),
 });
 
@@ -46,6 +47,7 @@ const editUserSchema = z.object({
   lastName: z.string().optional(),
   phone: z.string().optional(),
   avatar: z.string().optional(),
+  waveBalance: z.number().min(0, 'Wave balance must be 0 or greater').default(0),
   expiresAt: z.string().optional(),
 });
 
@@ -144,6 +146,7 @@ export default function AdminDashboard() {
       lastName: '',
       phone: '',
       avatar: '',
+      waveBalance: 0,
       expiresAt: '',
     },
   });
@@ -367,6 +370,7 @@ export default function AdminDashboard() {
       lastName: user.lastName || '',
       phone: user.phone || '',
       avatar: user.avatar || '',
+      waveBalance: user.waveBalance || 0,
       expiresAt: formattedExpiresAt,
     });
     setAvatarPreview(user.avatar || '');
@@ -697,6 +701,32 @@ export default function AdminDashboard() {
                       />
                       <FormField
                         control={form.control}
+                        name="waveBalance"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <Activity className="h-4 w-4 text-blue-500" />
+                              Wave Balance
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                type="number"
+                                min="0"
+                                data-testid="input-wave-balance"
+                                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
+                                onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                            <p className="text-sm text-gray-500">
+                              Number of waves this user can assign to their properties (0 = unlimited for admin)
+                            </p>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
                         name="expiresAt"
                         render={({ field }) => (
                           <FormItem>
@@ -897,6 +927,32 @@ export default function AdminDashboard() {
                               <Input {...field} data-testid="edit-input-phone" />
                             </FormControl>
                             <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={editForm.control}
+                        name="waveBalance"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <Activity className="h-4 w-4 text-blue-500" />
+                              Wave Balance
+                            </FormLabel>
+                            <FormControl>
+                              <Input 
+                                {...field} 
+                                type="number"
+                                min="0"
+                                data-testid="edit-input-wave-balance"
+                                className="border-blue-200 focus:border-blue-500 focus:ring-blue-500"
+                                onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                            <p className="text-sm text-gray-500">
+                              Number of waves this user can assign to their properties (0 = unlimited for admin)
+                            </p>
                           </FormItem>
                         )}
                       />
