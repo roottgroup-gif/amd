@@ -128,8 +128,8 @@ export default function PropertyMap({
       }
 
       try {
-        // Check current favorite status
-        const currentData = queryClient.getQueryData(['/api/favorites', userId, propertyId]) as { isFavorite?: boolean } | undefined;
+        // Check current favorite status using the correct query key format
+        const currentData = queryClient.getQueryData(['/api/favorites/check', { userId, propertyId }]) as { isFavorite?: boolean } | undefined;
         const isFavorite = currentData?.isFavorite || false;
 
         if (isFavorite) {
@@ -452,7 +452,7 @@ export default function PropertyMap({
   // Helper function to get favorite status for popup
   const getFavoriteStatus = (propertyId: string) => {
     if (!userId) return false;
-    const favoriteData = queryClient.getQueryData(['/api/favorites', userId, propertyId]) as { isFavorite?: boolean } | undefined;
+    const favoriteData = queryClient.getQueryData(['/api/favorites/check', { userId, propertyId }]) as { isFavorite?: boolean } | undefined;
     return favoriteData?.isFavorite || false;
   };
 
