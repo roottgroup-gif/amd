@@ -287,6 +287,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Set specific wave balance for a customer
+  app.put("/api/admin/users/:id/wave-balance", requireRole("admin"), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { waveBalance } = req.body;
+
+      if (typeof waveBalance !== 'number' || waveBalance < 0) {
+        return res.status(400).json({ message: "Wave balance must be a non-negative number" });
+      }
+
+      const updatedUser = await storage.updateUser(id, { waveBalance });
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const { password: _, ...userWithoutPassword } = updatedUser;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      console.error("Set wave balance error:", error);
+      res.status(500).json({ message: "Failed to set customer wave balance" });
+    }
+  });
+
   // Customer profile update route (users can update their own profile)
   app.put("/api/profile", requireAuth, async (req, res) => {
     try {
