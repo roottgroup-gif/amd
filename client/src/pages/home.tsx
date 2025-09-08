@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import SearchBar from "@/components/search-bar";
 import PropertyCard from "@/components/property-card";
 import PropertyMap from "@/components/property-map";
@@ -19,6 +19,7 @@ import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu,
 export default function HomePage() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const [, setLocation] = useLocation();
   const { data: featuredProperties, isLoading: featuredLoading } = useFeaturedProperties();
   const [searchResults, setSearchResults] = useState<AISearchResponse | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>('sale');
@@ -180,7 +181,11 @@ export default function HomePage() {
                     <Heart className="h-4 w-4" />
                     <span>Favorites</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                  <DropdownMenuItem 
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={() => setLocation('/favorites')}
+                    data-testid="my-properties-menu"
+                  >
                     <Home className="h-4 w-4" />
                     <span>My Properties</span>
                   </DropdownMenuItem>
