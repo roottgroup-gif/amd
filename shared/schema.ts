@@ -41,6 +41,7 @@ export const properties = pgTable("properties", {
   status: text("status").default("active"), // "active" | "sold" | "rented" | "pending"
   agentId: varchar("agent_id").references(() => users.id),
   contactPhone: text("contact_phone"), // Contact phone number for this property (WhatsApp and calls)
+  waveId: varchar("wave_id").references(() => waves.id), // Wave assignment
   views: integer("views").default(0),
   isFeatured: boolean("is_featured").default(false),
   createdAt: timestamp("created_at").defaultNow(),
@@ -95,6 +96,29 @@ export const customerPoints = pgTable("customer_points", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Wave management tables
+export const waves = pgTable("waves", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  description: text("description"),
+  color: text("color").default("#3B82F6"), // Hex color for map display
+  isActive: boolean("is_active").default(true),
+  createdBy: varchar("created_by").references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const customerWavePermissions = pgTable("customer_wave_permissions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  waveId: varchar("wave_id").references(() => waves.id).notNull(),
+  maxProperties: integer("max_properties").notNull().default(1), // How many properties customer can assign to this wave
+  usedProperties: integer("used_properties").default(0), // How many properties customer has already assigned
+  grantedBy: varchar("granted_by").references(() => users.id), // Super admin who granted permission
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ one, many }) => ({
   properties: many(properties),
@@ -103,6 +127,8 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   searchHistory: many(searchHistory),
   customerActivity: many(customerActivity),
   customerPoints: one(customerPoints),
+  wavePermissions: many(customerWavePermissions),
+  createdWaves: many(waves),
 }));
 
 export const propertiesRelations = relations(properties, ({ one, many }) => ({
@@ -110,8 +136,36 @@ export const propertiesRelations = relations(properties, ({ one, many }) => ({
     fields: [properties.agentId],
     references: [users.id],
   }),
+  wave: one(waves, {
+    fields: [properties.waveId],
+    references: [waves.id],
+  }),
   inquiries: many(inquiries),
   favorites: many(favorites),
+}));
+
+export const wavesRelations = relations(waves, ({ one, many }) => ({
+  properties: many(properties),
+  permissions: many(customerWavePermissions),
+  createdBy: one(users, {
+    fields: [waves.createdBy],
+    references: [users.id],
+  }),
+}));
+
+export const customerWavePermissionsRelations = relations(customerWavePermissions, ({ one }) => ({
+  user: one(users, {
+    fields: [customerWavePermissions.userId],
+    references: [users.id],
+  }),
+  wave: one(waves, {
+    fields: [customerWavePermissions.waveId],
+    references: [waves.id],
+  }),
+  grantedBy: one(users, {
+    fields: [customerWavePermissions.grantedBy],
+    references: [users.id],
+  }),
 }));
 
 export const inquiriesRelations = relations(inquiries, ({ one }) => ({
@@ -202,6 +256,18 @@ export const insertCustomerPointsSchema = createInsertSchema(customerPoints).omi
   updatedAt: true,
 });
 
+export const insertWaveSchema = createInsertSchema(waves).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertCustomerWavePermissionSchema = createInsertSchema(customerWavePermissions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -217,10 +283,15 @@ export type CustomerActivity = typeof customerActivity.$inferSelect;
 export type InsertCustomerActivity = z.infer<typeof insertCustomerActivitySchema>;
 export type CustomerPoints = typeof customerPoints.$inferSelect;
 export type InsertCustomerPoints = z.infer<typeof insertCustomerPointsSchema>;
+export type Wave = typeof waves.$inferSelect;
+export type InsertWave = z.infer<typeof insertWaveSchema>;
+export type CustomerWavePermission = typeof customerWavePermissions.$inferSelect;
+export type InsertCustomerWavePermission = z.infer<typeof insertCustomerWavePermissionSchema>;
 
 // Property with relations
 export type PropertyWithAgent = Property & {
   agent: User | null;
+  wave: Wave | null;
   customerContact?: {
     name: string;
     phone: string | null;
@@ -231,6 +302,12 @@ export type PropertyWithAgent = Property & {
 export type PropertyWithDetails = PropertyWithAgent & {
   inquiries: Inquiry[];
   favorites: Favorite[];
+};
+
+// Wave with permissions
+export type WaveWithPermissions = Wave & {
+  permissions: CustomerWavePermission[];
+  properties: Property[];
 };
 
 // Property filters type
