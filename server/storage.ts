@@ -1209,7 +1209,8 @@ class MemStorage implements IStorage {
 }
 
 // Use database storage for wave management
-export const storage = new DatabaseStorage();
+// Use MemStorage when database is not available
+export const storage = new MemStorage();
 
 // Initialize database with default users if they don't exist
 async function initializeDatabase() {
@@ -1444,9 +1445,22 @@ async function initializeWaves() {
   }
 }
 
-// Initialize database and example properties
-initializeDatabase().then(() => {
-  return initializeWaves();
-}).then(() => {
-  addExampleProperties().catch(console.error);
-}).catch(console.error);
+// Initialize properties for in-memory storage
+if (storage instanceof MemStorage) {
+  // Add sample properties to in-memory storage
+  setTimeout(async () => {
+    try {
+      await addExampleProperties();
+      console.log("✅ Loaded sample properties in memory");
+    } catch (error) {
+      console.error("Failed to load sample properties:", error);
+    }
+  }, 1000);
+} else {
+  // Initialize database and example properties
+  initializeDatabase().then(() => {
+    return initializeWaves();
+  }).then(() => {
+    addExampleProperties().catch(console.error);
+  }).catch(console.error);
+}
