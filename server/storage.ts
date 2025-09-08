@@ -170,6 +170,7 @@ export class DatabaseStorage implements IStorage {
     return {
       ...property.properties,
       agent: property.users,
+      wave: null,
     };
   }
 
@@ -264,6 +265,7 @@ export class DatabaseStorage implements IStorage {
     return results.map(row => ({
       ...row.properties,
       agent: row.users,
+      wave: null,
       customerContact: row.latestInquiry ? {
         name: row.latestInquiry.name,
         phone: row.latestInquiry.phone,
@@ -285,6 +287,7 @@ export class DatabaseStorage implements IStorage {
     return results.map(row => ({
       ...row.properties,
       agent: row.users,
+      wave: null,
     }));
   }
 
@@ -387,6 +390,7 @@ export class DatabaseStorage implements IStorage {
     return results.map(row => ({
       ...row.properties,
       agent: row.users,
+      wave: null,
     }));
   }
 
