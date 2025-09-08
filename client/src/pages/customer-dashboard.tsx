@@ -705,75 +705,77 @@ export default function CustomerDashboard() {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-slate-200 dark:border-gray-700">
-              <TabsList className="grid w-full grid-cols-4 sm:grid-cols-7 h-auto bg-transparent gap-1 p-2">
+              <TabsList className="grid w-full grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-7 h-auto bg-transparent gap-1 p-1 sm:p-2">
                 <TabsTrigger 
                   value="overview" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200"
+                  className="text-xs sm:text-sm py-1.5 sm:py-2 px-1 sm:px-2 md:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-h-[2.5rem] sm:min-h-[2.75rem]"
                   data-testid="tab-overview"
                 >
-                  <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
-                  <span className="hidden sm:inline">Overview</span>
+                  <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-[10px] sm:text-xs md:text-sm">Overview</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="browse" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200"
+                  className="text-xs sm:text-sm py-1.5 sm:py-2 px-1 sm:px-2 md:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-h-[2.5rem] sm:min-h-[2.75rem]"
                 >
-                  <Search className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
-                  <span className="hidden sm:inline">Browse</span>
+                  <Search className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-[10px] sm:text-xs md:text-sm">Browse</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="map" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200"
+                  className="text-xs sm:text-sm py-1.5 sm:py-2 px-1 sm:px-2 md:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-h-[2.5rem] sm:min-h-[2.75rem] col-span-1 sm:col-span-1"
                 >
-                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
-                  <span className="hidden sm:inline">Map</span>
+                  <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-[10px] sm:text-xs md:text-sm">Map</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="add-property" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200"
+                  className="text-xs sm:text-sm py-1.5 sm:py-2 px-1 sm:px-2 md:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-h-[2.5rem] sm:min-h-[2.75rem] col-span-1 sm:col-span-1"
                 >
-                  <Plus className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
-                  <span className="hidden sm:inline">Add</span>
+                  <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-[10px] sm:text-xs md:text-sm">Add</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="my-properties" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
+                  className="text-xs sm:text-sm py-1.5 sm:py-2 px-1 sm:px-2 md:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-h-[2.5rem] sm:min-h-[2.75rem] col-span-1 sm:col-span-1"
                 >
-                  <Building className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
-                  <span className="hidden sm:inline">My Properties</span>
-                  <span className="sm:hidden">Mine</span>
+                  <Building className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-[10px] sm:text-xs md:text-sm hidden xs:inline sm:hidden md:inline">My Properties</span>
+                  <span className="text-[10px] sm:text-xs md:text-sm xs:hidden sm:inline md:hidden">Mine</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="favorites" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
+                  className="text-xs sm:text-sm py-1.5 sm:py-2 px-1 sm:px-2 md:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-h-[2.5rem] sm:min-h-[2.75rem] col-span-1 sm:col-span-1"
                 >
-                  <Heart className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
-                  <span className="hidden sm:inline">Favorites</span>
-                  <span className="sm:hidden">Fav</span>
-                  <span className="ml-1 text-xs bg-orange-100 text-orange-700 px-1 rounded-full">{favorites.length}</span>
+                  <div className="flex items-center gap-1">
+                    <Heart className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="text-[8px] xs:text-[10px] sm:text-xs bg-orange-100 text-orange-700 px-1 rounded-full min-w-[1rem] h-4 flex items-center justify-center">{favorites.length}</span>
+                  </div>
+                  <span className="text-[10px] sm:text-xs md:text-sm hidden xs:inline sm:hidden md:inline">Favorites</span>
+                  <span className="text-[10px] sm:text-xs md:text-sm xs:hidden sm:inline md:hidden">Fav</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="profile" 
-                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 col-span-1 sm:col-span-1"
+                  className="text-xs sm:text-sm py-1.5 sm:py-2 px-1 sm:px-2 md:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200 flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 min-h-[2.5rem] sm:min-h-[2.75rem] col-span-1 sm:col-span-1"
                 >
-                  <User className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
-                  <span className="hidden sm:inline">Profile</span>
+                  <User className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-[10px] sm:text-xs md:text-sm">Profile</span>
                 </TabsTrigger>
               </TabsList>
             </div>
 
-            <TabsContent value="overview" className="space-y-4 sm:space-y-6">
+            <TabsContent value="overview" className="space-y-3 sm:space-y-4 md:space-y-6">
               {/* Account Status and Expiration Dashboard */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                 {/* Account Status Card */}
-                <Card className="lg:col-span-1 shadow-lg border-0 bg-white dark:bg-gray-800">
+                <Card className="md:col-span-1 xl:col-span-1 shadow-lg border-0 bg-white dark:bg-gray-800">
                   <CardHeader className="border-b border-slate-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-white dark:from-gray-800 dark:to-gray-800">
-                    <CardTitle className="text-lg font-bold text-blue-800 dark:text-blue-200 flex items-center">
-                      <User className="h-5 w-5 mr-2" />
+                    <CardTitle className="text-base sm:text-lg font-bold text-blue-800 dark:text-blue-200 flex items-center">
+                      <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                       Account Status
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 sm:p-4 md:p-6">
                     {(() => {
                       const daysUntilExpiration = calculateDaysUntilExpiration(user?.expiresAt);
                       const status = getExpirationStatus(daysUntilExpiration);
@@ -814,37 +816,37 @@ export default function CustomerDashboard() {
                 </Card>
 
                 {/* Property Statistics Overview */}
-                <Card className="lg:col-span-2 shadow-lg border-0 bg-white dark:bg-gray-800">
+                <Card className="md:col-span-1 xl:col-span-2 shadow-lg border-0 bg-white dark:bg-gray-800">
                   <CardHeader className="border-b border-slate-200 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-white dark:from-gray-800 dark:to-gray-800">
-                    <CardTitle className="text-lg font-bold text-orange-800 dark:text-orange-200 flex items-center">
-                      <BarChart3 className="h-5 w-5 mr-2" />
+                    <CardTitle className="text-base sm:text-lg font-bold text-orange-800 dark:text-orange-200 flex items-center">
+                      <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                       Property Overview
                     </CardTitle>
-                    <CardDescription className="text-orange-600 dark:text-orange-300">
+                    <CardDescription className="text-sm sm:text-base text-orange-600 dark:text-orange-300">
                       Your property portfolio statistics
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="p-6">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                      <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg">
-                        <div className="text-2xl font-bold text-blue-600 dark:text-blue-300">{userProperties.length}</div>
-                        <div className="text-sm text-blue-500 dark:text-blue-400">My Properties</div>
+                  <CardContent className="p-3 sm:p-4 md:p-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4 md:mb-6">
+                      <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg">
+                        <div className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600 dark:text-blue-300">{userProperties.length}</div>
+                        <div className="text-xs sm:text-sm text-blue-500 dark:text-blue-400">My Properties</div>
                       </div>
-                      <div className="text-center p-4 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-900 dark:to-pink-800 rounded-lg">
-                        <div className="text-2xl font-bold text-pink-600 dark:text-pink-300">{favorites.length}</div>
-                        <div className="text-sm text-pink-500 dark:text-pink-400">Favorites</div>
+                      <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-900 dark:to-pink-800 rounded-lg">
+                        <div className="text-lg sm:text-xl md:text-2xl font-bold text-pink-600 dark:text-pink-300">{favorites.length}</div>
+                        <div className="text-xs sm:text-sm text-pink-500 dark:text-pink-400">Favorites</div>
                       </div>
-                      <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg">
-                        <div className="text-2xl font-bold text-green-600 dark:text-green-300">
+                      <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg">
+                        <div className="text-lg sm:text-xl md:text-2xl font-bold text-green-600 dark:text-green-300">
                           {userProperties.filter(p => p.status === 'active').length}
                         </div>
-                        <div className="text-sm text-green-500 dark:text-green-400">Active</div>
+                        <div className="text-xs sm:text-sm text-green-500 dark:text-green-400">Active</div>
                       </div>
-                      <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-lg">
-                        <div className="text-2xl font-bold text-purple-600 dark:text-purple-300">
+                      <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-lg">
+                        <div className="text-lg sm:text-xl md:text-2xl font-bold text-purple-600 dark:text-purple-300">
                           {propertyStats?.total || 0}
                         </div>
-                        <div className="text-sm text-purple-500 dark:text-purple-400">Total Market</div>
+                        <div className="text-xs sm:text-sm text-purple-500 dark:text-purple-400">Total Market</div>
                       </div>
                     </div>
                   </CardContent>
@@ -852,17 +854,17 @@ export default function CustomerDashboard() {
               </div>
 
               {/* Charts Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                 {/* Property Type Distribution Chart */}
                 <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
-                  <CardHeader className="border-b border-slate-200 dark:border-gray-700">
-                    <CardTitle className="text-lg font-bold flex items-center">
-                      <PieChartIcon className="h-5 w-5 mr-2 text-orange-600" />
+                  <CardHeader className="border-b border-slate-200 dark:border-gray-700 p-3 sm:p-4 md:p-6">
+                    <CardTitle className="text-base sm:text-lg font-bold flex items-center">
+                      <PieChartIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-orange-600" />
                       Market by Property Type
                     </CardTitle>
-                    <CardDescription>Distribution of properties in the market</CardDescription>
+                    <CardDescription className="text-sm sm:text-base">Distribution of properties in the market</CardDescription>
                   </CardHeader>
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 sm:p-4 md:p-6">
                     {propertyStats?.byType && propertyStats.byType.length > 0 ? (
                       <ChartContainer
                         config={{
@@ -871,7 +873,7 @@ export default function CustomerDashboard() {
                           villa: { label: "Villa", color: "#10b981" },
                           land: { label: "Land", color: "#f59e0b" }
                         }}
-                        className="h-[300px]"
+                        className="h-[200px] sm:h-[250px] md:h-[300px]"
                       >
                         <PieChart>
                           <ChartTooltip content={<ChartTooltipContent />} />
@@ -895,10 +897,10 @@ export default function CustomerDashboard() {
                         </PieChart>
                       </ChartContainer>
                     ) : (
-                      <div className="h-[300px] flex items-center justify-center text-gray-500">
+                      <div className="h-[200px] sm:h-[250px] md:h-[300px] flex items-center justify-center text-gray-500">
                         <div className="text-center">
-                          <PieChartIcon className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                          <p>No property data available</p>
+                          <PieChartIcon className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 mx-auto mb-2 opacity-50" />
+                          <p className="text-sm sm:text-base">No property data available</p>
                         </div>
                       </div>
                     )}
@@ -907,21 +909,21 @@ export default function CustomerDashboard() {
 
                 {/* Listing Type Chart */}
                 <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
-                  <CardHeader className="border-b border-slate-200 dark:border-gray-700">
-                    <CardTitle className="text-lg font-bold flex items-center">
-                      <TrendingUp className="h-5 w-5 mr-2 text-green-600" />
+                  <CardHeader className="border-b border-slate-200 dark:border-gray-700 p-3 sm:p-4 md:p-6">
+                    <CardTitle className="text-base sm:text-lg font-bold flex items-center">
+                      <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-green-600" />
                       Sale vs Rent Distribution
                     </CardTitle>
-                    <CardDescription>Market distribution by listing type</CardDescription>
+                    <CardDescription className="text-sm sm:text-base">Market distribution by listing type</CardDescription>
                   </CardHeader>
-                  <CardContent className="p-6">
+                  <CardContent className="p-3 sm:p-4 md:p-6">
                     {propertyStats?.byListingType && propertyStats.byListingType.length > 0 ? (
                       <ChartContainer
                         config={{
                           sale: { label: "For Sale", color: "#3b82f6" },
                           rent: { label: "For Rent", color: "#10b981" }
                         }}
-                        className="h-[300px]"
+                        className="h-[200px] sm:h-[250px] md:h-[300px]"
                       >
                         <BarChart data={propertyStats.byListingType}>
                           <CartesianGrid strokeDasharray="3 3" />
@@ -933,10 +935,10 @@ export default function CustomerDashboard() {
                         </BarChart>
                       </ChartContainer>
                     ) : (
-                      <div className="h-[300px] flex items-center justify-center text-gray-500">
+                      <div className="h-[200px] sm:h-[250px] md:h-[300px] flex items-center justify-center text-gray-500">
                         <div className="text-center">
-                          <BarChart3 className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                          <p>No listing data available</p>
+                          <BarChart3 className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 mx-auto mb-2 opacity-50" />
+                          <p className="text-sm sm:text-base">No listing data available</p>
                         </div>
                       </div>
                     )}
@@ -945,44 +947,44 @@ export default function CustomerDashboard() {
               </div>
 
               {/* Activity and Quick Actions */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                 {/* Recent Activity */}
                 <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
-                  <CardHeader className="border-b border-slate-200 dark:border-gray-700">
-                    <CardTitle className="text-lg font-bold flex items-center">
-                      <Activity className="h-5 w-5 mr-2 text-blue-600" />
+                  <CardHeader className="border-b border-slate-200 dark:border-gray-700 p-3 sm:p-4 md:p-6">
+                    <CardTitle className="text-base sm:text-lg font-bold flex items-center">
+                      <Activity className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-blue-600" />
                       Recent Activity
                     </CardTitle>
-                    <CardDescription>Your latest actions and updates</CardDescription>
+                    <CardDescription className="text-sm sm:text-base">Your latest actions and updates</CardDescription>
                   </CardHeader>
-                  <CardContent className="p-6">
-                    <div className="space-y-4">
+                  <CardContent className="p-3 sm:p-4 md:p-6">
+                    <div className="space-y-2 sm:space-y-3 md:space-y-4">
                       {userProperties.slice(0, 3).map((property) => (
-                        <div key={property.id} className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                          <div className="h-10 w-10 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
-                            <Home className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                        <div key={property.id} className="flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                          <div className="h-8 w-8 sm:h-10 sm:w-10 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Home className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 text-orange-600 dark:text-orange-400" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                            <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                               {property.title}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-gray-400">
                               Listed as {property.listingType} • {property.status}
                             </p>
                           </div>
-                          <Badge variant={property.status === 'active' ? 'default' : 'secondary'} className="text-xs">
+                          <Badge variant={property.status === 'active' ? 'default' : 'secondary'} className="text-xs flex-shrink-0">
                             {property.status}
                           </Badge>
                         </div>
                       ))}
                       {userProperties.length === 0 && (
-                        <div className="text-center py-8">
-                          <Home className="h-12 w-12 mx-auto mb-3 text-gray-400" />
-                          <p className="text-gray-500 dark:text-gray-400">No properties listed yet</p>
+                        <div className="text-center py-4 sm:py-6 md:py-8">
+                          <Home className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 mx-auto mb-2 sm:mb-3 text-gray-400" />
+                          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">No properties listed yet</p>
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className="mt-2"
+                            className="mt-2 text-xs sm:text-sm"
                             onClick={() => setActiveTab('add-property')}
                           >
                             Add Your First Property
@@ -995,53 +997,53 @@ export default function CustomerDashboard() {
 
                 {/* Quick Actions */}
                 <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
-                  <CardHeader className="border-b border-slate-200 dark:border-gray-700">
-                    <CardTitle className="text-lg font-bold flex items-center">
-                      <Settings className="h-5 w-5 mr-2 text-purple-600" />
+                  <CardHeader className="border-b border-slate-200 dark:border-gray-700 p-3 sm:p-4 md:p-6">
+                    <CardTitle className="text-base sm:text-lg font-bold flex items-center">
+                      <Settings className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-purple-600" />
                       Quick Actions
                     </CardTitle>
-                    <CardDescription>Manage your account and properties</CardDescription>
+                    <CardDescription className="text-sm sm:text-base">Manage your account and properties</CardDescription>
                   </CardHeader>
-                  <CardContent className="p-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <CardContent className="p-3 sm:p-4 md:p-6">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
                       <Button 
                         variant="outline" 
-                        className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-orange-50 hover:border-orange-200 transition-all duration-200"
+                        className="h-16 sm:h-18 md:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 hover:bg-orange-50 hover:border-orange-200 transition-all duration-200"
                         onClick={() => setActiveTab('add-property')}
                         data-testid="button-add-property"
                       >
-                        <Plus className="h-6 w-6 text-orange-600" />
-                        <span className="text-sm font-medium">Add Property</span>
+                        <Plus className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-orange-600" />
+                        <span className="text-xs sm:text-sm font-medium text-center leading-tight">Add Property</span>
                       </Button>
                       
                       <Button 
                         variant="outline" 
-                        className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-blue-50 hover:border-blue-200 transition-all duration-200"
+                        className="h-16 sm:h-18 md:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 hover:bg-blue-50 hover:border-blue-200 transition-all duration-200"
                         onClick={() => setActiveTab('browse')}
                         data-testid="button-browse-properties"
                       >
-                        <Search className="h-6 w-6 text-blue-600" />
-                        <span className="text-sm font-medium">Browse Properties</span>
+                        <Search className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-blue-600" />
+                        <span className="text-xs sm:text-sm font-medium text-center leading-tight">Browse Properties</span>
                       </Button>
                       
                       <Button 
                         variant="outline" 
-                        className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-green-50 hover:border-green-200 transition-all duration-200"
+                        className="h-16 sm:h-18 md:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 hover:bg-green-50 hover:border-green-200 transition-all duration-200"
                         onClick={() => setActiveTab('favorites')}
                         data-testid="button-view-favorites"
                       >
-                        <Heart className="h-6 w-6 text-green-600" />
-                        <span className="text-sm font-medium">View Favorites</span>
+                        <Heart className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-green-600" />
+                        <span className="text-xs sm:text-sm font-medium text-center leading-tight">View Favorites</span>
                       </Button>
                       
                       <Button 
                         variant="outline" 
-                        className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-purple-50 hover:border-purple-200 transition-all duration-200"
+                        className="h-16 sm:h-18 md:h-20 flex flex-col items-center justify-center space-y-1 sm:space-y-2 hover:bg-purple-50 hover:border-purple-200 transition-all duration-200"
                         onClick={() => setActiveTab('profile')}
                         data-testid="button-edit-profile"
                       >
-                        <User className="h-6 w-6 text-purple-600" />
-                        <span className="text-sm font-medium">Edit Profile</span>
+                        <User className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-purple-600" />
+                        <span className="text-xs sm:text-sm font-medium text-center leading-tight">Edit Profile</span>
                       </Button>
                     </div>
                   </CardContent>
