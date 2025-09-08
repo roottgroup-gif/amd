@@ -1420,6 +1420,30 @@ export default function CustomerDashboard() {
                           )}
                         />
 
+                        <FormField
+                          control={propertyForm.control}
+                          name="contactPhone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Contact Phone</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                  <Input 
+                                    placeholder="e.g., +964 750 123 4567" 
+                                    {...field} 
+                                    className="pl-10"
+                                    data-testid="input-contact-phone" 
+                                  />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                              <p className="text-xs text-muted-foreground">
+                                This phone number will be shown to interested buyers for WhatsApp and calls
+                              </p>
+                            </FormItem>
+                          )}
+                        />
                       </div>
 
                       {/* Location Selection Map */}
@@ -1463,76 +1487,6 @@ export default function CustomerDashboard() {
                             </p>
                           </div>
                         )}
-                      </div>
-
-                      {/* Address Information (Auto-filled from map) */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField
-                          control={propertyForm.control}
-                          name="address"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Address *</FormLabel>
-                              <FormControl>
-                                <Input placeholder="e.g., 123 Main Street" {...field} data-testid="input-address" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={propertyForm.control}
-                          name="city"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>City *</FormLabel>
-                              <FormControl>
-                                <Input placeholder="e.g., Erbil" {...field} data-testid="input-city" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={propertyForm.control}
-                          name="country"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Country *</FormLabel>
-                              <FormControl>
-                                <Input placeholder="e.g., Iraq" {...field} data-testid="input-country" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={propertyForm.control}
-                          name="contactPhone"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Contact Phone</FormLabel>
-                              <FormControl>
-                                <div className="relative">
-                                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                  <Input 
-                                    placeholder="e.g., +964 750 123 4567" 
-                                    {...field} 
-                                    className="pl-10"
-                                    data-testid="input-contact-phone" 
-                                  />
-                                </div>
-                              </FormControl>
-                              <FormMessage />
-                              <p className="text-xs text-muted-foreground">
-                                This phone number will be shown to interested buyers for WhatsApp and calls
-                              </p>
-                            </FormItem>
-                          )}
-                        />
                       </div>
 
                       {/* Property Images Upload */}
