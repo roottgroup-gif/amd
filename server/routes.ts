@@ -1,7 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertPropertySchema, insertInquirySchema, insertFavoriteSchema, insertUserSchema } from "@shared/schema";
+import { 
+  insertPropertySchema, insertInquirySchema, insertFavoriteSchema, insertUserSchema,
+  insertWaveSchema, insertCustomerWavePermissionSchema
+} from "@shared/schema";
 import { hashPassword, requireAuth, requireRole, requireAnyRole, populateUser } from "./auth";
 import session from "express-session";
 import { z } from "zod";
@@ -753,6 +756,167 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Seed error:", error);
       res.status(500).json({ message: "Failed to seed users" });
+    }
+  });
+
+  // Wave Management Routes
+  
+  // Get all waves (for super admin and customers to see available waves)
+  app.get("/api/waves", requireAuth, async (req, res) => {
+    try {
+      const waves = await storage.getWaves();
+      res.json(waves);
+    } catch (error) {
+      console.error("Error fetching waves:", error);
+      res.status(500).json({ message: "Failed to fetch waves" });
+    }
+  });
+
+  // Create wave (super admin only)
+  app.post("/api/waves", requireRole("super_admin"), async (req, res) => {
+    try {
+      const validatedData = insertWaveSchema.parse(req.body);
+      const wave = await storage.createWave({
+        ...validatedData,
+        createdBy: req.session.userId!
+      });
+      res.status(201).json(wave);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid wave data", errors: error.errors });
+      }
+      console.error("Error creating wave:", error);
+      res.status(500).json({ message: "Failed to create wave" });
+    }
+  });
+
+  // Update wave (super admin only)
+  app.put("/api/waves/:id", requireRole("super_admin"), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const validatedData = insertWaveSchema.partial().parse(req.body);
+      const wave = await storage.updateWave(id, validatedData);
+      
+      if (!wave) {
+        return res.status(404).json({ message: "Wave not found" });
+      }
+      
+      res.json(wave);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid wave data", errors: error.errors });
+      }
+      console.error("Error updating wave:", error);
+      res.status(500).json({ message: "Failed to update wave" });
+    }
+  });
+
+  // Delete wave (super admin only)
+  app.delete("/api/waves/:id", requireRole("super_admin"), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteWave(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Wave not found" });
+      }
+      
+      res.json({ message: "Wave deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting wave:", error);
+      res.status(500).json({ message: "Failed to delete wave" });
+    }
+  });
+
+  // Get customer wave permissions (for specific customer)
+  app.get("/api/customers/:userId/wave-permissions", requireAuth, async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const currentUser = await storage.getUser(req.session.userId!);
+      
+      // Users can only see their own permissions or admin can see all
+      if (req.session.userId !== userId && currentUser?.role !== 'super_admin') {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      
+      const permissions = await storage.getCustomerWavePermissions(userId);
+      res.json(permissions);
+    } catch (error) {
+      console.error("Error fetching wave permissions:", error);
+      res.status(500).json({ message: "Failed to fetch wave permissions" });
+    }
+  });
+
+  // Grant wave permission to customer (super admin only)
+  app.post("/api/customers/:userId/wave-permissions", requireRole("super_admin"), async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { waveId, maxProperties } = req.body;
+      
+      const permission = await storage.grantWavePermission({
+        userId,
+        waveId,
+        maxProperties: maxProperties || 1,
+        usedProperties: 0,
+        grantedBy: req.session.userId!
+      });
+      
+      res.status(201).json(permission);
+    } catch (error) {
+      console.error("Error granting wave permission:", error);
+      res.status(500).json({ message: "Failed to grant wave permission" });
+    }
+  });
+
+  // Update wave permission (super admin only)
+  app.put("/api/customers/:userId/wave-permissions/:waveId", requireRole("super_admin"), async (req, res) => {
+    try {
+      const { userId, waveId } = req.params;
+      const { maxProperties } = req.body;
+      
+      const permission = await storage.getWavePermission(userId, waveId);
+      if (!permission) {
+        return res.status(404).json({ message: "Wave permission not found" });
+      }
+      
+      const updated = await storage.updateWavePermission(permission.id, {
+        maxProperties,
+        grantedBy: req.session.userId!
+      });
+      
+      res.json(updated);
+    } catch (error) {
+      console.error("Error updating wave permission:", error);
+      res.status(500).json({ message: "Failed to update wave permission" });
+    }
+  });
+
+  // Revoke wave permission (super admin only)
+  app.delete("/api/customers/:userId/wave-permissions/:waveId", requireRole("super_admin"), async (req, res) => {
+    try {
+      const { userId, waveId } = req.params;
+      const success = await storage.revokeWavePermission(userId, waveId);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Wave permission not found" });
+      }
+      
+      res.json({ message: "Wave permission revoked successfully" });
+    } catch (error) {
+      console.error("Error revoking wave permission:", error);
+      res.status(500).json({ message: "Failed to revoke wave permission" });
+    }
+  });
+
+  // Get properties by wave (for map display)
+  app.get("/api/waves/:waveId/properties", requireAuth, async (req, res) => {
+    try {
+      const { waveId } = req.params;
+      const properties = await storage.getPropertiesByWave(waveId);
+      res.json(properties);
+    } catch (error) {
+      console.error("Error fetching wave properties:", error);
+      res.status(500).json({ message: "Failed to fetch wave properties" });
     }
   });
 
