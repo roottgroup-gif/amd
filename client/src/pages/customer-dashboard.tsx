@@ -29,7 +29,7 @@ import {
   Star, Bookmark, MessageSquare, User, Settings, Plus,
   Building, University, Mountain, Tag, Key, Edit, Trash2,
   EyeOff, ToggleLeft, ToggleRight, BarChart3, PieChart as PieChartIcon,
-  TrendingUp, Activity, Clock, Users
+  TrendingUp, Activity, Clock, Users, AlertTriangle
 } from 'lucide-react';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
@@ -926,7 +926,7 @@ export default function CustomerDashboard() {
                             </div>
                             {waveBalance.remainingWaves <= 0 && (
                               <p className="text-sm text-red-600 dark:text-red-400 mt-2">
-                                ⚠️ No waves remaining. Contact an admin to increase your balance.
+                                ⚠️ Balance not available. You must buy balance to continue using wave assignments.
                               </p>
                             )}
                           </div>
@@ -1562,7 +1562,7 @@ export default function CustomerDashboard() {
                                   </div>
                                   <p className="text-sm text-red-600">
                                     You have used all {waveBalance.totalBalance} of your wave assignments. 
-                                    Contact an admin to increase your wave balance.
+                                    You must buy balance to continue assigning properties to waves.
                                   </p>
                                 </div>
                               )}
