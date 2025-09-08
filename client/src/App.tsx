@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/components/AuthProvider";
 import { NetworkStatus } from "@/components/NetworkStatus";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { useNetworkError } from "@/hooks/useNetworkError";
 import Home from "@/pages/home.tsx";
 import Properties from "@/pages/properties.tsx";
 import PropertyDetail from "@/pages/property-detail.tsx";
@@ -16,6 +18,8 @@ import DashboardRedirect from "@/pages/dashboard-redirect.tsx";
 import NotFound from "@/pages/not-found.tsx";
 
 function Router() {
+  useNetworkError(); // Hook to handle network errors globally
+  
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -34,15 +38,17 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <NetworkStatus />
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider>
+            <NetworkStatus />
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
