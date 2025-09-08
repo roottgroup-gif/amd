@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { PropertyWithAgent, PropertyFilters } from "@shared/schema";
 import { Search, MapPin, Navigation } from "lucide-react";
+import { useAddToFavorites, useRemoveFromFavorites, useIsFavorite } from "@/hooks/use-properties";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PropertyMapProps {
   properties: PropertyWithAgent[];
@@ -12,6 +14,7 @@ interface PropertyMapProps {
   onFilterChange?: (filters: PropertyFilters) => void;
   onPropertyClick?: (property: PropertyWithAgent) => void;
   onPropertySelect?: (property: PropertyWithAgent) => void;
+  userId?: string;
   className?: string;
 }
 
@@ -21,6 +24,7 @@ export default function PropertyMap({
   onFilterChange, 
   onPropertyClick,
   onPropertySelect,
+  userId,
   className 
 }: PropertyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -29,6 +33,11 @@ export default function PropertyMap({
   const currentPropertiesRef = useRef<PropertyWithAgent[]>([]);
   const [isLocating, setIsLocating] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  
+  // Favorites hooks
+  const addToFavorites = useAddToFavorites();
+  const removeFromFavorites = useRemoveFromFavorites();
+  const queryClient = useQueryClient();
   
   // Local state for filters
   const [localFilters, setLocalFilters] = useState<PropertyFilters>(filters || {});
@@ -65,7 +74,7 @@ export default function PropertyMap({
   // Properties are already filtered from the API, so we use them directly
   // The filtering happens on the server side when onFilterChange is called
 
-  // Add global slider function for popup
+  // Add global functions for popup interactions
   useEffect(() => {
     // Define global function for changing slides in map popups
     (window as any).changeSlide = (popupId: string, direction: number) => {
@@ -111,10 +120,45 @@ export default function PropertyMap({
       }
     };
 
-    // Cleanup global function on unmount
+    // Define global function for handling favorites from map popups
+    (window as any).toggleFavoriteFromMap = async (propertyId: string) => {
+      if (!userId) {
+        console.warn('User not logged in, cannot toggle favorite');
+        return;
+      }
+
+      try {
+        // Check current favorite status
+        const currentData = queryClient.getQueryData(['/api/favorites', userId, propertyId]) as { isFavorite?: boolean } | undefined;
+        const isFavorite = currentData?.isFavorite || false;
+
+        if (isFavorite) {
+          await removeFromFavorites.mutateAsync({ userId, propertyId });
+        } else {
+          await addToFavorites.mutateAsync({ userId, propertyId });
+        }
+
+        // Update the heart button immediately
+        const heartButton = document.querySelector(`#heart-btn-${propertyId}`) as HTMLElement;
+        if (heartButton) {
+          const newIsFavorite = !isFavorite;
+          heartButton.innerHTML = newIsFavorite 
+            ? '<i class="fas fa-heart" style="color: #ef4444; font-size: 14px;"></i>'
+            : '<i class="far fa-heart" style="color: #6b7280; font-size: 14px;"></i>';
+          heartButton.style.backgroundColor = newIsFavorite ? '#fee2e2' : '#f3f4f6';
+        }
+      } catch (error) {
+        console.error('Failed to toggle favorite:', error);
+      }
+    };
+
+    // Cleanup global functions on unmount
     return () => {
       if ((window as any).changeSlide) {
         delete (window as any).changeSlide;
+      }
+      if ((window as any).toggleFavoriteFromMap) {
+        delete (window as any).toggleFavoriteFromMap;
       }
     };
   }, []);
@@ -405,6 +449,13 @@ export default function PropertyMap({
     markersRef.current.push(marker);
   };
 
+  // Helper function to get favorite status for popup
+  const getFavoriteStatus = (propertyId: string) => {
+    if (!userId) return false;
+    const favoriteData = queryClient.getQueryData(['/api/favorites', userId, propertyId]) as { isFavorite?: boolean } | undefined;
+    return favoriteData?.isFavorite || false;
+  };
+
   // Function to create individual property marker
   const createSingleMarker = (property: any, L: any) => {
     const lat = parseFloat(property.latitude || '0');
@@ -517,6 +568,13 @@ export default function PropertyMap({
     const popupBg = isDark ? '#1f2937' : '#ffffff';
     const textColor = isDark ? '#ffffff' : '#000000';
     const subTextColor = isDark ? '#d1d5db' : '#666666';
+    
+    // Get current favorite status for this property
+    const isFavorite = getFavoriteStatus(property.id);
+    const heartIconClass = isFavorite ? 'fas fa-heart' : 'far fa-heart';
+    const heartIconColor = isFavorite ? '#ef4444' : '#6b7280';
+    const heartBgColor = isFavorite ? '#fee2e2' : '#f3f4f6';
+    const heartBgHover = isFavorite ? '#fecaca' : '#e5e7eb';
     
     const popupContent = `
       <div class="property-popup responsive-popup" id="${popupId}" style="background: ${popupBg}; color: ${textColor};">
@@ -655,6 +713,17 @@ export default function PropertyMap({
                     style="flex: 1; min-width: 100px;">
               View Property
             </button>
+            ${userId ? `
+              <button id="heart-btn-${property.id}" 
+                      class="popup-button heart-button" 
+                      onclick="window.toggleFavoriteFromMap('${property.id}')"
+                      style="background: ${heartBgColor}; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
+                      onmouseover="this.style.background='${heartBgHover}'"
+                      onmouseout="this.style.background='${heartBgColor}'"
+                      title="${isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}">
+                <i class="${heartIconClass}" style="color: ${heartIconColor}; font-size: 14px;"></i>
+              </button>
+            ` : ''}
             ${(() => {
               // Priority: Customer contact (from inquiries) > Property contact phone > Agent phone
               const customerContact = property.customerContact;
