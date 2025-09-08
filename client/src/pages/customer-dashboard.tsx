@@ -54,6 +54,7 @@ const propertyFormSchema = z.object({
   amenities: z.array(z.string()).default([]),
   features: z.array(z.string()).default([]),
   contactPhone: z.string().optional(),
+  waveId: z.string().optional(),
   status: z.enum(['active', 'inactive']).default('active'),
 });
 
@@ -173,6 +174,7 @@ export default function CustomerDashboard() {
       amenities: [],
       features: [],
       contactPhone: user?.phone || '',
+      waveId: '',
       status: 'active',
     },
   });
@@ -271,6 +273,17 @@ export default function CustomerDashboard() {
       if (!user?.id) return [];
       const response = await fetch(`/api/users/${user.id}/properties`);
       if (!response.ok) throw new Error('Failed to fetch user properties');
+      return response.json();
+    },
+    enabled: !!user?.id,
+  });
+
+  // Fetch available waves for customer
+  const { data: availableWaves = [] } = useQuery({
+    queryKey: ['/api/waves'],
+    queryFn: async () => {
+      const response = await fetch('/api/waves');
+      if (!response.ok) throw new Error('Failed to fetch waves');
       return response.json();
     },
     enabled: !!user?.id,
@@ -578,6 +591,7 @@ export default function CustomerDashboard() {
       amenities: [],
       features: [],
       contactPhone: user?.phone || '',
+      waveId: '',
       status: 'active',
     });
     setSelectedLocation(null);
@@ -1440,6 +1454,46 @@ export default function CustomerDashboard() {
                               <FormMessage />
                               <p className="text-xs text-muted-foreground">
                                 This phone number will be shown to interested buyers for WhatsApp and calls
+                              </p>
+                            </FormItem>
+                          )}
+                        />
+
+                        {/* Wave Selection */}
+                        <FormField
+                          control={propertyForm.control}
+                          name="waveId"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Property Wave (Optional)</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-wave">
+                                    <SelectValue placeholder="Select a wave for this property" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="">
+                                    <span className="flex items-center gap-2">
+                                      <span className="text-muted-foreground">No Wave</span>
+                                    </span>
+                                  </SelectItem>
+                                  {availableWaves.map((wave) => (
+                                    <SelectItem key={wave.id} value={wave.id}>
+                                      <span className="flex items-center gap-2">
+                                        <div 
+                                          className="w-3 h-3 rounded-full border"
+                                          style={{ backgroundColor: wave.color }}
+                                        />
+                                        {wave.name}
+                                      </span>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                              <p className="text-xs text-muted-foreground">
+                                Assign your property to a wave to organize it with similar properties. This helps with map viewing and property management.
                               </p>
                             </FormItem>
                           )}
