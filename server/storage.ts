@@ -803,10 +803,12 @@ class MemStorage implements IStorage {
   private inquiries: Inquiry[] = [];
   private favorites: Favorite[] = [];
   private searchHistories: SearchHistory[] = [];
+  private waves: Wave[] = [];
 
   constructor() {
     // Initialize with admin and customer users
     this.initializeDefaultUsers();
+    this.initializeDefaultWaves();
   }
 
   private async initializeDefaultUsers() {
@@ -848,6 +850,33 @@ class MemStorage implements IStorage {
       createdAt: new Date(),
       expiresAt: null,
       isExpired: false
+    });
+  }
+
+  private async initializeDefaultWaves() {
+    // Create default waves for users to select from
+    const defaultWaves = [
+      { name: "Premium Wave", description: "Premium properties with special circle motion effect", color: "#F59E0B" },
+      { name: "Luxury Homes", description: "High-end luxury properties", color: "#9333EA" },
+      { name: "Budget Friendly", description: "Affordable housing options", color: "#059669" },
+      { name: "Family Homes", description: "Perfect for families with children", color: "#DC2626" },
+      { name: "City Center", description: "Properties in prime city locations", color: "#2563EB" },
+      { name: "Suburban Living", description: "Quiet suburban properties", color: "#EA580C" },
+      { name: "Investment Properties", description: "Great for rental income", color: "#7C2D12" },
+      { name: "New Construction", description: "Recently built properties", color: "#0D9488" }
+    ];
+
+    defaultWaves.forEach((wave, index) => {
+      this.waves.push({
+        id: `wave-${index + 1}`,
+        name: wave.name,
+        description: wave.description,
+        color: wave.color,
+        isActive: true,
+        createdBy: 'admin-001', // Admin user creates these waves
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
     });
   }
 
@@ -1125,18 +1154,39 @@ class MemStorage implements IStorage {
   }
 
   // Wave management stubs
-  async getWaves(): Promise<Wave[]> { return []; }
-  async getWave(id: string): Promise<Wave | undefined> { return undefined; }
+  async getWaves(): Promise<Wave[]> { return this.waves.filter(w => w.isActive); }
+  async getWave(id: string): Promise<Wave | undefined> { return this.waves.find(w => w.id === id && w.isActive); }
   async createWave(wave: InsertWave): Promise<Wave> {
-    return {
+    const newWave: Wave = {
       id: `wave-${Date.now()}`,
       ...wave,
+      isActive: true,
       createdAt: new Date(),
       updatedAt: new Date()
-    } as Wave;
+    };
+    this.waves.push(newWave);
+    return newWave;
   }
-  async updateWave(id: string, wave: Partial<InsertWave>): Promise<Wave | undefined> { return undefined; }
-  async deleteWave(id: string): Promise<boolean> { return false; }
+  async updateWave(id: string, updateData: Partial<InsertWave>): Promise<Wave | undefined> {
+    const waveIndex = this.waves.findIndex(w => w.id === id);
+    if (waveIndex === -1) return undefined;
+    
+    this.waves[waveIndex] = {
+      ...this.waves[waveIndex],
+      ...updateData,
+      updatedAt: new Date()
+    };
+    return this.waves[waveIndex];
+  }
+  async deleteWave(id: string): Promise<boolean> {
+    const waveIndex = this.waves.findIndex(w => w.id === id);
+    if (waveIndex === -1) return false;
+    
+    // Soft delete by marking as inactive
+    this.waves[waveIndex].isActive = false;
+    this.waves[waveIndex].updatedAt = new Date();
+    return true;
+  }
 
   // Customer wave permissions stubs
   async getCustomerWavePermissions(userId: string): Promise<CustomerWavePermission[]> { return []; }
@@ -1435,9 +1485,16 @@ async function initializeWaves() {
     const adminUser = await db().select().from(users).where(eq(users.role, 'super_admin')).limit(1);
     const adminId = adminUser[0]?.id;
 
-    // Create only one orange premium wave
+    // Create multiple useful waves for customers
     const defaultWaves = [
-      { name: "Premium Wave", description: "Premium properties with special circle motion effect", color: "#F59E0B" }
+      { name: "Premium Wave", description: "Premium properties with special circle motion effect", color: "#F59E0B" },
+      { name: "Luxury Homes", description: "High-end luxury properties", color: "#9333EA" },
+      { name: "Budget Friendly", description: "Affordable housing options", color: "#059669" },
+      { name: "Family Homes", description: "Perfect for families with children", color: "#DC2626" },
+      { name: "City Center", description: "Properties in prime city locations", color: "#2563EB" },
+      { name: "Suburban Living", description: "Quiet suburban properties", color: "#EA580C" },
+      { name: "Investment Properties", description: "Great for rental income", color: "#7C2D12" },
+      { name: "New Construction", description: "Recently built properties", color: "#0D9488" }
     ];
 
     for (const wave of defaultWaves) {
