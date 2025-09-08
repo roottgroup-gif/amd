@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import PropertyMap from '@/components/property-map';
 import LocationSelectionMap from '@/components/location-selection-map';
@@ -151,6 +151,7 @@ export default function CustomerDashboard() {
   const [selectedLocation, setSelectedLocation] = useState<{lat: number, lng: number} | null>(null);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editingProperty, setEditingProperty] = useState<PropertyWithAgent | null>(null);
+  const [showBalanceModal, setShowBalanceModal] = useState(false);
 
   // Property form
   const propertyForm = useForm<PropertyFormValues>({
@@ -850,7 +851,7 @@ export default function CustomerDashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="p-3 sm:p-4 md:p-6">
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4 md:mb-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4 md:mb-6">
                       <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg">
                         <div className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600 dark:text-blue-300">{userProperties.length}</div>
                         <div className="text-xs sm:text-sm text-blue-500 dark:text-blue-400">My Properties</div>
@@ -865,6 +866,30 @@ export default function CustomerDashboard() {
                         </div>
                         <div className="text-xs sm:text-sm text-green-500 dark:text-green-400">Active</div>
                       </div>
+                      {/* Balance Information in Overview */}
+                      {!waveBalanceLoading && waveBalance && (
+                        <>
+                          <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900 dark:to-indigo-800 rounded-lg">
+                            <div className="text-lg sm:text-xl md:text-2xl font-bold text-indigo-600 dark:text-indigo-300">
+                              {(waveBalance as any).hasUnlimited ? '∞' : (waveBalance as any).totalBalance || 0}
+                            </div>
+                            <div className="text-xs sm:text-sm text-indigo-500 dark:text-indigo-400">Total Balance</div>
+                          </div>
+                          <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800 rounded-lg">
+                            <div className="text-lg sm:text-xl md:text-2xl font-bold text-orange-600 dark:text-orange-300">
+                              {(waveBalance as any).currentUsage || 0}
+                            </div>
+                            <div className="text-xs sm:text-sm text-orange-500 dark:text-orange-400">In Use</div>
+                          </div>
+                          <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900 dark:to-emerald-800 rounded-lg">
+                            <div className="text-lg sm:text-xl md:text-2xl font-bold text-emerald-600 dark:text-emerald-300">
+                              {(waveBalance as any).hasUnlimited ? '∞' : (waveBalance as any).remainingWaves || 0}
+                            </div>
+                            <div className="text-xs sm:text-sm text-emerald-500 dark:text-emerald-400">Remaining</div>
+                          </div>
+                        </>
+                      )}
+                      
                       <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-lg">
                         <div className="text-lg sm:text-xl md:text-2xl font-bold text-purple-600 dark:text-purple-300">
                           {propertyStats?.total || 0}
@@ -1570,8 +1595,9 @@ export default function CustomerDashboard() {
                               <Select 
                                 onValueChange={(value) => {
                                   // Validate wave assignment before allowing change
-                                  if (value !== "no-wave" && waveBalance && !waveBalance.hasUnlimited && waveBalance.remainingWaves <= 0) {
-                                    // Don't allow wave assignment if no remaining waves
+                                  if (value !== "no-wave" && waveBalance && !(waveBalance as any).hasUnlimited && (waveBalance as any).remainingWaves <= 0) {
+                                    // Show modal when trying to assign wave without balance
+                                    setShowBalanceModal(true);
                                     return;
                                   }
                                   field.onChange(value);
@@ -2327,6 +2353,68 @@ export default function CustomerDashboard() {
                 <div className="w-2 h-2 bg-orange-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
               <span>Processing your request</span>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Insufficient Balance Modal */}
+      <Dialog open={showBalanceModal} onOpenChange={setShowBalanceModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600">
+              <AlertTriangle className="h-5 w-5" />
+              Balance Not Available
+            </DialogTitle>
+            <DialogDescription>
+              You don't have balance for this premium wave!
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 rounded-lg">
+              <p className="text-sm text-red-700 dark:text-red-300">
+                You have used all your wave assignments. To assign properties to premium waves, you must buy balance.
+              </p>
+            </div>
+            {!waveBalanceLoading && waveBalance && (
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    {(waveBalance as any).totalBalance || 0}
+                  </div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">Total Balance</div>
+                </div>
+                <div className="p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                  <div className="text-lg font-bold text-orange-600 dark:text-orange-400">
+                    {(waveBalance as any).currentUsage || 0}
+                  </div>
+                  <div className="text-xs text-orange-600 dark:text-orange-400">In Use</div>
+                </div>
+                <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                  <div className="text-lg font-bold text-red-600 dark:text-red-400">
+                    {(waveBalance as any).remainingWaves || 0}
+                  </div>
+                  <div className="text-xs text-red-600 dark:text-red-400">Remaining</div>
+                </div>
+              </div>
+            )}
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setShowBalanceModal(false)}>
+                Close
+              </Button>
+              <Button 
+                className="bg-green-600 hover:bg-green-700 text-white"
+                onClick={() => {
+                  setShowBalanceModal(false);
+                  toast({
+                    title: "Contact Support",
+                    description: "Please contact support to purchase additional balance.",
+                    variant: "default",
+                  });
+                }}
+              >
+                Buy Balance
+              </Button>
             </div>
           </div>
         </DialogContent>
