@@ -67,6 +67,11 @@ export interface IStorage {
   // Wave management
   getWaves(): Promise<Wave[]>;
   getWave(id: string): Promise<Wave | undefined>;
+  
+  // Wave balance tracking
+  getUserWaveUsage(userId: string): Promise<number>;
+  getUserRemainingWaves(userId: string): Promise<number>;
+  validateWaveAssignment(userId: string, waveId: string | null): Promise<{ valid: boolean; message?: string }>;
   createWave(wave: InsertWave): Promise<Wave>;
   updateWave(id: string, wave: Partial<InsertWave>): Promise<Wave | undefined>;
   deleteWave(id: string): Promise<boolean>;
@@ -283,6 +288,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
+    // Validate wave assignment if a wave is being assigned
+    if (insertProperty.agentId && insertProperty.waveId) {
+      const validation = await this.validateWaveAssignment(insertProperty.agentId, insertProperty.waveId);
+      if (!validation.valid) {
+        throw new Error(validation.message || 'Wave assignment not allowed');
+      }
+    }
+
     const [property] = await db()
       .insert(properties)
       .values(insertProperty as any)
@@ -291,6 +304,20 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateProperty(id: string, updateProperty: Partial<InsertProperty>): Promise<Property | undefined> {
+    // Get current property to check if wave assignment is changing
+    const currentProperty = await this.getProperty(id);
+    if (!currentProperty) {
+      return undefined;
+    }
+
+    // Validate wave assignment if a wave is being assigned or changed
+    if (updateProperty.waveId !== undefined && currentProperty.agentId) {
+      const validation = await this.validateWaveAssignment(currentProperty.agentId, updateProperty.waveId);
+      if (!validation.valid) {
+        throw new Error(validation.message || 'Wave assignment not allowed');
+      }
+    }
+
     const updateData = { ...updateProperty, updatedAt: new Date() } as any;
     const [property] = await db()
       .update(properties)
@@ -699,6 +726,59 @@ export class DatabaseStorage implements IStorage {
       wave: null // Will be populated by calling code if needed
     }));
   }
+
+  // Wave balance tracking methods
+  async getUserWaveUsage(userId: string): Promise<number> {
+    const result = await db()
+      .select({ count: sql<number>`count(*)` })
+      .from(properties)
+      .where(and(
+        eq(properties.agentId, userId),
+        sql`${properties.waveId} IS NOT NULL AND ${properties.waveId} != 'no-wave'`
+      ));
+    return result[0]?.count || 0;
+  }
+
+  async getUserRemainingWaves(userId: string): Promise<number> {
+    const user = await this.getUser(userId);
+    if (!user) return 0;
+    
+    // Admin and super_admin have unlimited waves
+    if (user.role === 'admin' || user.role === 'super_admin') {
+      return 999999; // Effectively unlimited
+    }
+    
+    const currentUsage = await this.getUserWaveUsage(userId);
+    const remaining = (user.waveBalance || 0) - currentUsage;
+    return Math.max(0, remaining);
+  }
+
+  async validateWaveAssignment(userId: string, waveId: string | null): Promise<{ valid: boolean; message?: string }> {
+    // If no wave is being assigned (null or 'no-wave'), it's always valid
+    if (!waveId || waveId === 'no-wave') {
+      return { valid: true };
+    }
+
+    const user = await this.getUser(userId);
+    if (!user) {
+      return { valid: false, message: 'User not found' };
+    }
+
+    // Admin and super_admin have unlimited waves
+    if (user.role === 'admin' || user.role === 'super_admin') {
+      return { valid: true };
+    }
+
+    const remainingWaves = await this.getUserRemainingWaves(userId);
+    if (remainingWaves <= 0) {
+      return { 
+        valid: false, 
+        message: `No wave assignments remaining. Current balance: ${user.waveBalance || 0}` 
+      };
+    }
+
+    return { valid: true };
+  }
 }
 
 class MemStorage implements IStorage {
@@ -1045,6 +1125,55 @@ class MemStorage implements IStorage {
   async updateWavePermission(id: string, permission: Partial<InsertCustomerWavePermission>): Promise<CustomerWavePermission | undefined> { return undefined; }
   async revokeWavePermission(userId: string, waveId: string): Promise<boolean> { return false; }
   async getPropertiesByWave(waveId: string): Promise<PropertyWithAgent[]> { return []; }
+
+  // Wave balance tracking methods
+  async getUserWaveUsage(userId: string): Promise<number> {
+    return this.properties.filter(p => 
+      p.agentId === userId && 
+      p.waveId && 
+      p.waveId !== 'no-wave'
+    ).length;
+  }
+
+  async getUserRemainingWaves(userId: string): Promise<number> {
+    const user = this.users.find(u => u.id === userId);
+    if (!user) return 0;
+    
+    // Admin and super_admin have unlimited waves
+    if (user.role === 'admin' || user.role === 'super_admin') {
+      return 999999;
+    }
+    
+    const currentUsage = await this.getUserWaveUsage(userId);
+    const remaining = (user.waveBalance || 0) - currentUsage;
+    return Math.max(0, remaining);
+  }
+
+  async validateWaveAssignment(userId: string, waveId: string | null): Promise<{ valid: boolean; message?: string }> {
+    if (!waveId || waveId === 'no-wave') {
+      return { valid: true };
+    }
+
+    const user = this.users.find(u => u.id === userId);
+    if (!user) {
+      return { valid: false, message: 'User not found' };
+    }
+
+    // Admin and super_admin have unlimited waves
+    if (user.role === 'admin' || user.role === 'super_admin') {
+      return { valid: true };
+    }
+
+    const remainingWaves = await this.getUserRemainingWaves(userId);
+    if (remainingWaves <= 0) {
+      return { 
+        valid: false, 
+        message: `No wave assignments remaining. Current balance: ${user.waveBalance || 0}` 
+      };
+    }
+
+    return { valid: true };
+  }
 }
 
 // Use database storage for wave management
