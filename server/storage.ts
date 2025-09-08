@@ -72,6 +72,7 @@ export interface IStorage {
   getUserWaveUsage(userId: string): Promise<number>;
   getUserRemainingWaves(userId: string): Promise<number>;
   validateWaveAssignment(userId: string, waveId: string | null): Promise<{ valid: boolean; message?: string }>;
+  updateUsersWithZeroWaveBalance(): Promise<number>;
   createWave(wave: InsertWave): Promise<Wave>;
   updateWave(id: string, wave: Partial<InsertWave>): Promise<Wave | undefined>;
   deleteWave(id: string): Promise<boolean>;
@@ -779,6 +780,21 @@ export class DatabaseStorage implements IStorage {
 
     return { valid: true };
   }
+
+  // Function to update wave balance for all users with 0 balance
+  async updateUsersWithZeroWaveBalance(): Promise<number> {
+    const result = await db()
+      .update(users)
+      .set({ waveBalance: 10 })
+      .where(and(
+        eq(users.waveBalance, 0),
+        eq(users.role, 'user')
+      ))
+      .returning({ id: users.id });
+    
+    console.log(`Updated wave balance for ${result.length} users`);
+    return result.length;
+  }
 }
 
 class MemStorage implements IStorage {
@@ -809,6 +825,7 @@ class MemStorage implements IStorage {
       phone: '+964 750 000 0000',
       isVerified: true,
       avatar: null,
+      waveBalance: 999999,
       createdAt: new Date(),
       expiresAt: null,
       isExpired: false
@@ -827,6 +844,7 @@ class MemStorage implements IStorage {
       phone: '+964 750 111 2222',
       isVerified: true,
       avatar: null,
+      waveBalance: 10,
       createdAt: new Date(),
       expiresAt: null,
       isExpired: false
@@ -1173,6 +1191,20 @@ class MemStorage implements IStorage {
     }
 
     return { valid: true };
+  }
+
+  // Function to update wave balance for all users with 0 balance (in-memory)
+  async updateUsersWithZeroWaveBalance(): Promise<number> {
+    let updatedCount = 0;
+    this.users.forEach(user => {
+      if (user.role === 'user' && (user.waveBalance || 0) === 0) {
+        user.waveBalance = 10;
+        updatedCount++;
+      }
+    });
+    
+    console.log(`Updated wave balance for ${updatedCount} users`);
+    return updatedCount;
   }
 }
 

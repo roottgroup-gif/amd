@@ -273,6 +273,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update wave balance for customers with 0 balance
+  app.post("/api/admin/update-customer-wave-balance", requireRole("admin"), async (req, res) => {
+    try {
+      const updatedCount = await storage.updateUsersWithZeroWaveBalance();
+      res.json({ 
+        message: `Updated wave balance for ${updatedCount} customers`, 
+        updatedCount 
+      });
+    } catch (error) {
+      console.error("Update wave balance error:", error);
+      res.status(500).json({ message: "Failed to update customer wave balances" });
+    }
+  });
+
   // Customer profile update route (users can update their own profile)
   app.put("/api/profile", requireAuth, async (req, res) => {
     try {
