@@ -345,8 +345,8 @@ export default function PropertyMap({
       html: `
         <div class="cluster-marker" style="
           background: ${bgGradient};
-          width: 56px;
-          height: 56px;
+          width: 44px;
+          height: 44px;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -367,8 +367,8 @@ export default function PropertyMap({
         </div>
       `,
       className: 'custom-cluster-marker',
-      iconSize: [56, 56],
-      iconAnchor: [28, 28]
+      iconSize: [44, 44],
+      iconAnchor: [22, 22]
     });
     
     const marker = L.marker([lat, lng], { icon: clusterIcon }).addTo(mapInstanceRef.current);
@@ -477,8 +477,8 @@ export default function PropertyMap({
         html: `
           <div class="property-marker-icon ${animationClass}" style="
             background: ${bgColor};
-            width: 48px;
-            height: 48px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -492,14 +492,14 @@ export default function PropertyMap({
           "
           onmouseover="this.style.transform='scale(1.1)'; this.style.zIndex='1001'"
           onmouseout="this.style.transform='scale(1)'; this.style.zIndex='1000'">
-            <i class="fas ${iconType}" style="color: white; font-size: 18px; pointer-events: none;"></i>
+            <i class="fas ${iconType}" style="color: white; font-size: 14px; pointer-events: none;"></i>
             ${isFeatured ? '<div class="premium-ring" style="position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; border: 2px solid #fbbf24; animation: pulse 2s infinite;"></div>' : ''}
             ${waveAnimation}
           </div>
         `,
         className: 'custom-property-marker clickable-marker',
-        iconSize: [48, 48],
-        iconAnchor: [24, 24]
+        iconSize: [36, 36],
+        iconAnchor: [18, 18]
       });
     };
 
