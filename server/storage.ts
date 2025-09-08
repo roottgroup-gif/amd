@@ -1211,6 +1211,61 @@ class MemStorage implements IStorage {
 // Use database storage for wave management
 export const storage = new DatabaseStorage();
 
+// Initialize database with default users if they don't exist
+async function initializeDatabase() {
+  try {
+    // Check if users already exist
+    const existingUsers = await db().select({ count: sql<number>`count(*)` }).from(users);
+    
+    if (existingUsers[0]?.count > 0) {
+      console.log("Users already exist, skipping initialization");
+      return;
+    }
+
+    console.log("Initializing database with default users...");
+
+    // Hash passwords
+    const bcrypt = await import('bcryptjs');
+    const hashedAdminPassword = await bcrypt.hash("admin123", 12);
+    const hashedCustomerPassword = await bcrypt.hash("customer123", 12);
+
+    // Create admin user
+    const [admin] = await db().insert(users).values({
+      id: "admin-001",
+      username: "admin",
+      email: "admin@estateai.com",
+      password: hashedAdminPassword,
+      role: "super_admin",
+      firstName: "System",
+      lastName: "Admin",
+      phone: "+964 750 000 0000",
+      isVerified: true,
+      waveBalance: 999999
+    }).returning();
+
+    console.log("✅ Created admin user:", admin.username);
+
+    // Create customer user for testing
+    const [customer] = await db().insert(users).values({
+      id: "customer-001",
+      username: "Jutyar",
+      email: "jutyar@estateai.com", 
+      password: hashedCustomerPassword,
+      role: "user",
+      firstName: "Jutyar",
+      lastName: "Customer",
+      phone: "+964 750 111 2222",
+      isVerified: true,
+      waveBalance: 10
+    }).returning();
+
+    console.log("✅ Created customer user:", customer.username);
+
+  } catch (error) {
+    console.error("Failed to initialize database:", error);
+  }
+}
+
 // Add example properties for demonstration
 async function addExampleProperties() {
   // Example Property 1
@@ -1262,5 +1317,7 @@ async function addExampleProperties() {
   });
 }
 
-// Initialize example properties
-addExampleProperties().catch(console.error);
+// Initialize database and example properties
+initializeDatabase().then(() => {
+  addExampleProperties().catch(console.error);
+}).catch(console.error);
