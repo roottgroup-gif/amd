@@ -156,42 +156,42 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
         )}
       </div>
       
-      <CardContent className="p-3">
+      <CardContent className="p-6">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate" data-testid={`property-title-${property.id}`}>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white truncate" data-testid={`property-title-${property.id}`}>
             {property.title}
           </h3>
           <span 
-            className="text-sm font-bold text-orange-600 dark:text-orange-400"
+            className="text-2xl font-bold text-orange-600 dark:text-orange-400"
             data-testid={`property-price-${property.id}`}
           >
             {formatPrice(property.price, property.currency, property.listingType)}
           </span>
         </div>
         
-        <div className="flex items-center text-gray-600 dark:text-gray-300 mb-2">
-          <MapPin className="h-3 w-3 mr-1" />
-          <p className="text-xs truncate" data-testid={`property-address-${property.id}`}>
+        <div className="flex items-center text-gray-600 dark:text-gray-300 mb-4">
+          <MapPin className="h-4 w-4 mr-1" />
+          <p className="truncate" data-testid={`property-address-${property.id}`}>
             {property.address}, {property.city}
           </p>
         </div>
         
-        <div className="flex items-center space-x-2 text-xs text-gray-600 dark:text-gray-300 mb-2">
+        <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300 mb-4">
           {property.bedrooms && (
             <span className="flex items-center">
-              <Bed className="h-3 w-3 mr-1" style={{color: '#FF7800'}} />
+              <Bed className="h-4 w-4 mr-1" style={{color: '#FF7800'}} />
               {property.bedrooms} {t('property.beds')}
             </span>
           )}
           {property.bathrooms && (
             <span className="flex items-center">
-              <Bath className="h-3 w-3 mr-1" style={{color: '#FF7800'}} />
+              <Bath className="h-4 w-4 mr-1" style={{color: '#FF7800'}} />
               {property.bathrooms} {t('property.baths')}
             </span>
           )}
           {property.area && (
             <span className="flex items-center">
-              <Square className="h-3 w-3 mr-1" style={{color: '#FF7800'}} />
+              <Square className="h-4 w-4 mr-1" style={{color: '#FF7800'}} />
               {property.area.toLocaleString()} {t('property.sqft')}
             </span>
           )}
