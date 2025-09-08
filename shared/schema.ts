@@ -14,7 +14,7 @@ export const users = pgTable("users", {
   phone: text("phone"),
   avatar: text("avatar"),
   isVerified: boolean("is_verified").default(false),
-  waveBalance: integer("wave_balance").default(0), // Number of waves user can assign to properties
+  waveBalance: integer("wave_balance").default(10), // Number of waves user can assign to properties
   expiresAt: timestamp("expires_at"), // User account expiration date
   isExpired: boolean("is_expired").default(false), // Computed or manual flag for expiration status
   createdAt: timestamp("created_at").defaultNow(),
