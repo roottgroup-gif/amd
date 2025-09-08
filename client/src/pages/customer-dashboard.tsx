@@ -1563,13 +1563,13 @@ export default function CustomerDashboard() {
                               <FormLabel className="flex items-center gap-2">
                                 <Activity className="h-4 w-4 text-blue-500" />
                                 Property Wave
-                                {waveBalance && !waveBalance.hasUnlimited && (
+                                {waveBalance && !(waveBalance as any).hasUnlimited && (
                                   <span className={`text-xs px-2 py-1 rounded-full ${
-                                    waveBalance.remainingWaves <= 0 ? 'bg-red-100 text-red-700' :
-                                    waveBalance.remainingWaves <= 2 ? 'bg-yellow-100 text-yellow-700' :
+                                    (waveBalance as any).remainingWaves <= 0 ? 'bg-red-100 text-red-700' :
+                                    (waveBalance as any).remainingWaves <= 2 ? 'bg-yellow-100 text-yellow-700' :
                                     'bg-green-100 text-green-700'
                                   }`}>
-                                    {waveBalance.remainingWaves} remaining
+                                    {(waveBalance as any).remainingWaves} remaining
                                   </span>
                                 )}
                                 {waveBalance?.hasUnlimited && (
@@ -1579,14 +1579,14 @@ export default function CustomerDashboard() {
                                 )}
                               </FormLabel>
                               
-                              {waveBalance && !waveBalance.hasUnlimited && waveBalance.remainingWaves <= 0 && (
+                              {waveBalance && !(waveBalance as any).hasUnlimited && (waveBalance as any).remainingWaves <= 0 && (
                                 <div className="bg-red-50 border border-red-200 p-3 rounded-lg mb-3">
                                   <div className="flex items-center gap-2 text-red-700 mb-1">
                                     <AlertTriangle className="h-4 w-4" />
                                     <span className="font-medium">No Waves Remaining</span>
                                   </div>
                                   <p className="text-sm text-red-600">
-                                    You have used all {waveBalance.totalBalance} of your wave assignments. 
+                                    You have used all {(waveBalance as any).totalBalance} of your wave assignments. 
                                     You must buy balance to continue assigning properties to waves.
                                   </p>
                                 </div>
@@ -1603,15 +1603,15 @@ export default function CustomerDashboard() {
                                   field.onChange(value);
                                 }} 
                                 defaultValue={field.value}
-                                disabled={waveBalance && !waveBalance.hasUnlimited && waveBalance.remainingWaves <= 0}
+                                disabled={waveBalance && !(waveBalance as any).hasUnlimited && (waveBalance as any).remainingWaves <= 0}
                               >
                                 <FormControl>
                                   <SelectTrigger 
                                     data-testid="select-wave"
-                                    className={waveBalance && !waveBalance.hasUnlimited && waveBalance.remainingWaves <= 0 ? 'opacity-50 cursor-not-allowed' : ''}
+                                    className={waveBalance && !(waveBalance as any).hasUnlimited && (waveBalance as any).remainingWaves <= 0 ? 'opacity-50 cursor-not-allowed' : ''}
                                   >
                                     <SelectValue placeholder={
-                                      waveBalance && !waveBalance.hasUnlimited && waveBalance.remainingWaves <= 0 
+                                      waveBalance && !(waveBalance as any).hasUnlimited && (waveBalance as any).remainingWaves <= 0 
                                         ? "No waves available" 
                                         : "Select a wave for this property"
                                     } />
