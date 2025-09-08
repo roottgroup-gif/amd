@@ -1,12 +1,15 @@
 import { 
   users, properties, inquiries, favorites, searchHistory, customerActivity, customerPoints,
+  waves, customerWavePermissions,
   type User, type InsertUser,
   type Property, type InsertProperty, type PropertyWithAgent,
   type Inquiry, type InsertInquiry,
   type Favorite, type InsertFavorite,
   type SearchHistory, type InsertSearchHistory,
   type CustomerActivity, type InsertCustomerActivity,
-  type CustomerPoints, type InsertCustomerPoints
+  type CustomerPoints, type InsertCustomerPoints,
+  type Wave, type InsertWave,
+  type CustomerWavePermission, type InsertCustomerWavePermission
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, like, gte, lte, desc, asc, sql, inArray } from "drizzle-orm";
@@ -60,6 +63,21 @@ export interface IStorage {
     pointsHistory: { date: string; points: number }[];
     monthlyActivity: { month: string; activities: number }[];
   }>;
+
+  // Wave management
+  getWaves(): Promise<Wave[]>;
+  getWave(id: string): Promise<Wave | undefined>;
+  createWave(wave: InsertWave): Promise<Wave>;
+  updateWave(id: string, wave: Partial<InsertWave>): Promise<Wave | undefined>;
+  deleteWave(id: string): Promise<boolean>;
+
+  // Customer wave permissions
+  getCustomerWavePermissions(userId: string): Promise<CustomerWavePermission[]>;
+  getWavePermission(userId: string, waveId: string): Promise<CustomerWavePermission | undefined>;
+  grantWavePermission(permission: InsertCustomerWavePermission): Promise<CustomerWavePermission>;
+  updateWavePermission(id: string, permission: Partial<InsertCustomerWavePermission>): Promise<CustomerWavePermission | undefined>;
+  revokeWavePermission(userId: string, waveId: string): Promise<boolean>;
+  getPropertiesByWave(waveId: string): Promise<PropertyWithAgent[]>;
 }
 
 export interface PropertyFilters {
@@ -549,6 +567,138 @@ export class DatabaseStorage implements IStorage {
       }))
     };
   }
+
+  // Wave management
+  async getWaves(): Promise<Wave[]> {
+    return await db()
+      .select()
+      .from(waves)
+      .where(eq(waves.isActive, true))
+      .orderBy(waves.name);
+  }
+
+  async getWave(id: string): Promise<Wave | undefined> {
+    const [wave] = await db()
+      .select()
+      .from(waves)
+      .where(eq(waves.id, id));
+    return wave || undefined;
+  }
+
+  async createWave(insertWave: InsertWave): Promise<Wave> {
+    const [wave] = await db()
+      .insert(waves)
+      .values(insertWave)
+      .returning();
+    return wave;
+  }
+
+  async updateWave(id: string, updateWave: Partial<InsertWave>): Promise<Wave | undefined> {
+    const [wave] = await db()
+      .update(waves)
+      .set({ ...updateWave, updatedAt: new Date() })
+      .where(eq(waves.id, id))
+      .returning();
+    return wave || undefined;
+  }
+
+  async deleteWave(id: string): Promise<boolean> {
+    // Soft delete by marking as inactive
+    const result = await db()
+      .update(waves)
+      .set({ isActive: false, updatedAt: new Date() })
+      .where(eq(waves.id, id));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  // Customer wave permissions
+  async getCustomerWavePermissions(userId: string): Promise<CustomerWavePermission[]> {
+    const results = await db()
+      .select()
+      .from(customerWavePermissions)
+      .innerJoin(waves, eq(customerWavePermissions.waveId, waves.id))
+      .where(and(
+        eq(customerWavePermissions.userId, userId),
+        eq(waves.isActive, true)
+      ))
+      .orderBy(waves.name);
+
+    return results.map(row => row.customer_wave_permissions);
+  }
+
+  async getWavePermission(userId: string, waveId: string): Promise<CustomerWavePermission | undefined> {
+    const [permission] = await db()
+      .select()
+      .from(customerWavePermissions)
+      .where(and(
+        eq(customerWavePermissions.userId, userId),
+        eq(customerWavePermissions.waveId, waveId)
+      ));
+    return permission || undefined;
+  }
+
+  async grantWavePermission(permission: InsertCustomerWavePermission): Promise<CustomerWavePermission> {
+    // Check if permission already exists
+    const existing = await this.getWavePermission(permission.userId, permission.waveId);
+    
+    if (existing) {
+      // Update existing permission
+      const [updated] = await db()
+        .update(customerWavePermissions)
+        .set({
+          maxProperties: permission.maxProperties,
+          grantedBy: permission.grantedBy,
+          updatedAt: new Date()
+        })
+        .where(eq(customerWavePermissions.id, existing.id))
+        .returning();
+      return updated;
+    } else {
+      // Create new permission
+      const [newPermission] = await db()
+        .insert(customerWavePermissions)
+        .values(permission)
+        .returning();
+      return newPermission;
+    }
+  }
+
+  async updateWavePermission(id: string, permission: Partial<InsertCustomerWavePermission>): Promise<CustomerWavePermission | undefined> {
+    const [updated] = await db()
+      .update(customerWavePermissions)
+      .set({ ...permission, updatedAt: new Date() })
+      .where(eq(customerWavePermissions.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async revokeWavePermission(userId: string, waveId: string): Promise<boolean> {
+    const result = await db()
+      .delete(customerWavePermissions)
+      .where(and(
+        eq(customerWavePermissions.userId, userId),
+        eq(customerWavePermissions.waveId, waveId)
+      ));
+    return (result.rowCount ?? 0) > 0;
+  }
+
+  async getPropertiesByWave(waveId: string): Promise<PropertyWithAgent[]> {
+    const results = await db()
+      .select()
+      .from(properties)
+      .leftJoin(users, eq(properties.agentId, users.id))
+      .where(and(
+        eq(properties.waveId, waveId),
+        eq(properties.status, "active")
+      ))
+      .orderBy(desc(properties.createdAt));
+
+    return results.map(row => ({
+      ...row.properties,
+      agent: row.users,
+      wave: null // Will be populated by calling code if needed
+    }));
+  }
 }
 
 class MemStorage implements IStorage {
@@ -831,10 +981,74 @@ class MemStorage implements IStorage {
     return newSearch;
   }
   async getSearchHistoryByUser(userId: string): Promise<SearchHistory[]> { return []; }
+
+  // Customer Analytics stubs
+  async addCustomerActivity(activity: InsertCustomerActivity): Promise<CustomerActivity> {
+    return {
+      id: `activity-${Date.now()}`,
+      ...activity,
+      createdAt: new Date()
+    } as CustomerActivity;
+  }
+  async getCustomerActivities(userId: string, limit?: number): Promise<CustomerActivity[]> { return []; }
+  async getCustomerPoints(userId: string): Promise<CustomerPoints | undefined> { return undefined; }
+  async updateCustomerPoints(userId: string, points: Partial<InsertCustomerPoints>): Promise<CustomerPoints> {
+    return {
+      id: `points-${userId}`,
+      userId,
+      totalPoints: points.totalPoints || 0,
+      currentLevel: points.currentLevel || "Bronze",
+      pointsThisMonth: points.pointsThisMonth || 0,
+      lastActivity: new Date(),
+      updatedAt: new Date()
+    } as CustomerPoints;
+  }
+  async getCustomerAnalytics(userId: string): Promise<{
+    totalActivities: number;
+    activitiesByType: { activityType: string; count: number; points: number }[];
+    pointsHistory: { date: string; points: number }[];
+    monthlyActivity: { month: string; activities: number }[];
+  }> {
+    return {
+      totalActivities: 0,
+      activitiesByType: [],
+      pointsHistory: [],
+      monthlyActivity: []
+    };
+  }
+
+  // Wave management stubs
+  async getWaves(): Promise<Wave[]> { return []; }
+  async getWave(id: string): Promise<Wave | undefined> { return undefined; }
+  async createWave(wave: InsertWave): Promise<Wave> {
+    return {
+      id: `wave-${Date.now()}`,
+      ...wave,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    } as Wave;
+  }
+  async updateWave(id: string, wave: Partial<InsertWave>): Promise<Wave | undefined> { return undefined; }
+  async deleteWave(id: string): Promise<boolean> { return false; }
+
+  // Customer wave permissions stubs
+  async getCustomerWavePermissions(userId: string): Promise<CustomerWavePermission[]> { return []; }
+  async getWavePermission(userId: string, waveId: string): Promise<CustomerWavePermission | undefined> { return undefined; }
+  async grantWavePermission(permission: InsertCustomerWavePermission): Promise<CustomerWavePermission> {
+    return {
+      id: `perm-${Date.now()}`,
+      ...permission,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    } as CustomerWavePermission;
+  }
+  async updateWavePermission(id: string, permission: Partial<InsertCustomerWavePermission>): Promise<CustomerWavePermission | undefined> { return undefined; }
+  async revokeWavePermission(userId: string, waveId: string): Promise<boolean> { return false; }
+  async getPropertiesByWave(waveId: string): Promise<PropertyWithAgent[]> { return []; }
 }
 
-// Use memory storage temporarily to bypass database connection issues
-export const storage = new MemStorage();
+// Use database storage for wave management
+export const storage = new DatabaseStorage();
 
 // Add example properties for demonstration
 async function addExampleProperties() {
