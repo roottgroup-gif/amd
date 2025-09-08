@@ -138,8 +138,16 @@ export function useAddToFavorites() {
       const response = await apiRequest("POST", "/api/favorites", { userId, propertyId });
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (_, { userId, propertyId }) => {
+      // Invalidate general favorites queries
       queryClient.invalidateQueries({ queryKey: ["/api/favorites"] });
+      // Invalidate specific check query
+      queryClient.invalidateQueries({ queryKey: ["/api/favorites/check"] });
+      // Update the specific favorite check immediately
+      queryClient.setQueryData(
+        ["/api/favorites/check", { userId, propertyId }],
+        { isFavorite: true }
+      );
     },
   });
 }
@@ -152,8 +160,16 @@ export function useRemoveFromFavorites() {
       const response = await apiRequest("DELETE", "/api/favorites", { userId, propertyId });
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (_, { userId, propertyId }) => {
+      // Invalidate general favorites queries
       queryClient.invalidateQueries({ queryKey: ["/api/favorites"] });
+      // Invalidate specific check query
+      queryClient.invalidateQueries({ queryKey: ["/api/favorites/check"] });
+      // Update the specific favorite check immediately
+      queryClient.setQueryData(
+        ["/api/favorites/check", { userId, propertyId }],
+        { isFavorite: false }
+      );
     },
   });
 }
