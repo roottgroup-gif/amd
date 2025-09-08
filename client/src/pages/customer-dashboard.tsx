@@ -28,8 +28,11 @@ import {
   Home, Eye, Bed, Bath, Maximize, Phone, Mail, Calendar,
   Star, Bookmark, MessageSquare, User, Settings, Plus,
   Building, University, Mountain, Tag, Key, Edit, Trash2,
-  EyeOff, ToggleLeft, ToggleRight
+  EyeOff, ToggleLeft, ToggleRight, BarChart3, PieChart as PieChartIcon,
+  TrendingUp, Activity, Clock, Users
 } from 'lucide-react';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
+import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 // Property form schema for validation
 const propertyFormSchema = z.object({
@@ -143,7 +146,7 @@ export default function CustomerDashboard() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
   const [mapFilters, setMapFilters] = useState<PropertyFilters>({ limit: 100 });
-  const [activeTab, setActiveTab] = useState('browse');
+  const [activeTab, setActiveTab] = useState('overview');
   const [selectedLocation, setSelectedLocation] = useState<{lat: number, lng: number} | null>(null);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editingProperty, setEditingProperty] = useState<PropertyWithAgent | null>(null);
@@ -225,6 +228,40 @@ export default function CustomerDashboard() {
   const { data: favorites = [] } = useQuery<PropertyWithAgent[]>({
     queryKey: ['/api/users', user?.id, 'favorites'],
     enabled: !!user?.id,
+  });
+
+  // Fetch dashboard analytics data
+  const { data: analyticsData, isLoading: analyticsLoading } = useQuery({
+    queryKey: [`/api/customers/${user?.id}/analytics`],
+    enabled: !!user?.id,
+  });
+
+  // Fetch property statistics for charts
+  const { data: propertyStats } = useQuery({
+    queryKey: ['/api/properties', { limit: 1000 }],
+    select: (data: PropertyWithAgent[]) => {
+      const byType = data?.reduce((acc, prop) => {
+        acc[prop.type] = (acc[prop.type] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>) || {};
+      
+      const byListingType = data?.reduce((acc, prop) => {
+        acc[prop.listingType] = (acc[prop.listingType] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>) || {};
+      
+      const byStatus = data?.reduce((acc, prop) => {
+        acc[prop.status] = (acc[prop.status] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>) || {};
+      
+      return {
+        total: data?.length || 0,
+        byType: Object.entries(byType).map(([name, value]) => ({ name, value })),
+        byListingType: Object.entries(byListingType).map(([name, value]) => ({ name, value })),
+        byStatus: Object.entries(byStatus).map(([name, value]) => ({ name, value }))
+      };
+    }
   });
 
   // Fetch user's own properties
@@ -668,7 +705,15 @@ export default function CustomerDashboard() {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-slate-200 dark:border-gray-700">
-              <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 h-auto bg-transparent gap-1 p-2">
+              <TabsList className="grid w-full grid-cols-4 sm:grid-cols-7 h-auto bg-transparent gap-1 p-2">
+                <TabsTrigger 
+                  value="overview" 
+                  className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200"
+                  data-testid="tab-overview"
+                >
+                  <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Overview</span>
+                </TabsTrigger>
                 <TabsTrigger 
                   value="browse" 
                   className="text-xs sm:text-sm py-2 px-2 sm:px-4 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 hover:bg-slate-100 transition-all duration-200"
@@ -716,6 +761,293 @@ export default function CustomerDashboard() {
                 </TabsTrigger>
               </TabsList>
             </div>
+
+            <TabsContent value="overview" className="space-y-4 sm:space-y-6">
+              {/* Account Status and Expiration Dashboard */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+                {/* Account Status Card */}
+                <Card className="lg:col-span-1 shadow-lg border-0 bg-white dark:bg-gray-800">
+                  <CardHeader className="border-b border-slate-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-white dark:from-gray-800 dark:to-gray-800">
+                    <CardTitle className="text-lg font-bold text-blue-800 dark:text-blue-200 flex items-center">
+                      <User className="h-5 w-5 mr-2" />
+                      Account Status
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    {(() => {
+                      const daysUntilExpiration = calculateDaysUntilExpiration(user?.expiresAt);
+                      const status = getExpirationStatus(daysUntilExpiration);
+                      return (
+                        <div className="space-y-4">
+                          <div className={`p-4 rounded-lg ${status.bgColor} border border-opacity-30`}>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-lg">{status.icon}</span>
+                              <Badge variant="secondary" className={`${status.color} font-medium`}>
+                                {status.status}
+                              </Badge>
+                            </div>
+                            <h3 className={`font-semibold ${status.color} mb-1`}>{status.title}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{status.description}</p>
+                          </div>
+                          
+                          {daysUntilExpiration !== null && daysUntilExpiration > 0 && (
+                            <div className="relative">
+                              <div className="flex items-center justify-between text-sm mb-2">
+                                <span className="text-gray-600 dark:text-gray-400">Days Remaining</span>
+                                <span className="font-medium">{daysUntilExpiration}</span>
+                              </div>
+                              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div 
+                                  className={`h-2 rounded-full transition-all duration-300 ${
+                                    daysUntilExpiration <= 3 ? 'bg-red-500' : 
+                                    daysUntilExpiration <= 7 ? 'bg-yellow-500' : 'bg-green-500'
+                                  }`}
+                                  style={{ width: `${Math.min(100, (daysUntilExpiration / 30) * 100)}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </CardContent>
+                </Card>
+
+                {/* Property Statistics Overview */}
+                <Card className="lg:col-span-2 shadow-lg border-0 bg-white dark:bg-gray-800">
+                  <CardHeader className="border-b border-slate-200 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-white dark:from-gray-800 dark:to-gray-800">
+                    <CardTitle className="text-lg font-bold text-orange-800 dark:text-orange-200 flex items-center">
+                      <BarChart3 className="h-5 w-5 mr-2" />
+                      Property Overview
+                    </CardTitle>
+                    <CardDescription className="text-orange-600 dark:text-orange-300">
+                      Your property portfolio statistics
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                      <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900 dark:to-blue-800 rounded-lg">
+                        <div className="text-2xl font-bold text-blue-600 dark:text-blue-300">{userProperties.length}</div>
+                        <div className="text-sm text-blue-500 dark:text-blue-400">My Properties</div>
+                      </div>
+                      <div className="text-center p-4 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-pink-900 dark:to-pink-800 rounded-lg">
+                        <div className="text-2xl font-bold text-pink-600 dark:text-pink-300">{favorites.length}</div>
+                        <div className="text-sm text-pink-500 dark:text-pink-400">Favorites</div>
+                      </div>
+                      <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 rounded-lg">
+                        <div className="text-2xl font-bold text-green-600 dark:text-green-300">
+                          {userProperties.filter(p => p.status === 'active').length}
+                        </div>
+                        <div className="text-sm text-green-500 dark:text-green-400">Active</div>
+                      </div>
+                      <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 rounded-lg">
+                        <div className="text-2xl font-bold text-purple-600 dark:text-purple-300">
+                          {propertyStats?.total || 0}
+                        </div>
+                        <div className="text-sm text-purple-500 dark:text-purple-400">Total Market</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Charts Section */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                {/* Property Type Distribution Chart */}
+                <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+                  <CardHeader className="border-b border-slate-200 dark:border-gray-700">
+                    <CardTitle className="text-lg font-bold flex items-center">
+                      <PieChartIcon className="h-5 w-5 mr-2 text-orange-600" />
+                      Market by Property Type
+                    </CardTitle>
+                    <CardDescription>Distribution of properties in the market</CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    {propertyStats?.byType && propertyStats.byType.length > 0 ? (
+                      <ChartContainer
+                        config={{
+                          house: { label: "House", color: "#3b82f6" },
+                          apartment: { label: "Apartment", color: "#ef4444" },
+                          villa: { label: "Villa", color: "#10b981" },
+                          land: { label: "Land", color: "#f59e0b" }
+                        }}
+                        className="h-[300px]"
+                      >
+                        <PieChart>
+                          <ChartTooltip content={<ChartTooltipContent />} />
+                          <ChartLegend content={<ChartLegendContent />} />
+                          <Pie
+                            dataKey="value"
+                            data={propertyStats.byType}
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={80}
+                            label={({ name, value }: { name: string; value: number }) => `${name}: ${value}`}
+                          >
+                            {propertyStats.byType.map((entry: { name: string; value: number }, index: number) => (
+                              <Cell key={`cell-${index}`} fill={
+                                entry.name === 'house' ? '#3b82f6' :
+                                entry.name === 'apartment' ? '#ef4444' :
+                                entry.name === 'villa' ? '#10b981' : '#f59e0b'
+                              } />
+                            ))}
+                          </Pie>
+                        </PieChart>
+                      </ChartContainer>
+                    ) : (
+                      <div className="h-[300px] flex items-center justify-center text-gray-500">
+                        <div className="text-center">
+                          <PieChartIcon className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                          <p>No property data available</p>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Listing Type Chart */}
+                <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+                  <CardHeader className="border-b border-slate-200 dark:border-gray-700">
+                    <CardTitle className="text-lg font-bold flex items-center">
+                      <TrendingUp className="h-5 w-5 mr-2 text-green-600" />
+                      Sale vs Rent Distribution
+                    </CardTitle>
+                    <CardDescription>Market distribution by listing type</CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    {propertyStats?.byListingType && propertyStats.byListingType.length > 0 ? (
+                      <ChartContainer
+                        config={{
+                          sale: { label: "For Sale", color: "#3b82f6" },
+                          rent: { label: "For Rent", color: "#10b981" }
+                        }}
+                        className="h-[300px]"
+                      >
+                        <BarChart data={propertyStats.byListingType}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" />
+                          <YAxis />
+                          <ChartTooltip content={<ChartTooltipContent />} />
+                          <ChartLegend content={<ChartLegendContent />} />
+                          <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                        </BarChart>
+                      </ChartContainer>
+                    ) : (
+                      <div className="h-[300px] flex items-center justify-center text-gray-500">
+                        <div className="text-center">
+                          <BarChart3 className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                          <p>No listing data available</p>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Activity and Quick Actions */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                {/* Recent Activity */}
+                <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+                  <CardHeader className="border-b border-slate-200 dark:border-gray-700">
+                    <CardTitle className="text-lg font-bold flex items-center">
+                      <Activity className="h-5 w-5 mr-2 text-blue-600" />
+                      Recent Activity
+                    </CardTitle>
+                    <CardDescription>Your latest actions and updates</CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      {userProperties.slice(0, 3).map((property) => (
+                        <div key={property.id} className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                          <div className="h-10 w-10 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
+                            <Home className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                              {property.title}
+                            </p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                              Listed as {property.listingType} • {property.status}
+                            </p>
+                          </div>
+                          <Badge variant={property.status === 'active' ? 'default' : 'secondary'} className="text-xs">
+                            {property.status}
+                          </Badge>
+                        </div>
+                      ))}
+                      {userProperties.length === 0 && (
+                        <div className="text-center py-8">
+                          <Home className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                          <p className="text-gray-500 dark:text-gray-400">No properties listed yet</p>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="mt-2"
+                            onClick={() => setActiveTab('add-property')}
+                          >
+                            Add Your First Property
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Quick Actions */}
+                <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+                  <CardHeader className="border-b border-slate-200 dark:border-gray-700">
+                    <CardTitle className="text-lg font-bold flex items-center">
+                      <Settings className="h-5 w-5 mr-2 text-purple-600" />
+                      Quick Actions
+                    </CardTitle>
+                    <CardDescription>Manage your account and properties</CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Button 
+                        variant="outline" 
+                        className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-orange-50 hover:border-orange-200 transition-all duration-200"
+                        onClick={() => setActiveTab('add-property')}
+                        data-testid="button-add-property"
+                      >
+                        <Plus className="h-6 w-6 text-orange-600" />
+                        <span className="text-sm font-medium">Add Property</span>
+                      </Button>
+                      
+                      <Button 
+                        variant="outline" 
+                        className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-blue-50 hover:border-blue-200 transition-all duration-200"
+                        onClick={() => setActiveTab('browse')}
+                        data-testid="button-browse-properties"
+                      >
+                        <Search className="h-6 w-6 text-blue-600" />
+                        <span className="text-sm font-medium">Browse Properties</span>
+                      </Button>
+                      
+                      <Button 
+                        variant="outline" 
+                        className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-green-50 hover:border-green-200 transition-all duration-200"
+                        onClick={() => setActiveTab('favorites')}
+                        data-testid="button-view-favorites"
+                      >
+                        <Heart className="h-6 w-6 text-green-600" />
+                        <span className="text-sm font-medium">View Favorites</span>
+                      </Button>
+                      
+                      <Button 
+                        variant="outline" 
+                        className="h-20 flex flex-col items-center justify-center space-y-2 hover:bg-purple-50 hover:border-purple-200 transition-all duration-200"
+                        onClick={() => setActiveTab('profile')}
+                        data-testid="button-edit-profile"
+                      >
+                        <User className="h-6 w-6 text-purple-600" />
+                        <span className="text-sm font-medium">Edit Profile</span>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
             <TabsContent value="browse" className="space-y-4 sm:space-y-6">
               {/* Search and Filter */}
