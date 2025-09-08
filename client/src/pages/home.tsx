@@ -184,10 +184,10 @@ export default function HomePage() {
                   <DropdownMenuItem 
                     className="flex items-center gap-2 cursor-pointer"
                     onClick={() => setLocation('/favorites')}
-                    data-testid="my-properties-menu"
+                    data-testid="my-favorites-menu"
                   >
-                    <Home className="h-4 w-4" />
-                    <span>My Properties</span>
+                    <Heart className="h-4 w-4" />
+                    <span>My Favorites</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
                     <Settings className="h-4 w-4" />
