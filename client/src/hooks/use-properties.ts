@@ -31,6 +31,13 @@ export function useFeaturedProperties() {
 export function useProperty(id: string) {
   return useQuery<Property>({
     queryKey: ["/api/properties", id],
+    queryFn: async () => {
+      const response = await fetch(`/api/properties/${id}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch property: ${response.status}`);
+      }
+      return response.json();
+    },
     enabled: !!id,
   });
 }
