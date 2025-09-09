@@ -1377,7 +1377,6 @@ async function addExampleProperties() {
     images: [],
     amenities: ["Swimming Pool", "Garden", "Parking", "Security System", "Gym"],
     features: ["Air Conditioning", "Heating", "Fireplace", "High Ceilings", "Storage Room"],
-    contactPhone: "+964 750 987 6543",
     status: "active",
     agentId: "customer-001"
   });
@@ -1406,7 +1405,6 @@ async function addExampleProperties() {
     ],
     amenities: ["Private Garden", "Garage", "Central Heating", "Security System"],
     features: ["Hardwood Floors", "Granite Countertops", "Walk-in Closets", "Patio"],
-    contactPhone: "+964 750 456 7890",
     status: "active",
     agentId: "customer-001",
     isFeatured: true
@@ -1435,7 +1433,6 @@ async function addExampleProperties() {
     ],
     amenities: ["Rooftop Terrace", "Concierge Service", "Gym Access", "Valet Parking"],
     features: ["Floor-to-Ceiling Windows", "Designer Kitchen", "Smart Home Technology", "City Views"],
-    contactPhone: "+964 750 789 0123",
     status: "active",
     agentId: "customer-001",
     isFeatured: true
@@ -1464,7 +1461,6 @@ async function addExampleProperties() {
     ],
     amenities: ["Mountain Views", "Large Garden", "Fireplace", "Outdoor Kitchen"],
     features: ["Stone Construction", "Wooden Beams", "Multiple Terraces", "Wine Cellar"],
-    contactPhone: "+964 750 234 5678",
     status: "active",
     agentId: "customer-001",
     isFeatured: true
