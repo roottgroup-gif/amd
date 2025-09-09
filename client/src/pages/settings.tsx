@@ -82,10 +82,6 @@ export default function SettingsPage() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
-                <User className="h-8 w-8 text-orange-500" />
-                Settings & Preferences
-              </h1>
             </div>
           </div>
         </div>
