@@ -1023,10 +1023,8 @@ class MemStorage implements IStorage {
     });
   }
   async createProperty(property: InsertProperty): Promise<Property> { 
-    // Use provided ID or generate a predictable one
-    const id = (property as any).id || `property-${this.properties.length + 1}`;
     const newProperty: Property = { 
-      id, 
+      id: `prop-${Date.now()}`, 
       ...property,
       description: property.description || null,
       currency: property.currency || 'USD',
@@ -1277,15 +1275,6 @@ class MemStorage implements IStorage {
 // Use MemStorage when database is not available
 export const storage = new MemStorage();
 
-// Initialize sample data for memory storage
-if (storage instanceof MemStorage) {
-  setTimeout(() => {
-    addExampleProperties().then(() => {
-      console.log("✅ Loaded sample properties in memory");
-    }).catch(console.error);
-  }, 100);
-}
-
 // Initialize database with default users if they don't exist
 async function initializeDatabase() {
   try {
@@ -1347,7 +1336,6 @@ async function initializeDatabase() {
 async function addExampleProperties() {
   // Example Property 1
   await storage.createProperty({
-    id: "property-1",
     title: "Modern Apartment in Erbil City Center",
     description: "Beautiful 2-bedroom apartment located in the heart of Erbil. Perfect for young professionals or small families. Features modern amenities and easy access to shopping centers and restaurants.",
     type: "apartment",
@@ -1372,7 +1360,6 @@ async function addExampleProperties() {
 
   // Example Property 2
   await storage.createProperty({
-    id: "property-2",
     title: "Spacious Villa in Ainkawa",
     description: "Luxurious 4-bedroom villa in the prestigious Ainkawa area. This property features a large garden, swimming pool, and high-end finishes throughout. Perfect for families looking for comfort and privacy.",
     type: "villa",
@@ -1397,7 +1384,6 @@ async function addExampleProperties() {
   // Add 3 new properties with 3 photos each
   // Property 3: Elegant Townhouse in Duhok
   await storage.createProperty({
-    id: "property-3",
     title: "Elegant Townhouse in Duhok",
     description: "A stunning 3-bedroom townhouse in Duhok's premium residential area. Features include spacious living areas, modern finishes, private garden, and excellent location near schools and shopping centers. Perfect for families seeking comfort and style.",
     type: "house",
