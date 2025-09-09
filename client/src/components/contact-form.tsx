@@ -75,7 +75,7 @@ export default function ContactForm({ property, agent, className }: ContactFormP
     'Real Estate Agent';
 
   return (
-    <Card className={`sticky top-6 shadow-lg border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 ${className}`} data-testid="contact-form">
+    <Card className={`sticky top-6 border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 ${className}`} data-testid="contact-form">
       <CardHeader className="text-center pb-6 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-gray-800 dark:to-gray-700 rounded-t-lg">
         <Avatar className="w-24 h-24 mx-auto mb-6 ring-4 ring-orange-200 ring-offset-2 shadow-lg">
           <AvatarImage src={agent?.avatar} alt={agentName} />
