@@ -1465,6 +1465,431 @@ async function addExampleProperties() {
     agentId: "customer-001",
     isFeatured: true
   });
+
+  // TURKEY PROPERTIES (3)
+  // Property 6: Modern Apartment in Istanbul
+  await storage.createProperty({
+    title: "Modern Apartment in Istanbul",
+    description: "Stunning 2-bedroom apartment in the heart of Istanbul with Bosphorus views. Located in a modern complex with excellent amenities and close to public transportation.",
+    type: "apartment",
+    listingType: "rent",
+    price: "1500",
+    currency: "USD",
+    bedrooms: 2,
+    bathrooms: 2,
+    area: 120,
+    address: "Besiktas District, Istanbul",
+    city: "Istanbul",
+    country: "Turkey",
+    latitude: "41.0082",
+    longitude: "28.9784",
+    images: [
+      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1571055107669-63c7d25e6d08?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Sea View", "Gym", "Concierge", "Parking"],
+    features: ["Modern Kitchen", "High Ceilings", "Balcony", "Smart Home"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: true
+  });
+
+  // Property 7: Executive Villa in Ankara
+  await storage.createProperty({
+    title: "Executive Villa in Ankara",
+    description: "Prestigious 4-bedroom villa in Ankara's diplomatic district. Perfect for executives and diplomats, featuring luxury finishes and premium location.",
+    type: "villa",
+    listingType: "sale",
+    price: "650000",
+    currency: "USD",
+    bedrooms: 4,
+    bathrooms: 4,
+    area: 380,
+    address: "Cankaya District, Ankara",
+    city: "Ankara",
+    country: "Turkey",
+    latitude: "39.9334",
+    longitude: "32.8597",
+    images: [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Private Garden", "Swimming Pool", "Security", "Garage"],
+    features: ["Marble Floors", "Central AC", "Master Suite", "Office Room"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: false
+  });
+
+  // Property 8: Coastal House in Izmir
+  await storage.createProperty({
+    title: "Coastal House in Izmir",
+    description: "Beautiful 3-bedroom house near the Aegean coast in Izmir. Enjoy Mediterranean lifestyle with modern amenities and sea breeze.",
+    type: "house",
+    listingType: "sale",
+    price: "320000",
+    currency: "USD",
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 200,
+    address: "Alsancak District, Izmir",
+    city: "Izmir",
+    country: "Turkey",
+    latitude: "38.4237",
+    longitude: "27.1428",
+    images: [
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Sea Access", "Terrace", "Parking", "Storage"],
+    features: ["Open Plan", "Large Windows", "Hardwood Floors", "Garden"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: false
+  });
+
+  // JORDAN PROPERTIES (3)
+  // Property 9: Luxury Apartment in Amman
+  await storage.createProperty({
+    title: "Luxury Apartment in Amman",
+    description: "Elegant 3-bedroom apartment in Amman's upscale Abdoun area. Features modern design, premium finishes, and stunning city views.",
+    type: "apartment",
+    listingType: "rent",
+    price: "1200",
+    currency: "USD",
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 150,
+    address: "Abdoun Circle, Amman",
+    city: "Amman",
+    country: "Jordan",
+    latitude: "31.9454",
+    longitude: "35.9284",
+    images: [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["City Views", "Elevator", "Parking", "24/7 Security"],
+    features: ["Modern Kitchen", "Walk-in Closet", "Balcony", "Central AC"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: true
+  });
+
+  // Property 10: Family Villa in Irbid
+  await storage.createProperty({
+    title: "Family Villa in Irbid",
+    description: "Spacious 4-bedroom family villa in Irbid's residential area. Perfect for large families with beautiful garden and traditional architecture.",
+    type: "villa",
+    listingType: "sale",
+    price: "280000",
+    currency: "USD",
+    bedrooms: 4,
+    bathrooms: 3,
+    area: 280,
+    address: "University Street, Irbid",
+    city: "Irbid",
+    country: "Jordan",
+    latitude: "32.5556",
+    longitude: "35.8500",
+    images: [
+      "https://images.unsplash.com/photo-1576941089067-2de3c901e126?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Large Garden", "Parking", "Storage", "Guest Room"],
+    features: ["Traditional Design", "High Ceilings", "Natural Light", "Patio"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: false
+  });
+
+  // Property 11: Beachfront Condo in Aqaba
+  await storage.createProperty({
+    title: "Beachfront Condo in Aqaba",
+    description: "Stunning 2-bedroom condo with direct Red Sea access in Aqaba. Perfect for vacation rental or permanent residence with amazing sea views.",
+    type: "apartment",
+    listingType: "sale",
+    price: "220000",
+    currency: "USD",
+    bedrooms: 2,
+    bathrooms: 2,
+    area: 110,
+    address: "South Beach, Aqaba",
+    city: "Aqaba",
+    country: "Jordan",
+    latitude: "29.5197",
+    longitude: "35.0073",
+    images: [
+      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1571055107669-63c7d25e6d08?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Beach Access", "Swimming Pool", "Resort Facilities", "Concierge"],
+    features: ["Sea View", "Modern Finishes", "Balcony", "Resort Living"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: true
+  });
+
+  // LEBANON PROPERTIES (3)
+  // Property 12: Penthouse in Beirut
+  await storage.createProperty({
+    title: "Penthouse in Beirut",
+    description: "Luxurious penthouse in Beirut's trendy Gemmayzeh district. Features panoramic Mediterranean views, modern amenities, and rooftop terrace.",
+    type: "apartment",
+    listingType: "rent",
+    price: "2500",
+    currency: "USD",
+    bedrooms: 3,
+    bathrooms: 3,
+    area: 200,
+    address: "Gemmayzeh Street, Beirut",
+    city: "Beirut",
+    country: "Lebanon",
+    latitude: "33.8938",
+    longitude: "35.5018",
+    images: [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Rooftop Terrace", "Sea Views", "Elevator", "Parking"],
+    features: ["Open Plan", "Modern Kitchen", "Floor-to-Ceiling Windows", "Terrace"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: true
+  });
+
+  // Property 13: Mountain House in Tripoli
+  await storage.createProperty({
+    title: "Mountain House in Tripoli",
+    description: "Charming 3-bedroom house in Tripoli with mountain views. Traditional Lebanese architecture with modern comfort and beautiful landscape.",
+    type: "house",
+    listingType: "sale",
+    price: "180000",
+    currency: "USD",
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 180,
+    address: "Old City, Tripoli",
+    city: "Tripoli",
+    country: "Lebanon",
+    latitude: "34.4367",
+    longitude: "35.8497",
+    images: [
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Mountain Views", "Traditional Architecture", "Garden", "Storage"],
+    features: ["Stone Walls", "High Ceilings", "Natural Light", "Courtyard"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: false
+  });
+
+  // Property 14: Coastal Villa in Sidon
+  await storage.createProperty({
+    title: "Coastal Villa in Sidon",
+    description: "Elegant 4-bedroom villa near Sidon's historic port. Combines traditional Lebanese charm with modern amenities and sea proximity.",
+    type: "villa",
+    listingType: "sale",
+    price: "420000",
+    currency: "USD",
+    bedrooms: 4,
+    bathrooms: 3,
+    area: 320,
+    address: "Sea Castle Road, Sidon",
+    city: "Sidon",
+    country: "Lebanon",
+    latitude: "33.5631",
+    longitude: "35.3689",
+    images: [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Sea Proximity", "Historic Location", "Garden", "Parking"],
+    features: ["Traditional Design", "Modern Kitchen", "Large Rooms", "Balcony"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: false
+  });
+
+  // SYRIA PROPERTIES (3)
+  // Property 15: Classic Apartment in Damascus
+  await storage.createProperty({
+    title: "Classic Apartment in Damascus",
+    description: "Beautiful 3-bedroom apartment in Damascus Old City. Features traditional Syrian architecture with modern renovations and historical charm.",
+    type: "apartment",
+    listingType: "rent",
+    price: "600",
+    currency: "USD",
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 140,
+    address: "Straight Street, Old Damascus",
+    city: "Damascus",
+    country: "Syria",
+    latitude: "33.5138",
+    longitude: "36.2765",
+    images: [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Historical Location", "Traditional Courtyard", "Central Location", "Parking"],
+    features: ["Arched Ceilings", "Traditional Tiles", "Natural Light", "Courtyard View"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: false
+  });
+
+  // Property 16: Family Home in Aleppo
+  await storage.createProperty({
+    title: "Family Home in Aleppo",
+    description: "Spacious 4-bedroom family home in Aleppo's residential district. Traditional Syrian architecture with modern amenities and large garden.",
+    type: "house",
+    listingType: "sale",
+    price: "150000",
+    currency: "USD",
+    bedrooms: 4,
+    bathrooms: 3,
+    area: 250,
+    address: "Al-Furqan District, Aleppo",
+    city: "Aleppo",
+    country: "Syria",
+    latitude: "36.2021",
+    longitude: "37.1343",
+    images: [
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1576941089067-2de3c901e126?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Large Garden", "Traditional Design", "Family Friendly", "Storage"],
+    features: ["High Ceilings", "Natural Stone", "Multiple Rooms", "Courtyard"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: false
+  });
+
+  // Property 17: Modern Apartment in Homs
+  await storage.createProperty({
+    title: "Modern Apartment in Homs",
+    description: "Contemporary 2-bedroom apartment in Homs city center. Recently renovated with modern amenities and excellent location near amenities.",
+    type: "apartment",
+    listingType: "rent",
+    price: "450",
+    currency: "USD",
+    bedrooms: 2,
+    bathrooms: 1,
+    area: 100,
+    address: "Clock Square, Homs",
+    city: "Homs",
+    country: "Syria",
+    latitude: "34.7394",
+    longitude: "36.7163",
+    images: [
+      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1571055107669-63c7d25e6d08?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Central Location", "Modern Finishes", "Elevator", "Nearby Shopping"],
+    features: ["Open Plan", "Modern Kitchen", "Good Natural Light", "Updated Bathrooms"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: false
+  });
+
+  // IRAN PROPERTIES (3)
+  // Property 18: Luxury Apartment in Tehran
+  await storage.createProperty({
+    title: "Luxury Apartment in Tehran",
+    description: "Sophisticated 3-bedroom apartment in Tehran's upscale Elahiyeh district. Modern amenities, city views, and premium location near embassies.",
+    type: "apartment",
+    listingType: "rent",
+    price: "1800",
+    currency: "USD",
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 160,
+    address: "Elahiyeh District, Tehran",
+    city: "Tehran",
+    country: "Iran",
+    latitude: "35.6892",
+    longitude: "51.3890",
+    images: [
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Mountain Views", "Parking", "Security", "Elevator"],
+    features: ["Modern Design", "Large Windows", "Built-in Storage", "Central AC"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: true
+  });
+
+  // Property 19: Traditional House in Isfahan
+  await storage.createProperty({
+    title: "Traditional House in Isfahan",
+    description: "Historic 4-bedroom house in Isfahan's cultural district. Beautiful Persian architecture with traditional courtyard and modern updates.",
+    type: "house",
+    listingType: "sale",
+    price: "200000",
+    currency: "USD",
+    bedrooms: 4,
+    bathrooms: 2,
+    area: 220,
+    address: "Naqsh-e Jahan Square Area, Isfahan",
+    city: "Isfahan",
+    country: "Iran",
+    latitude: "32.6546",
+    longitude: "51.6680",
+    images: [
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Historic Value", "Traditional Courtyard", "Cultural Location", "Garden"],
+    features: ["Persian Architecture", "Traditional Tiles", "High Ceilings", "Courtyard"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: false
+  });
+
+  // Property 20: Garden Villa in Shiraz
+  await storage.createProperty({
+    title: "Garden Villa in Shiraz",
+    description: "Elegant 3-bedroom villa in Shiraz with beautiful Persian garden. Perfect blend of traditional design and modern comfort in the city of poets.",
+    type: "villa",
+    listingType: "sale",
+    price: "350000",
+    currency: "USD",
+    bedrooms: 3,
+    bathrooms: 3,
+    area: 260,
+    address: "Hafez Gardens, Shiraz",
+    city: "Shiraz",
+    country: "Iran",
+    latitude: "29.5918",
+    longitude: "52.5837",
+    images: [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+      "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+    ],
+    amenities: ["Persian Garden", "Cultural Heritage", "Private Pool", "Fountain"],
+    features: ["Traditional Design", "Modern Kitchen", "Garden Views", "Artistic Details"],
+    status: "active",
+    agentId: "customer-001",
+    isFeatured: true
+  });
 }
 
 // Create default waves if they don't exist
