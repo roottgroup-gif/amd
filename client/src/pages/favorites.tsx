@@ -58,10 +58,6 @@ export default function FavoritesPage() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
-                <Heart className="h-8 w-8 text-red-500" />
-                My Favorites
-              </h1>
               <p className="text-muted-foreground mt-1">
                 {favorites?.length || 0} favorite {(favorites?.length || 0) === 1 ? 'property' : 'properties'}
               </p>
