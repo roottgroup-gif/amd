@@ -329,14 +329,47 @@ export default function PropertyMap({
     propertiesToCluster: PropertyWithAgent[],
     zoomLevel: number
   ) => {
+    // If zoomed very far out (zoom < 8), group by country
+    if (zoomLevel < 8) {
+      return createCountryBasedClusters(propertiesToCluster);
+    }
     // If zoomed out (zoom < 10), group by city
-    if (zoomLevel < 10) {
+    else if (zoomLevel < 10) {
       return createCityBasedClusters(propertiesToCluster);
     }
     // If zoomed in more, use distance-based clustering
     else {
       return createDistanceBasedClusters(propertiesToCluster, zoomLevel);
     }
+  };
+
+  // Function to create country-based clusters
+  const createCountryBasedClusters = (propertiesToCluster: PropertyWithAgent[]) => {
+    const countryGroups: { [key: string]: PropertyWithAgent[] } = {};
+    
+    // Group properties by country
+    propertiesToCluster.forEach((property) => {
+      if (!property.latitude || !property.longitude) return;
+      
+      // Use country as grouping key, fallback to 'Unknown Country'
+      const country = property.country || 'Unknown Country';
+      
+      if (!countryGroups[country]) {
+        countryGroups[country] = [];
+      }
+      countryGroups[country].push(property);
+    });
+
+    // Convert country groups to clusters
+    return Object.entries(countryGroups).map(([country, properties]) => ({
+      properties,
+      country,
+      clusterType: 'country',
+      center: {
+        lat: properties.reduce((sum, p) => sum + parseFloat(p.latitude || "0"), 0) / properties.length,
+        lng: properties.reduce((sum, p) => sum + parseFloat(p.longitude || "0"), 0) / properties.length,
+      },
+    }));
   };
 
   // Function to create city-based clusters
@@ -360,6 +393,7 @@ export default function PropertyMap({
     return Object.entries(cityGroups).map(([city, properties]) => ({
       properties,
       city,
+      clusterType: 'city',
       center: {
         lat: properties.reduce((sum, p) => sum + parseFloat(p.latitude || "0"), 0) / properties.length,
         lng: properties.reduce((sum, p) => sum + parseFloat(p.longitude || "0"), 0) / properties.length,
@@ -425,14 +459,14 @@ export default function PropertyMap({
     const count = cluster.properties.length;
     const { lat, lng } = cluster.center;
 
-    // Get theme-aware colors
+    // Get theme-aware colors - use orange for cluster markers
     const isDark = document.documentElement.classList.contains("dark");
     const bgGradient = isDark
-      ? "linear-gradient(135deg, #059669 0%, #047857 100%)"
-      : "linear-gradient(135deg, #10b981 0%, #059669 100%)";
+      ? "linear-gradient(135deg, #ea580c 0%, #dc2626 100%)"
+      : "linear-gradient(135deg, #fb923c 0%, #f97316 100%)";
     const shadowColor = isDark
-      ? "rgba(16, 185, 129, 0.4)"
-      : "rgba(5, 150, 105, 0.4)";
+      ? "rgba(251, 146, 60, 0.4)"
+      : "rgba(249, 115, 22, 0.4)";
     const borderColor = "#ffffff";
 
     // Determine cluster size and styling based on count and type
@@ -465,7 +499,10 @@ export default function PropertyMap({
         "
         onmouseover="this.style.transform='scale(1.1)'"
         onmouseout="this.style.transform='scale(1)'">
-          ${isCityCluster ? 
+          ${cluster.clusterType === 'country' ? 
+            `<i class="fas fa-globe" style="font-size: ${iconSize}; margin-bottom: 2px;"></i>
+             <div style="font-size: 10px; line-height: 1;">${count}</div>` :
+            cluster.clusterType === 'city' ?
             `<i class="fas fa-city" style="font-size: ${iconSize}; margin-bottom: 2px;"></i>
              <div style="font-size: 10px; line-height: 1;">${count}</div>` :
             `<i class="fas fa-home" style="margin-right: 4px; font-size: ${iconSize};"></i>${count}`
@@ -486,9 +523,14 @@ export default function PropertyMap({
     const subTextColor = isDark ? "#d1d5db" : "#666666";
     const popupBorderColor = isDark ? "#374151" : "#e5e7eb";
 
-    const popupTitle = isCityCluster && cluster.city ? 
-      `${count} Properties in ${cluster.city}` : 
-      `${count} Properties in this area`;
+    let popupTitle;
+    if (cluster.clusterType === 'country' && cluster.country) {
+      popupTitle = `${count} Properties in ${cluster.country}`;
+    } else if (cluster.clusterType === 'city' && cluster.city) {
+      popupTitle = `${count} Properties in ${cluster.city}`;
+    } else {
+      popupTitle = `${count} Properties in this area`;
+    }
       
     const popupContent = `
       <div class="cluster-popup" style="width: 320px; max-width: 95vw; background: ${popupBg}; color: ${textColor};">
@@ -967,7 +1009,7 @@ export default function PropertyMap({
     // Get current zoom level to determine clustering strategy
     const currentZoom = mapInstanceRef.current.getZoom();
     const clusters = createZoomBasedClusters(propertiesToShow, currentZoom);
-    const isCityBasedClustering = currentZoom < 10;
+    const isClusteringEnabled = currentZoom < 10;
     
     clusters.forEach((cluster) => {
       if (cluster.properties.length === 1) {
@@ -975,7 +1017,7 @@ export default function PropertyMap({
         createSingleMarker(cluster.properties[0], L);
       } else {
         // Show cluster marker if multiple properties are grouped
-        createClusterMarker(cluster, L, isCityBasedClustering);
+        createClusterMarker(cluster, L, isClusteringEnabled);
       }
     });
   };
