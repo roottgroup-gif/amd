@@ -518,13 +518,6 @@ export default function PropertyDetailPage() {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Views:</span>
-                    <span className="font-medium">
-                      <Eye className="inline h-4 w-4 mr-1" />
-                      {property.views}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
                     <span className="text-muted-foreground">Status:</span>
                     <Badge variant="secondary" className="capitalize">{property.status}</Badge>
                   </div>
