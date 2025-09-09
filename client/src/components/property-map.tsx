@@ -171,6 +171,12 @@ export default function PropertyMap({
       }
     };
 
+    // Define global function for viewing property details from map popup
+    (window as any).viewPropertyFromMap = (propertyId: string) => {
+      // Navigate to property detail page
+      window.location.href = `/property/${propertyId}`;
+    };
+
     // Define global function for zooming to property from cluster popup with smooth motion
     (window as any).zoomToPropertyFromCluster = (propertyId: string, lat: string, lng: string) => {
       if (mapInstanceRef.current && lat && lng) {
@@ -283,6 +289,9 @@ export default function PropertyMap({
       }
       if ((window as any).toggleFavoriteFromMap) {
         delete (window as any).toggleFavoriteFromMap;
+      }
+      if ((window as any).viewPropertyFromMap) {
+        delete (window as any).viewPropertyFromMap;
       }
       if ((window as any).zoomToPropertyFromCluster) {
         delete (window as any).zoomToPropertyFromCluster;
