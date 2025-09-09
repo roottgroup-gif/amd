@@ -1438,7 +1438,7 @@ export default function PropertyMap({
                 <Button
                   onClick={handleGetMyLocation}
                   disabled={isLocating}
-                  className={`w-10 h-10 rounded-full backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0 flex items-center justify-center ${isLocating ? "animate-pulse" : ""}`}
+                  className={`w-10 h-10 rounded-full backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200 flex-shrink-0 flex items-center justify-center ${isLocating ? "animate-pulse" : ""}`}
                   data-testid="footer-location-button"
                 >
                   <Navigation
@@ -1454,7 +1454,7 @@ export default function PropertyMap({
                   className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                     localFilters.listingType === "sale"
                       ? "bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-600"
-                      : "bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30"
+                      : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                   }`}
                   onClick={() => handleFilterChange("listingType", "sale")}
                 >
@@ -1471,7 +1471,7 @@ export default function PropertyMap({
                   className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                     localFilters.listingType === "rent"
                       ? "bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-600"
-                      : "bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30"
+                      : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                   }`}
                   onClick={() => handleFilterChange("listingType", "rent")}
                 >
@@ -1489,7 +1489,7 @@ export default function PropertyMap({
                     className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "house"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
-                        : "bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30"
+                        : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                     }`}
                     onClick={() => handleFilterChange("type", "house")}
                   >
@@ -1507,7 +1507,7 @@ export default function PropertyMap({
                     className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "apartment"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
-                        : "bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30"
+                        : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                     }`}
                     onClick={() => handleFilterChange("type", "apartment")}
                   >
@@ -1525,7 +1525,7 @@ export default function PropertyMap({
                     className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "villa"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
-                        : "bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30"
+                        : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                     }`}
                     onClick={() => handleFilterChange("type", "villa")}
                   >
@@ -1543,7 +1543,7 @@ export default function PropertyMap({
                     className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "land"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
-                        : "bg-white/90 dark:bg-black/90 border-white/20 hover:bg-white dark:hover:bg-black hover:border-white/30"
+                        : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                     }`}
                     onClick={() => handleFilterChange("type", "land")}
                   >
