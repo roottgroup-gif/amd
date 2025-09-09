@@ -188,8 +188,9 @@ export default function HomePage() {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      console.log('Settings clicked');
+                      console.log('Settings clicked, current showSettings:', showSettings);
                       setShowSettings(true);
+                      console.log('Settings modal should open now');
                     }}
                     data-testid="settings-menu"
                   >

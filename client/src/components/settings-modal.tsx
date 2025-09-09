@@ -31,6 +31,7 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
+  console.log('SettingsModal rendered with isOpen:', isOpen);
   const [userSettings, setUserSettings] = useState({
     // Profile Settings
     displayName: "",
@@ -74,7 +75,11 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto" data-testid="settings-modal">
+      <DialogContent 
+        className="max-w-2xl max-h-[80vh] overflow-y-auto bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 shadow-2xl" 
+        data-testid="settings-modal"
+        style={{ zIndex: 10002 }}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
