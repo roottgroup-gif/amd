@@ -87,9 +87,6 @@ export default function SettingsPage() {
         </div>
 
         <div className="space-y-6">
-          {/* Profile Settings */}
-          <Card>
-          </Card>
 
           {/* Language & Region */}
           <Card>
