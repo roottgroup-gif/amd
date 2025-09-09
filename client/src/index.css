@@ -139,7 +139,7 @@
 .leaflet-popup-content-wrapper {
   border-radius: 16px !important;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 8px 25px rgba(0, 0, 0, 0.08) !important;
-  border: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
   padding: 0 !important;
   backdrop-filter: blur(8px) !important;
   background: rgba(255, 255, 255, 0.98) !important;
@@ -173,7 +173,7 @@
   text-align: center !important;
   line-height: 32px !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
-  border: none !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   z-index: 1000 !important;
   font-weight: 600 !important;
@@ -188,7 +188,7 @@
   background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.8) 100%) !important;
   transform: scale(1.1) rotate(90deg) !important;
   box-shadow: 0 6px 25px rgba(220, 38, 38, 0.4), 0 3px 12px rgba(0, 0, 0, 0.3) !important;
-  border: none !important;
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
   color: white !important;
 }
 
@@ -664,7 +664,6 @@
   overflow: hidden !important;
   max-width: 90vw !important;
   width: auto !important;
-  border: none !important;
 }
 
 .custom-cluster-popup .leaflet-popup-content {
@@ -688,7 +687,7 @@
   text-align: center !important;
   line-height: 32px !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  border: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   z-index: 1000 !important;
   font-weight: 600 !important;
@@ -702,7 +701,7 @@
   background: rgba(255, 255, 255, 1) !important;
   transform: scale(1.1) !important;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2), 0 3px 12px rgba(0, 0, 0, 0.15) !important;
-  border: none !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
   color: #000000 !important;
 }
 
