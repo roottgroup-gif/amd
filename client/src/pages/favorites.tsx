@@ -45,7 +45,7 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <Navigation />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
