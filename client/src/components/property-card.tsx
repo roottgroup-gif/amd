@@ -93,6 +93,8 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
             src={images[currentImageIndex]}
             alt={property.title}
             className="w-full h-48 object-cover transition-transform duration-300"
+            loading="lazy"
+            decoding="async"
             onError={(e) => {
               (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
             }}
