@@ -566,33 +566,35 @@ export default function PropertyMap({
     }
       
     const popupContent = `
-      <div class="cluster-popup" style="
+      <div class="cluster-popup responsive-cluster-popup" style="
         width: 100%; 
-        max-width: min(400px, 95vw); 
-        min-width: 280px; 
+        max-width: min(400px, 90vw); 
+        min-width: min(280px, 85vw); 
         background: ${popupBg}; 
         color: ${textColor}; 
         border-radius: 12px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        overflow: hidden;
       ">
         <div style="
           background: linear-gradient(135deg, #fb923c 0%, #f97316 100%); 
           color: white; 
-          padding: 16px; 
+          padding: clamp(12px, 4vw, 16px); 
           margin: -8px -8px 0 -8px; 
           border-radius: 12px 12px 0 0; 
           font-weight: 600; 
           text-align: center; 
-          font-size: 15px;
+          font-size: clamp(13px, 3vw, 15px);
           letter-spacing: 0.3px;
+          word-wrap: break-word;
         ">
           ${popupTitle}
         </div>
         <div style="
-          max-height: 350px; 
+          max-height: min(350px, 60vh); 
           overflow-y: auto; 
-          padding: 8px; 
+          padding: clamp(6px, 2vw, 8px); 
           scrollbar-width: thin;
           scrollbar-color: #cbd5e0 transparent;
         ">
@@ -612,22 +614,22 @@ export default function PropertyMap({
                 return `
                 <div style="
                   display: flex; 
-                  gap: 12px; 
-                  padding: 12px; 
+                  gap: clamp(8px, 2vw, 12px); 
+                  padding: clamp(8px, 2vw, 12px); 
                   border-bottom: 1px solid ${popupBorderColor}; 
                   cursor: pointer; 
                   color: ${textColor}; 
                   border-radius: 8px;
                   transition: background-color 0.2s ease;
-                  margin-bottom: 8px;
+                  margin-bottom: clamp(4px, 1vw, 8px);
                 " 
                 onclick="window.zoomToPropertyFromCluster('${property.id}', ${property.latitude}, ${property.longitude})"
                 onmouseover="this.style.backgroundColor='${isDark ? '#374151' : '#f8fafc'}'"
                 onmouseout="this.style.backgroundColor='transparent'">
                   
                   <div style="
-                    width: 80px; 
-                    height: 60px; 
+                    width: clamp(60px, 15vw, 80px); 
+                    height: clamp(45px, 12vw, 60px); 
                     border-radius: 6px; 
                     overflow: hidden; 
                     flex-shrink: 0;
@@ -646,33 +648,36 @@ export default function PropertyMap({
                   <div style="flex: 1; min-width: 0;">
                     <div style="
                       font-weight: 600; 
-                      font-size: 14px; 
+                      font-size: clamp(12px, 3vw, 14px); 
                       margin-bottom: 4px; 
                       color: ${textColor};
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
+                      line-height: 1.3;
                     ">${property.title}</div>
                     
                     <div style="
-                      font-size: 12px; 
+                      font-size: clamp(10px, 2.5vw, 12px); 
                       color: ${subTextColor}; 
                       margin-bottom: 6px;
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
+                      line-height: 1.3;
                     ">${property.address}</div>
                     
                     <div style="
                       font-weight: 700; 
                       color: #FF7800; 
-                      font-size: 13px;
+                      font-size: clamp(11px, 3vw, 13px);
                       display: flex;
                       align-items: center;
                       gap: 4px;
+                      line-height: 1.3;
                     ">
                       <span>${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}</span>
-                      ${property.listingType === "rent" ? '<span style="font-size: 11px; font-weight: 500;">/mo</span>' : ""}
+                      ${property.listingType === "rent" ? '<span style="font-size: clamp(9px, 2.5vw, 11px); font-weight: 500;">/mo</span>' : ""}
                     </div>
                   </div>
                 </div>

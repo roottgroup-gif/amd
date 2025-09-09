@@ -649,6 +649,42 @@
 .custom-cluster-popup .leaflet-popup-content-wrapper {
   border-radius: 12px !important;
   overflow: hidden !important;
+  max-width: 90vw !important;
+  width: auto !important;
+}
+
+.custom-cluster-popup .leaflet-popup-content {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 350px !important;
+  max-width: 90vw !important;
+  overflow: hidden !important;
+}
+
+/* Cluster popup close button - make icon white */
+.custom-cluster-popup .leaflet-popup-close-button {
+  top: 12px !important;
+  right: 12px !important;
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 14px !important;
+  color: white !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  border-radius: 50% !important;
+  text-align: center !important;
+  line-height: 28px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.2s ease !important;
+  z-index: 1000 !important;
+  font-weight: bold !important;
+}
+
+.custom-cluster-popup .leaflet-popup-close-button:hover {
+  background: rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3) !important;
+  color: white !important;
 }
 
 .cluster-property-item:hover {
@@ -658,4 +694,49 @@
 
 .cluster-property-item:last-child {
   border-bottom: none !important;
+}
+
+/* Responsive cluster popup styling */
+@media (max-width: 768px) {
+  .custom-cluster-popup .leaflet-popup-content {
+    width: 320px !important;
+    max-width: 88vw !important;
+  }
+  
+  .custom-cluster-popup .leaflet-popup-content-wrapper {
+    max-width: 88vw !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .custom-cluster-popup .leaflet-popup-content {
+    width: 300px !important;
+    max-width: 85vw !important;
+  }
+  
+  .custom-cluster-popup .leaflet-popup-content-wrapper {
+    max-width: 85vw !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-cluster-popup .leaflet-popup-content {
+    width: 280px !important;
+    max-width: 82vw !important;
+  }
+  
+  .custom-cluster-popup .leaflet-popup-content-wrapper {
+    max-width: 82vw !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .custom-cluster-popup .leaflet-popup-content {
+    width: 260px !important;
+    max-width: 80vw !important;
+  }
+  
+  .custom-cluster-popup .leaflet-popup-content-wrapper {
+    max-width: 80vw !important;
+  }
 }
