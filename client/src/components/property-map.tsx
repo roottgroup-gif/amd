@@ -529,16 +529,16 @@ export default function PropertyMap({
         onmouseout="this.style.transform='scale(1)'">
           ${cluster.clusterType === 'country' ? 
             `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-bottom: 2px;">
-               <i class="fas fa-home" style="font-size: 8px;"></i>
-               <i class="fas fa-building" style="font-size: 8px;"></i>
-               <i class="fas fa-university" style="font-size: 8px;"></i>
-               <i class="fas fa-map-marked-alt" style="font-size: 8px;"></i>
+               <i class="fas fa-home" style="font-size: 8px; color: white;"></i>
+               <i class="fas fa-building" style="font-size: 8px; color: white;"></i>
+               <i class="fas fa-university" style="font-size: 8px; color: white;"></i>
+               <i class="fas fa-map-marked-alt" style="font-size: 8px; color: white;"></i>
              </div>
-             <div style="font-size: 10px; line-height: 1;">${count}</div>` :
+             <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>` :
             cluster.clusterType === 'city' ?
-            `<i class="fas fa-city" style="font-size: ${iconSize}; margin-bottom: 2px;"></i>
-             <div style="font-size: 10px; line-height: 1;">${count}</div>` :
-            `<i class="fas fa-home" style="margin-right: 4px; font-size: ${iconSize};"></i>${count}`
+            `<i class="fas fa-city" style="font-size: ${iconSize}; margin-bottom: 2px; color: white;"></i>
+             <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>` :
+            `<i class="fas fa-home" style="margin-right: 4px; font-size: ${iconSize}; color: white;"></i><span style="color: white;">${count}</span>`
           }
         </div>
       `,
