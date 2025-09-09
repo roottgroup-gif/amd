@@ -197,27 +197,6 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
           )}
         </div>
         
-        {/* Contact Information */}
-        {((property as any).contactPhone || property.agent?.phone) && (
-          <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-            <div className="flex space-x-2">
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const phone = (property as any).contactPhone || property.agent?.phone;
-                  window.open(`tel:${phone}`, '_self');
-                }}
-                data-testid={`call-button-${property.id}`}
-              >
-                <Phone className="h-3 w-3 mr-1" />
-                Call
-              </Button>
-            </div>
-          </div>
-        )}
 
         <div className="flex items-center justify-between">
           {property.agent && (
