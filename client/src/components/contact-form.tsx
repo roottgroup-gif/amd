@@ -95,14 +95,6 @@ export default function ContactForm({ property, agent, className }: ContactFormP
         </div>
         <p className="text-sm text-muted-foreground">Licensed Real Estate Agent</p>
         
-        <div className="flex items-center justify-center mt-2">
-          <div className="flex text-yellow-400">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="h-4 w-4 fill-current" />
-            ))}
-          </div>
-          <span className="text-sm text-muted-foreground ml-2">5.0 (48 reviews)</span>
-        </div>
       </CardHeader>
       
       <CardContent className="space-y-4">
