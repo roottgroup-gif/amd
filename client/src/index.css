@@ -179,7 +179,8 @@
 }
 
 .custom-popup .leaflet-popup-close-button:hover {
-  background: rgba(248, 250, 252, 1) !important;
+  color: white !important;
+  background: rgba(0, 0, 0, 0.8) !important;
   transform: scale(1.05) !important;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
 }
