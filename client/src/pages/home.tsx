@@ -32,6 +32,8 @@ export default function HomePage() {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [cardPosition, setCardPosition] = useState<{x: number, y: number} | null>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const [sharedPropertyId, setSharedPropertyId] = useState<string | null>(null);
+  const [sharedPropertyCoords, setSharedPropertyCoords] = useState<{lat: number, lng: number} | null>(null);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
       return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
@@ -52,6 +54,25 @@ export default function HomePage() {
       } else {
         document.documentElement.classList.remove('dark');
       }
+    }
+  }, []);
+
+  // Handle shared property from URL parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const propertyId = urlParams.get('showProperty');
+    const lat = urlParams.get('lat');
+    const lng = urlParams.get('lng');
+    
+    if (propertyId && lat && lng) {
+      setSharedPropertyId(propertyId);
+      setSharedPropertyCoords({
+        lat: parseFloat(lat),
+        lng: parseFloat(lng)
+      });
+      
+      // Clear URL parameters after processing
+      window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
 
@@ -151,6 +172,8 @@ export default function HomePage() {
           }}
           userId={user?.id}
           className="h-full w-full"
+          sharedPropertyId={sharedPropertyId}
+          sharedPropertyCoords={sharedPropertyCoords}
         />
         
         {/* Absolute Blurred Filter Section inside Map */}

@@ -127,19 +127,11 @@ export default function PropertyDetailPage() {
   };
 
   const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: property?.title,
-        text: `Check out this property: ${property?.title}`,
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: "Link copied",
-        description: "Property link has been copied to clipboard.",
-      });
-    }
+    if (!property || !property.latitude || !property.longitude) return;
+    
+    // Navigate to map page with property location
+    const mapUrl = `/?showProperty=${property.id}&lat=${property.latitude}&lng=${property.longitude}`;
+    window.location.href = mapUrl;
   };
 
   const nextImage = () => {
