@@ -173,7 +173,7 @@
   text-align: center !important;
   line-height: 32px !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
-  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  border: none !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   z-index: 1000 !important;
   font-weight: 600 !important;
@@ -188,7 +188,7 @@
   background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.8) 100%) !important;
   transform: scale(1.1) rotate(90deg) !important;
   box-shadow: 0 6px 25px rgba(220, 38, 38, 0.4), 0 3px 12px rgba(0, 0, 0, 0.3) !important;
-  border: 2px solid rgba(255, 255, 255, 0.5) !important;
+  border: none !important;
   color: white !important;
 }
 
