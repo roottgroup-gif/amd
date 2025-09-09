@@ -489,7 +489,7 @@ export class DatabaseStorage implements IStorage {
     const currentMonth = new Date().toISOString().substring(0, 7); // YYYY-MM format
     
     if (existing) {
-      const newTotal = existing.totalPoints + activityPoints;
+      const newTotal = (existing.totalPoints || 0) + activityPoints;
       const newLevel = this.calculateLevel(newTotal);
       
       await db()
@@ -497,7 +497,7 @@ export class DatabaseStorage implements IStorage {
         .set({
           totalPoints: newTotal,
           currentLevel: newLevel,
-          pointsThisMonth: existing.pointsThisMonth + activityPoints,
+          pointsThisMonth: (existing.pointsThisMonth || 0) + activityPoints,
           lastActivity: new Date(),
           updatedAt: new Date()
         })
@@ -901,6 +901,7 @@ class MemStorage implements IStorage {
     const newUser: User = {
       id: `user-${Date.now()}`,
       ...user,
+      role: user.role || 'user',
       createdAt: new Date(),
       expiresAt: user.expiresAt ? new Date(user.expiresAt) : null,
       isExpired: false
@@ -950,7 +951,8 @@ class MemStorage implements IStorage {
     const agent = this.users.find(u => u.id === property.agentId);
     return {
       ...property,
-      agent: agent || null
+      agent: agent || null,
+      wave: null
     };
   }
   
@@ -1006,7 +1008,8 @@ class MemStorage implements IStorage {
       const agent = this.users.find(u => u.id === property.agentId);
       return {
         ...property,
-        agent: agent || null
+        agent: agent || null,
+        wave: null
       };
     });
   }
@@ -1018,7 +1021,8 @@ class MemStorage implements IStorage {
       const agent = this.users.find(u => u.id === property.agentId);
       return {
         ...property,
-        agent: agent || null
+        agent: agent || null,
+        wave: null
       };
     });
   }
@@ -1063,6 +1067,8 @@ class MemStorage implements IStorage {
     const newInquiry: Inquiry = { 
       id: `inq-${Date.now()}`, 
       ...inquiry,
+      propertyId: inquiry.propertyId || null,
+      userId: inquiry.userId || null,
       phone: inquiry.phone || null,
       status: 'pending',
       createdAt: new Date() 
@@ -1082,7 +1088,8 @@ class MemStorage implements IStorage {
       const agent = this.users.find(u => u.id === property.agentId);
       return {
         ...property,
-        agent: agent || null
+        agent: agent || null,
+        wave: null
       };
     });
   }
