@@ -95,41 +95,6 @@ export default function SettingsPage() {
                 Profile Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="displayName">Display Name</Label>
-                  <Input
-                    id="displayName"
-                    value={userSettings.displayName}
-                    onChange={(e) => updateSetting('displayName', e.target.value)}
-                    placeholder="Your name"
-                    data-testid="display-name-input"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={userSettings.email}
-                    onChange={(e) => updateSetting('email', e.target.value)}
-                    placeholder="your.email@example.com"
-                    data-testid="email-input"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  value={userSettings.phone}
-                  onChange={(e) => updateSetting('phone', e.target.value)}
-                  placeholder="+964 xxx xxx xxxx"
-                  data-testid="phone-input"
-                />
-              </div>
-            </CardContent>
           </Card>
 
           {/* Language & Region */}
