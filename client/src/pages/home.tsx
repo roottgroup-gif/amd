@@ -396,7 +396,14 @@ export default function HomePage() {
                 <div className="flex flex-wrap items-center gap-1 sm:gap-2">
                   <span className="text-xs sm:text-sm font-medium text-black dark:text-gray-300">Active filters:</span>
                 {mapFilters.listingType && (
-                  <Badge variant="secondary" className="text-xs" style={{backgroundColor: '#FF7800', color: '#000'}}>
+                  <Badge 
+                    variant="secondary" 
+                    className="text-xs" 
+                    style={{
+                      backgroundColor: mapFilters.listingType === 'sale' ? '#ef4444' : '#22c55e',
+                      color: '#ffffff'
+                    }}
+                  >
                     {mapFilters.listingType === 'sale' ? 'For Sale' : 'For Rent'}
                   </Badge>
                 )}
