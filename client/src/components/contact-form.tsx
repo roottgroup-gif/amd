@@ -112,9 +112,9 @@ export default function ContactForm({ property, agent, className }: ContactFormP
         )}
         
         {/* Contact Buttons */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <Button 
-            className="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
+            className="w-full h-14 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 text-white font-bold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-[1.03] hover:-translate-y-1 rounded-xl border border-blue-400/20 backdrop-blur-sm"
             onClick={() => {
               const phone = (property as any).contactPhone || agent?.phone;
               if (phone) {
@@ -124,12 +124,12 @@ export default function ContactForm({ property, agent, className }: ContactFormP
             disabled={!((property as any).contactPhone || agent?.phone)}
             data-testid="call-button"
           >
-            <Phone className="mr-3 h-5 w-5" />
-            {t('contact.callNow')}
+            <Phone className="mr-3 h-5 w-5 drop-shadow-lg" />
+            <span className="text-lg tracking-wide">{t('contact.callNow')}</span>
           </Button>
           
           <Button 
-            className="w-full h-12 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
+            className="w-full h-14 bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-600 hover:via-green-700 hover:to-green-800 text-white font-bold shadow-2xl hover:shadow-green-500/25 transition-all duration-300 transform hover:scale-[1.03] hover:-translate-y-1 rounded-xl border border-green-400/20 backdrop-blur-sm"
             onClick={() => {
               const phone = (property as any).contactPhone || agent?.phone;
               if (phone) {
@@ -141,8 +141,8 @@ export default function ContactForm({ property, agent, className }: ContactFormP
             disabled={!((property as any).contactPhone || agent?.phone)}
             data-testid="whatsapp-button"
           >
-            <MessageSquare className="mr-3 h-5 w-5" />
-            WhatsApp
+            <MessageSquare className="mr-3 h-5 w-5 drop-shadow-lg" />
+            <span className="text-lg tracking-wide">WhatsApp</span>
           </Button>
         </div>
       </CardContent>
