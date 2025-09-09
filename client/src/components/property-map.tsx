@@ -714,7 +714,11 @@ export default function PropertyMap({
         background: ${popupBg}; 
         color: ${textColor}; 
         border-radius: 12px; 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 10px 30px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+        transform: translateZ(15px) rotateX(3deg);
+        transform-style: preserve-3d;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
         overflow: hidden;
       ">
@@ -1030,7 +1034,15 @@ export default function PropertyMap({
     const heartBgHover = isFavorite ? "#fecaca" : "#e5e7eb";
 
     const popupContent = `
-      <div class="property-popup responsive-popup" id="${popupId}" style="background: ${popupBg}; color: ${textColor};">
+      <div class="property-popup responsive-popup" id="${popupId}" style="
+        background: ${popupBg}; 
+        color: ${textColor};
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 10px 30px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+        transform: translateZ(10px) rotateX(2deg);
+        transform-style: preserve-3d;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);">
         ${
           images.length > 0
             ? `
