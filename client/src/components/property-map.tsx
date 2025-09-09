@@ -564,33 +564,35 @@ export default function PropertyMap({
     const popupContent = `
       <div class="cluster-popup" style="
         width: 100%; 
-        max-width: min(400px, 95vw); 
-        min-width: 280px; 
+        max-width: min(420px, 95vw); 
+        min-width: 300px; 
         background: ${popupBg}; 
         color: ${textColor}; 
-        border-radius: 12px; 
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        border-radius: 16px; 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08);
+        border: 1px solid #f1f5f9;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+        overflow: hidden;
       ">
         <div style="
           background: linear-gradient(135deg, #fb923c 0%, #f97316 100%); 
           color: white; 
-          padding: 16px; 
-          margin: -8px -8px 0 -8px; 
-          border-radius: 12px 12px 0 0; 
+          padding: 20px; 
           font-weight: 600; 
           text-align: center; 
-          font-size: 15px;
+          font-size: 16px;
           letter-spacing: 0.3px;
+          box-shadow: 0 2px 8px rgba(251, 146, 60, 0.2);
         ">
           ${popupTitle}
         </div>
         <div style="
-          max-height: 350px; 
+          max-height: 380px; 
           overflow-y: auto; 
-          padding: 8px; 
+          padding: 16px; 
           scrollbar-width: thin;
-          scrollbar-color: #cbd5e0 transparent;
+          scrollbar-color: #e2e8f0 transparent;
+          background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
         ">
           <style>
             .cluster-popup::-webkit-scrollbar { width: 6px; }
@@ -608,26 +610,29 @@ export default function PropertyMap({
                 return `
                 <div style="
                   display: flex; 
-                  gap: 12px; 
-                  padding: 12px; 
-                  border-bottom: 1px solid ${popupBorderColor}; 
+                  gap: 14px; 
+                  padding: 16px; 
+                  border: 1px solid #f1f5f9; 
                   cursor: pointer; 
                   color: ${textColor}; 
-                  border-radius: 8px;
-                  transition: background-color 0.2s ease;
-                  margin-bottom: 8px;
+                  border-radius: 12px;
+                  transition: all 0.3s ease;
+                  margin-bottom: 12px;
+                  background: #ffffff;
+                  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
                 " 
                 onclick="window.zoomToPropertyFromCluster('${property.id}', ${property.latitude}, ${property.longitude})"
-                onmouseover="this.style.backgroundColor='#f8fafc'"
-                onmouseout="this.style.backgroundColor='transparent'">
+                onmouseover="this.style.backgroundColor='#f8fafc'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'"
+                onmouseout="this.style.backgroundColor='#ffffff'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
                   
                   <div style="
-                    width: 80px; 
-                    height: 60px; 
-                    border-radius: 6px; 
+                    width: 90px; 
+                    height: 70px; 
+                    border-radius: 10px; 
                     overflow: hidden; 
                     flex-shrink: 0;
-                    background: #e2e8f0;
+                    background: #f1f5f9;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
                   ">
                     <img src="${propertyImage}" 
                          alt="${property.title}" 
@@ -641,31 +646,34 @@ export default function PropertyMap({
                   
                   <div style="flex: 1; min-width: 0;">
                     <div style="
-                      font-weight: 600; 
-                      font-size: 14px; 
-                      margin-bottom: 4px; 
-                      color: ${textColor};
+                      font-weight: 700; 
+                      font-size: 15px; 
+                      margin-bottom: 6px; 
+                      color: #1e293b;
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
+                      line-height: 1.3;
                     ">${property.title}</div>
                     
                     <div style="
-                      font-size: 12px; 
-                      color: ${subTextColor}; 
-                      margin-bottom: 6px;
+                      font-size: 13px; 
+                      color: #64748b; 
+                      margin-bottom: 8px;
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
+                      line-height: 1.2;
                     ">${property.address}</div>
                     
                     <div style="
-                      font-weight: 700; 
-                      color: #FF7800; 
-                      font-size: 13px;
+                      font-weight: 800; 
+                      color: #f97316; 
+                      font-size: 14px;
                       display: flex;
                       align-items: center;
                       gap: 4px;
+                      letter-spacing: 0.2px;
                     ">
                       <span>${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}</span>
                       ${property.listingType === "rent" ? '<span style="font-size: 11px; font-weight: 500;">/mo</span>' : ""}
