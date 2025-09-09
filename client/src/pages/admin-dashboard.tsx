@@ -6,6 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -36,6 +37,7 @@ const createUserSchema = z.object({
   avatar: z.string().optional(),
   waveBalance: z.number().min(0, 'Wave balance must be 0 or greater').default(0),
   expiresAt: z.string().optional(),
+  isVerified: z.boolean().default(false),
 });
 
 const editUserSchema = z.object({
@@ -49,6 +51,7 @@ const editUserSchema = z.object({
   avatar: z.string().optional(),
   waveBalance: z.number().min(0, 'Wave balance must be 0 or greater').default(0),
   expiresAt: z.string().optional(),
+  isVerified: z.boolean().default(false),
 });
 
 type CreateUserForm = z.infer<typeof createUserSchema>;
@@ -131,7 +134,9 @@ export default function AdminDashboard() {
       lastName: '',
       phone: '',
       avatar: '',
+      waveBalance: 10,
       expiresAt: '',
+      isVerified: false,
     },
   });
 
@@ -148,6 +153,7 @@ export default function AdminDashboard() {
       avatar: '',
       waveBalance: 0,
       expiresAt: '',
+      isVerified: false,
     },
   });
 
@@ -372,6 +378,7 @@ export default function AdminDashboard() {
       avatar: user.avatar || '',
       waveBalance: user.waveBalance || 0,
       expiresAt: formattedExpiresAt,
+      isVerified: user.isVerified || false,
     });
     setAvatarPreview(user.avatar || '');
     setIsEditUserOpen(true);
@@ -749,6 +756,30 @@ export default function AdminDashboard() {
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={form.control}
+                        name="isVerified"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-orange-200 p-4">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                data-testid="checkbox-verified"
+                              />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel className="flex items-center gap-2 text-orange-600 font-medium">
+                                <Shield className="h-4 w-4" />
+                                Verified Customer
+                              </FormLabel>
+                              <p className="text-sm text-gray-500">
+                                Grant this customer the orange verified badge. Verified customers are trusted and receive priority support.
+                              </p>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
                       <div className="flex justify-end space-x-2 pt-4">
                         <Button 
                           type="button" 
@@ -980,6 +1011,30 @@ export default function AdminDashboard() {
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={editForm.control}
+                        name="isVerified"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border border-orange-200 p-4">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                data-testid="edit-checkbox-verified"
+                              />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel className="flex items-center gap-2 text-orange-600 font-medium">
+                                <Shield className="h-4 w-4" />
+                                Verified Customer
+                              </FormLabel>
+                              <p className="text-sm text-gray-500">
+                                Grant this customer the orange verified badge. Verified customers are trusted and receive priority support.
+                              </p>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
                       <div className="flex justify-end space-x-2 pt-4">
                         <Button 
                           type="button" 
@@ -1120,7 +1175,11 @@ export default function AdminDashboard() {
                                   </Badge>
                                   <Badge 
                                     variant={u.isVerified ? 'default' : 'secondary'}
-                                    className="text-xs md:hidden"
+                                    className={`text-xs md:hidden ${
+                                      u.isVerified 
+                                        ? 'bg-orange-100 text-orange-800 hover:bg-orange-200' 
+                                        : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+                                    }`}
                                     data-testid={`badge-status-${u.id}`}
                                   >
                                     {u.isVerified ? 'Verified' : 'Unverified'}
@@ -1144,7 +1203,7 @@ export default function AdminDashboard() {
                               variant={u.isVerified ? 'default' : 'secondary'}
                               className={`text-xs font-medium ${
                                 u.isVerified 
-                                  ? 'bg-green-100 text-green-800 hover:bg-green-200' 
+                                  ? 'bg-orange-100 text-orange-800 hover:bg-orange-200 border-orange-300' 
                                   : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
                               }`}
                               data-testid={`badge-status-${u.id}`}
@@ -1346,7 +1405,14 @@ export default function AdminDashboard() {
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Status:</span>
-                          <Badge variant={selectedCustomer.isVerified ? 'default' : 'secondary'}>
+                          <Badge 
+                            variant={selectedCustomer.isVerified ? 'default' : 'secondary'}
+                            className={`${
+                              selectedCustomer.isVerified 
+                                ? 'bg-orange-100 text-orange-800 hover:bg-orange-200 border-orange-300' 
+                                : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+                            }`}
+                          >
                             {selectedCustomer.isVerified ? 'Verified' : 'Pending'}
                           </Badge>
                         </div>
