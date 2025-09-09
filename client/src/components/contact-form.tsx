@@ -4,11 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/lib/i18n";
 import { useCreateInquiry } from "@/hooks/use-properties";
 import { useToast } from "@/hooks/use-toast";
 import type { Property, User } from "@/types";
-import { Phone, MessageSquare, Mail, Star, Send } from "lucide-react";
+import { Phone, MessageSquare, Mail, Star, Send, Shield } from "lucide-react";
 
 interface ContactFormProps {
   property: Property;
@@ -81,7 +82,18 @@ export default function ContactForm({ property, agent, className }: ContactFormP
           <AvatarFallback className="text-lg">{agentInitials}</AvatarFallback>
         </Avatar>
         
-        <CardTitle className="text-lg" data-testid="agent-name">{agentName}</CardTitle>
+        <div className="flex items-center justify-center gap-2">
+          <CardTitle className="text-lg" data-testid="agent-name">{agentName}</CardTitle>
+          {agent?.isVerified && (
+            <Badge 
+              className="bg-orange-100 text-orange-800 hover:bg-orange-200 border-orange-300 text-xs font-medium"
+              data-testid="verified-badge"
+            >
+              <Shield className="h-3 w-3 mr-1" />
+              Verified
+            </Badge>
+          )}
+        </div>
         <p className="text-sm text-muted-foreground">Licensed Real Estate Agent</p>
         
         <div className="flex items-center justify-center mt-2">
