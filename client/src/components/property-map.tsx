@@ -26,8 +26,6 @@ interface PropertyMapProps {
   onPropertySelect?: (property: PropertyWithAgent) => void;
   userId?: string;
   className?: string;
-  sharedPropertyId?: string | null;
-  sharedPropertyCoords?: {lat: number, lng: number} | null;
 }
 
 export default function PropertyMap({
@@ -38,8 +36,6 @@ export default function PropertyMap({
   onPropertySelect,
   userId,
   className,
-  sharedPropertyId,
-  sharedPropertyCoords,
 }: PropertyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -435,72 +431,6 @@ export default function PropertyMap({
     };
   }, []);
 
-  // Handle shared property centering
-  useEffect(() => {
-    if (sharedPropertyCoords && mapInstanceRef.current && (window as any).L) {
-      const L = (window as any).L;
-      const { lat, lng } = sharedPropertyCoords;
-      
-      // Center the map on the shared property with smooth animation
-      setTimeout(() => {
-        if (mapInstanceRef.current) {
-          mapInstanceRef.current.flyTo([lat, lng], 16, {
-            animate: true,
-            duration: 2,
-            easeLinearity: 0.1
-          });
-          
-          // Add a special highlight marker for the shared property
-          setTimeout(() => {
-            if (mapInstanceRef.current && L) {
-              const highlightMarker = L.divIcon({
-                html: `
-                  <div style="
-                    width: 60px;
-                    height: 60px;
-                    border-radius: 50%;
-                    background: radial-gradient(circle, rgba(255, 120, 0, 0.9) 0%, rgba(255, 120, 0, 0.5) 50%, transparent 70%);
-                    animation: sharedPropertyPulse 3s ease-in-out infinite;
-                    pointer-events: none;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                  ">
-                    <div style="
-                      width: 24px;
-                      height: 24px;
-                      background: #FF7800;
-                      border-radius: 50%;
-                      border: 3px solid white;
-                      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-                    "></div>
-                  </div>
-                  <style>
-                    @keyframes sharedPropertyPulse {
-                      0%, 100% { transform: scale(1); opacity: 0.9; }
-                      50% { transform: scale(1.2); opacity: 0.6; }
-                    }
-                  </style>
-                `,
-                className: 'shared-property-marker',
-                iconSize: [60, 60],
-                iconAnchor: [30, 30],
-              });
-              
-              const sharedMarker = L.marker([lat, lng], { icon: highlightMarker }).addTo(mapInstanceRef.current);
-              
-              // Remove the highlight marker after 5 seconds
-              setTimeout(() => {
-                if (sharedMarker && mapInstanceRef.current) {
-                  mapInstanceRef.current.removeLayer(sharedMarker);
-                }
-              }, 5000);
-            }
-          }, 1500);
-        }
-      }, 1000);
-    }
-  }, [sharedPropertyCoords]);
 
   // Function to create zoom-based clusters
   const createZoomBasedClusters = (
