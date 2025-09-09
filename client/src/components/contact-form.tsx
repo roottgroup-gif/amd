@@ -148,58 +148,6 @@ export default function ContactForm({ property, agent, className }: ContactFormP
             {t('contact.sendMessage')}
           </Button>
         </div>
-        
-        {/* Contact Form */}
-        <div className="pt-6 border-t border-border">
-          <h4 className="font-semibold text-foreground mb-4">Send a Message</h4>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              type="text"
-              placeholder={t('contact.name')}
-              value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              required
-              data-testid="contact-name-input"
-            />
-            
-            <Input
-              type="email"
-              placeholder={t('contact.email')}
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              required
-              data-testid="contact-email-input"
-            />
-            
-            <Input
-              type="tel"
-              placeholder="Phone Number (Optional)"
-              value={formData.phone}
-              onChange={(e) => handleInputChange('phone', e.target.value)}
-              data-testid="contact-phone-input"
-            />
-            
-            <Textarea
-              placeholder={t('contact.message')}
-              value={formData.message}
-              onChange={(e) => handleInputChange('message', e.target.value)}
-              rows={4}
-              required
-              data-testid="contact-message-input"
-            />
-            
-            <Button 
-              type="submit" 
-              className="w-full"
-              disabled={createInquiry.isPending}
-              data-testid="send-message-button"
-            >
-              <Send className="mr-2 h-4 w-4" />
-              {createInquiry.isPending ? t('common.loading') : t('contact.sendMessage')}
-            </Button>
-          </form>
-        </div>
       </CardContent>
     </Card>
   );
