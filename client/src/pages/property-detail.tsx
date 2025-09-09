@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTranslation } from "@/lib/i18n";
 import { useProperty, useAddToFavorites, useRemoveFromFavorites, useIsFavorite } from "@/hooks/use-properties";
 import { useToast } from "@/hooks/use-toast";
+import { SEOHead } from "@/components/SEOHead";
 import type { Property } from "@/types";
 import { 
   Heart, Bed, Bath, Square, Car, MapPin, ArrowLeft, 
@@ -36,11 +37,44 @@ export default function PropertyDetailPage() {
 
   const isFavorite = favoriteData?.isFavorite || false;
 
-  useEffect(() => {
-    if (property) {
-      document.title = `${property.title} - EstateAI`;
-    }
-  }, [property]);
+  // Generate property structured data
+  const getPropertyStructuredData = (property: Property) => {
+    const images = property.images && property.images.length > 0 ? property.images : [];
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      "name": property.title,
+      "description": property.description || `${property.title} in ${property.city}, ${property.country}`,
+      "url": `${window.location.origin}/property/${property.id}`,
+      "image": images,
+      "price": {
+        "@type": "MonetaryAmount",
+        "currency": property.currency || "USD",
+        "value": property.price
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": property.address,
+        "addressLocality": property.city,
+        "addressCountry": property.country
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": property.latitude,
+        "longitude": property.longitude
+      },
+      "numberOfRooms": property.bedrooms,
+      "numberOfBathroomsTotal": property.bathrooms,
+      "floorSize": {
+        "@type": "QuantitativeValue",
+        "value": property.area,
+        "unitText": "square feet"
+      },
+      "availableFrom": property.createdAt,
+      "listingType": property.listingType === 'rent' ? 'ForRent' : 'ForSale'
+    };
+  };
 
   // Load theme from localStorage on component mount
   useEffect(() => {
@@ -178,6 +212,16 @@ export default function PropertyDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      {property && (
+        <SEOHead
+          title={`${property.title} - ${formatPrice(property.price, property.currency || 'USD', property.listingType)} | EstateAI`}
+          description={`${property.description || `${property.bedrooms} bedroom ${property.type} for ${property.listingType} in ${property.city}, ${property.country}.`} View details, photos, and contact information.`}
+          keywords={`${property.type}, ${property.city}, ${property.country}, ${property.listingType}, real estate, property, ${property.bedrooms} bedroom, ${property.bathrooms} bathroom`}
+          ogImage={property.images && property.images.length > 0 ? property.images[0] : undefined}
+          canonicalUrl={`${window.location.origin}/property/${property.id}`}
+          structuredData={getPropertyStructuredData(property)}
+        />
+      )}
       <Navigation />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Disallow admin areas
+Disallow: /admin/
+Disallow: /customer/dashboard
+Disallow: /dashboard
+
+# Allow important pages
+Allow: /
+Allow: /properties
+Allow: /property/*
+Allow: /favorites
+Allow: /settings
+
+# Sitemap location
+Sitemap: https://your-domain.com/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1

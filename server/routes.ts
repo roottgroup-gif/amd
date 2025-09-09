@@ -8,6 +8,7 @@ import {
 import { hashPassword, requireAuth, requireRole, requireAnyRole, populateUser } from "./auth";
 import session from "express-session";
 import { z } from "zod";
+import sitemapRouter from "./routes/sitemap";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration
@@ -24,6 +25,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Add user to all requests
   app.use(populateUser);
+
+  // SEO routes
+  app.use(sitemapRouter);
 
   // Authentication routes
   app.post("/api/auth/login", async (req, res) => {
