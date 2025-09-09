@@ -658,13 +658,22 @@ export default function PropertyMap({
         onmouseover="this.style.transform='scale(1.1)'"
         onmouseout="this.style.transform='scale(1)'">
           ${cluster.clusterType === 'country' ? 
-            `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-bottom: 2px;">
-               <i class="fas fa-home" style="font-size: 8px; color: white;"></i>
-               <i class="fas fa-building" style="font-size: 8px; color: white;"></i>
-               <i class="fas fa-university" style="font-size: 8px; color: white;"></i>
-               <i class="fas fa-map-marked-alt" style="font-size: 8px; color: white;"></i>
-             </div>
-             <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>` :
+            (() => {
+              if (hasActiveFilter && hasFilteredType) {
+                // Show only the filtered type icon for country clusters
+                return `<i class="${iconToShow}" style="font-size: 12px; margin-bottom: 2px; color: white;"></i>
+                        <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>`;
+              } else {
+                // Show all icons when no filter is active
+                const uniqueTypes = Object.keys(typeAnalysis);
+                const iconsToShow = uniqueTypes.length <= 4 ? uniqueTypes : uniqueTypes.slice(0, 4);
+                const gridCols = iconsToShow.length === 1 ? '1fr' : iconsToShow.length === 2 ? '1fr 1fr' : '1fr 1fr';
+                return `<div style="display: grid; grid-template-columns: ${gridCols}; gap: 1px; margin-bottom: 2px;">
+                        ${iconsToShow.map(type => `<i class="${getPropertyTypeIcon(type)}" style="font-size: 8px; color: white;"></i>`).join('')}
+                        </div>
+                        <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>`;
+              }
+            })() :
             cluster.clusterType === 'city' ?
             `<i class="fas fa-city" style="font-size: ${iconSize}; margin-bottom: 2px; color: white;"></i>
              <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>` :
