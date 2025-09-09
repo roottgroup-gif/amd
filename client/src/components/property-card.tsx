@@ -6,7 +6,7 @@ import { useTranslation } from "@/lib/i18n";
 import { useAddToFavorites, useRemoveFromFavorites, useIsFavorite } from "@/hooks/use-properties";
 import { useState } from "react";
 import type { Property } from "@/types";
-import { Heart, Bed, Bath, Square, MapPin, User, ChevronLeft, ChevronRight, Loader2, Phone, MessageCircle } from "lucide-react";
+import { Heart, Bed, Bath, Square, MapPin, User, ChevronLeft, ChevronRight, Phone, MessageCircle } from "lucide-react";
 
 interface PropertyCardProps {
   property: Property;
@@ -22,7 +22,6 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
   const { data: favoriteData } = useIsFavorite(userId || "", property.id);
   
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isNavigating, setIsNavigating] = useState(false);
   const isFavorite = favoriteData?.isFavorite || false;
   
   // Get all images or use default if no images
@@ -68,16 +67,11 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
     return `${currency === 'USD' ? '$' : currency}${formattedAmount}${suffix}`;
   };
 
-  const handleViewProperty = async (e: React.MouseEvent) => {
+  const handleViewProperty = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setIsNavigating(true);
-    
-    // Add a small delay to show the loading state for professional feel
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    // Navigate to property detail page
+    // Navigate to property detail page immediately
     navigate(`/property/${property.id}`);
   };
 
@@ -214,18 +208,10 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
           
           <Button 
             onClick={handleViewProperty}
-            disabled={isNavigating}
             className="ml-auto"
             data-testid={`view-details-button-${property.id}`}
           >
-            {isNavigating ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
-              </>
-            ) : (
-              t('property.viewDetails')
-            )}
+            {t('property.viewDetails')}
           </Button>
         </div>
       </CardContent>
