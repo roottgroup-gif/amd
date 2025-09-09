@@ -86,10 +86,10 @@ export default function ContactForm({ property, agent, className }: ContactFormP
           <CardTitle className="text-lg" data-testid="agent-name">{agentName}</CardTitle>
           {agent?.isVerified && (
             <Badge 
-              className="bg-orange-100 text-orange-800 hover:bg-orange-200 border-orange-300 p-1"
+              className="bg-orange-100 text-orange-800 hover:bg-orange-200 border-orange-300 p-1 animate-pulse"
               data-testid="verified-badge"
             >
-              <CheckCircle className="h-3 w-3" />
+              <CheckCircle className="h-3 w-3 animate-pulse" />
             </Badge>
           )}
         </div>
