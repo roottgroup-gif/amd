@@ -89,12 +89,6 @@ export default function SettingsPage() {
         <div className="space-y-6">
           {/* Profile Settings */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <User className="h-4 w-4" />
-                Profile Information
-              </CardTitle>
-            </CardHeader>
           </Card>
 
           {/* Language & Region */}
