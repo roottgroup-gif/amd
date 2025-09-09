@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import Navigation from "@/components/navigation";
 import PropertyCard from "@/components/property-card";
 import { Button } from "@/components/ui/button";
@@ -10,73 +10,17 @@ import type { Property } from "@/types";
 
 export default function FavoritesPage() {
   const [userId] = useState("demo-user-id"); // In real app, get from auth context
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [showMap, setShowMap] = useState(false);
   const { data: favorites, isLoading, error } = useFavorites(userId);
+  const [, setLocation] = useLocation();
 
   const handleMapClick = (property: Property) => {
-    setSelectedProperty(property);
-    setShowMap(true);
+    // Navigate to home page with property ID to show on map
+    setLocation(`/?showProperty=${property.id}`);
   };
 
   useEffect(() => {
     document.title = "My Favorites - EstateAI";
   }, []);
-
-  useEffect(() => {
-    if (showMap && selectedProperty) {
-      // Initialize map
-      const script = document.createElement('script');
-      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-      script.onload = () => {
-        // Create map
-        const L = (window as any).L;
-        const mapContainer = document.getElementById('map-container');
-        if (mapContainer) {
-          // Clear any existing map
-          mapContainer.innerHTML = '';
-          
-          // Get coordinates - use default coordinates for demo
-          const lat = selectedProperty.latitude || 36.2048; // Default to Erbil
-          const lng = selectedProperty.longitude || 44.0088;
-          
-          const map = L.map('map-container').setView([lat, lng], 15);
-          
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-          }).addTo(map);
-          
-          // Add property marker
-          const marker = L.marker([lat, lng]).addTo(map);
-          marker.bindPopup(`
-            <div class="p-2">
-              <h4 class="font-semibold">${selectedProperty.title}</h4>
-              <p class="text-sm text-gray-600">${selectedProperty.address}</p>
-              <p class="text-sm font-medium text-orange-600">
-                ${selectedProperty.currency === 'USD' ? '$' : selectedProperty.currency}${parseFloat(selectedProperty.price).toLocaleString()}${selectedProperty.listingType === 'rent' ? '/mo' : ''}
-              </p>
-            </div>
-          `).openPopup();
-        }
-      };
-      
-      // Load CSS if not already loaded
-      if (!document.querySelector('link[href*="leaflet"]')) {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-        document.head.appendChild(link);
-      }
-      
-      document.head.appendChild(script);
-      
-      return () => {
-        // Cleanup
-        const scripts = document.querySelectorAll('script[src*="leaflet"]');
-        scripts.forEach(s => s.remove());
-      };
-    }
-  }, [showMap, selectedProperty]);
 
   if (isLoading) {
     return (
@@ -151,35 +95,6 @@ export default function FavoritesPage() {
                 />
               ))}
             </div>
-
-            {/* Map Modal */}
-            {showMap && selectedProperty && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowMap(false)}>
-                <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold">{selectedProperty.title}</h3>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => setShowMap(false)}
-                      className="text-gray-500 hover:text-gray-700"
-                    >
-                      ✕
-                    </Button>
-                  </div>
-                  <div className="h-96">
-                    <div 
-                      id="map-container" 
-                      className="w-full h-full rounded-lg"
-                      style={{ height: '100%' }}
-                    ></div>
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                    📍 {selectedProperty.address}, {selectedProperty.city}
-                  </p>
-                </div>
-              </div>
-            )}
           </>
         )}
       </div>

@@ -31,6 +31,7 @@ export default function HomePage() {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [cardPosition, setCardPosition] = useState<{x: number, y: number} | null>(null);
+  const [highlightedPropertyId, setHighlightedPropertyId] = useState<string | null>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
@@ -41,6 +42,32 @@ export default function HomePage() {
 
   // Load properties for the map with current filters
   const { data: mapProperties } = useProperties(mapFilters);
+
+  // Check for property to highlight from URL parameter
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const showPropertyId = urlParams.get('showProperty');
+    if (showPropertyId) {
+      setHighlightedPropertyId(showPropertyId);
+      // Clear the URL parameter to keep the URL clean
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('showProperty');
+      window.history.replaceState({}, '', newUrl.toString());
+    }
+  }, []);
+
+  // When we have properties and a highlighted property ID, trigger the map to focus on it
+  useEffect(() => {
+    if (highlightedPropertyId && mapProperties && mapProperties.length > 0) {
+      const propertyToHighlight = mapProperties.find(p => p.id === highlightedPropertyId);
+      if (propertyToHighlight) {
+        // Trigger the property selection to focus on it on the map
+        setSelectedProperty(propertyToHighlight);
+        // Clear the highlighted property ID after using it
+        setHighlightedPropertyId(null);
+      }
+    }
+  }, [highlightedPropertyId, mapProperties]);
 
   // Load theme from localStorage on component mount
   useEffect(() => {
@@ -147,7 +174,8 @@ export default function HomePage() {
             window.location.href = `/property/${property.id}`;
           }}
           onPropertySelect={(property) => {
-            // Just trigger zoom, use built-in marker popup
+            // Handle property selection for highlighting
+            setHighlightedPropertyId(property.id);
           }}
           userId={user?.id}
           className="h-full w-full"
