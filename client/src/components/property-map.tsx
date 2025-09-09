@@ -644,7 +644,7 @@ export default function PropertyMap({
           align-items: center;
           justify-content: center;
           flex-direction: ${isCityCluster ? 'column' : 'row'};
-          box-shadow: 0 6px 20px ${shadowColor}, 0 0 0 2px ${borderColor};
+          box-shadow: 0 10px 30px ${shadowColor}, 0 6px 15px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.2);
           border: 3px solid ${borderColor};
           cursor: pointer;
           font-weight: 700;
@@ -652,11 +652,13 @@ export default function PropertyMap({
           font-size: ${fontSize};
           position: relative;
           z-index: 1000;
-          transition: all 0.2s ease;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           text-align: center;
+          transform: translateZ(0) rotateX(8deg) rotateY(8deg);
+          transform-style: preserve-3d;
         "
-        onmouseover="this.style.transform='scale(1.1)'"
-        onmouseout="this.style.transform='scale(1)'">
+        onmouseover="this.style.transform='scale(1.2) translateZ(15px) rotateX(15deg) rotateY(15deg)'; this.style.boxShadow='0 20px 50px ${shadowColor}, 0 12px 25px rgba(0,0,0,0.3), inset 0 3px 0 rgba(255,255,255,0.3)';"
+        onmouseout="this.style.transform='translateZ(0) rotateX(8deg) rotateY(8deg)'; this.style.boxShadow='0 10px 30px ${shadowColor}, 0 6px 15px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.2)';">
           ${cluster.clusterType === 'country' ? 
             (() => {
               if (hasActiveFilter && hasFilteredType) {
@@ -971,15 +973,17 @@ export default function PropertyMap({
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 16px ${shadowColor}, 0 0 0 2px ${markerBorderColor};
+            box-shadow: 0 8px 25px ${shadowColor}, 0 4px 10px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2);
             border: 3px solid ${markerBorderColor};
             cursor: pointer;
             position: relative;
             z-index: 1000;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateZ(0) rotateX(5deg) rotateY(5deg);
+            transform-style: preserve-3d;
           "
-          onmouseover="this.style.transform='scale(1.1)'; this.style.zIndex='1001'"
-          onmouseout="this.style.transform='scale(1)'; this.style.zIndex='1000'">
+          onmouseover="this.style.transform='scale(1.15) translateZ(10px) rotateX(10deg) rotateY(10deg)'; this.style.zIndex='1001'; this.style.boxShadow='0 15px 35px ${shadowColor}, 0 8px 15px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.3)';"
+          onmouseout="this.style.transform='translateZ(0) rotateX(5deg) rotateY(5deg)'; this.style.zIndex='1000'; this.style.boxShadow='0 8px 25px ${shadowColor}, 0 4px 10px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.2)';">
             <i class="fas ${iconType}" style="color: white; font-size: 16px; pointer-events: none;"></i>
             ${isFeatured ? '<div class="premium-ring" style="position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; border: 2px solid #fbbf24; animation: pulse 2s infinite;"></div>' : ""}
             ${waveAnimation}
