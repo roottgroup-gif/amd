@@ -265,7 +265,7 @@ export default function PropertyDetailPage() {
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white dark:bg-black/80 dark:hover:bg-black dark:text-white"
                   onClick={prevImage}
                   data-testid="prev-image-button"
                 >
@@ -274,7 +274,7 @@ export default function PropertyDetailPage() {
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white dark:bg-black/80 dark:hover:bg-black dark:text-white"
                   onClick={nextImage}
                   data-testid="next-image-button"
                 >
@@ -296,8 +296,8 @@ export default function PropertyDetailPage() {
                 onClick={handleFavoriteClick}
                 className={`transition-all duration-200 ${
                   isFavorite 
-                    ? 'bg-red-50 hover:bg-red-100 text-red-500 border-red-200' 
-                    : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700'
+                    ? 'bg-red-50 hover:bg-red-100 text-red-500 border-red-200 dark:bg-red-900/20 dark:hover:bg-red-900/30 dark:text-red-400 dark:border-red-800' 
+                    : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white'
                 }`}
                 data-testid="favorite-button"
               >
@@ -309,7 +309,7 @@ export default function PropertyDetailPage() {
                 variant="secondary"
                 size="icon"
                 onClick={handleShare}
-                className="bg-white/80 hover:bg-white"
+                className="bg-white/80 hover:bg-white dark:bg-black/80 dark:hover:bg-black dark:text-white"
                 data-testid="share-button"
               >
                 <Share2 className="h-4 w-4" />
