@@ -3,7 +3,8 @@ import {
   Dialog, 
   DialogContent, 
   DialogHeader, 
-  DialogTitle 
+  DialogTitle,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,6 +80,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <User className="h-5 w-5" />
             Settings & Preferences
           </DialogTitle>
+          <DialogDescription>
+            Customize your profile, language, notifications, and display preferences.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">

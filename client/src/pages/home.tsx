@@ -185,7 +185,12 @@ export default function HomePage() {
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => setShowSettings(true)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Settings clicked');
+                      setShowSettings(true);
+                    }}
                     data-testid="settings-menu"
                   >
                     <Settings className="h-4 w-4" />
