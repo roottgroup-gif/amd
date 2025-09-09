@@ -612,9 +612,20 @@ export default function PropertyMap({
     // Analyze property types in this cluster
     const typeAnalysis = analyzeClusterTypes(cluster.properties);
     const hasActiveFilter = localFilters.type && localFilters.type !== 'all';
-    const dominantType = Object.keys(typeAnalysis).reduce((a, b) => 
-      typeAnalysis[a] > typeAnalysis[b] ? a : b
-    );
+    
+    // If there's an active filter, check if this cluster contains that type
+    const hasFilteredType = hasActiveFilter && typeAnalysis[localFilters.type!] > 0;
+    
+    // Determine which icon to show based on filter and cluster content
+    let iconToShow = 'fas fa-home'; // default
+    if (hasActiveFilter && hasFilteredType) {
+      // Show the filtered type icon if this cluster contains that type
+      iconToShow = getPropertyTypeIcon(localFilters.type!);
+    } else if (Object.keys(typeAnalysis).length === 1) {
+      // If all properties in cluster are same type, show that type's icon
+      const singleType = Object.keys(typeAnalysis)[0];
+      iconToShow = getPropertyTypeIcon(singleType);
+    }
 
     // Determine cluster size and styling based on count and type
     const isLargeCluster = count > 10;
@@ -657,11 +668,7 @@ export default function PropertyMap({
             cluster.clusterType === 'city' ?
             `<i class="fas fa-city" style="font-size: ${iconSize}; margin-bottom: 2px; color: white;"></i>
              <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>` :
-            hasActiveFilter && localFilters.type ?
-            `<i class="${getPropertyTypeIcon(localFilters.type)}" style="margin-right: 4px; font-size: ${iconSize}; color: white;"></i><span style="color: white;">${count}</span>` :
-            Object.keys(typeAnalysis).length === 1 ?
-            `<i class="${getPropertyTypeIcon(dominantType)}" style="margin-right: 4px; font-size: ${iconSize}; color: white;"></i><span style="color: white;">${count}</span>` :
-            `<i class="fas fa-home" style="margin-right: 4px; font-size: ${iconSize}; color: white;"></i><span style="color: white;">${count}</span>`
+`<i class="${iconToShow}" style="margin-right: 4px; font-size: ${iconSize}; color: white;"></i><span style="color: white;">${count}</span>`
           }
         </div>
       `,
