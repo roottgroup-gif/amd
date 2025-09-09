@@ -173,8 +173,23 @@ export default function PropertyMap({
 
     // Define global function for viewing property details from map popup
     (window as any).viewPropertyFromMap = (propertyId: string) => {
-      // Navigate to property detail page
-      window.location.href = `/property/${propertyId}`;
+      try {
+        // Navigate to property detail page using multiple approaches
+        console.log('Navigating to property:', propertyId);
+        
+        // First try: Direct window navigation
+        if (window.location) {
+          window.location.href = `/property/${propertyId}`;
+          return;
+        }
+        
+        // Fallback: Open in new window if direct navigation fails
+        window.open(`/property/${propertyId}`, '_self');
+      } catch (error) {
+        console.error('Navigation failed:', error);
+        // Last resort: Open in new tab
+        window.open(`/property/${propertyId}`, '_blank');
+      }
     };
 
     // Define global function for zooming to property from cluster popup with smooth motion
@@ -1199,7 +1214,7 @@ export default function PropertyMap({
                     onclick="window.viewPropertyFromMap('${property.id}')"
                     onmouseover="this.style.background='#e56600'"
                     onmouseout="this.style.background='#FF7800'"
-                    style="flex: 1; min-width: 100px;">
+                    style="flex: 1; min-width: 100px; background: #FF7800; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: background-color 0.2s ease; z-index: 9999; position: relative;">
               View Property
             </button>
             ${
