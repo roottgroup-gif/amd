@@ -1269,6 +1269,17 @@ class MemStorage implements IStorage {
     console.log(`Updated wave balance for ${updatedCount} users`);
     return updatedCount;
   }
+
+  // Method to clear all properties
+  async clearAllProperties(): Promise<number> {
+    const count = this.properties.length;
+    this.properties = [];
+    this.favorites = []; // Also clear favorites since they reference properties
+    this.inquiries = []; // Also clear inquiries since they reference properties
+    this.searchHistories = []; // Also clear search histories
+    console.log(`Cleared ${count} properties and related data`);
+    return count;
+  }
 }
 
 // Use database storage for wave management
@@ -1939,19 +1950,20 @@ async function initializeWaves() {
 // Initialize properties for in-memory storage
 if (storage instanceof MemStorage) {
   // Add sample properties to in-memory storage
+  // Clear all existing properties and do not load sample data
   setTimeout(async () => {
     try {
-      await addExampleProperties();
-      console.log("✅ Loaded sample properties in memory");
+      await storage.clearAllProperties();
+      console.log("✅ Cleared all property data - starting with empty database");
     } catch (error) {
-      console.error("Failed to load sample properties:", error);
+      console.error("Failed to clear properties:", error);
     }
   }, 1000);
 } else {
-  // Initialize database and example properties
+  // Initialize database without loading sample properties
   initializeDatabase().then(() => {
     return initializeWaves();
   }).then(() => {
-    addExampleProperties().catch(console.error);
+    console.log("✅ Database initialized - starting with empty property data");
   }).catch(console.error);
 }
