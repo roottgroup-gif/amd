@@ -886,6 +886,9 @@ export default function PropertyMap({
       </div>
     `;
 
+    // Add cluster marker to map
+    marker.addTo(mapInstanceRef.current);
+    
     marker.bindPopup(popupContent, {
       maxWidth: 350,
       className: "custom-cluster-popup",
@@ -1294,6 +1297,9 @@ export default function PropertyMap({
       </div>
     `;
 
+    // Add marker to map
+    marker.addTo(mapInstanceRef.current);
+    
     marker.bindPopup(popupContent, {
       maxWidth: 350,
       minWidth: 240,
