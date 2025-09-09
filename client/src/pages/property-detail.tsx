@@ -13,7 +13,7 @@ import { SEOHead } from "@/components/SEOHead";
 import type { Property } from "@/types";
 import { 
   Heart, Bed, Bath, Square, Car, MapPin, ArrowLeft, 
-  ChevronLeft, ChevronRight, Check, Calendar,
+  Share2, ChevronLeft, ChevronRight, Check, Calendar,
   Eye, Phone, MessageSquare, Mail, Sun, Moon
 } from "lucide-react";
 
@@ -126,6 +126,34 @@ export default function PropertyDetailPage() {
     }
   };
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: property?.title,
+          text: `Check out this property: ${property?.title}`,
+          url: window.location.href,
+        });
+      } catch (error) {
+        // User canceled the share or share failed - silently handle this
+        // Only show error for actual failures, not cancellations
+        if (error instanceof Error && !error.message.includes('canceled') && !error.message.includes('cancelled')) {
+          // Fallback to clipboard
+          navigator.clipboard.writeText(window.location.href);
+          toast({
+            title: "Link copied",
+            description: "Property link has been copied to clipboard.",
+          });
+        }
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link copied",
+        description: "Property link has been copied to clipboard.",
+      });
+    }
+  };
 
   const nextImage = () => {
     if (property?.images && property.images.length > 0) {
@@ -276,6 +304,15 @@ export default function PropertyDetailPage() {
                 <Heart className={`h-4 w-4 transition-all duration-200 ${
                   isFavorite ? 'fill-current scale-110' : 'hover:scale-105'
                 }`} />
+              </Button>
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={handleShare}
+                className="bg-white/80 hover:bg-white dark:bg-black/80 dark:hover:bg-black dark:text-white"
+                data-testid="share-button"
+              >
+                <Share2 className="h-4 w-4" />
               </Button>
             </div>
           </div>
