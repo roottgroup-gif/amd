@@ -435,8 +435,8 @@ export default function PropertyMap({
       html: `
         <div class="cluster-marker" style="
           background: ${bgGradient};
-          width: 44px;
-          height: 44px;
+          width: 32px;
+          height: 32px;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -446,19 +446,19 @@ export default function PropertyMap({
           cursor: pointer;
           font-weight: 700;
           color: white;
-          font-size: 14px;
+          font-size: 11px;
           position: relative;
           z-index: 1000;
           transition: all 0.2s ease;
         "
         onmouseover="this.style.transform='scale(1.1)'"
         onmouseout="this.style.transform='scale(1)'">
-          <i class="fas fa-home" style="margin-right: 4px; font-size: 12px;"></i>${count}
+          <i class="fas fa-home" style="margin-right: 2px; font-size: 8px;"></i>${count}
         </div>
       `,
       className: "custom-cluster-marker",
-      iconSize: [44, 44],
-      iconAnchor: [22, 22],
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
     });
 
     const marker = L.marker([lat, lng], { icon: clusterIcon }).addTo(
@@ -914,7 +914,7 @@ export default function PropertyMap({
     updateMarkersForProperties(properties);
   }, [properties]);
 
-  // Update markers function that accepts properties array - always show all markers
+  // Update markers function that accepts properties array - with zoom-based clustering
   const updateMarkersForProperties = (
     propertiesToShow: PropertyWithAgent[],
   ) => {
@@ -943,13 +943,30 @@ export default function PropertyMap({
     }
 
     const L = (window as any).L;
-
-    // Always show individual markers for all properties
-    propertiesToShow.forEach((property) => {
-      if (property.latitude && property.longitude) {
-        createSingleMarker(property, L);
-      }
-    });
+    const currentZoom = mapInstanceRef.current.getZoom();
+    
+    // Use clustering when zoomed out (zoom level < 14), individual markers when zoomed in
+    if (currentZoom < 14) {
+      // Create clusters for zoomed out view
+      const clusters = createClustersForProperties(propertiesToShow);
+      
+      clusters.forEach((cluster) => {
+        if (cluster.properties.length === 1) {
+          // Single property - show individual marker
+          createSingleMarker(cluster.properties[0], L);
+        } else {
+          // Multiple properties - show cluster marker
+          createClusterMarker(cluster, L);
+        }
+      });
+    } else {
+      // Show individual markers for all properties when zoomed in
+      propertiesToShow.forEach((property) => {
+        if (property.latitude && property.longitude) {
+          createSingleMarker(property, L);
+        }
+      });
+    }
   };
 
   const handleFilterChange = (key: string, value: string) => {
