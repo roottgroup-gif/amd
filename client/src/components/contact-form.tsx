@@ -97,15 +97,6 @@ export default function ContactForm({ property, agent, className }: ContactFormP
       <CardContent className="space-y-4">
         {/* Quick Contact Buttons */}
         <div className="space-y-3">
-          {/* Show contact phone if available */}
-          {((property as any).contactPhone || agent?.phone) && (
-            <div className="text-center mb-3">
-              <p className="text-sm text-muted-foreground mb-1">Contact Number</p>
-              <p className="font-semibold text-lg">
-                {(property as any).contactPhone || agent?.phone}
-              </p>
-            </div>
-          )}
           
           <Button 
             className="w-full"
