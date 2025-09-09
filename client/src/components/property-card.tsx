@@ -215,24 +215,6 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
                 <Phone className="h-3 w-3 mr-1" />
                 Call
               </Button>
-              <Button 
-                size="sm" 
-                variant="outline"
-                className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100 dark:bg-green-900/20 dark:border-green-800 dark:text-green-400"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  const phone = (property as any).contactPhone || property.agent?.phone;
-                  // Format phone number for WhatsApp (remove any non-digits except +)
-                  const whatsappPhone = phone.replace(/[^\d+]/g, '');
-                  const message = encodeURIComponent(`Hi! I'm interested in the property: ${property.title}. Could you please provide more information?`);
-                  window.open(`https://wa.me/${whatsappPhone}?text=${message}`, '_blank');
-                }}
-                data-testid={`whatsapp-button-${property.id}`}
-              >
-                <MessageCircle className="h-3 w-3 mr-1" />
-                WhatsApp
-              </Button>
             </div>
           </div>
         )}
