@@ -9,7 +9,7 @@ import { useTranslation } from "@/lib/i18n";
 import { useCreateInquiry } from "@/hooks/use-properties";
 import { useToast } from "@/hooks/use-toast";
 import type { Property, User } from "@/types";
-import { Phone, MessageSquare, Mail, Star, Send, Shield } from "lucide-react";
+import { Phone, MessageSquare, Mail, Star, Send, CheckCircle } from "lucide-react";
 
 interface ContactFormProps {
   property: Property;
@@ -89,7 +89,7 @@ export default function ContactForm({ property, agent, className }: ContactFormP
               className="bg-orange-100 text-orange-800 hover:bg-orange-200 border-orange-300 text-xs font-medium"
               data-testid="verified-badge"
             >
-              <Shield className="h-3 w-3 mr-1" />
+              <CheckCircle className="h-3 w-3 mr-1" />
               Verified
             </Badge>
           )}
