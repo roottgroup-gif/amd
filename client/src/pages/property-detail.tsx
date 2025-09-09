@@ -247,20 +247,6 @@ export default function PropertyDetailPage() {
             </Button>
           </Link>
           
-          {/* Theme Toggle Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleTheme}
-            className="text-black hover:text-black dark:text-gray-300 dark:hover:text-white"
-            data-testid="theme-toggle-button"
-          >
-            {theme === 'light' ? (
-              <Moon className="h-5 w-5" />
-            ) : (
-              <Sun className="h-5 w-5" />
-            )}
-          </Button>
         </div>
 
         {/* Image Gallery */}
