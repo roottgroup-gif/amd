@@ -578,16 +578,17 @@ export default function PropertyMap({
         overflow: hidden;
       ">
         <div style="
-          background: linear-gradient(135deg, #fb923c 0%, #f97316 100%); 
+          background: linear-gradient(135deg, #FF7800 0%, #e56600 100%); 
           color: white; 
           padding: clamp(12px, 4vw, 16px); 
-          margin: -8px -8px 0 -8px; 
+          margin: 0; 
           border-radius: 12px 12px 0 0; 
           font-weight: 600; 
           text-align: center; 
           font-size: clamp(13px, 3vw, 15px);
           letter-spacing: 0.3px;
           word-wrap: break-word;
+          border-bottom: 1px solid rgba(255, 120, 0, 0.2);
         ">
           ${popupTitle}
         </div>
