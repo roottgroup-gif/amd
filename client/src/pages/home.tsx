@@ -173,10 +173,6 @@ export default function HomePage() {
                   align="start" 
                   className="w-48 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 z-[10001]"
                 >
-                  <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
-                    <User className="h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="flex items-center gap-2 cursor-pointer"
                     onClick={() => setLocation('/favorites')}
