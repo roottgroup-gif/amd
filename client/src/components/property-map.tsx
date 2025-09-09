@@ -500,7 +500,12 @@ export default function PropertyMap({
         onmouseover="this.style.transform='scale(1.1)'"
         onmouseout="this.style.transform='scale(1)'">
           ${cluster.clusterType === 'country' ? 
-            `<i class="fas fa-globe" style="font-size: ${iconSize}; margin-bottom: 2px;"></i>
+            `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-bottom: 2px;">
+               <i class="fas fa-home" style="font-size: 8px;"></i>
+               <i class="fas fa-building" style="font-size: 8px;"></i>
+               <i class="fas fa-university" style="font-size: 8px;"></i>
+               <i class="fas fa-map-marked-alt" style="font-size: 8px;"></i>
+             </div>
              <div style="font-size: 10px; line-height: 1;">${count}</div>` :
             cluster.clusterType === 'city' ?
             `<i class="fas fa-city" style="font-size: ${iconSize}; margin-bottom: 2px;"></i>
