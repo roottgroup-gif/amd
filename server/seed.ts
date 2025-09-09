@@ -270,6 +270,81 @@ async function seedData() {
         features: ["Modern Architecture", "Open Concept", "Designer Finishes"],
         agentId: agent.id,
         isFeatured: true
+      },
+      {
+        title: "Waterfront Apartment with Marina Views",
+        description: "Spectacular waterfront apartment with stunning marina views, luxury finishes, and resort-style amenities.",
+        type: "apartment",
+        listingType: "rent" as const,
+        price: "1200",
+        currency: "USD",
+        bedrooms: 2,
+        bathrooms: 2,
+        area: 1400,
+        address: "Marina District, Basra",
+        city: "Basra",
+        country: "Iraq",
+        latitude: "30.5234",
+        longitude: "47.8077",
+        images: [
+          "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+          "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+          "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+        ],
+        amenities: ["Marina Views", "Swimming Pool", "Fitness Center", "Concierge"],
+        features: ["Floor-to-Ceiling Windows", "Premium Appliances", "Waterfront Balcony"],
+        agentId: agent.id,
+        isFeatured: true
+      },
+      {
+        title: "Mountain View Villa in Zakho",
+        description: "Breathtaking mountain view villa with panoramic vistas, spacious terraces, and premium mountain location.",
+        type: "villa",
+        listingType: "sale" as const,
+        price: "520000",
+        currency: "USD",
+        bedrooms: 6,
+        bathrooms: 5,
+        area: 4200,
+        address: "Mountain Heights, Zakho",
+        city: "Zakho",
+        country: "Iraq",
+        latitude: "37.1436",
+        longitude: "42.6822",
+        images: [
+          "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+          "https://images.unsplash.com/photo-1600585154526-990dced4db0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+          "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+        ],
+        amenities: ["Mountain Views", "Private Driveway", "Landscaped Gardens", "Security System"],
+        features: ["Panoramic Terraces", "Luxury Finishes", "Multiple Living Areas"],
+        agentId: agent.id,
+        isFeatured: true
+      },
+      {
+        title: "Historic Townhouse in Najaf",
+        description: "Beautifully renovated historic townhouse blending traditional architecture with modern comfort and convenience.",
+        type: "house",
+        listingType: "sale" as const,
+        price: "165000",
+        currency: "USD",
+        bedrooms: 3,
+        bathrooms: 3,
+        area: 1900,
+        address: "Heritage Quarter, Najaf",
+        city: "Najaf",
+        country: "Iraq",
+        latitude: "32.0000",
+        longitude: "44.3333",
+        images: [
+          "https://images.unsplash.com/photo-1588880331179-bc9b93a8cb5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+          "https://images.unsplash.com/photo-1576941089067-2de3c901e126?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+          "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+        ],
+        amenities: ["Historic Character", "Renovated Kitchen", "Private Courtyard", "Guest Parking"],
+        features: ["Original Architectural Details", "Modern Updates", "Cultural Heritage"],
+        agentId: agent.id,
+        isFeatured: false
       }
     ];
 
