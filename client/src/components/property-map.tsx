@@ -171,26 +171,106 @@ export default function PropertyMap({
       }
     };
 
-    // Define global function for zooming to property from cluster popup
+    // Define global function for zooming to property from cluster popup with smooth motion
     (window as any).zoomToPropertyFromCluster = (propertyId: string, lat: string, lng: string) => {
       if (mapInstanceRef.current && lat && lng) {
         const latitude = parseFloat(lat);
         const longitude = parseFloat(lng);
+        const L = (window as any).L;
         
-        // Close any open popups first
+        // Add visual feedback - highlight the clicked item temporarily
+        const clickedItem = document.querySelector(`[onclick*="${propertyId}"]`) as HTMLElement;
+        if (clickedItem) {
+          clickedItem.style.background = 'linear-gradient(135deg, #FF7800 0%, #e56600 100%)';
+          clickedItem.style.color = 'white';
+          clickedItem.style.transform = 'scale(1.02)';
+          clickedItem.style.transition = 'all 0.3s ease';
+          
+          // Reset after animation
+          setTimeout(() => {
+            if (clickedItem) {
+              clickedItem.style.background = 'transparent';
+              clickedItem.style.color = '';
+              clickedItem.style.transform = 'scale(1)';
+            }
+          }, 1500);
+        }
+        
+        // Close any open popups first with animation
         mapInstanceRef.current.closePopup();
         
-        // Zoom to the property location with a high zoom level
-        mapInstanceRef.current.setView([latitude, longitude], 16, {
-          animate: true,
-          duration: 1.0
-        });
+        // First, zoom out slightly to show movement, then zoom to target
+        const currentZoom = mapInstanceRef.current.getZoom();
+        const targetZoom = Math.max(16, currentZoom + 2);
+        
+        // Create smooth multi-stage animation
+        setTimeout(() => {
+          if (mapInstanceRef.current) {
+            // Stage 1: Smooth pan and zoom with easing
+            mapInstanceRef.current.flyTo([latitude, longitude], targetZoom, {
+              animate: true,
+              duration: 1.5,
+              easeLinearity: 0.1
+            });
+            
+            // Stage 2: Add a temporary pulse marker to show the target
+            setTimeout(() => {
+              if (mapInstanceRef.current && L) {
+                const pulseMarker = L.divIcon({
+                  html: `
+                    <div style="
+                      width: 60px;
+                      height: 60px;
+                      border-radius: 50%;
+                      background: radial-gradient(circle, rgba(255, 120, 0, 0.8) 0%, rgba(255, 120, 0, 0.4) 50%, transparent 70%);
+                      animation: pulseAnimation 2s ease-out;
+                      pointer-events: none;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                    ">
+                      <div style="
+                        width: 20px;
+                        height: 20px;
+                        background: #FF7800;
+                        border-radius: 50%;
+                        border: 3px solid white;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                      "></div>
+                    </div>
+                    <style>
+                      @keyframes pulseAnimation {
+                        0% { transform: scale(0.5); opacity: 0; }
+                        50% { transform: scale(1.2); opacity: 1; }
+                        100% { transform: scale(1); opacity: 0.8; }
+                      }
+                    </style>
+                  `,
+                  className: 'pulse-marker',
+                  iconSize: [60, 60],
+                  iconAnchor: [30, 30],
+                });
+                
+                const tempMarker = L.marker([latitude, longitude], { icon: pulseMarker }).addTo(mapInstanceRef.current);
+                
+                // Remove the pulse marker after animation
+                setTimeout(() => {
+                  if (tempMarker && mapInstanceRef.current) {
+                    mapInstanceRef.current.removeLayer(tempMarker);
+                  }
+                }, 2000);
+              }
+            }, 800);
+          }
+        }, 200);
         
         // Optional: trigger property selection callback if available
         if (onPropertySelect) {
           const property = properties.find(p => p.id === propertyId);
           if (property) {
-            onPropertySelect(property);
+            setTimeout(() => {
+              onPropertySelect(property);
+            }, 1000);
           }
         }
       }
