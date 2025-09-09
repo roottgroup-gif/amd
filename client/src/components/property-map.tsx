@@ -572,6 +572,32 @@ export default function PropertyMap({
     return clusters;
   };
 
+  // Helper function to get property type icon
+  const getPropertyTypeIcon = (type: string) => {
+    switch (type) {
+      case 'house':
+        return 'fas fa-home';
+      case 'apartment':
+        return 'fas fa-building';
+      case 'villa':
+        return 'fas fa-university';
+      case 'land':
+        return 'fas fa-mountain';
+      default:
+        return 'fas fa-home';
+    }
+  };
+
+  // Helper function to analyze cluster property types
+  const analyzeClusterTypes = (properties: PropertyWithAgent[]) => {
+    const typeCount: { [key: string]: number } = {};
+    properties.forEach(prop => {
+      const type = prop.type || 'house';
+      typeCount[type] = (typeCount[type] || 0) + 1;
+    });
+    return typeCount;
+  };
+
   // Function to create cluster marker
   const createClusterMarker = (cluster: any, L: any, isCityCluster: boolean = false) => {
     const count = cluster.properties.length;
@@ -582,6 +608,13 @@ export default function PropertyMap({
     const bgGradient = "linear-gradient(135deg, #f97316 0%, #ea580c 100%)"; // Consistent orange gradient
     const shadowColor = "rgba(249, 115, 22, 0.4)"; // Consistent orange shadow
     const borderColor = "#ffffff";
+
+    // Analyze property types in this cluster
+    const typeAnalysis = analyzeClusterTypes(cluster.properties);
+    const hasActiveFilter = localFilters.type && localFilters.type !== 'all';
+    const dominantType = Object.keys(typeAnalysis).reduce((a, b) => 
+      typeAnalysis[a] > typeAnalysis[b] ? a : b
+    );
 
     // Determine cluster size and styling based on count and type
     const isLargeCluster = count > 10;
@@ -624,6 +657,10 @@ export default function PropertyMap({
             cluster.clusterType === 'city' ?
             `<i class="fas fa-city" style="font-size: ${iconSize}; margin-bottom: 2px; color: white;"></i>
              <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>` :
+            hasActiveFilter && localFilters.type ?
+            `<i class="${getPropertyTypeIcon(localFilters.type)}" style="margin-right: 4px; font-size: ${iconSize}; color: white;"></i><span style="color: white;">${count}</span>` :
+            Object.keys(typeAnalysis).length === 1 ?
+            `<i class="${getPropertyTypeIcon(dominantType)}" style="margin-right: 4px; font-size: ${iconSize}; color: white;"></i><span style="color: white;">${count}</span>` :
             `<i class="fas fa-home" style="margin-right: 4px; font-size: ${iconSize}; color: white;"></i><span style="color: white;">${count}</span>`
           }
         </div>
