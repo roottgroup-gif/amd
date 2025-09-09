@@ -86,9 +86,6 @@ export default function SettingsPage() {
                 <User className="h-8 w-8 text-orange-500" />
                 Settings & Preferences
               </h1>
-              <p className="text-muted-foreground mt-1">
-                Customize your profile, language, notifications, and display preferences
-              </p>
             </div>
           </div>
         </div>
