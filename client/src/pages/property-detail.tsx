@@ -348,74 +348,83 @@ export default function PropertyDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Property Header */}
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
-              <div className="flex-1">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Badge className={property.listingType === 'sale' 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-emerald-600 text-white'
-                  }>
-                    {property.listingType === 'sale' ? t('filter.forSale') : t('filter.forRent')}
-                  </Badge>
-                  {property.isFeatured && (
-                    <Badge variant="secondary">Featured</Badge>
-                  )}
-                </div>
-                <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2" data-testid="property-title">
-                  {property.title}
-                </h1>
-                <div className="flex items-center text-muted-foreground mb-4">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  <p data-testid="property-address">
-                    {property.address}, {property.city}, {property.country}
-                  </p>
-                </div>
-              </div>
-              <div className="text-left md:text-right">
-                <div className="text-3xl font-bold text-primary mb-1" data-testid="property-price">
-                  {formatPrice(property.price, property.currency, property.listingType)}
-                </div>
-                {property.area && (
-                  <div className="text-sm text-muted-foreground">
-                    ${Math.round(parseFloat(property.price) / property.area)}/sq ft
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-8 mb-8">
+              <div className="flex flex-col md:flex-row md:items-start md:justify-between">
+                <div className="flex-1 mb-6 md:mb-0">
+                  <div className="flex items-center flex-wrap gap-3 mb-4">
+                    <Badge className={`px-4 py-2 text-sm font-semibold rounded-full ${
+                      property.listingType === 'sale' 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                    }`}>
+                      {property.listingType === 'sale' ? t('filter.forSale') : t('filter.forRent')}
+                    </Badge>
+                    {property.isFeatured && (
+                      <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 text-sm font-semibold rounded-full">✨ Featured</Badge>
+                    )}
                   </div>
-                )}
+                  <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 leading-tight" data-testid="property-title">
+                    {property.title}
+                  </h1>
+                  <div className="flex items-center text-gray-600 dark:text-gray-400 text-lg">
+                    <MapPin className="h-5 w-5 mr-2 text-red-500" />
+                    <p data-testid="property-address" className="font-medium">
+                      {property.address}, {property.city}, {property.country}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-left md:text-right">
+                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4 rounded-xl mb-3">
+                    <div className="text-4xl font-bold" data-testid="property-price">
+                      {formatPrice(property.price, property.currency, property.listingType)}
+                    </div>
+                    {property.area && (
+                      <div className="text-blue-100 text-sm font-medium mt-1">
+                        ${Math.round(parseFloat(property.price) / property.area)}/sq ft
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Property Features */}
-            <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 mb-8">
-              <CardContent className="p-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {property.bedrooms && (
-                    <div className="text-center" data-testid="bedrooms-info">
-                      <Bed className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <div className="font-semibold text-lg">{property.bedrooms}</div>
-                      <div className="text-sm text-muted-foreground">Bedrooms</div>
-                    </div>
-                  )}
-                  {property.bathrooms && (
-                    <div className="text-center" data-testid="bathrooms-info">
-                      <Bath className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <div className="font-semibold text-lg">{property.bathrooms}</div>
-                      <div className="text-sm text-muted-foreground">Bathrooms</div>
-                    </div>
-                  )}
-                  {property.area && (
-                    <div className="text-center" data-testid="area-info">
-                      <Square className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <div className="font-semibold text-lg">{property.area.toLocaleString()}</div>
-                      <div className="text-sm text-muted-foreground">Sq Ft</div>
-                    </div>
-                  )}
-                  <div className="text-center">
-                    <Car className="h-8 w-8 text-primary mx-auto mb-2" />
-                    <div className="font-semibold text-lg">2</div>
-                    <div className="text-sm text-muted-foreground">Parking</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              {property.bedrooms && (
+                <div className="bg-white dark:bg-gray-900 rounded-xl p-6 text-center shadow-md border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow" data-testid="bedrooms-info">
+                  <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                    <Bed className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                   </div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{property.bedrooms}</div>
+                  <div className="text-gray-500 dark:text-gray-400 font-medium">Bedrooms</div>
                 </div>
-              </CardContent>
-            </Card>
+              )}
+              {property.bathrooms && (
+                <div className="bg-white dark:bg-gray-900 rounded-xl p-6 text-center shadow-md border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow" data-testid="bathrooms-info">
+                  <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                    <Bath className="h-8 w-8 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{property.bathrooms}</div>
+                  <div className="text-gray-500 dark:text-gray-400 font-medium">Bathrooms</div>
+                </div>
+              )}
+              {property.area && (
+                <div className="bg-white dark:bg-gray-900 rounded-xl p-6 text-center shadow-md border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow" data-testid="area-info">
+                  <div className="bg-purple-100 dark:bg-purple-900 p-3 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                    <Square className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{property.area.toLocaleString()}</div>
+                  <div className="text-gray-500 dark:text-gray-400 font-medium">Sq Ft</div>
+                </div>
+              )}
+              <div className="bg-white dark:bg-gray-900 rounded-xl p-6 text-center shadow-md border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-shadow">
+                <div className="bg-orange-100 dark:bg-orange-900 p-3 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <Car className="h-8 w-8 text-orange-600 dark:text-orange-400" />
+                </div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white mb-1">2</div>
+                <div className="text-gray-500 dark:text-gray-400 font-medium">Parking</div>
+              </div>
+            </div>
 
             {/* Description */}
             {property.description && (
