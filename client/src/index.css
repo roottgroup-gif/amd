@@ -168,7 +168,7 @@
   height: 28px !important;
   font-size: 14px !important;
   color: white !important;
-  background: rgba(0, 0, 0, 0.6) !important;
+  background: transparent !important;
   border-radius: 50% !important;
   text-align: center !important;
   line-height: 28px !important;
@@ -180,9 +180,9 @@
 
 .custom-popup .leaflet-popup-close-button:hover {
   color: white !important;
-  background: rgba(0, 0, 0, 0.8) !important;
+  background: transparent !important;
   transform: scale(1.05) !important;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: none !important;
 }
 
 /* Popup Animation Keyframes */
