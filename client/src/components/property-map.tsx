@@ -538,22 +538,118 @@ export default function PropertyMap({
     }
       
     const popupContent = `
-      <div class="cluster-popup" style="width: 320px; max-width: 95vw; background: ${popupBg}; color: ${textColor};">
-        <div style="background: linear-gradient(135deg, #bdd479 0%, #a3c766 100%); color: white; padding: 12px 16px; margin: -8px -8px 12px -8px; border-radius: 12px 12px 0 0; font-weight: 600; text-align: center;">
+      <div class="cluster-popup" style="
+        width: 100%; 
+        max-width: min(400px, 95vw); 
+        min-width: 280px; 
+        background: ${popupBg}; 
+        color: ${textColor}; 
+        border-radius: 12px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      ">
+        <div style="
+          background: linear-gradient(135deg, #bdd479 0%, #a3c766 100%); 
+          color: white; 
+          padding: 16px; 
+          margin: -8px -8px 0 -8px; 
+          border-radius: 12px 12px 0 0; 
+          font-weight: 600; 
+          text-align: center; 
+          font-size: 15px;
+          letter-spacing: 0.3px;
+        ">
           ${popupTitle}
         </div>
-        <div style="max-height: 300px; overflow-y: auto;">
+        <div style="
+          max-height: 350px; 
+          overflow-y: auto; 
+          padding: 8px; 
+          scrollbar-width: thin;
+          scrollbar-color: #cbd5e0 transparent;
+        ">
+          <style>
+            .cluster-popup::-webkit-scrollbar { width: 6px; }
+            .cluster-popup::-webkit-scrollbar-track { background: transparent; }
+            .cluster-popup::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 3px; }
+            .cluster-popup::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
+          </style>
           ${cluster.properties
             .map(
-              (property: any) => `
-            <div style="padding: 8px 0; border-bottom: 1px solid ${popupBorderColor}; cursor: pointer; color: ${textColor};" onclick="window.viewPropertyFromMap('${property.id}')">
-              <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px; color: ${textColor};">${property.title}</div>
-              <div style="font-size: 11px; color: ${subTextColor}; margin-bottom: 4px;">${property.address}</div>
-              <div style="font-weight: 700; color: #FF7800; font-size: 12px;">
-                ${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === "rent" ? "/mo" : ""}
-              </div>
-            </div>
-          `,
+              (property: any) => {
+                const propertyImage = property.images && property.images.length > 0 
+                  ? property.images[0] 
+                  : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=250&fit=crop&crop=center";
+                
+                return `
+                <div style="
+                  display: flex; 
+                  gap: 12px; 
+                  padding: 12px; 
+                  border-bottom: 1px solid ${popupBorderColor}; 
+                  cursor: pointer; 
+                  color: ${textColor}; 
+                  border-radius: 8px;
+                  transition: background-color 0.2s ease;
+                  margin-bottom: 8px;
+                " 
+                onclick="window.viewPropertyFromMap('${property.id}')"
+                onmouseover="this.style.backgroundColor='${isDark ? '#374151' : '#f8fafc'}'"
+                onmouseout="this.style.backgroundColor='transparent'">
+                  
+                  <div style="
+                    width: 80px; 
+                    height: 60px; 
+                    border-radius: 6px; 
+                    overflow: hidden; 
+                    flex-shrink: 0;
+                    background: #e2e8f0;
+                  ">
+                    <img src="${propertyImage}" 
+                         alt="${property.title}" 
+                         style="
+                           width: 100%; 
+                           height: 100%; 
+                           object-fit: cover;
+                         " 
+                         onerror="this.src='https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=250&fit=crop&crop=center';" />
+                  </div>
+                  
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="
+                      font-weight: 600; 
+                      font-size: 14px; 
+                      margin-bottom: 4px; 
+                      color: ${textColor};
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    ">${property.title}</div>
+                    
+                    <div style="
+                      font-size: 12px; 
+                      color: ${subTextColor}; 
+                      margin-bottom: 6px;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    ">${property.address}</div>
+                    
+                    <div style="
+                      font-weight: 700; 
+                      color: #FF7800; 
+                      font-size: 13px;
+                      display: flex;
+                      align-items: center;
+                      gap: 4px;
+                    ">
+                      <span>${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}</span>
+                      ${property.listingType === "rent" ? '<span style="font-size: 11px; font-weight: 500;">/mo</span>' : ""}
+                    </div>
+                  </div>
+                </div>
+              `;
+              }
             )
             .join("")}
         </div>
