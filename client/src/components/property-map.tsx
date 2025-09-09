@@ -682,7 +682,7 @@ export default function PropertyMap({
 
     marker.bindPopup(popupContent, {
       maxWidth: 350,
-      className: "custom-cluster-popup",
+      className: "custom-cluster-popup custom-popup",
     });
 
     markersRef.current.push(marker);
