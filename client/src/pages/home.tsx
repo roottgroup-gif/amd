@@ -56,13 +56,25 @@ export default function HomePage() {
     }
   }, []);
 
-  // When we have properties and a highlighted property ID, trigger the map to focus on it
+  // When we have properties and a highlighted property ID, trigger the map to zoom to it
   useEffect(() => {
     if (highlightedPropertyId && mapProperties && mapProperties.length > 0) {
       const propertyToHighlight = mapProperties.find(p => p.id === highlightedPropertyId);
-      if (propertyToHighlight) {
-        // Trigger the property selection to focus on it on the map
-        setSelectedProperty(propertyToHighlight);
+      if (propertyToHighlight && propertyToHighlight.latitude && propertyToHighlight.longitude) {
+        // Use the global zoom function to smoothly animate to the property location
+        const zoomToProperty = () => {
+          if ((window as any).zoomToPropertyFromCluster) {
+            (window as any).zoomToPropertyFromCluster(
+              propertyToHighlight.id,
+              propertyToHighlight.latitude,
+              propertyToHighlight.longitude
+            );
+          }
+        };
+        
+        // Wait a bit for the map to be fully initialized before zooming
+        setTimeout(zoomToProperty, 1000);
+        
         // Clear the highlighted property ID after using it
         setHighlightedPropertyId(null);
       }
