@@ -487,14 +487,10 @@ export default function PropertyMap({
     const count = cluster.properties.length;
     const { lat, lng } = cluster.center;
 
-    // Get theme-aware colors - use orange for cluster markers
+    // Always use orange colors for cluster markers regardless of theme
     const isDark = document.documentElement.classList.contains("dark");
-    const bgGradient = isDark
-      ? "linear-gradient(135deg, #ea580c 0%, #dc2626 100%)"
-      : "linear-gradient(135deg, #fb923c 0%, #f97316 100%)";
-    const shadowColor = isDark
-      ? "rgba(251, 146, 60, 0.4)"
-      : "rgba(249, 115, 22, 0.4)";
+    const bgGradient = "linear-gradient(135deg, #fb923c 0%, #f97316 100%)";
+    const shadowColor = "rgba(249, 115, 22, 0.4)";
     const borderColor = "#ffffff";
 
     // Determine cluster size and styling based on count and type
