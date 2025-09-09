@@ -5,6 +5,8 @@ import type { Property, PropertyFilters, AISearchResponse, Inquiry } from "@/typ
 export function useProperties(filters?: PropertyFilters) {
   return useQuery<Property[]>({
     queryKey: ["/api/properties", filters],
+    staleTime: 1 * 60 * 1000, // 1 minute cache for property lists
+    gcTime: 3 * 60 * 1000, // 3 minutes in memory
     queryFn: async () => {
       const params = new URLSearchParams();
       if (filters) {
@@ -25,6 +27,8 @@ export function useProperties(filters?: PropertyFilters) {
 export function useFeaturedProperties() {
   return useQuery<Property[]>({
     queryKey: ["/api/properties/featured"],
+    staleTime: 2 * 60 * 1000, // 2 minutes cache for featured
+    gcTime: 5 * 60 * 1000, // 5 minutes in memory
   });
 }
 
@@ -39,6 +43,8 @@ export function useProperty(id: string) {
       return response.json();
     },
     enabled: !!id,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    gcTime: 10 * 60 * 1000, // 10 minutes in memory
   });
 }
 
