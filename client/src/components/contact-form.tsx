@@ -75,43 +75,46 @@ export default function ContactForm({ property, agent, className }: ContactFormP
     'Real Estate Agent';
 
   return (
-    <Card className={`sticky top-6 ${className}`} data-testid="contact-form">
-      <CardHeader className="text-center pb-4">
-        <Avatar className="w-20 h-20 mx-auto mb-4">
+    <Card className={`sticky top-6 shadow-lg border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 ${className}`} data-testid="contact-form">
+      <CardHeader className="text-center pb-6 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-gray-800 dark:to-gray-700 rounded-t-lg">
+        <Avatar className="w-24 h-24 mx-auto mb-6 ring-4 ring-orange-200 ring-offset-2 shadow-lg">
           <AvatarImage src={agent?.avatar} alt={agentName} />
-          <AvatarFallback className="text-lg">{agentInitials}</AvatarFallback>
+          <AvatarFallback className="text-xl font-semibold bg-gradient-to-br from-orange-400 to-orange-600 text-white">{agentInitials}</AvatarFallback>
         </Avatar>
         
-        <div className="flex items-center justify-center gap-2">
-          <CardTitle className="text-lg" data-testid="agent-name">{agentName}</CardTitle>
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <CardTitle className="text-xl font-bold text-gray-900 dark:text-gray-100" data-testid="agent-name">{agentName}</CardTitle>
           {agent?.isVerified && (
             <Badge 
-              className="bg-orange-100 text-orange-800 hover:bg-orange-200 border-orange-300 p-1"
+              className="bg-orange-500 text-white hover:bg-orange-600 border-0 p-1.5 shadow-md"
               data-testid="verified-badge"
             >
-              <CheckCircle className="h-3 w-3" />
+              <CheckCircle className="h-4 w-4" />
             </Badge>
           )}
         </div>
-        <p className="text-sm text-muted-foreground">Licensed Real Estate Agent</p>
+        <p className="text-sm font-medium text-orange-700 dark:text-orange-300 bg-white/50 dark:bg-gray-800/50 px-3 py-1 rounded-full inline-block">Licensed Real Estate Agent</p>
         
       </CardHeader>
       
-      <CardContent className="space-y-4">
-        {/* Quick Contact Buttons */}
-        <div className="space-y-3">
-          {/* Show contact phone if available */}
-          {((property as any).contactPhone || agent?.phone) && (
-            <div className="text-center mb-3">
-              <p className="text-sm text-muted-foreground mb-1">Contact Number</p>
-              <p className="font-semibold text-lg">
-                {(property as any).contactPhone || agent?.phone}
-              </p>
+      <CardContent className="p-6 space-y-5">
+        {/* Contact Information */}
+        {((property as any).contactPhone || agent?.phone) && (
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 p-4 rounded-lg border border-blue-100 dark:border-gray-600">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Phone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              <p className="text-sm font-medium text-blue-800 dark:text-blue-300">Contact Number</p>
             </div>
-          )}
-          
+            <p className="font-bold text-lg text-center text-gray-900 dark:text-gray-100 tracking-wide">
+              {(property as any).contactPhone || agent?.phone}
+            </p>
+          </div>
+        )}
+        
+        {/* Contact Buttons */}
+        <div className="space-y-3">
           <Button 
-            className="w-full"
+            className="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
             onClick={() => {
               const phone = (property as any).contactPhone || agent?.phone;
               if (phone) {
@@ -121,12 +124,12 @@ export default function ContactForm({ property, agent, className }: ContactFormP
             disabled={!((property as any).contactPhone || agent?.phone)}
             data-testid="call-button"
           >
-            <Phone className="mr-2 h-4 w-4" />
+            <Phone className="mr-3 h-5 w-5" />
             {t('contact.callNow')}
           </Button>
           
           <Button 
-            className="w-full bg-green-600 hover:bg-green-700"
+            className="w-full h-12 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
             onClick={() => {
               const phone = (property as any).contactPhone || agent?.phone;
               if (phone) {
@@ -138,10 +141,9 @@ export default function ContactForm({ property, agent, className }: ContactFormP
             disabled={!((property as any).contactPhone || agent?.phone)}
             data-testid="whatsapp-button"
           >
-            <MessageSquare className="mr-2 h-4 w-4" />
+            <MessageSquare className="mr-3 h-5 w-5" />
             WhatsApp
           </Button>
-          
         </div>
       </CardContent>
     </Card>
