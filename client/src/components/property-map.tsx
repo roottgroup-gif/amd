@@ -88,25 +88,6 @@ export default function PropertyMap({
 
   // Add global functions for popup interactions
   useEffect(() => {
-    // Define global function for scrolling cluster properties
-    (window as any).scrollClusterProperties = (popupId: string, direction: number) => {
-      try {
-        const popup = document.querySelector(`.cluster-properties-container`);
-        if (!popup) return;
-
-        const scrollAmount = 120; // Amount to scroll per click
-        const currentScroll = popup.scrollTop;
-        const newScroll = currentScroll + (direction * scrollAmount);
-        
-        popup.scrollTo({
-          top: newScroll,
-          behavior: 'smooth'
-        });
-      } catch (error) {
-        console.warn("Error in scrollClusterProperties function:", error);
-      }
-    };
-
     // Define global function for changing slides in map popups
     (window as any).changeSlide = (popupId: string, direction: number) => {
       try {
@@ -506,10 +487,14 @@ export default function PropertyMap({
     const count = cluster.properties.length;
     const { lat, lng } = cluster.center;
 
-    // Always use orange colors for cluster markers regardless of theme
+    // Get theme-aware colors - use orange for cluster markers
     const isDark = document.documentElement.classList.contains("dark");
-    const bgGradient = "linear-gradient(135deg, #fb923c 0%, #f97316 100%)";
-    const shadowColor = "rgba(249, 115, 22, 0.4)";
+    const bgGradient = isDark
+      ? "linear-gradient(135deg, #ea580c 0%, #dc2626 100%)"
+      : "linear-gradient(135deg, #fb923c 0%, #f97316 100%)";
+    const shadowColor = isDark
+      ? "rgba(251, 146, 60, 0.4)"
+      : "rgba(249, 115, 22, 0.4)";
     const borderColor = "#ffffff";
 
     // Determine cluster size and styling based on count and type
@@ -566,10 +551,10 @@ export default function PropertyMap({
       mapInstanceRef.current,
     );
 
-    const popupBg = "#ffffff"; // Always white background
-    const textColor = "#000000"; // Always black text for contrast
-    const subTextColor = "#666666"; // Always gray subtext
-    const popupBorderColor = "#e5e7eb"; // Always light gray border
+    const popupBg = isDark ? "#1f2937" : "#ffffff";
+    const textColor = isDark ? "#ffffff" : "#000000";
+    const subTextColor = isDark ? "#d1d5db" : "#666666";
+    const popupBorderColor = isDark ? "#374151" : "#e5e7eb";
 
     let popupTitle;
     if (cluster.clusterType === 'country' && cluster.country) {
@@ -583,36 +568,33 @@ export default function PropertyMap({
     const popupContent = `
       <div class="cluster-popup" style="
         width: 100%; 
-        max-width: min(420px, 95vw); 
-        min-width: 300px; 
+        max-width: min(400px, 95vw); 
+        min-width: 280px; 
         background: ${popupBg}; 
         color: ${textColor}; 
-        border-radius: 16px; 
-        box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08);
-        border: 1px solid #f1f5f9;
+        border-radius: 12px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-        overflow: hidden;
       ">
         <div style="
           background: linear-gradient(135deg, #fb923c 0%, #f97316 100%); 
           color: white; 
-          padding: 20px; 
+          padding: 16px; 
+          margin: -8px -8px 0 -8px; 
+          border-radius: 12px 12px 0 0; 
           font-weight: 600; 
           text-align: center; 
-          font-size: 16px;
+          font-size: 15px;
           letter-spacing: 0.3px;
-          box-shadow: 0 2px 8px rgba(251, 146, 60, 0.2);
         ">
           ${popupTitle}
         </div>
-        <div class="cluster-properties-container" style="
-          max-height: 380px; 
+        <div style="
+          max-height: 350px; 
           overflow-y: auto; 
-          padding: 16px; 
+          padding: 8px; 
           scrollbar-width: thin;
-          scrollbar-color: #e2e8f0 transparent;
-          background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
-          position: relative;
+          scrollbar-color: #cbd5e0 transparent;
         ">
           <style>
             .cluster-popup::-webkit-scrollbar { width: 6px; }
@@ -630,29 +612,26 @@ export default function PropertyMap({
                 return `
                 <div style="
                   display: flex; 
-                  gap: 14px; 
-                  padding: 16px; 
-                  border: 1px solid #f1f5f9; 
+                  gap: 12px; 
+                  padding: 12px; 
+                  border-bottom: 1px solid ${popupBorderColor}; 
                   cursor: pointer; 
                   color: ${textColor}; 
-                  border-radius: 12px;
-                  transition: all 0.3s ease;
-                  margin-bottom: 12px;
-                  background: #ffffff;
-                  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+                  border-radius: 8px;
+                  transition: background-color 0.2s ease;
+                  margin-bottom: 8px;
                 " 
                 onclick="window.zoomToPropertyFromCluster('${property.id}', ${property.latitude}, ${property.longitude})"
-                onmouseover="this.style.backgroundColor='#f8fafc'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'"
-                onmouseout="this.style.backgroundColor='#ffffff'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+                onmouseover="this.style.backgroundColor='${isDark ? '#374151' : '#f8fafc'}'"
+                onmouseout="this.style.backgroundColor='transparent'">
                   
                   <div style="
-                    width: 90px; 
-                    height: 70px; 
-                    border-radius: 10px; 
+                    width: 80px; 
+                    height: 60px; 
+                    border-radius: 6px; 
                     overflow: hidden; 
                     flex-shrink: 0;
-                    background: #f1f5f9;
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+                    background: #e2e8f0;
                   ">
                     <img src="${propertyImage}" 
                          alt="${property.title}" 
@@ -666,34 +645,31 @@ export default function PropertyMap({
                   
                   <div style="flex: 1; min-width: 0;">
                     <div style="
-                      font-weight: 700; 
-                      font-size: 15px; 
-                      margin-bottom: 6px; 
-                      color: #1e293b;
+                      font-weight: 600; 
+                      font-size: 14px; 
+                      margin-bottom: 4px; 
+                      color: ${textColor};
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
-                      line-height: 1.3;
                     ">${property.title}</div>
                     
                     <div style="
-                      font-size: 13px; 
-                      color: #64748b; 
-                      margin-bottom: 8px;
+                      font-size: 12px; 
+                      color: ${subTextColor}; 
+                      margin-bottom: 6px;
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
-                      line-height: 1.2;
                     ">${property.address}</div>
                     
                     <div style="
-                      font-weight: 800; 
-                      color: #f97316; 
-                      font-size: 14px;
+                      font-weight: 700; 
+                      color: #FF7800; 
+                      font-size: 13px;
                       display: flex;
                       align-items: center;
                       gap: 4px;
-                      letter-spacing: 0.2px;
                     ">
                       <span>${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}</span>
                       ${property.listingType === "rent" ? '<span style="font-size: 11px; font-weight: 500;">/mo</span>' : ""}
@@ -704,58 +680,13 @@ export default function PropertyMap({
               }
             )
             .join("")}
-          <!-- Arrow navigation buttons for scrolling through properties -->
-          ${cluster.properties.length > 3 ? `
-          <button onclick="scrollClusterProperties('cluster-popup-${lat}-${lng}', -1)" 
-                  style="
-                    position: absolute; 
-                    left: 8px; 
-                    top: 50%; 
-                    transform: translateY(-50%);
-                    background: rgba(0,0,0,0.5); 
-                    color: white; 
-                    border: none; 
-                    border-radius: 50%; 
-                    width: 30px; 
-                    height: 30px; 
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 14px;
-                    z-index: 1000;
-                  "
-                  onmouseover="this.style.background='rgba(0,0,0,0.7)'"
-                  onmouseout="this.style.background='rgba(0,0,0,0.5)'">‹</button>
-          <button onclick="scrollClusterProperties('cluster-popup-${lat}-${lng}', 1)" 
-                  style="
-                    position: absolute; 
-                    right: 8px; 
-                    top: 50%; 
-                    transform: translateY(-50%);
-                    background: rgba(0,0,0,0.5); 
-                    color: white; 
-                    border: none; 
-                    border-radius: 50%; 
-                    width: 30px; 
-                    height: 30px; 
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 14px;
-                    z-index: 1000;
-                  "
-                  onmouseover="this.style.background='rgba(0,0,0,0.7)'"
-                  onmouseout="this.style.background='rgba(0,0,0,0.5)'">›</button>
-          ` : ""}
         </div>
       </div>
     `;
 
     marker.bindPopup(popupContent, {
       maxWidth: 350,
-      className: "custom-cluster-popup custom-popup",
+      className: "custom-cluster-popup",
     });
 
     markersRef.current.push(marker);
