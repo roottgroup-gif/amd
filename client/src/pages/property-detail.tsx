@@ -428,118 +428,147 @@ export default function PropertyDetailPage() {
 
             {/* Description */}
             {property.description && (
-              <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 mb-8">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Description</h3>
-                  <p className="text-muted-foreground leading-relaxed" data-testid="property-description">
-                    {property.description}
-                  </p>
-                </CardContent>
-              </Card>
+              <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-8 mb-8">
+                <div className="flex items-center mb-6">
+                  <div className="bg-blue-100 dark:bg-blue-900 p-2 rounded-lg mr-4">
+                    <div className="w-6 h-6 bg-blue-600 dark:bg-blue-400 rounded"></div>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">About This Property</h3>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg" data-testid="property-description">
+                  {property.description}
+                </p>
+              </div>
             )}
 
             {/* Amenities & Features */}
-            <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 mb-8">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Features & Amenities</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {property.features?.length > 0 ? (
-                    <div>
-                      <h4 className="font-medium mb-2">Features</h4>
-                      <div className="space-y-2">
-                        {property.features.map((feature, index) => (
-                          <div key={index} className="flex items-center space-x-2">
-                            <Check className="h-4 w-4 text-green-500" />
-                            <span className="text-sm text-muted-foreground">{feature}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <h4 className="font-medium mb-2">Features</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Central Air Conditioning</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Hardwood Floors</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Modern Kitchen</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {property.amenities?.length > 0 ? (
-                    <div>
-                      <h4 className="font-medium mb-2">Amenities</h4>
-                      <div className="space-y-2">
-                        {property.amenities.map((amenity, index) => (
-                          <div key={index} className="flex items-center space-x-2">
-                            <Check className="h-4 w-4 text-green-500" />
-                            <span className="text-sm text-muted-foreground">{amenity}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <h4 className="font-medium mb-2">Amenities</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Garden & Patio</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Security System</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Garage Parking</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-8 mb-8">
+              <div className="flex items-center mb-6">
+                <div className="bg-green-100 dark:bg-green-900 p-2 rounded-lg mr-4">
+                  <Check className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
-              </CardContent>
-            </Card>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Features & Amenities</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {property.features?.length > 0 ? (
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
+                    <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Property Features</h4>
+                    <div className="space-y-3">
+                      {property.features.map((feature, index) => (
+                        <div key={index} className="flex items-center space-x-3">
+                          <div className="bg-green-100 dark:bg-green-900 p-1.5 rounded-full">
+                            <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                          </div>
+                          <span className="text-gray-700 dark:text-gray-300 font-medium">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
+                    <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Property Features</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-green-100 dark:bg-green-900 p-1.5 rounded-full">
+                          <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                        </div>
+                        <span className="text-gray-700 dark:text-gray-300 font-medium">Central Air Conditioning</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-green-100 dark:bg-green-900 p-1.5 rounded-full">
+                          <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                        </div>
+                        <span className="text-gray-700 dark:text-gray-300 font-medium">Hardwood Floors</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-green-100 dark:bg-green-900 p-1.5 rounded-full">
+                          <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                        </div>
+                        <span className="text-gray-700 dark:text-gray-300 font-medium">Modern Kitchen</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {property.amenities?.length > 0 ? (
+                  <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-6">
+                    <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Building Amenities</h4>
+                    <div className="space-y-3">
+                      {property.amenities.map((amenity, index) => (
+                        <div key={index} className="flex items-center space-x-3">
+                          <div className="bg-blue-100 dark:bg-blue-900 p-1.5 rounded-full">
+                            <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <span className="text-gray-700 dark:text-gray-300 font-medium">{amenity}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-6">
+                    <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Building Amenities</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-blue-100 dark:bg-blue-900 p-1.5 rounded-full">
+                          <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <span className="text-gray-700 dark:text-gray-300 font-medium">Garden & Patio</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-blue-100 dark:bg-blue-900 p-1.5 rounded-full">
+                          <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <span className="text-gray-700 dark:text-gray-300 font-medium">Security System</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="bg-blue-100 dark:bg-blue-900 p-1.5 rounded-full">
+                          <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <span className="text-gray-700 dark:text-gray-300 font-medium">Garage Parking</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
 
             {/* Property Stats */}
-            <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Property Information</h3>
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Property Type:</span>
-                    <span className="font-medium capitalize">{property.type}</span>
+            <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-8">
+              <div className="flex items-center mb-6">
+                <div className="bg-purple-100 dark:bg-purple-900 p-2 rounded-lg mr-4">
+                  <div className="w-6 h-6 bg-purple-600 dark:bg-purple-400 rounded"></div>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Property Details</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
+                  <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+                    <span className="text-gray-600 dark:text-gray-400 font-medium">Property Type</span>
+                    <span className="font-semibold text-gray-900 dark:text-white capitalize">{property.type}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Listed:</span>
-                    <span className="font-medium">
-                      <Calendar className="inline h-4 w-4 mr-1" />
-                      {new Date(property.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Views:</span>
-                    <span className="font-medium">
-                      <Eye className="inline h-4 w-4 mr-1" />
-                      {property.views}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Status:</span>
-                    <Badge variant="secondary" className="capitalize">{property.status}</Badge>
+                  <div className="flex items-center justify-between py-3">
+                    <span className="text-gray-600 dark:text-gray-400 font-medium">Status</span>
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 capitalize px-3 py-1">{property.status}</Badge>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-6">
+                  <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+                    <span className="text-gray-600 dark:text-gray-400 font-medium">Listed Date</span>
+                    <div className="flex items-center text-gray-900 dark:text-white font-semibold">
+                      <Calendar className="h-4 w-4 mr-2 text-blue-600" />
+                      {new Date(property.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between py-3">
+                    <span className="text-gray-600 dark:text-gray-400 font-medium">Views</span>
+                    <div className="flex items-center text-gray-900 dark:text-white font-semibold">
+                      <Eye className="h-4 w-4 mr-2 text-green-600" />
+                      {property.views}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Contact Form */}
