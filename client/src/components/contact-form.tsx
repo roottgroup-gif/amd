@@ -139,14 +139,6 @@ export default function ContactForm({ property, agent, className }: ContactFormP
             WhatsApp
           </Button>
           
-          <Button 
-            variant="outline" 
-            className="w-full"
-            data-testid="email-button"
-          >
-            <Mail className="mr-2 h-4 w-4" />
-            {t('contact.sendMessage')}
-          </Button>
         </div>
       </CardContent>
     </Card>
