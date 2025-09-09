@@ -902,6 +902,12 @@ class MemStorage implements IStorage {
       id: `user-${Date.now()}`,
       ...user,
       role: user.role || 'user',
+      firstName: user.firstName || null,
+      lastName: user.lastName || null,
+      phone: user.phone || null,
+      avatar: user.avatar || null,
+      isVerified: user.isVerified || null,
+      waveBalance: user.waveBalance || null,
       createdAt: new Date(),
       expiresAt: user.expiresAt ? new Date(user.expiresAt) : null,
       isExpired: false
@@ -1033,6 +1039,14 @@ class MemStorage implements IStorage {
       description: property.description || null,
       currency: property.currency || 'USD',
       status: property.status || 'active',
+      bedrooms: property.bedrooms || null,
+      bathrooms: property.bathrooms || null,
+      area: property.area || null,
+      latitude: property.latitude || null,
+      longitude: property.longitude || null,
+      contactPhone: property.contactPhone || null,
+      waveId: property.waveId || null,
+      isFeatured: property.isFeatured || null,
       views: 0, 
       createdAt: new Date(), 
       updatedAt: new Date() 
@@ -1171,6 +1185,9 @@ class MemStorage implements IStorage {
     const newWave: Wave = {
       id: `wave-${Date.now()}`,
       ...wave,
+      description: wave.description || null,
+      color: wave.color || null,
+      createdBy: wave.createdBy || null,
       isActive: true,
       createdAt: new Date(),
       updatedAt: new Date()

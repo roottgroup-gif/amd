@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, Suspense, lazy } from "react";
 import { useParams, Link } from "wouter";
 import Navigation from "@/components/navigation";
 import ContactForm from "@/components/contact-form";
@@ -229,6 +229,8 @@ export default function PropertyDetailPage() {
               alt={`${property.title} - Image ${currentImageIndex + 1}`}
               className="w-full h-full object-cover"
               data-testid="property-main-image"
+              loading="eager"
+              fetchPriority="high"
             />
             
             {/* Image Navigation */}
@@ -299,6 +301,7 @@ export default function PropertyDetailPage() {
                       src={image}
                       alt={`${property.title} thumbnail ${index + 1}`}
                       className="w-16 h-16 md:w-20 md:h-20 object-cover"
+                      loading="lazy"
                     />
                   </div>
                 ))}
