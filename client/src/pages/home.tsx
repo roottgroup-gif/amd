@@ -366,113 +366,24 @@ export default function HomePage() {
           {/* Price Range Slider */}
           {showFilters && (
             <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20 dark:border-white/10">
-              <div className="space-y-4">
-                <label className="text-xs sm:text-sm font-medium text-black dark:text-gray-300 flex items-center gap-2">
-                  <DollarSign className="h-4 w-4" />
-                  Price Range
+              <div className="space-y-2 sm:space-y-3">
+                <label className="text-xs sm:text-sm font-medium text-black dark:text-gray-300 flex items-center gap-1 flex-wrap">
+                  <DollarSign className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Price Range: ${priceRange[0].toLocaleString()} - ${priceRange[1].toLocaleString()}</span>
+                  <span className="sm:hidden">Price: ${priceRange[0] < 1000 ? priceRange[0] : priceRange[0] < 1000000 ? Math.round(priceRange[0]/1000) + 'K' : Math.round(priceRange[0]/1000000) + 'M'} - ${priceRange[1] < 1000 ? priceRange[1] : priceRange[1] < 1000000 ? Math.round(priceRange[1]/1000) + 'K' : Math.round(priceRange[1]/1000000) + 'M'}</span>
                 </label>
-                
-                {/* Price Display and Input Fields */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="text-xs text-black dark:text-gray-400">Min Price</label>
-                    <Input
-                      type="number"
-                      placeholder="Min"
-                      value={priceRange[0]}
-                      onChange={(e) => {
-                        const value = Math.max(1, parseInt(e.target.value) || 1);
-                        const newRange: [number, number] = [value, Math.max(value, priceRange[1])];
-                        handlePriceRangeChange(newRange);
-                      }}
-                      className="h-8 text-xs bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400"
-                      style={{borderColor: '#FF7800'}}
-                      data-testid="min-price-input"
-                    />
-                    <div className="text-xs text-black dark:text-gray-400">
-                      ${priceRange[0].toLocaleString()}
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs text-black dark:text-gray-400">Max Price</label>
-                    <Input
-                      type="number"
-                      placeholder="Max"
-                      value={priceRange[1]}
-                      onChange={(e) => {
-                        const value = Math.min(10000000, parseInt(e.target.value) || 10000000);
-                        const newRange: [number, number] = [Math.min(priceRange[0], value), value];
-                        handlePriceRangeChange(newRange);
-                      }}
-                      className="h-8 text-xs bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400"
-                      style={{borderColor: '#FF7800'}}
-                      data-testid="max-price-input"
-                    />
-                    <div className="text-xs text-black dark:text-gray-400">
-                      ${priceRange[1].toLocaleString()}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Slider */}
-                <div className="space-y-2">
-                  <Slider
-                    value={priceRange}
-                    onValueChange={handlePriceRangeChange}
-                    max={10000000}
-                    min={1}
-                    step={10000}
-                    className="w-full"
-                    data-testid="price-range-slider"
-                  />
-                  <div className="flex justify-between text-xs text-black dark:text-gray-400">
-                    <span>$1</span>
-                    <span>$10M</span>
-                  </div>
-                </div>
-
-                {/* Quick Price Presets */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePriceRangeChange([1, 100000])}
-                    className="h-7 px-2 text-xs bg-orange-50/80 dark:bg-orange-950/80 border-orange-300 dark:border-orange-600 hover:bg-orange-100/80 dark:hover:bg-orange-900/80"
-                    style={{borderColor: '#FF7800'}}
-                    data-testid="preset-under-100k"
-                  >
-                    Under $100K
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePriceRangeChange([100000, 500000])}
-                    className="h-7 px-2 text-xs bg-orange-50/80 dark:bg-orange-950/80 border-orange-300 dark:border-orange-600 hover:bg-orange-100/80 dark:hover:bg-orange-900/80"
-                    style={{borderColor: '#FF7800'}}
-                    data-testid="preset-100k-500k"
-                  >
-                    $100K - $500K
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePriceRangeChange([500000, 1000000])}
-                    className="h-7 px-2 text-xs bg-orange-50/80 dark:bg-orange-950/80 border-orange-300 dark:border-orange-600 hover:bg-orange-100/80 dark:hover:bg-orange-900/80"
-                    style={{borderColor: '#FF7800'}}
-                    data-testid="preset-500k-1m"
-                  >
-                    $500K - $1M
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePriceRangeChange([1000000, 10000000])}
-                    className="h-7 px-2 text-xs bg-orange-50/80 dark:bg-orange-950/80 border-orange-300 dark:border-orange-600 hover:bg-orange-100/80 dark:hover:bg-orange-900/80"
-                    style={{borderColor: '#FF7800'}}
-                    data-testid="preset-over-1m"
-                  >
-                    $1M+
-                  </Button>
+                <Slider
+                  value={priceRange}
+                  onValueChange={handlePriceRangeChange}
+                  max={10000000}
+                  min={1}
+                  step={50000}
+                  className="w-full"
+                  data-testid="price-range-slider"
+                />
+                <div className="flex justify-between text-xs text-black dark:text-gray-400">
+                  <span>$1</span>
+                  <span>$10M+</span>
                 </div>
               </div>
             </div>
