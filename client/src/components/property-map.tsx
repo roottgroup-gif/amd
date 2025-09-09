@@ -589,18 +589,49 @@ export default function PropertyMap({
         ">
           ${popupTitle}
         </div>
-        <div style="
+        <div class="popup-scroll-container" style="
           max-height: 350px; 
           overflow-y: auto; 
           padding: 8px; 
           scrollbar-width: thin;
           scrollbar-color: #cbd5e0 transparent;
+          perspective: 1000px;
+          transform-style: preserve-3d;
         ">
           <style>
-            .cluster-popup::-webkit-scrollbar { width: 6px; }
-            .cluster-popup::-webkit-scrollbar-track { background: transparent; }
-            .cluster-popup::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 3px; }
-            .cluster-popup::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
+            .popup-scroll-container::-webkit-scrollbar { width: 6px; }
+            .popup-scroll-container::-webkit-scrollbar-track { background: transparent; }
+            .popup-scroll-container::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 3px; }
+            .popup-scroll-container::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
+            
+            .popup-scroll-container {
+              scroll-behavior: smooth;
+            }
+            
+            .property-scroll-item {
+              transform-origin: center center;
+              transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+              backface-visibility: hidden;
+              will-change: transform;
+            }
+            
+            .property-scroll-item:hover {
+              transform: perspective(1000px) rotateX(5deg) translateZ(10px) scale(1.02);
+              box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.08);
+            }
+            
+            .popup-scroll-container::-webkit-scrollbar-thumb:active {
+              background: #718096;
+            }
+            
+            @media (prefers-reduced-motion: reduce) {
+              .property-scroll-item {
+                transition: none;
+              }
+              .property-scroll-item:hover {
+                transform: none;
+              }
+            }
           </style>
           ${cluster.properties
             .map(
@@ -610,7 +641,7 @@ export default function PropertyMap({
                   : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=250&fit=crop&crop=center";
                 
                 return `
-                <div style="
+                <div class="property-scroll-item" style="
                   display: flex; 
                   gap: 12px; 
                   padding: 12px; 
