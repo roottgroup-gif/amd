@@ -674,24 +674,23 @@
   overflow: hidden !important;
 }
 
-/* Professional cluster popup close button */
+/* Professional cluster popup close button - pure white background */
 .custom-cluster-popup .leaflet-popup-close-button {
   top: 8px !important;
   right: 8px !important;
   width: 32px !important;
   height: 32px !important;
   font-size: 16px !important;
-  color: white !important;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%) !important;
+  color: #333333 !important;
+  background: rgba(255, 255, 255, 1) !important;
   border-radius: 50% !important;
   text-align: center !important;
   line-height: 32px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
-  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   z-index: 1000 !important;
   font-weight: 600 !important;
-  backdrop-filter: blur(8px) !important;
   cursor: pointer !important;
   display: flex !important;
   align-items: center !important;
@@ -699,15 +698,15 @@
 }
 
 .custom-cluster-popup .leaflet-popup-close-button:hover {
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.8) 100%) !important;
-  transform: scale(1.1) rotate(90deg) !important;
-  box-shadow: 0 6px 25px rgba(220, 38, 38, 0.4), 0 3px 12px rgba(0, 0, 0, 0.3) !important;
-  border: 2px solid rgba(255, 255, 255, 0.5) !important;
-  color: white !important;
+  background: rgba(255, 255, 255, 1) !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2), 0 3px 12px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  color: #000000 !important;
 }
 
 .custom-cluster-popup .leaflet-popup-close-button:active {
-  transform: scale(0.95) rotate(90deg) !important;
+  transform: scale(0.95) !important;
   transition: all 0.1s ease !important;
 }
 
