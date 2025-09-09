@@ -88,6 +88,25 @@ export default function PropertyMap({
 
   // Add global functions for popup interactions
   useEffect(() => {
+    // Define global function for scrolling cluster properties
+    (window as any).scrollClusterProperties = (popupId: string, direction: number) => {
+      try {
+        const popup = document.querySelector(`.cluster-properties-container`);
+        if (!popup) return;
+
+        const scrollAmount = 120; // Amount to scroll per click
+        const currentScroll = popup.scrollTop;
+        const newScroll = currentScroll + (direction * scrollAmount);
+        
+        popup.scrollTo({
+          top: newScroll,
+          behavior: 'smooth'
+        });
+      } catch (error) {
+        console.warn("Error in scrollClusterProperties function:", error);
+      }
+    };
+
     // Define global function for changing slides in map popups
     (window as any).changeSlide = (popupId: string, direction: number) => {
       try {
@@ -586,13 +605,14 @@ export default function PropertyMap({
         ">
           ${popupTitle}
         </div>
-        <div style="
+        <div class="cluster-properties-container" style="
           max-height: 380px; 
           overflow-y: auto; 
           padding: 16px; 
           scrollbar-width: thin;
           scrollbar-color: #e2e8f0 transparent;
           background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+          position: relative;
         ">
           <style>
             .cluster-popup::-webkit-scrollbar { width: 6px; }
@@ -684,6 +704,51 @@ export default function PropertyMap({
               }
             )
             .join("")}
+          <!-- Arrow navigation buttons for scrolling through properties -->
+          ${cluster.properties.length > 3 ? `
+          <button onclick="scrollClusterProperties('cluster-popup-${lat}-${lng}', -1)" 
+                  style="
+                    position: absolute; 
+                    left: 8px; 
+                    top: 50%; 
+                    transform: translateY(-50%);
+                    background: rgba(0,0,0,0.5); 
+                    color: white; 
+                    border: none; 
+                    border-radius: 50%; 
+                    width: 30px; 
+                    height: 30px; 
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 14px;
+                    z-index: 1000;
+                  "
+                  onmouseover="this.style.background='rgba(0,0,0,0.7)'"
+                  onmouseout="this.style.background='rgba(0,0,0,0.5)'">‹</button>
+          <button onclick="scrollClusterProperties('cluster-popup-${lat}-${lng}', 1)" 
+                  style="
+                    position: absolute; 
+                    right: 8px; 
+                    top: 50%; 
+                    transform: translateY(-50%);
+                    background: rgba(0,0,0,0.5); 
+                    color: white; 
+                    border: none; 
+                    border-radius: 50%; 
+                    width: 30px; 
+                    height: 30px; 
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 14px;
+                    z-index: 1000;
+                  "
+                  onmouseover="this.style.background='rgba(0,0,0,0.7)'"
+                  onmouseout="this.style.background='rgba(0,0,0,0.5)'">›</button>
+          ` : ""}
         </div>
       </div>
     `;
