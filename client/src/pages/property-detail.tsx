@@ -126,13 +126,26 @@ export default function PropertyDetailPage() {
     }
   };
 
-  const handleShare = () => {
+  const handleShare = async () => {
     if (navigator.share) {
-      navigator.share({
-        title: property?.title,
-        text: `Check out this property: ${property?.title}`,
-        url: window.location.href,
-      });
+      try {
+        await navigator.share({
+          title: property?.title,
+          text: `Check out this property: ${property?.title}`,
+          url: window.location.href,
+        });
+      } catch (error) {
+        // User canceled the share or share failed - silently handle this
+        // Only show error for actual failures, not cancellations
+        if (error instanceof Error && !error.message.includes('canceled') && !error.message.includes('cancelled')) {
+          // Fallback to clipboard
+          navigator.clipboard.writeText(window.location.href);
+          toast({
+            title: "Link copied",
+            description: "Property link has been copied to clipboard.",
+          });
+        }
+      }
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast({
