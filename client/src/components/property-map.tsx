@@ -323,7 +323,7 @@ export default function PropertyMap({
     };
   }, []);
 
-  // Function to update markers - always show all individual markers
+  // Function to update markers - use clustering when multiple properties are nearby
   const updateMarkers = () => {
     if (
       !mapInstanceRef.current ||
@@ -351,10 +351,16 @@ export default function PropertyMap({
     });
     markersRef.current = [];
 
-    // Always show individual markers for all properties
-    properties.forEach((property) => {
-      if (property.latitude && property.longitude) {
-        createSingleMarker(property, L);
+    // Create clusters and show either individual markers or cluster markers
+    const clusters = createClustersForProperties(properties);
+    
+    clusters.forEach((cluster) => {
+      if (cluster.properties.length === 1) {
+        // Show individual marker if only one property in cluster
+        createSingleMarker(cluster.properties[0], L);
+      } else {
+        // Show cluster marker if multiple properties are grouped
+        createClusterMarker(cluster, L);
       }
     });
   };
