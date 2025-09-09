@@ -26,8 +26,6 @@ interface PropertyMapProps {
   onPropertySelect?: (property: PropertyWithAgent) => void;
   userId?: string;
   className?: string;
-  highlightPropertyId?: string;
-  onPropertyHighlighted?: () => void;
 }
 
 export default function PropertyMap({
@@ -38,8 +36,6 @@ export default function PropertyMap({
   onPropertySelect,
   userId,
   className,
-  highlightPropertyId,
-  onPropertyHighlighted,
 }: PropertyMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -89,101 +85,6 @@ export default function PropertyMap({
 
   // Properties are already filtered from the API, so we use them directly
   // The filtering happens on the server side when onFilterChange is called
-
-  // Function to smoothly zoom to a property with animation
-  const zoomToPropertyWithAnimation = (property: PropertyWithAgent) => {
-    if (!mapInstanceRef.current || !property.latitude || !property.longitude) return;
-    
-    const L = (window as any).L;
-    const latitude = parseFloat(property.latitude);
-    const longitude = parseFloat(property.longitude);
-    
-    // Start from a zoomed out view and then zoom into the property
-    const initialZoom = 8; // Zoomed out view
-    const targetZoom = 16; // Zoomed in view
-    
-    // First, zoom out to show the initial view
-    mapInstanceRef.current.setView([latitude, longitude], initialZoom, {
-      animate: false
-    });
-    
-    // Then, after a short delay, smoothly zoom into the property
-    setTimeout(() => {
-      if (mapInstanceRef.current) {
-        // Smooth zoom animation to the property
-        mapInstanceRef.current.flyTo([latitude, longitude], targetZoom, {
-          animate: true,
-          duration: 2.0,
-          easeLinearity: 0.1
-        });
-        
-        // Add a pulsing marker to highlight the property
-        setTimeout(() => {
-          if (mapInstanceRef.current && L) {
-            const pulseMarker = L.divIcon({
-              html: `
-                <div style="
-                  width: 80px;
-                  height: 80px;
-                  border-radius: 50%;
-                  background: radial-gradient(circle, rgba(255, 120, 0, 0.9) 0%, rgba(255, 120, 0, 0.5) 50%, transparent 70%);
-                  animation: favoritesPulse 3s ease-out;
-                  pointer-events: none;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                ">
-                  <div style="
-                    width: 24px;
-                    height: 24px;
-                    background: #FF7800;
-                    border-radius: 50%;
-                    border: 4px solid white;
-                    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-                  "></div>
-                </div>
-                <style>
-                  @keyframes favoritesPulse {
-                    0% { transform: scale(0.3); opacity: 0; }
-                    30% { transform: scale(1.3); opacity: 1; }
-                    60% { transform: scale(1.1); opacity: 0.9; }
-                    100% { transform: scale(1); opacity: 0.7; }
-                  }
-                </style>
-              `,
-              className: 'favorites-pulse-marker',
-              iconSize: [80, 80],
-              iconAnchor: [40, 40],
-            });
-            
-            const tempMarker = L.marker([latitude, longitude], { icon: pulseMarker }).addTo(mapInstanceRef.current);
-            
-            // Remove the pulse marker after animation
-            setTimeout(() => {
-              if (tempMarker && mapInstanceRef.current) {
-                mapInstanceRef.current.removeLayer(tempMarker);
-              }
-            }, 3500);
-          }
-        }, 1000); // Show pulse marker during zoom animation
-      }
-    }, 300); // Small delay before starting zoom animation
-    
-    // Call the callback to let parent know animation started
-    if (onPropertyHighlighted) {
-      onPropertyHighlighted();
-    }
-  };
-
-  // Effect to handle property highlighting from favorites
-  useEffect(() => {
-    if (highlightPropertyId && properties.length > 0) {
-      const propertyToHighlight = properties.find(p => p.id === highlightPropertyId);
-      if (propertyToHighlight) {
-        zoomToPropertyWithAnimation(propertyToHighlight);
-      }
-    }
-  }, [highlightPropertyId, properties]);
 
   // Add global functions for popup interactions
   useEffect(() => {

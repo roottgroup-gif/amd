@@ -177,11 +177,6 @@ export default function HomePage() {
             // Handle property selection for highlighting
             setHighlightedPropertyId(property.id);
           }}
-          highlightPropertyId={highlightedPropertyId}
-          onPropertyHighlighted={() => {
-            // Clear the highlighted property ID after animation starts
-            setHighlightedPropertyId(null);
-          }}
           userId={user?.id}
           className="h-full w-full"
         />
