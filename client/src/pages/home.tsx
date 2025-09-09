@@ -3,7 +3,6 @@ import { Link, useLocation } from "wouter";
 import SearchBar from "@/components/search-bar";
 import PropertyCard from "@/components/property-card";
 import PropertyMap from "@/components/property-map";
-import SettingsModal from "@/components/settings-modal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -39,7 +38,6 @@ export default function HomePage() {
     }
     return 'light';
   });
-  const [showSettings, setShowSettings] = useState(false);
 
   // Load properties for the map with current filters
   const { data: mapProperties } = useProperties(mapFilters);
@@ -185,13 +183,7 @@ export default function HomePage() {
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      console.log('Settings clicked, current showSettings:', showSettings);
-                      setShowSettings(true);
-                      console.log('Settings modal should open now');
-                    }}
+                    onClick={() => setLocation('/settings')}
                     data-testid="settings-menu"
                   >
                     <Settings className="h-4 w-4" />
@@ -468,11 +460,6 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* Settings Modal */}
-      <SettingsModal 
-        isOpen={showSettings} 
-        onClose={() => setShowSettings(false)} 
-      />
     </div>
   );
 }

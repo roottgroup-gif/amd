@@ -11,6 +11,7 @@ import Home from "@/pages/home.tsx";
 import Properties from "@/pages/properties.tsx";
 import PropertyDetail from "@/pages/property-detail.tsx";
 import Favorites from "@/pages/favorites.tsx";
+import Settings from "@/pages/settings.tsx";
 import CustomerDashboard from "@/pages/customer-dashboard";
 import AdminLogin from "@/pages/admin-login.tsx";
 import AdminDashboard from "@/pages/admin-dashboard";
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/properties" component={Properties} />
       <Route path="/property/:id" component={PropertyDetail} />
       <Route path="/favorites" component={Favorites} />
+      <Route path="/settings" component={Settings} />
       <Route path="/dashboard" component={DashboardRedirect} />
       <Route path="/customer/dashboard" component={CustomerDashboard} />
       <Route path="/admin/login" component={AdminLogin} />
