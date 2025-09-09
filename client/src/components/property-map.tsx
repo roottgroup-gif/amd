@@ -547,10 +547,10 @@ export default function PropertyMap({
       mapInstanceRef.current,
     );
 
-    const popupBg = isDark ? "#1f2937" : "#ffffff";
-    const textColor = isDark ? "#ffffff" : "#000000";
-    const subTextColor = isDark ? "#d1d5db" : "#666666";
-    const popupBorderColor = isDark ? "#374151" : "#e5e7eb";
+    const popupBg = "#ffffff"; // Always white background
+    const textColor = "#000000"; // Always black text for contrast
+    const subTextColor = "#666666"; // Always gray subtext
+    const popupBorderColor = "#e5e7eb"; // Always light gray border
 
     let popupTitle;
     if (cluster.clusterType === 'country' && cluster.country) {
@@ -618,7 +618,7 @@ export default function PropertyMap({
                   margin-bottom: 8px;
                 " 
                 onclick="window.zoomToPropertyFromCluster('${property.id}', ${property.latitude}, ${property.longitude})"
-                onmouseover="this.style.backgroundColor='${isDark ? '#374151' : '#f8fafc'}'"
+                onmouseover="this.style.backgroundColor='#f8fafc'"
                 onmouseout="this.style.backgroundColor='transparent'">
                   
                   <div style="
