@@ -808,16 +808,43 @@ export default function PropertyMap({
                     ">${property.address}</div>
                     
                     <div style="
-                      font-weight: 700; 
-                      color: #FF7800; 
-                      font-size: clamp(11px, 3vw, 13px);
                       display: flex;
                       align-items: center;
-                      gap: 4px;
-                      line-height: 1.3;
+                      justify-content: space-between;
+                      margin-bottom: 4px;
                     ">
-                      <span>${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}</span>
-                      ${property.listingType === "rent" ? '<span style="font-size: clamp(9px, 2.5vw, 11px); font-weight: 500;">/mo</span>' : ""}
+                      <div style="
+                        font-weight: 700; 
+                        color: #FF7800; 
+                        font-size: clamp(11px, 3vw, 13px);
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        line-height: 1.3;
+                      ">
+                        <span>${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}</span>
+                        ${property.listingType === "rent" ? '<span style="font-size: clamp(9px, 2.5vw, 11px); font-weight: 500;">/mo</span>' : ""}
+                      </div>
+                      <div style="
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 3px;
+                        padding: 2px 6px;
+                        border-radius: 12px;
+                        font-size: clamp(8px, 2vw, 10px);
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                        ${property.listingType === 'rent' 
+                          ? 'background: rgba(34, 197, 94, 0.15); color: #059669; border: 1px solid rgba(34, 197, 94, 0.3);' 
+                          : 'background: rgba(239, 68, 68, 0.15); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.3);'
+                        }
+                      ">
+                        ${property.listingType === 'rent' 
+                          ? '<span style="color: #059669;">🔑</span><span>Rent</span>' 
+                          : '<span style="color: #dc2626;">🏷️</span><span>Sale</span>'
+                        }
+                      </div>
                     </div>
                   </div>
                 </div>
