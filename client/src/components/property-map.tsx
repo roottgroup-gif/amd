@@ -602,8 +602,8 @@ export default function PropertyMap({
         html: `
           <div class="property-marker-icon ${animationClass}" style="
             background: ${bgColor};
-            width: 36px;
-            height: 36px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -617,14 +617,14 @@ export default function PropertyMap({
           "
           onmouseover="this.style.transform='scale(1.1)'; this.style.zIndex='1001'"
           onmouseout="this.style.transform='scale(1)'; this.style.zIndex='1000'">
-            <i class="fas ${iconType}" style="color: white; font-size: 14px; pointer-events: none;"></i>
+            <i class="fas ${iconType}" style="color: white; font-size: 10px; pointer-events: none;"></i>
             ${isFeatured ? '<div class="premium-ring" style="position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; border: 2px solid #fbbf24; animation: pulse 2s infinite;"></div>' : ""}
             ${waveAnimation}
           </div>
         `,
         className: "custom-property-marker clickable-marker",
-        iconSize: [36, 36],
-        iconAnchor: [18, 18],
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
       });
     };
 
