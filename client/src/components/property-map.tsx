@@ -549,7 +549,7 @@ export default function PropertyMap({
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
       ">
         <div style="
-          background: linear-gradient(135deg, #bdd479 0%, #a3c766 100%); 
+          background: linear-gradient(135deg, #fb923c 0%, #f97316 100%); 
           color: white; 
           padding: 16px; 
           margin: -8px -8px 0 -8px; 
