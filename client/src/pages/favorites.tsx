@@ -58,9 +58,6 @@ export default function FavoritesPage() {
               </Button>
             </Link>
             <div>
-              <p className="text-muted-foreground mt-1">
-                {favorites?.length || 0} favorite {(favorites?.length || 0) === 1 ? 'property' : 'properties'}
-              </p>
             </div>
           </div>
         </div>
