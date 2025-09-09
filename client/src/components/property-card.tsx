@@ -6,15 +6,17 @@ import { useTranslation } from "@/lib/i18n";
 import { useAddToFavorites, useRemoveFromFavorites, useIsFavorite } from "@/hooks/use-properties";
 import { useState } from "react";
 import type { Property } from "@/types";
-import { Heart, Bed, Bath, Square, MapPin, User, ChevronLeft, ChevronRight, Phone, MessageCircle } from "lucide-react";
+import { Heart, Bed, Bath, Square, MapPin, User, ChevronLeft, ChevronRight, Phone, MessageCircle, Map } from "lucide-react";
 
 interface PropertyCardProps {
   property: Property;
   userId?: string;
   className?: string;
+  onMapClick?: (property: Property) => void;
+  showMapButton?: boolean;
 }
 
-export default function PropertyCard({ property, userId, className }: PropertyCardProps) {
+export default function PropertyCard({ property, userId, className, onMapClick, showMapButton = false }: PropertyCardProps) {
   const { t } = useTranslation();
   const [, navigate] = useLocation();
   const addToFavorites = useAddToFavorites();
@@ -73,6 +75,15 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
     
     // Navigate to property detail page immediately
     navigate(`/property/${property.id}`);
+  };
+
+  const handleMapClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (onMapClick) {
+      onMapClick(property);
+    }
   };
 
 
@@ -206,13 +217,26 @@ export default function PropertyCard({ property, userId, className }: PropertyCa
             </div>
           )}
           
-          <Button 
-            onClick={handleViewProperty}
-            className="ml-auto"
-            data-testid={`view-details-button-${property.id}`}
-          >
-            {t('property.viewDetails')}
-          </Button>
+          <div className="flex items-center gap-2 ml-auto">
+            {showMapButton && (
+              <Button 
+                onClick={handleMapClick}
+                variant="outline"
+                size="icon"
+                className="bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-600"
+                data-testid={`map-button-${property.id}`}
+                title="Show on map"
+              >
+                <Map className="h-4 w-4" />
+              </Button>
+            )}
+            <Button 
+              onClick={handleViewProperty}
+              data-testid={`view-details-button-${property.id}`}
+            >
+              {t('property.viewDetails')}
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
