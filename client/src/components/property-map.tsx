@@ -801,8 +801,7 @@ export default function PropertyMap({
               const contactType = isCustomer ? "Customer" : "Agent";
 
               return `
-                <div style="margin-bottom: 12px; padding: 8px; background: ${bgColor}; border-radius: 8px; border-left: 3px solid ${borderColor};">
-               
+             
               `;
             }
             return "";

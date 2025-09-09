@@ -79,12 +79,14 @@ export default function FavoritesPage() {
                 <p className="text-muted-foreground mb-6">
                   Start adding properties to your favorites by clicking the heart icon on property listings.
                 </p>
-                <Link href="/properties">
-                  <Button className="flex items-center gap-2" data-testid="browse-properties">
-                    <HomeIcon className="h-4 w-4" />
-                    Browse Properties
-                  </Button>
-                </Link>
+                <div className="flex justify-center">
+                  <Link href="/properties">
+                    <Button className="flex items-center gap-2" data-testid="browse-properties">
+                      <HomeIcon className="h-4 w-4" />
+                      Browse Properties
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </CardContent>
           </Card>
