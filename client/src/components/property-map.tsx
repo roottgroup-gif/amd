@@ -323,55 +323,59 @@ export default function PropertyMap({
     };
   }, []);
 
-  // Function to update markers - use clustering when multiple properties are nearby
-  const updateMarkers = () => {
-    if (
-      !mapInstanceRef.current ||
-      typeof window === "undefined" ||
-      !(window as any).L
-    )
-      return;
 
-    // Don't update markers if properties array is empty (might be loading)
-    if (!properties || properties.length === 0) {
-      return;
+  // Function to create zoom-based clusters
+  const createZoomBasedClusters = (
+    propertiesToCluster: PropertyWithAgent[],
+    zoomLevel: number
+  ) => {
+    // If zoomed out (zoom < 10), group by city
+    if (zoomLevel < 10) {
+      return createCityBasedClusters(propertiesToCluster);
     }
-
-    const L = (window as any).L;
-
-    // Clear existing markers safely
-    markersRef.current.forEach((marker) => {
-      try {
-        if (mapInstanceRef.current && marker) {
-          mapInstanceRef.current.removeLayer(marker);
-        }
-      } catch (error) {
-        // Ignore cleanup errors
-      }
-    });
-    markersRef.current = [];
-
-    // Create clusters and show either individual markers or cluster markers
-    const clusters = createClustersForProperties(properties);
-    
-    clusters.forEach((cluster) => {
-      if (cluster.properties.length === 1) {
-        // Show individual marker if only one property in cluster
-        createSingleMarker(cluster.properties[0], L);
-      } else {
-        // Show cluster marker if multiple properties are grouped
-        createClusterMarker(cluster, L);
-      }
-    });
+    // If zoomed in more, use distance-based clustering
+    else {
+      return createDistanceBasedClusters(propertiesToCluster, zoomLevel);
+    }
   };
 
-  // Function to create clusters for given properties
-  const createClustersForProperties = (
+  // Function to create city-based clusters
+  const createCityBasedClusters = (propertiesToCluster: PropertyWithAgent[]) => {
+    const cityGroups: { [key: string]: PropertyWithAgent[] } = {};
+    
+    // Group properties by city
+    propertiesToCluster.forEach((property) => {
+      if (!property.latitude || !property.longitude) return;
+      
+      // Use city as grouping key, fallback to 'Unknown City'
+      const city = property.city || 'Unknown City';
+      
+      if (!cityGroups[city]) {
+        cityGroups[city] = [];
+      }
+      cityGroups[city].push(property);
+    });
+
+    // Convert city groups to clusters
+    return Object.entries(cityGroups).map(([city, properties]) => ({
+      properties,
+      city,
+      center: {
+        lat: properties.reduce((sum, p) => sum + parseFloat(p.latitude || "0"), 0) / properties.length,
+        lng: properties.reduce((sum, p) => sum + parseFloat(p.longitude || "0"), 0) / properties.length,
+      },
+    }));
+  };
+
+  // Function to create distance-based clusters
+  const createDistanceBasedClusters = (
     propertiesToCluster: PropertyWithAgent[],
+    zoomLevel: number
   ) => {
     const clusters: any[] = [];
     const processed = new Set<number>();
-    const CLUSTER_DISTANCE = 0.02;
+    // Adjust cluster distance based on zoom level
+    const CLUSTER_DISTANCE = zoomLevel > 13 ? 0.005 : zoomLevel > 11 ? 0.01 : 0.02;
 
     propertiesToCluster.forEach((property, index) => {
       if (processed.has(index) || !property.latitude || !property.longitude)
@@ -407,14 +411,8 @@ export default function PropertyMap({
       clusters.push({
         properties: cluster,
         center: {
-          lat:
-            cluster.reduce((sum, p) => sum + parseFloat(p.latitude || "0"), 0) /
-            cluster.length,
-          lng:
-            cluster.reduce(
-              (sum, p) => sum + parseFloat(p.longitude || "0"),
-              0,
-            ) / cluster.length,
+          lat: cluster.reduce((sum, p) => sum + parseFloat(p.latitude || "0"), 0) / cluster.length,
+          lng: cluster.reduce((sum, p) => sum + parseFloat(p.longitude || "0"), 0) / cluster.length,
         },
       });
     });
@@ -423,7 +421,7 @@ export default function PropertyMap({
   };
 
   // Function to create cluster marker
-  const createClusterMarker = (cluster: any, L: any) => {
+  const createClusterMarker = (cluster: any, L: any, isCityCluster: boolean = false) => {
     const count = cluster.properties.length;
     const { lat, lng } = cluster.center;
 
@@ -437,34 +435,46 @@ export default function PropertyMap({
       : "rgba(5, 150, 105, 0.4)";
     const borderColor = "#ffffff";
 
+    // Determine cluster size and styling based on count and type
+    const isLargeCluster = count > 10;
+    const clusterSize = isCityCluster ? (isLargeCluster ? 60 : 50) : 44;
+    const fontSize = isCityCluster ? (isLargeCluster ? '12px' : '11px') : '14px';
+    const iconSize = isCityCluster ? '10px' : '12px';
+    
     const clusterIcon = L.divIcon({
       html: `
         <div class="cluster-marker" style="
           background: ${bgGradient};
-          width: 44px;
-          height: 44px;
+          width: ${clusterSize}px;
+          height: ${clusterSize}px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
+          flex-direction: ${isCityCluster ? 'column' : 'row'};
           box-shadow: 0 6px 20px ${shadowColor}, 0 0 0 2px ${borderColor};
           border: 3px solid ${borderColor};
           cursor: pointer;
           font-weight: 700;
           color: white;
-          font-size: 14px;
+          font-size: ${fontSize};
           position: relative;
           z-index: 1000;
           transition: all 0.2s ease;
+          text-align: center;
         "
         onmouseover="this.style.transform='scale(1.1)'"
         onmouseout="this.style.transform='scale(1)'">
-          <i class="fas fa-home" style="margin-right: 4px; font-size: 12px;"></i>${count}
+          ${isCityCluster ? 
+            `<i class="fas fa-city" style="font-size: ${iconSize}; margin-bottom: 2px;"></i>
+             <div style="font-size: 10px; line-height: 1;">${count}</div>` :
+            `<i class="fas fa-home" style="margin-right: 4px; font-size: ${iconSize};"></i>${count}`
+          }
         </div>
       `,
       className: "custom-cluster-marker",
-      iconSize: [44, 44],
-      iconAnchor: [22, 22],
+      iconSize: [clusterSize, clusterSize],
+      iconAnchor: [clusterSize/2, clusterSize/2],
     });
 
     const marker = L.marker([lat, lng], { icon: clusterIcon }).addTo(
@@ -476,10 +486,14 @@ export default function PropertyMap({
     const subTextColor = isDark ? "#d1d5db" : "#666666";
     const popupBorderColor = isDark ? "#374151" : "#e5e7eb";
 
+    const popupTitle = isCityCluster && cluster.city ? 
+      `${count} Properties in ${cluster.city}` : 
+      `${count} Properties in this area`;
+      
     const popupContent = `
       <div class="cluster-popup" style="width: 320px; max-width: 95vw; background: ${popupBg}; color: ${textColor};">
         <div style="background: linear-gradient(135deg, #bdd479 0%, #a3c766 100%); color: white; padding: 12px 16px; margin: -8px -8px 12px -8px; border-radius: 12px 12px 0 0; font-weight: 600; text-align: center;">
-          ${count} Properties in this area
+          ${popupTitle}
         </div>
         <div style="max-height: 300px; overflow-y: auto;">
           ${cluster.properties
@@ -931,6 +945,13 @@ export default function PropertyMap({
     )
       return;
 
+    // Don't update markers if properties array is empty (might be loading)
+    if (!propertiesToShow || propertiesToShow.length === 0) {
+      return;
+    }
+
+    const L = (window as any).L;
+
     // Clear existing markers safely
     markersRef.current.forEach((marker) => {
       try {
@@ -943,17 +964,18 @@ export default function PropertyMap({
     });
     markersRef.current = [];
 
-    // Don't update markers if properties array is empty
-    if (!propertiesToShow || propertiesToShow.length === 0) {
-      return;
-    }
-
-    const L = (window as any).L;
-
-    // Always show individual markers for all properties
-    propertiesToShow.forEach((property) => {
-      if (property.latitude && property.longitude) {
-        createSingleMarker(property, L);
+    // Get current zoom level to determine clustering strategy
+    const currentZoom = mapInstanceRef.current.getZoom();
+    const clusters = createZoomBasedClusters(propertiesToShow, currentZoom);
+    const isCityBasedClustering = currentZoom < 10;
+    
+    clusters.forEach((cluster) => {
+      if (cluster.properties.length === 1) {
+        // Show individual marker if only one property in cluster
+        createSingleMarker(cluster.properties[0], L);
+      } else {
+        // Show cluster marker if multiple properties are grouped
+        createClusterMarker(cluster, L, isCityBasedClustering);
       }
     });
   };
