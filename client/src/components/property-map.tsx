@@ -437,15 +437,20 @@ export default function PropertyMap({
     propertiesToCluster: PropertyWithAgent[],
     zoomLevel: number
   ) => {
-    // If zoomed very far out (zoom < 8), group by country
-    if (zoomLevel < 8) {
+    // Enhanced zoom-based clustering with better grouping when zooming out
+    // If zoomed very far out (zoom < 7), group by country
+    if (zoomLevel < 7) {
       return createCountryBasedClusters(propertiesToCluster);
     }
-    // If zoomed out (zoom < 10), group by city
-    else if (zoomLevel < 10) {
+    // If zoomed out (zoom < 9), group by city
+    else if (zoomLevel < 9) {
       return createCityBasedClusters(propertiesToCluster);
     }
-    // If zoomed in more, use distance-based clustering
+    // If moderately zoomed out (zoom < 12), use larger distance clustering
+    else if (zoomLevel < 12) {
+      return createDistanceBasedClusters(propertiesToCluster, zoomLevel);
+    }
+    // If zoomed in more, use precise distance-based clustering
     else {
       return createDistanceBasedClusters(propertiesToCluster, zoomLevel);
     }
@@ -516,8 +521,13 @@ export default function PropertyMap({
   ) => {
     const clusters: any[] = [];
     const processed = new Set<number>();
-    // Adjust cluster distance based on zoom level
-    const CLUSTER_DISTANCE = zoomLevel > 13 ? 0.005 : zoomLevel > 11 ? 0.01 : 0.02;
+    // Enhanced cluster distance based on zoom level for better grouping
+    const CLUSTER_DISTANCE = 
+      zoomLevel > 15 ? 0.003 :  // Very close clustering for high zoom
+      zoomLevel > 13 ? 0.005 :  // Close clustering
+      zoomLevel > 11 ? 0.01 :   // Medium clustering
+      zoomLevel > 9 ? 0.03 :    // Larger clustering for medium zoom
+      0.05;                     // Very large clustering for lower zoom
 
     propertiesToCluster.forEach((property, index) => {
       if (processed.has(index) || !property.latitude || !property.longitude)
@@ -567,14 +577,10 @@ export default function PropertyMap({
     const count = cluster.properties.length;
     const { lat, lng } = cluster.center;
 
-    // Get theme-aware colors - use orange for cluster markers
+    // Always use orange background for cluster markers regardless of theme
     const isDark = document.documentElement.classList.contains("dark");
-    const bgGradient = isDark
-      ? "linear-gradient(135deg, #ea580c 0%, #dc2626 100%)"
-      : "linear-gradient(135deg, #fb923c 0%, #f97316 100%)";
-    const shadowColor = isDark
-      ? "rgba(251, 146, 60, 0.4)"
-      : "rgba(249, 115, 22, 0.4)";
+    const bgGradient = "linear-gradient(135deg, #f97316 0%, #ea580c 100%)"; // Consistent orange gradient
+    const shadowColor = "rgba(249, 115, 22, 0.4)"; // Consistent orange shadow
     const borderColor = "#ffffff";
 
     // Determine cluster size and styling based on count and type
