@@ -162,26 +162,39 @@
 }
 
 .custom-popup .leaflet-popup-close-button {
-  top: 12px !important;
-  right: 12px !important;
-  width: 28px !important;
-  height: 28px !important;
-  font-size: 14px !important;
-  color: #666 !important;
-  background: rgba(255, 255, 255, 0.95) !important;
+  top: 8px !important;
+  right: 8px !important;
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 16px !important;
+  color: white !important;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%) !important;
   border-radius: 50% !important;
   text-align: center !important;
-  line-height: 28px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-  border: 1px solid rgba(0, 0, 0, 0.05) !important;
-  transition: all 0.2s ease !important;
+  line-height: 32px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   z-index: 1000 !important;
+  font-weight: 600 !important;
+  backdrop-filter: blur(8px) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .custom-popup .leaflet-popup-close-button:hover {
-  background: rgba(248, 250, 252, 1) !important;
-  transform: scale(1.05) !important;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.8) 100%) !important;
+  transform: scale(1.1) rotate(90deg) !important;
+  box-shadow: 0 6px 25px rgba(220, 38, 38, 0.4), 0 3px 12px rgba(0, 0, 0, 0.3) !important;
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
+  color: white !important;
+}
+
+.custom-popup .leaflet-popup-close-button:active {
+  transform: scale(0.95) rotate(90deg) !important;
+  transition: all 0.1s ease !important;
 }
 
 /* Popup Animation Keyframes */
@@ -661,30 +674,41 @@
   overflow: hidden !important;
 }
 
-/* Cluster popup close button - make icon white */
+/* Professional cluster popup close button */
 .custom-cluster-popup .leaflet-popup-close-button {
-  top: 12px !important;
-  right: 12px !important;
-  width: 28px !important;
-  height: 28px !important;
-  font-size: 14px !important;
+  top: 8px !important;
+  right: 8px !important;
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 16px !important;
   color: white !important;
-  background: rgba(0, 0, 0, 0.6) !important;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%) !important;
   border-radius: 50% !important;
   text-align: center !important;
-  line-height: 28px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  transition: all 0.2s ease !important;
+  line-height: 32px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   z-index: 1000 !important;
-  font-weight: bold !important;
+  font-weight: 600 !important;
+  backdrop-filter: blur(8px) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .custom-cluster-popup .leaflet-popup-close-button:hover {
-  background: rgba(0, 0, 0, 0.8) !important;
-  transform: scale(1.05) !important;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3) !important;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.8) 100%) !important;
+  transform: scale(1.1) rotate(90deg) !important;
+  box-shadow: 0 6px 25px rgba(220, 38, 38, 0.4), 0 3px 12px rgba(0, 0, 0, 0.3) !important;
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
   color: white !important;
+}
+
+.custom-cluster-popup .leaflet-popup-close-button:active {
+  transform: scale(0.95) rotate(90deg) !important;
+  transition: all 0.1s ease !important;
 }
 
 .cluster-property-item:hover {
