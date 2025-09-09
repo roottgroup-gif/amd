@@ -171,6 +171,31 @@ export default function PropertyMap({
       }
     };
 
+    // Define global function for zooming to property from cluster popup
+    (window as any).zoomToPropertyFromCluster = (propertyId: string, lat: string, lng: string) => {
+      if (mapInstanceRef.current && lat && lng) {
+        const latitude = parseFloat(lat);
+        const longitude = parseFloat(lng);
+        
+        // Close any open popups first
+        mapInstanceRef.current.closePopup();
+        
+        // Zoom to the property location with a high zoom level
+        mapInstanceRef.current.setView([latitude, longitude], 16, {
+          animate: true,
+          duration: 1.0
+        });
+        
+        // Optional: trigger property selection callback if available
+        if (onPropertySelect) {
+          const property = properties.find(p => p.id === propertyId);
+          if (property) {
+            onPropertySelect(property);
+          }
+        }
+      }
+    };
+
     // Cleanup global functions on unmount
     return () => {
       if ((window as any).changeSlide) {
@@ -178,6 +203,9 @@ export default function PropertyMap({
       }
       if ((window as any).toggleFavoriteFromMap) {
         delete (window as any).toggleFavoriteFromMap;
+      }
+      if ((window as any).zoomToPropertyFromCluster) {
+        delete (window as any).zoomToPropertyFromCluster;
       }
     };
   }, []);
@@ -593,7 +621,7 @@ export default function PropertyMap({
                   transition: background-color 0.2s ease;
                   margin-bottom: 8px;
                 " 
-                onclick="window.viewPropertyFromMap('${property.id}')"
+                onclick="window.zoomToPropertyFromCluster('${property.id}', ${property.latitude}, ${property.longitude})"
                 onmouseover="this.style.backgroundColor='${isDark ? '#374151' : '#f8fafc'}'"
                 onmouseout="this.style.backgroundColor='transparent'">
                   
