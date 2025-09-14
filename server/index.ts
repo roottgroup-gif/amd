@@ -10,7 +10,8 @@ import path from "path";
 const app = express();
 
 // Trust proxy for correct protocol detection behind reverse proxies
-app.set('trust proxy', true);
+// Only trust first proxy for security (Replit's proxy)
+app.set('trust proxy', 1);
 
 // Enable gzip compression for all responses
 app.use(compression({
