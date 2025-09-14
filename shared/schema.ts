@@ -3,6 +3,15 @@ import { pgTable, text, varchar, integer, decimal, boolean, timestamp, jsonb } f
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Language constants
+export const SUPPORTED_LANGUAGES = ["en", "ar", "ku"] as const;
+export const LANGUAGE_NAMES = {
+  en: "English",
+  ar: "Arabic", 
+  ku: "Kurdish Sorani"
+} as const;
+export type Language = typeof SUPPORTED_LANGUAGES[number];
+
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
@@ -17,6 +26,7 @@ export const users = pgTable("users", {
   waveBalance: integer("wave_balance").default(10), // Number of waves user can assign to properties
   expiresAt: timestamp("expires_at"), // User account expiration date
   isExpired: boolean("is_expired").default(false), // Computed or manual flag for expiration status
+  allowedLanguages: jsonb("allowed_languages").$type<string[]>().default(["en"]), // Languages user can add data in: "en", "ar", "ku"
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -40,6 +50,7 @@ export const properties = pgTable("properties", {
   amenities: jsonb("amenities").$type<string[]>().default([]),
   features: jsonb("features").$type<string[]>().default([]),
   status: text("status").default("active"), // "active" | "sold" | "rented" | "pending"
+  language: text("language").notNull().default("en"), // Language of the property data: "en", "ar", "ku"
   agentId: varchar("agent_id").references(() => users.id),
   contactPhone: text("contact_phone"), // Contact phone number for this property (WhatsApp and calls)
   waveId: varchar("wave_id").references(() => waves.id), // Wave assignment
@@ -221,6 +232,8 @@ export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
   isExpired: true, // This will be computed based on expiresAt
+}).extend({
+  allowedLanguages: z.array(z.enum(SUPPORTED_LANGUAGES)).default(["en"]).optional(),
 });
 
 export const insertPropertySchema = createInsertSchema(properties).omit({
@@ -228,6 +241,8 @@ export const insertPropertySchema = createInsertSchema(properties).omit({
   createdAt: true,
   updatedAt: true,
   views: true,
+}).extend({
+  language: z.enum(SUPPORTED_LANGUAGES).default("en"),
 });
 
 export const insertInquirySchema = createInsertSchema(inquiries).omit({
