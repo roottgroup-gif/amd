@@ -25,11 +25,14 @@ const sseClients = new Set<Response>();
 function broadcastToSSEClients(event: string, data: any) {
   const message = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
   
+  console.log(`📡 Broadcasting ${event} to ${sseClients.size} connected clients:`, data.title || data.id);
+  
   // Send to all connected clients
   sseClients.forEach(client => {
     try {
       client.write(message);
     } catch (error) {
+      console.error(`❌ Failed to send ${event} to client:`, error);
       // Remove disconnected clients
       sseClients.delete(client);
     }
@@ -542,6 +545,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Property not found" });
       }
       
+      // Broadcast updated property to all SSE clients
+      broadcastToSSEClients('property_updated', property);
+      
       res.json(property);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -577,6 +583,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!deleted) {
         return res.status(404).json({ message: "Property not found" });
       }
+      
+      // Broadcast property deletion to all SSE clients
+      broadcastToSSEClients('property_deleted', { id, title: property.title });
       
       res.json({ message: "Property deleted successfully" });
     } catch (error) {

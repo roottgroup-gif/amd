@@ -44,7 +44,7 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
     eventSource.addEventListener('property_created', (event) => {
       try {
         const property: Property = JSON.parse((event as MessageEvent).data);
-        console.log('New property created:', property);
+        console.log('🏠 New property created and detected:', property.title);
 
         // Invalidate properties queries to trigger refetch
         queryClient.invalidateQueries({ 
@@ -66,14 +66,14 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
         // Call custom callback if provided
         onPropertyCreated?.(property);
       } catch (error) {
-        console.error('Error handling property_created event:', error);
+        console.error('❌ Error handling property_created event:', error);
       }
     });
 
     eventSource.addEventListener('property_updated', (event) => {
       try {
         const property: Property = JSON.parse((event as MessageEvent).data);
-        console.log('Property updated:', property);
+        console.log('🔄 Property updated and detected:', property.title);
 
         // Invalidate properties queries
         queryClient.invalidateQueries({ 
@@ -95,7 +95,7 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
         // Call custom callback if provided
         onPropertyUpdated?.(property);
       } catch (error) {
-        console.error('Error handling property_updated event:', error);
+        console.error('❌ Error handling property_updated event:', error);
       }
     });
 
@@ -103,7 +103,7 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
       try {
         const data = JSON.parse((event as MessageEvent).data);
         const propertyId = data.propertyId || data.id;
-        console.log('Property deleted:', propertyId);
+        console.log('🗑️ Property deleted and detected:', data.title || propertyId);
 
         // Invalidate properties queries
         queryClient.invalidateQueries({ 
@@ -125,7 +125,7 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
         // Call custom callback if provided
         onPropertyDeleted?.(propertyId);
       } catch (error) {
-        console.error('Error handling property_deleted event:', error);
+        console.error('❌ Error handling property_deleted event:', error);
       }
     });
 
