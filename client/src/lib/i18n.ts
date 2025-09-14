@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
-type Language = 'en' | 'ar' | 'ku';
+type Language = 'en' | 'ar' | 'kur';
 
 interface Translations {
   [key: string]: {
     en: string;
     ar: string;
-    ku: string;
+    kur: string;
   };
 }
 
@@ -15,142 +15,142 @@ const translations: Translations = {
   'nav.home': {
     en: 'Home',
     ar: 'الرئيسية',
-    ku: 'سەرەتا'
+    kur: 'سەرەتا'
   },
   'nav.properties': {
     en: 'Properties',
     ar: 'العقارات',
-    ku: 'خانووبەرە'
+    kur: 'خانووبەرە'
   },
   'nav.agents': {
     en: 'Agents',
     ar: 'الوكلاء',
-    ku: 'بریکار'
+    kur: 'بریکار'
   },
   'nav.about': {
     en: 'About',
     ar: 'حول',
-    ku: 'دەربارە'
+    kur: 'دەربارە'
   },
   'nav.signIn': {
     en: 'Sign In',
     ar: 'تسجيل الدخول',
-    ku: 'چوونەژوورەوە'
+    kur: 'چوونەژوورەوە'
   },
 
   // Hero Section
   'hero.title': {
     en: 'Find Your Perfect Home with AI',
     ar: 'اعثر على منزلك المثالي بالذكاء الاصطناعي',
-    ku: 'ماڵی تەواوی خۆت بە AI بدۆزەرەوە'
+    kur: 'ماڵی تەواوی خۆت بە AI بدۆزەرەوە'
   },
   'hero.subtitle': {
     en: 'Discover properties tailored to your needs using intelligent recommendations',
     ar: 'اكتشف العقارات المصممة خصيصًا لاحتياجاتك باستخدام التوصيات الذكية',
-    ku: 'خانووبەرەکان بدۆزەرەوە کە بە پێی پێداویستییەکانت داڕێژراون'
+    kur: 'خانووبەرەکان بدۆزەرەوە کە بە پێی پێداویستییەکانت داڕێژراون'
   },
   'hero.searchPlaceholder': {
     en: "Ask AI: 'Find me a 3-bedroom house under $200k near downtown'",
     ar: "اسأل الذكاء الاصطناعي: 'ابحث لي عن منزل بـ 3 غرف نوم تحت 200 ألف دولار بالقرب من وسط المدينة'",
-    ku: "لە AI بپرسە: 'ماڵێکی 3 ژووری نوستن بدۆزەرەوە کە کەمتر لە 200 هەزار دۆلار بێت'"
+    kur: "لە AI بپرسە: 'ماڵێکی 3 ژووری نوستن بدۆزەرەوە کە کەمتر لە 200 هەزار دۆلار بێت'"
   },
   'hero.search': {
     en: 'Search',
     ar: 'بحث',
-    ku: 'گەڕان'
+    kur: 'گەڕان'
   },
 
   // Quick Filters
   'filter.forSale': {
     en: 'For Sale',
     ar: 'للبيع',
-    ku: 'بۆ فرۆشتن'
+    kur: 'بۆ فرۆشتن'
   },
   'filter.forRent': {
     en: 'For Rent',
     ar: 'للإيجار',
-    ku: 'بۆ کرێ'
+    kur: 'بۆ کرێ'
   },
   'filter.houses': {
     en: 'Houses',
     ar: 'منازل',
-    ku: 'ماڵەکان'
+    kur: 'ماڵەکان'
   },
   'filter.apartments': {
     en: 'Apartments',
     ar: 'شقق',
-    ku: 'شوقەکان'
+    kur: 'شوقەکان'
   },
   'filter.nearMe': {
     en: 'Near Me',
     ar: 'بالقرب مني',
-    ku: 'نزیکی من'
+    kur: 'نزیکی من'
   },
 
   // Property Details
   'property.beds': {
     en: 'Beds',
     ar: 'غرف نوم',
-    ku: 'ژووری نوستن'
+    kur: 'ژووری نوستن'
   },
   'property.baths': {
     en: 'Baths',
     ar: 'حمامات',
-    ku: 'حەمام'
+    kur: 'حەمام'
   },
   'property.sqft': {
     en: 'sq ft',
     ar: 'قدم مربع',
-    ku: 'پێی چوارگۆشە'
+    kur: 'پێی چوارگۆشە'
   },
   'property.viewDetails': {
     en: 'View Details',
     ar: 'عرض التفاصيل',
-    ku: 'بینینی وردەکارییەکان'
+    kur: 'بینینی وردەکارییەکان'
   },
 
   // Contact
   'contact.callNow': {
     en: 'Call Now',
     ar: 'اتصل الآن',
-    ku: 'ئێستا پەیوەندی بکە'
+    kur: 'ئێستا پەیوەندی بکە'
   },
   'contact.sendMessage': {
     en: 'Send Message',
     ar: 'إرسال رسالة',
-    ku: 'نامە بنێرە'
+    kur: 'نامە بنێرە'
   },
   'contact.name': {
     en: 'Your Name',
     ar: 'اسمك',
-    ku: 'ناوت'
+    kur: 'ناوت'
   },
   'contact.email': {
     en: 'Your Email',
     ar: 'بريدك الإلكتروني',
-    ku: 'ئیمەیڵت'
+    kur: 'ئیمەیڵت'
   },
   'contact.message': {
     en: 'Your Message',
     ar: 'رسالتك',
-    ku: 'نامەکەت'
+    kur: 'نامەکەت'
   },
 
   // Common
   'common.loading': {
     en: 'Loading...',
     ar: 'جاري التحميل...',
-    ku: 'بارکردن...'
+    kur: 'بارکردن...'
   },
   'common.error': {
     en: 'An error occurred',
     ar: 'حدث خطأ',
-    ku: 'هەڵەیەک ڕوویدا'
+    kur: 'هەڵەیەک ڕوویدا'
   },
   'common.noResults': {
     en: 'No results found',
     ar: 'لا توجد نتائج',
-    ku: 'هیچ ئەنجامێک نەدۆزرایەوە'
+    kur: 'هیچ ئەنجامێک نەدۆزرایەوە'
   }
 };
 
@@ -159,7 +159,7 @@ export function useTranslation() {
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language') as Language;
-    if (savedLanguage && ['en', 'ar', 'ku'].includes(savedLanguage)) {
+    if (savedLanguage && ['en', 'ar', 'kur'].includes(savedLanguage)) {
       setLanguage(savedLanguage);
     }
   }, []);
@@ -169,7 +169,7 @@ export function useTranslation() {
     localStorage.setItem('language', lang);
     
     // Update document direction for RTL languages
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dir = (lang === 'ar' || lang === 'kur') ? 'rtl' : 'ltr';
     document.documentElement.lang = lang;
   };
 
@@ -181,6 +181,6 @@ export function useTranslation() {
     language,
     changeLanguage,
     t,
-    isRTL: language === 'ar'
+    isRTL: language === 'ar' || language === 'kur'
   };
 }
