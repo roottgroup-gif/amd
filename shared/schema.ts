@@ -245,6 +245,15 @@ export const insertPropertySchema = createInsertSchema(properties).omit({
   language: z.enum(SUPPORTED_LANGUAGES).default("en"),
 });
 
+export const updatePropertySchema = createInsertSchema(properties).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  views: true,
+}).extend({
+  language: z.enum(SUPPORTED_LANGUAGES).optional(), // No default for updates
+}).partial();
+
 export const insertInquirySchema = createInsertSchema(inquiries).omit({
   id: true,
   createdAt: true,

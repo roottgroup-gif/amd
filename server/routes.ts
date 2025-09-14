@@ -2,10 +2,10 @@ import type { Express, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
-  insertPropertySchema, insertInquirySchema, insertFavoriteSchema, insertUserSchema,
+  insertPropertySchema, updatePropertySchema, insertInquirySchema, insertFavoriteSchema, insertUserSchema,
   insertWaveSchema, insertCustomerWavePermissionSchema
 } from "@shared/schema";
-import { hashPassword, requireAuth, requireRole, requireAnyRole, populateUser } from "./auth";
+import { hashPassword, requireAuth, requireRole, requireAnyRole, populateUser, validateLanguagePermission } from "./auth";
 import session from "express-session";
 import { z } from "zod";
 import sitemapRouter from "./routes/sitemap";
@@ -223,6 +223,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           delete processedBody.expiresAt;
         }
       }
+
+      // Only super admins can set language permissions for other users
+      if (processedBody.allowedLanguages && req.user?.role !== 'super_admin') {
+        return res.status(403).json({ 
+          message: "Only super admins can set language permissions" 
+        });
+      }
+
+      // Set default language permissions if not provided and user is super admin
+      if (!processedBody.allowedLanguages && req.user?.role === 'super_admin') {
+        processedBody.allowedLanguages = ['en']; // Default to English only
+      }
       
       const validatedData = insertUserSchema.parse(processedBody);
       
@@ -263,6 +275,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         } else {
           delete processedBody.expiresAt;
         }
+      }
+
+      // Only super admins can modify language permissions
+      if (processedBody.allowedLanguages && req.user?.role !== 'super_admin') {
+        return res.status(403).json({ 
+          message: "Only super admins can modify language permissions" 
+        });
       }
       
       const validatedData = insertUserSchema.partial().parse(processedBody);
@@ -518,7 +537,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/properties", requireAnyRole(["user", "admin"]), async (req, res) => {
+  app.post("/api/properties", requireAnyRole(["user", "admin"]), validateLanguagePermission, async (req, res) => {
     try {
       const validatedData = insertPropertySchema.parse(req.body);
       const property = await storage.createProperty(validatedData);
@@ -535,10 +554,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/properties/:id", requireAnyRole(["user", "admin"]), async (req, res) => {
+  app.put("/api/properties/:id", requireAnyRole(["user", "admin"]), validateLanguagePermission, async (req, res) => {
     try {
       const { id } = req.params;
-      const validatedData = insertPropertySchema.partial().parse(req.body);
+      const validatedData = updatePropertySchema.parse(req.body);
       const property = await storage.updateProperty(id, validatedData);
       
       if (!property) {

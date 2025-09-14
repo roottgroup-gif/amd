@@ -95,3 +95,48 @@ export const populateUser = async (req: Request, res: Response, next: NextFuncti
   }
   next();
 };
+
+// Middleware to validate user can add data in the specified language
+export const validateLanguagePermission = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  try {
+    let requestedLanguage = req.body.language;
+    
+    // For updates, if no language specified, get the existing property language
+    if (!requestedLanguage && req.method === 'PUT' && req.params.id) {
+      const existingProperty = await storage.getProperty(req.params.id);
+      if (existingProperty) {
+        requestedLanguage = existingProperty.language || 'en';
+      } else {
+        return res.status(404).json({ message: 'Property not found' });
+      }
+    }
+    
+    // For creates, default to "en" if no language specified
+    if (!requestedLanguage) {
+      requestedLanguage = 'en';
+    }
+    
+    // Super admins can add data in any language
+    if (req.user.role === 'super_admin') {
+      return next();
+    }
+
+    // Check if user has permission for this language
+    const userAllowedLanguages = req.user.allowedLanguages || ['en'];
+    
+    if (!userAllowedLanguages.includes(requestedLanguage)) {
+      return res.status(403).json({ 
+        message: `You don't have permission to add data in language '${requestedLanguage}'. Allowed languages: ${userAllowedLanguages.join(', ')}` 
+      });
+    }
+    
+    next();
+  } catch (error) {
+    console.error('Error validating language permission:', error);
+    res.status(500).json({ message: 'Error validating language permission' });
+  }
+};
