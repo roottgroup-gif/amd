@@ -1661,24 +1661,30 @@ export default function CustomerDashboard() {
                           name="listingType"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Listing Type *</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.listingType} *
+                              </FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
-                                  <SelectTrigger data-testid="select-listing-type">
-                                    <SelectValue placeholder="Select listing type" />
+                                  <SelectTrigger 
+                                    data-testid="select-listing-type"
+                                    className={getLanguageClasses(selectedLanguage)}
+                                    dir={getTextDirection(selectedLanguage)}
+                                  >
+                                    <SelectValue placeholder={t.selectListingType} />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
                                   <SelectItem value="sale">
                                     <span className="flex items-center gap-2">
                                       <Tag className="h-4 w-4 text-green-600" />
-                                      For Sale
+                                      {t.sale}
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="rent">
                                     <span className="flex items-center gap-2">
                                       <Key className="h-4 w-4 text-orange-600" />
-                                      For Rent
+                                      {t.rent}
                                     </span>
                                   </SelectItem>
                                 </SelectContent>
@@ -1693,12 +1699,16 @@ export default function CustomerDashboard() {
                           name="price"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Price (USD) *</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.price} *
+                              </FormLabel>
                               <FormControl>
                                 <Input 
-                                  placeholder="e.g., 150000" 
+                                  placeholder={t.pricePlaceholder} 
                                   type="number" 
                                   {...field}
+                                  className={getLanguageClasses(selectedLanguage)}
+                                  dir={getTextDirection(selectedLanguage)}
                                   onChange={(e) => field.onChange(e.target.value)}
                                   data-testid="input-price" 
                                 />
@@ -1713,13 +1723,17 @@ export default function CustomerDashboard() {
                           name="area"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Area (sq ft) *</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.area} *
+                              </FormLabel>
                               <FormControl>
                                 <Input 
-                                  placeholder="e.g., 1200" 
+                                  placeholder={t.areaPlaceholder} 
                                   type="number" 
                                   min="1"
                                   {...field}
+                                  className={getLanguageClasses(selectedLanguage)}
+                                  dir={getTextDirection(selectedLanguage)}
                                   onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
                                   data-testid="input-area"
                                 />
@@ -1776,9 +1790,17 @@ export default function CustomerDashboard() {
                           name="address"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Address *</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.address} *
+                              </FormLabel>
                               <FormControl>
-                                <Input placeholder="e.g., 123 Main Street" {...field} data-testid="input-address" />
+                                <Input 
+                                  placeholder={t.addressPlaceholder} 
+                                  {...field} 
+                                  className={getLanguageClasses(selectedLanguage)}
+                                  dir={getTextDirection(selectedLanguage)}
+                                  data-testid="input-address" 
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
