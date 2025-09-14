@@ -275,6 +275,36 @@ const translations: Translations = {
     en: 'Property link has been copied to your clipboard.',
     ar: 'تم نسخ رابط العقار إلى الحافظة.',
     kur: 'بەستەری خانووبەرەکە کۆپی کراوە بۆ کلیپ بۆردەکەت.'
+  },
+  'property.addedToFavorites': {
+    en: 'Added to Favorites',
+    ar: 'تمت الإضافة إلى المفضلة',
+    kur: 'زیادکرا بۆ بەرگری'
+  },
+  'property.addedToFavoritesDescription': {
+    en: 'Property has been added to your favorites.',
+    ar: 'تمت إضافة العقار إلى مفضلتك.',
+    kur: 'خانووبەرەکە زیادکرا بۆ بەرگریەکانت.'
+  },
+  'property.removedFromFavorites': {
+    en: 'Removed from Favorites',
+    ar: 'تمت الإزالة من المفضلة',
+    kur: 'لابرا لە بەرگری'
+  },
+  'property.removedFromFavoritesDescription': {
+    en: 'Property has been removed from your favorites.',
+    ar: 'تمت إزالة العقار من مفضلتك.',
+    kur: 'خانووبەرەکە لابرا لە بەرگریەکانت.'
+  },
+  'property.favoriteError': {
+    en: 'Error',
+    ar: 'خطأ',
+    kur: 'هەڵە'
+  },
+  'property.favoriteErrorDescription': {
+    en: 'Failed to update favorites. Please try again.',
+    ar: 'فشل في تحديث المفضلة. حاول مرة أخرى.',
+    kur: 'سەرکەوتوو نەبوو لە نوێکردنەوەی بەرگری. دووبارە هەوڵبدەوە.'
   }
 };
 
@@ -285,6 +315,9 @@ export function useTranslation() {
     const savedLanguage = localStorage.getItem('language') as Language;
     if (savedLanguage && ['en', 'ar', 'kur'].includes(savedLanguage)) {
       setLanguage(savedLanguage);
+      // Apply document direction and language on initial load
+      document.documentElement.dir = (savedLanguage === 'ar' || savedLanguage === 'kur') ? 'rtl' : 'ltr';
+      document.documentElement.lang = savedLanguage;
     }
   }, []);
 

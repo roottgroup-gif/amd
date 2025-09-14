@@ -151,20 +151,20 @@ export default function PropertyDetailPage() {
       if (isFavorite) {
         await removeFromFavorites.mutateAsync({ userId, propertyId: property.id });
         toast({
-          title: "Removed from favorites",
-          description: "Property has been removed from your favorites.",
+          title: t('property.removedFromFavorites'),
+          description: t('property.removedFromFavoritesDescription'),
         });
       } else {
         await addToFavorites.mutateAsync({ userId, propertyId: property.id });
         toast({
-          title: "Added to favorites",
-          description: "Property has been added to your favorites.",
+          title: t('property.addedToFavorites'),
+          description: t('property.addedToFavoritesDescription'),
         });
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to update favorites. Please try again.",
+        title: t('property.favoriteError'),
+        description: t('property.favoriteErrorDescription'),
         variant: "destructive",
       });
     }
