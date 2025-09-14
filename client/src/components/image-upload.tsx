@@ -205,6 +205,8 @@ export default function ImageUpload({
                       src={image}
                       alt={`Property image ${index + 1}`}
                       className="w-full h-full object-cover rounded-md"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <Button
                       variant="destructive"

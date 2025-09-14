@@ -10,6 +10,26 @@ interface SEOProps {
   structuredData?: object;
 }
 
+function addPreconnectHints() {
+  // Common external domains used for images to improve loading performance
+  const domains = [
+    'https://images.unsplash.com',
+    'https://cdn.pixabay.com',
+    'https://via.placeholder.com'
+  ];
+  
+  domains.forEach(domain => {
+    // Check if preconnect link already exists
+    if (!document.querySelector(`link[rel="preconnect"][href="${domain}"]`)) {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = domain;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    }
+  });
+}
+
 export function SEOHead({ 
   title = "EstateAI - AI-Powered Real Estate Finder",
   description = "Find your perfect home with AI-powered recommendations. Discover properties for rent and sale in Kurdistan, Iraq with intelligent search and expert agents.",
@@ -33,14 +53,19 @@ export function SEOHead({
     updateMetaTag('property', 'og:description', description);
     updateMetaTag('property', 'og:image', ogImage);
     updateMetaTag('property', 'og:url', canonicalUrl || window.location.href);
+    updateMetaTag('property', 'og:type', 'website');
     
     // Update Twitter tags
+    updateMetaTag('name', 'twitter:card', 'summary_large_image');
     updateMetaTag('property', 'twitter:title', title);
     updateMetaTag('property', 'twitter:description', description);
     updateMetaTag('property', 'twitter:image', ogImage);
     
     // Update canonical URL
     updateCanonicalUrl(canonicalUrl || window.location.href);
+    
+    // Add performance optimization hints
+    addPreconnectHints();
     
     // Update structured data
     if (structuredData) {
@@ -85,3 +110,4 @@ function updateStructuredData(data: object) {
   script.textContent = JSON.stringify(data);
   document.head.appendChild(script);
 }
+
