@@ -12,10 +12,20 @@ interface PropertyEventOptions {
 export function usePropertyEvents(options: PropertyEventOptions = {}) {
   const queryClient = useQueryClient();
   const eventSourceRef = useRef<EventSource | null>(null);
+  const currentFiltersRef = useRef<Record<string, any> | undefined>();
+  const callbacksRef = useRef<{
+    onPropertyCreated?: (property: Property) => void;
+    onPropertyUpdated?: (property: Property) => void;
+    onPropertyDeleted?: (propertyId: string) => void;
+  }>({});
   const { currentFilters, onPropertyCreated, onPropertyUpdated, onPropertyDeleted } = options;
 
+  // Update refs without triggering reconnection
+  currentFiltersRef.current = currentFilters;
+  callbacksRef.current = { onPropertyCreated, onPropertyUpdated, onPropertyDeleted };
+
   useEffect(() => {
-    // Create EventSource connection
+    // Create EventSource connection only once
     const eventSource = new EventSource('/api/properties/stream');
     eventSourceRef.current = eventSource;
 
@@ -52,9 +62,9 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
         });
 
         // If we have current filters, also invalidate the specific filtered query
-        if (currentFilters) {
+        if (currentFiltersRef.current) {
           queryClient.invalidateQueries({ 
-            queryKey: ['/api/properties', currentFilters] 
+            queryKey: ['/api/properties', currentFiltersRef.current] 
           });
         }
 
@@ -64,7 +74,7 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
         });
 
         // Call custom callback if provided
-        onPropertyCreated?.(property);
+        callbacksRef.current.onPropertyCreated?.(property);
       } catch (error) {
         console.error('❌ Error handling property_created event:', error);
       }
@@ -86,14 +96,14 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
         });
 
         // If we have current filters, also invalidate the specific filtered query
-        if (currentFilters) {
+        if (currentFiltersRef.current) {
           queryClient.invalidateQueries({ 
-            queryKey: ['/api/properties', currentFilters] 
+            queryKey: ['/api/properties', currentFiltersRef.current] 
           });
         }
 
         // Call custom callback if provided
-        onPropertyUpdated?.(property);
+        callbacksRef.current.onPropertyUpdated?.(property);
       } catch (error) {
         console.error('❌ Error handling property_updated event:', error);
       }
@@ -116,14 +126,14 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
         });
 
         // If we have current filters, also invalidate the specific filtered query
-        if (currentFilters) {
+        if (currentFiltersRef.current) {
           queryClient.invalidateQueries({ 
-            queryKey: ['/api/properties', currentFilters] 
+            queryKey: ['/api/properties', currentFiltersRef.current] 
           });
         }
 
         // Call custom callback if provided
-        onPropertyDeleted?.(propertyId);
+        callbacksRef.current.onPropertyDeleted?.(propertyId);
       } catch (error) {
         console.error('❌ Error handling property_deleted event:', error);
       }
@@ -143,7 +153,7 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
       eventSource.close();
       eventSourceRef.current = null;
     };
-  }, [queryClient, currentFilters, onPropertyCreated, onPropertyUpdated, onPropertyDeleted]);
+  }, [queryClient]); // Removed currentFilters and callbacks to prevent unnecessary reconnections
 
   // Return connection status
   const isConnected = eventSourceRef.current?.readyState === EventSource.OPEN;

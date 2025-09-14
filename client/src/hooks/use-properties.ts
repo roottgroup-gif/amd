@@ -3,8 +3,15 @@ import { apiRequest } from "@/lib/queryClient";
 import type { Property, PropertyFilters, AISearchResponse, Inquiry } from "@/types";
 
 export function useProperties(filters?: PropertyFilters) {
+  // Create a stable, serializable version of filters for the query key
+  const normalizedFilters = filters ? Object.fromEntries(
+    Object.entries(filters)
+      .filter(([, value]) => value !== undefined && value !== null && value !== '')
+      .sort(([a], [b]) => a.localeCompare(b)) // Sort keys for consistency
+  ) : {};
+
   return useQuery<Property[]>({
-    queryKey: ["/api/properties", filters],
+    queryKey: ["/api/properties", normalizedFilters],
     staleTime: 1 * 60 * 1000, // 1 minute cache for property lists
     gcTime: 3 * 60 * 1000, // 3 minutes in memory
     queryFn: async () => {
