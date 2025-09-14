@@ -384,6 +384,7 @@ export default function AdminDashboard() {
       waveBalance: user.waveBalance || 0,
       expiresAt: formattedExpiresAt,
       isVerified: user.isVerified || false,
+      allowedLanguages: user.allowedLanguages || ['en'],
     });
     setAvatarPreview(user.avatar || '');
     setIsEditUserOpen(true);
@@ -1108,6 +1109,74 @@ export default function AdminDashboard() {
                           </FormItem>
                         )}
                       />
+                      
+                      {/* Language Permissions - Super Admin Only */}
+                      {user?.role === 'super_admin' && (
+                        <FormField
+                          control={editForm.control}
+                          name="allowedLanguages"
+                          render={({ field }) => (
+                            <FormItem className="rounded-md border border-blue-200 p-4">
+                              <FormLabel className="flex items-center gap-2 text-blue-600 font-medium">
+                                <Languages className="h-4 w-4" />
+                                Language Permissions
+                              </FormLabel>
+                              <FormControl>
+                                <div className="space-y-3">
+                                  <p className="text-sm text-gray-500">
+                                    Select which languages this customer can use to create content
+                                  </p>
+                                  <div className="flex flex-wrap gap-4">
+                                    {SUPPORTED_LANGUAGES.map((lang) => (
+                                      <div key={lang} className="flex items-center space-x-2">
+                                        <Checkbox
+                                          checked={field.value?.includes(lang) || false}
+                                          onCheckedChange={(checked) => {
+                                            const currentLanguages = field.value || ['en'];
+                                            if (checked) {
+                                              field.onChange([...currentLanguages, lang]);
+                                            } else {
+                                              // Prevent removing all languages - at least English must remain
+                                              const newLanguages = currentLanguages.filter(l => l !== lang);
+                                              if (newLanguages.length === 0) {
+                                                field.onChange(['en']);
+                                              } else {
+                                                field.onChange(newLanguages);
+                                              }
+                                            }
+                                          }}
+                                          data-testid={`edit-checkbox-language-${lang}`}
+                                        />
+                                        <label 
+                                          className="text-sm font-medium cursor-pointer"
+                                          onClick={() => {
+                                            const currentLanguages = field.value || ['en'];
+                                            const isChecked = currentLanguages.includes(lang);
+                                            if (!isChecked) {
+                                              field.onChange([...currentLanguages, lang]);
+                                            } else {
+                                              const newLanguages = currentLanguages.filter(l => l !== lang);
+                                              if (newLanguages.length === 0) {
+                                                field.onChange(['en']);
+                                              } else {
+                                                field.onChange(newLanguages);
+                                              }
+                                            }
+                                          }}
+                                        >
+                                          {LANGUAGE_NAMES[lang]}
+                                        </label>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                      
                       <div className="flex justify-end space-x-2 pt-4">
                         <Button 
                           type="button" 
