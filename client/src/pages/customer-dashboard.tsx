@@ -134,6 +134,26 @@ const translations = {
     // Contact Info
     contactPhoneNote: 'This phone number will be shown to interested buyers for WhatsApp and calls',
     
+    // Amenities
+    swimmingPool: 'Swimming Pool',
+    garden: 'Garden',
+    parking: 'Parking',
+    securitySystem: 'Security System',
+    elevator: 'Elevator',
+    gym: 'Gym',
+    balcony: 'Balcony',
+    terrace: 'Terrace',
+    
+    // Features
+    airConditioning: 'Air Conditioning',
+    heating: 'Heating',
+    furnished: 'Furnished',
+    petFriendly: 'Pet Friendly',
+    fireplace: 'Fireplace',
+    highCeilings: 'High Ceilings',
+    modernKitchen: 'Modern Kitchen',
+    storageRoom: 'Storage Room',
+    
     // UI Text
     required: 'required',
     optional: 'optional',
@@ -236,6 +256,26 @@ const translations = {
     // Contact Info
     contactPhoneNote: 'سيظهر رقم الهاتف هذا للمشترين المهتمين للواتساب والمكالمات',
     
+    // Amenities
+    swimmingPool: 'مسبح',
+    garden: 'حديقة',
+    parking: 'موقف سيارات',
+    securitySystem: 'نظام أمني',
+    elevator: 'مصعد',
+    gym: 'صالة رياضية',
+    balcony: 'شرفة',
+    terrace: 'تراس',
+    
+    // Features
+    airConditioning: 'تكييف الهواء',
+    heating: 'تدفئة',
+    furnished: 'مفروش',
+    petFriendly: 'مناسب للحيوانات الأليفة',
+    fireplace: 'مدفأة',
+    highCeilings: 'أسقف عالية',
+    modernKitchen: 'مطبخ عصري',
+    storageRoom: 'غرفة تخزين',
+    
     // UI Text
     required: 'مطلوب',
     optional: 'اختياري',
@@ -258,7 +298,6 @@ const translations = {
     contactPhone: 'ژمارەی پەیوەندی',
     propertyWave: 'شەپۆلی موڵک',
     selectLanguage: 'زمان هەڵبژێرە',
-    description: 'وەسف',
     
     // Placeholders
     titlePlaceholder: 'نموونە: ڤیلایەکی جوان بە 3 ژووری نوستن',
@@ -338,6 +377,26 @@ const translations = {
     
     // Contact Info
     contactPhoneNote: 'ئەم ژمارە تەلەفۆنە بۆ کڕیارە ئارەزووبەکان پیشان دەدرێت بۆ واتساپ و پەیوەندیکردن',
+    
+    // Amenities
+    swimmingPool: 'مەلەوانی مەلە',
+    garden: 'باغچە',
+    parking: 'شوێنی ئۆتۆمبێل',
+    securitySystem: 'سیستەمی ئەمنی',
+    elevator: 'ئاسانسۆر',
+    gym: 'زیمی ریازی',
+    balcony: 'ئەیوان',
+    terrace: 'تەراس',
+    
+    // Features
+    airConditioning: 'کولەرکەر',
+    heating: 'گەرمکەر',
+    furnished: 'بە کەلوپەل',
+    petFriendly: 'گونجاو بۆ ئاژەڵەکان',
+    fireplace: 'بخاری با',
+    highCeilings: 'بانی بەرز',
+    modernKitchen: 'مەٹبەخی سەردەم',
+    storageRoom: 'ژووری کۆگاکراوە',
     
     // UI Text
     required: 'پێویست',
@@ -457,7 +516,7 @@ const getExpirationStatus = (daysUntilExpiration: number | null): {
 
 // Helper function to get text direction for language
 const getTextDirection = (language: Language): 'ltr' | 'rtl' => {
-  return language === 'ar' || language === 'ku' ? 'rtl' : 'ltr';
+  return language === 'ar' || language === 'ku' || language === 'kur' ? 'rtl' : 'ltr';
 };
 
 // Helper function to get language-specific CSS classes
@@ -1669,23 +1728,29 @@ export default function CustomerDashboard() {
             <TabsContent value="add-property" className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>{editingProperty ? 'Update Property' : 'Add New Property'}</CardTitle>
-                  <CardDescription>
-                    {editingProperty ? 'Update your property details' : 'Share your property with others by adding it to our platform'}
+                  <CardTitle className={getLanguageClasses(selectedLanguage)} dir={getTextDirection(selectedLanguage)}>
+                    {editingProperty ? t.updateProperty : t.addNewProperty}
+                  </CardTitle>
+                  <CardDescription className={getLanguageClasses(selectedLanguage)} dir={getTextDirection(selectedLanguage)}>
+                    {editingProperty ? t.updatePropertyText : t.sharePropertyText}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Form {...propertyForm}>
-                    <form onSubmit={propertyForm.handleSubmit(onSubmitProperty)} className="space-y-6">
+                    <form 
+                      onSubmit={propertyForm.handleSubmit(onSubmitProperty)} 
+                      className="space-y-6"
+                      dir={getTextDirection(selectedLanguage)}
+                    >
                       {/* Language Selection Section */}
                       {showLanguageSelection && (
                         <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                           <div className="flex items-center gap-3 mb-3">
                             <Globe className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                            <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200">Select Property Language</h3>
+                            <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200">{t.selectPropertyLanguage}</h3>
                           </div>
                           <p className="text-sm text-blue-700 dark:text-blue-300 mb-4">
-                            Choose the language for your property listing. This will change the form to that language and set the property's display language.
+                            {t.languageDescription}
                           </p>
                           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                             {availableLanguages.map((lang) => (
@@ -1733,7 +1798,7 @@ export default function CustomerDashboard() {
                                 {getTextDirection(selectedLanguage) === 'rtl' ? (
                                   <>بلغة: {LANGUAGE_NAMES[selectedLanguage]}</>
                                 ) : (
-                                  <>Language: {LANGUAGE_NAMES[selectedLanguage]}</>
+                                  <>{t.language}: {LANGUAGE_NAMES[selectedLanguage]}</>
                                 )}
                               </span>
                             </div>
@@ -1745,7 +1810,7 @@ export default function CustomerDashboard() {
                               className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30"
                               data-testid="button-change-language"
                             >
-                              {getTextDirection(selectedLanguage) === 'rtl' ? 'تغيير' : 'Change'}
+                              {getTextDirection(selectedLanguage) === 'rtl' ? 'تغيير' : t.change}
                             </Button>
                           </div>
 
@@ -1917,13 +1982,17 @@ export default function CustomerDashboard() {
                           name="bedrooms"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Bedrooms</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.bedrooms} *
+                              </FormLabel>
                               <FormControl>
                                 <Input 
-                                  placeholder="e.g., 3" 
+                                  placeholder={t.bedroomsPlaceholder} 
                                   type="number" 
                                   min="1"
                                   {...field}
+                                  className={getLanguageClasses(selectedLanguage)}
+                                  dir={getTextDirection(selectedLanguage)}
                                   onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
                                   data-testid="input-bedrooms"
                                 />
@@ -1938,13 +2007,17 @@ export default function CustomerDashboard() {
                           name="bathrooms"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Bathrooms</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.bathrooms} *
+                              </FormLabel>
                               <FormControl>
                                 <Input 
-                                  placeholder="e.g., 2" 
+                                  placeholder={t.bathroomsPlaceholder} 
                                   type="number" 
                                   min="1"
                                   {...field}
+                                  className={getLanguageClasses(selectedLanguage)}
+                                  dir={getTextDirection(selectedLanguage)}
                                   onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
                                   data-testid="input-bathrooms"
                                 />
@@ -1981,9 +2054,17 @@ export default function CustomerDashboard() {
                           name="city"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>City *</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.city} *
+                              </FormLabel>
                               <FormControl>
-                                <Input placeholder="e.g., Erbil" {...field} data-testid="input-city" />
+                                <Input 
+                                  placeholder={t.cityPlaceholder} 
+                                  {...field} 
+                                  className={getLanguageClasses(selectedLanguage)}
+                                  dir={getTextDirection(selectedLanguage)}
+                                  data-testid="input-city" 
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1995,9 +2076,17 @@ export default function CustomerDashboard() {
                           name="country"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Country *</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.country} *
+                              </FormLabel>
                               <FormControl>
-                                <Input placeholder="e.g., Iraq" {...field} data-testid="input-country" />
+                                <Input 
+                                  placeholder={t.countryPlaceholder} 
+                                  {...field} 
+                                  className={getLanguageClasses(selectedLanguage)}
+                                  dir={getTextDirection(selectedLanguage)}
+                                  data-testid="input-country" 
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -2009,21 +2098,24 @@ export default function CustomerDashboard() {
                           name="contactPhone"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Contact Phone</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.contactPhone}
+                              </FormLabel>
                               <FormControl>
                                 <div className="relative">
-                                  <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                  <Phone className={`absolute ${getTextDirection(selectedLanguage) === 'rtl' ? 'right-3' : 'left-3'} top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400`} />
                                   <Input 
-                                    placeholder="e.g., +964 750 123 4567" 
+                                    placeholder={t.contactPhonePlaceholder} 
                                     {...field} 
-                                    className="pl-10"
+                                    className={`${getTextDirection(selectedLanguage) === 'rtl' ? 'pr-10' : 'pl-10'} ${getLanguageClasses(selectedLanguage)}`}
+                                    dir={getTextDirection(selectedLanguage)}
                                     data-testid="input-contact-phone" 
                                   />
                                 </div>
                               </FormControl>
                               <FormMessage />
-                              <p className="text-xs text-muted-foreground">
-                                This phone number will be shown to interested buyers for WhatsApp and calls
+                              <p className={`text-xs text-muted-foreground ${getLanguageClasses(selectedLanguage)}`}>
+                                {t.contactPhoneNote}
                               </p>
                             </FormItem>
                           )}
@@ -2035,34 +2127,33 @@ export default function CustomerDashboard() {
                           name="waveId"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="flex items-center gap-2">
+                              <FormLabel className={`flex items-center gap-2 ${getLanguageClasses(selectedLanguage)}`}>
                                 <Activity className="h-4 w-4 text-blue-500" />
-                                Property Wave
+                                {t.waveBalance}
                                 {waveBalance && !(waveBalance as any).hasUnlimited && (
                                   <span className={`text-xs px-2 py-1 rounded-full ${
                                     (waveBalance as any).remainingWaves <= 0 ? 'bg-red-100 text-red-700' :
                                     (waveBalance as any).remainingWaves <= 2 ? 'bg-yellow-100 text-yellow-700' :
                                     'bg-green-100 text-green-700'
                                   }`}>
-                                    {(waveBalance as any).remainingWaves} remaining
+                                    {(waveBalance as any).remainingWaves} {t.remaining}
                                   </span>
                                 )}
                                 {waveBalance?.hasUnlimited && (
                                   <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">
-                                    Unlimited
+                                    {t.unlimited}
                                   </span>
                                 )}
                               </FormLabel>
                               
                               {waveBalance && !(waveBalance as any).hasUnlimited && (waveBalance as any).remainingWaves <= 0 && (
-                                <div className="bg-red-50 border border-red-200 p-3 rounded-lg mb-3">
+                                <div className="bg-red-50 border border-red-200 p-3 rounded-lg mb-3" dir={getTextDirection(selectedLanguage)}>
                                   <div className="flex items-center gap-2 text-red-700 mb-1">
                                     <AlertTriangle className="h-4 w-4" />
-                                    <span className="font-medium">No Waves Remaining</span>
+                                    <span className={`font-medium ${getLanguageClasses(selectedLanguage)}`}>{t.noWavesRemaining}</span>
                                   </div>
-                                  <p className="text-sm text-red-600">
-                                    You have used all {(waveBalance as any).totalBalance} of your wave assignments. 
-                                    You must buy balance to continue assigning properties to waves.
+                                  <p className={`text-sm text-red-600 ${getLanguageClasses(selectedLanguage)}`}>
+                                    {t.waveBalanceWarning.replace('{total}', (waveBalance as any).totalBalance)}
                                   </p>
                                 </div>
                               )}
@@ -2087,15 +2178,15 @@ export default function CustomerDashboard() {
                                   >
                                     <SelectValue placeholder={
                                       waveBalance && !(waveBalance as any).hasUnlimited && (waveBalance as any).remainingWaves <= 0 
-                                        ? "No waves available" 
-                                        : "Select a wave for this property"
+                                        ? t.noWavesAvailable 
+                                        : t.selectWavePlaceholder
                                     } />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
                                   <SelectItem value="no-wave">
                                     <span className="flex items-center gap-2">
-                                      <span className="text-muted-foreground">No Wave</span>
+                                      <span className="text-muted-foreground">{t.noWave}</span>
                                     </span>
                                   </SelectItem>
                                   {availableWaves.map((wave) => (
@@ -2112,8 +2203,8 @@ export default function CustomerDashboard() {
                                 </SelectContent>
                               </Select>
                               <FormMessage />
-                              <p className="text-xs text-muted-foreground">
-                                Assign your property to a wave to organize it with similar properties. This helps with map viewing and property management.
+                              <p className={`text-xs text-muted-foreground ${getLanguageClasses(selectedLanguage)}`}>
+                                {t.waveDescription}
                               </p>
                             </FormItem>
                           )}
@@ -2122,20 +2213,22 @@ export default function CustomerDashboard() {
 
                       {/* Location Selection Map */}
                       <div className="space-y-4">
-                        <div>
-                          <h3 className="text-lg font-medium mb-2">📍 Select Property Location</h3>
-                          <p className="text-sm text-muted-foreground mb-4">
-                            Click on the map to pinpoint your property's exact location. We'll automatically fill in the address, city, and country fields for you!
+                        <div dir={getTextDirection(selectedLanguage)}>
+                          <h3 className={`text-lg font-medium mb-2 ${getLanguageClasses(selectedLanguage)}`}>
+                            {t.selectLocationTitle}
+                          </h3>
+                          <p className={`text-sm text-muted-foreground mb-4 ${getLanguageClasses(selectedLanguage)}`}>
+                            {t.selectLocationDesc}
                           </p>
                           <div className="bg-orange-50 dark:bg-orange-900/20 p-3 rounded-lg border border-orange-200 dark:border-orange-800 mb-4">
-                            <div className="flex items-center space-x-2">
+                            <div className={`flex items-center ${getTextDirection(selectedLanguage) === 'rtl' ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
                               <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
-                              <span className="text-sm font-medium text-orange-700 dark:text-orange-300">
-                                Smart Auto-Fill Enabled
+                              <span className={`text-sm font-medium text-orange-700 dark:text-orange-300 ${getLanguageClasses(selectedLanguage)}`}>
+                                {t.smartAutoFill}
                               </span>
                             </div>
-                            <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
-                              Address details will be automatically detected and filled when you click on the map
+                            <p className={`text-xs text-orange-600 dark:text-orange-400 mt-1 ${getLanguageClasses(selectedLanguage)}`}>
+                              {t.autoFillDesc}
                             </p>
                           </div>
                         </div>
@@ -2150,14 +2243,14 @@ export default function CustomerDashboard() {
                         
                         {selectedLocation && (
                           <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg border border-green-200 dark:border-green-800">
-                            <div className="flex items-center space-x-2">
+                            <div className={`flex items-center ${getTextDirection(selectedLanguage) === 'rtl' ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
                               <div className="h-2 w-2 bg-green-500 rounded-full"></div>
-                              <span className="text-sm font-medium text-green-700 dark:text-green-300">
-                                Location Selected
+                              <span className={`text-sm font-medium text-green-700 dark:text-green-300 ${getLanguageClasses(selectedLanguage)}`}>
+                                {t.locationSelected}
                               </span>
                             </div>
-                            <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                              Coordinates: {selectedLocation.lat.toFixed(6)}, {selectedLocation.lng.toFixed(6)}
+                            <p className={`text-xs text-green-600 dark:text-green-400 mt-1 ${getLanguageClasses(selectedLanguage)}`}>
+                              {t.coordinates}: {selectedLocation.lat.toFixed(6)}, {selectedLocation.lng.toFixed(6)}
                             </p>
                           </div>
                         )}
@@ -2165,10 +2258,12 @@ export default function CustomerDashboard() {
 
                       {/* Property Images Upload */}
                       <div className="space-y-4">
-                        <div>
-                          <h3 className="text-lg font-medium mb-2">📷 Property Images</h3>
-                          <p className="text-sm text-muted-foreground mb-4">
-                            Upload high-quality images of your property. The first image will be used as the main photo.
+                        <div dir={getTextDirection(selectedLanguage)}>
+                          <h3 className={`text-lg font-medium mb-2 ${getLanguageClasses(selectedLanguage)}`}>
+                            {t.propertyImagesTitle}
+                          </h3>
+                          <p className={`text-sm text-muted-foreground mb-4 ${getLanguageClasses(selectedLanguage)}`}>
+                            {t.propertyImagesDesc}
                           </p>
                         </div>
                         
@@ -2198,27 +2293,38 @@ export default function CustomerDashboard() {
                           name="amenities"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Amenities</FormLabel>
-                              <div className="grid grid-cols-2 gap-2 mt-2">
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.amenities}
+                              </FormLabel>
+                              <div className="grid grid-cols-2 gap-2 mt-2" dir={getTextDirection(selectedLanguage)}>
                                 {[
-                                  'Swimming Pool', 'Garden', 'Parking', 'Security System',
-                                  'Elevator', 'Gym', 'Balcony', 'Terrace'
+                                  { key: 'swimmingPool', label: t.swimmingPool },
+                                  { key: 'garden', label: t.garden },
+                                  { key: 'parking', label: t.parking },
+                                  { key: 'securitySystem', label: t.securitySystem },
+                                  { key: 'elevator', label: t.elevator },
+                                  { key: 'gym', label: t.gym },
+                                  { key: 'balcony', label: t.balcony },
+                                  { key: 'terrace', label: t.terrace }
                                 ].map((amenity) => (
-                                  <label key={amenity} className="flex items-center space-x-2 cursor-pointer">
+                                  <label 
+                                    key={amenity.key} 
+                                    className={`flex items-center cursor-pointer ${getTextDirection(selectedLanguage) === 'rtl' ? 'space-x-reverse space-x-2' : 'space-x-2'}`}
+                                  >
                                     <input
                                       type="checkbox"
-                                      checked={field.value?.includes(amenity) || false}
+                                      checked={field.value?.includes(amenity.key) || false}
                                       onChange={(e) => {
                                         const current = field.value || [];
                                         if (e.target.checked) {
-                                          field.onChange([...current, amenity]);
+                                          field.onChange([...current, amenity.key]);
                                         } else {
-                                          field.onChange(current.filter(item => item !== amenity));
+                                          field.onChange(current.filter(item => item !== amenity.key));
                                         }
                                       }}
                                       className="rounded border-gray-300"
                                     />
-                                    <span className="text-sm">{amenity}</span>
+                                    <span className={`text-sm ${getLanguageClasses(selectedLanguage)}`}>{amenity.label}</span>
                                   </label>
                                 ))}
                               </div>
@@ -2232,27 +2338,38 @@ export default function CustomerDashboard() {
                           name="features"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Features</FormLabel>
-                              <div className="grid grid-cols-2 gap-2 mt-2">
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.features}
+                              </FormLabel>
+                              <div className="grid grid-cols-2 gap-2 mt-2" dir={getTextDirection(selectedLanguage)}>
                                 {[
-                                  'Air Conditioning', 'Heating', 'Furnished', 'Pet Friendly',
-                                  'Fireplace', 'High Ceilings', 'Modern Kitchen', 'Storage Room'
+                                  { key: 'airConditioning', label: t.airConditioning },
+                                  { key: 'heating', label: t.heating },
+                                  { key: 'furnished', label: t.furnished },
+                                  { key: 'petFriendly', label: t.petFriendly },
+                                  { key: 'fireplace', label: t.fireplace },
+                                  { key: 'highCeilings', label: t.highCeilings },
+                                  { key: 'modernKitchen', label: t.modernKitchen },
+                                  { key: 'storageRoom', label: t.storageRoom }
                                 ].map((feature) => (
-                                  <label key={feature} className="flex items-center space-x-2 cursor-pointer">
+                                  <label 
+                                    key={feature.key} 
+                                    className={`flex items-center cursor-pointer ${getTextDirection(selectedLanguage) === 'rtl' ? 'space-x-reverse space-x-2' : 'space-x-2'}`}
+                                  >
                                     <input
                                       type="checkbox"
-                                      checked={field.value?.includes(feature) || false}
+                                      checked={field.value?.includes(feature.key) || false}
                                       onChange={(e) => {
                                         const current = field.value || [];
                                         if (e.target.checked) {
-                                          field.onChange([...current, feature]);
+                                          field.onChange([...current, feature.key]);
                                         } else {
-                                          field.onChange(current.filter(item => item !== feature));
+                                          field.onChange(current.filter(item => item !== feature.key));
                                         }
                                       }}
                                       className="rounded border-gray-300"
                                     />
-                                    <span className="text-sm">{feature}</span>
+                                    <span className={`text-sm ${getLanguageClasses(selectedLanguage)}`}>{feature.label}</span>
                                   </label>
                                 ))}
                               </div>
@@ -2267,11 +2384,14 @@ export default function CustomerDashboard() {
                         name="description"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Description *</FormLabel>
+                            <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                              {t.description} *
+                            </FormLabel>
                             <FormControl>
                               <Textarea 
-                                placeholder="Describe your property in detail..."
-                                className="min-h-[100px]"
+                                placeholder={t.descriptionPlaceholder}
+                                className={`min-h-[100px] ${getLanguageClasses(selectedLanguage)}`}
+                                dir={getTextDirection(selectedLanguage)}
                                 {...field}
                                 data-testid="textarea-description"
                               />
@@ -2283,10 +2403,12 @@ export default function CustomerDashboard() {
 
                       {/* Property Visibility Control */}
                       <div className="space-y-4">
-                        <div>
-                          <h3 className="text-lg font-medium mb-2">👁️ Property Visibility</h3>
-                          <p className="text-sm text-muted-foreground mb-4">
-                            Control whether your property appears on the public map and search results.
+                        <div dir={getTextDirection(selectedLanguage)}>
+                          <h3 className={`text-lg font-medium mb-2 ${getLanguageClasses(selectedLanguage)}`}>
+                            {t.propertyVisibilityTitle}
+                          </h3>
+                          <p className={`text-sm text-muted-foreground mb-4 ${getLanguageClasses(selectedLanguage)}`}>
+                            {t.propertyVisibilityDesc}
                           </p>
                         </div>
                         
@@ -2297,13 +2419,13 @@ export default function CustomerDashboard() {
                             <FormItem>
                               <div className="flex items-center justify-between p-4 border rounded-lg bg-slate-50 dark:bg-gray-800">
                                 <div className="flex-1">
-                                  <FormLabel className="text-base font-medium">
-                                    {field.value === 'active' ? 'Visible on Map' : 'Hidden from Map'}
+                                  <FormLabel className={`text-base font-medium ${getLanguageClasses(selectedLanguage)}`}>
+                                    {field.value === 'active' ? t.visibleOnMap : t.hiddenFromMap}
                                   </FormLabel>
-                                  <p className="text-sm text-muted-foreground mt-1">
+                                  <p className={`text-sm text-muted-foreground mt-1 ${getLanguageClasses(selectedLanguage)}`}>
                                     {field.value === 'active' 
-                                      ? 'Your property will be visible to other users on the map and in search results'
-                                      : 'Your property will be hidden from the public map and search results'
+                                      ? t.visibleDesc
+                                      : t.hiddenDesc
                                     }
                                   </p>
                                 </div>
@@ -2319,13 +2441,13 @@ export default function CustomerDashboard() {
                                     >
                                       {field.value === 'active' ? (
                                         <>
-                                          <Eye className="h-4 w-4 mr-2" />
-                                          Visible
+                                          <Eye className={`h-4 w-4 ${getTextDirection(selectedLanguage) === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                                          {t.visible}
                                         </>
                                       ) : (
                                         <>
-                                          <EyeOff className="h-4 w-4 mr-2" />
-                                          Hidden
+                                          <EyeOff className={`h-4 w-4 ${getTextDirection(selectedLanguage) === 'rtl' ? 'ml-2' : 'mr-2'}`} />
+                                          {t.hidden}
                                         </>
                                       )}
                                     </Button>
