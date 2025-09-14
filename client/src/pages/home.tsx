@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense, lazy } from "react";
 import { Link, useLocation } from "wouter";
 import SearchBar from "@/components/search-bar";
 import PropertyCard from "@/components/property-card";
-import PropertyMap from "@/components/property-map";
+
+// Lazy load PropertyMap component for better performance (reduces initial bundle size)
+const PropertyMap = lazy(() => import("@/components/property-map"));
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -209,10 +211,18 @@ export default function HomePage() {
       />
       {/* Full Screen Map Section */}
       <section className="h-full w-full relative">
-        <PropertyMap 
-          properties={(mapProperties || []) as any}
-          filters={mapFilters}
-          onFilterChange={handleMapFilterChange}
+        <Suspense fallback={
+          <div className="h-full w-full flex items-center justify-center bg-muted rounded-lg">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+              <p className="text-muted-foreground">Loading map...</p>
+            </div>
+          </div>
+        }>
+          <PropertyMap 
+            properties={(mapProperties || []) as any}
+            filters={mapFilters}
+            onFilterChange={handleMapFilterChange}
           onPropertyClick={(property) => {
             window.location.href = `/property/${property.id}`;
           }}
@@ -223,6 +233,7 @@ export default function HomePage() {
           userId={user?.id}
           className="h-full w-full"
         />
+        </Suspense>
         
         {/* Absolute Blurred Filter Section inside Map */}
         <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-[9999] max-h-[calc(100vh-120px)] max-h-[calc(100dvh-120px)] overflow-hidden" style={{position: 'absolute'}}>

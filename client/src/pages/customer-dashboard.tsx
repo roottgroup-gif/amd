@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,10 +11,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import PropertyMap from '@/components/property-map';
-import LocationSelectionMap from '@/components/location-selection-map';
 import ImageUpload from '@/components/image-upload';
 import ProfilePhotoUpload from '@/components/profile-photo-upload';
+
+// Lazy load heavy components for better performance
+const PropertyMap = lazy(() => import('@/components/property-map'));
+const LocationSelectionMap = lazy(() => import('@/components/location-selection-map'));
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -1290,10 +1292,18 @@ export default function CustomerDashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="h-[600px] w-full">
-                    <PropertyMap 
-                      properties={allProperties}
-                      filters={mapFilters}
-                      onFilterChange={handleMapFilterChange}
+                    <Suspense fallback={
+                      <div className="h-full w-full flex items-center justify-center bg-muted rounded-lg">
+                        <div className="text-center">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
+                          <p className="text-muted-foreground">Loading map...</p>
+                        </div>
+                      </div>
+                    }>
+                      <PropertyMap 
+                        properties={allProperties}
+                        filters={mapFilters}
+                        onFilterChange={handleMapFilterChange}
                       onPropertyClick={handlePropertyInquiry}
                       className="h-full w-full rounded-lg"
                     />
