@@ -151,6 +151,130 @@ const translations: Translations = {
     en: 'No results found',
     ar: 'لا توجد نتائج',
     kur: 'هیچ ئەنجامێک نەدۆزرایەوە'
+  },
+
+  // Property Detail Page
+  'property.backToHome': {
+    en: 'Back to Home',
+    ar: 'العودة للرئيسية',
+    kur: 'گەڕانەوە بۆ سەرەتا'
+  },
+  'property.description': {
+    en: 'Description',
+    ar: 'الوصف',
+    kur: 'وەسف'
+  },
+  'property.featuresAmenities': {
+    en: 'Features & Amenities',
+    ar: 'المزايا والخدمات',
+    kur: 'تایبەتمەندی و خزمەتگوزاریەکان'
+  },
+  'property.features': {
+    en: 'Features',
+    ar: 'المزايا',
+    kur: 'تایبەتمەندییەکان'
+  },
+  'property.amenities': {
+    en: 'Amenities',
+    ar: 'الخدمات',
+    kur: 'خزمەتگوزاریەکان'
+  },
+  'property.propertyInformation': {
+    en: 'Property Information',
+    ar: 'معلومات العقار',
+    kur: 'زانیاری خانووبەرە'
+  },
+  'property.propertyType': {
+    en: 'Property Type:',
+    ar: 'نوع العقار:',
+    kur: 'جۆری خانووبەرە:'
+  },
+  'property.listed': {
+    en: 'Listed:',
+    ar: 'تاريخ الإدراج:',
+    kur: 'لیست کراوە:'
+  },
+  'property.status': {
+    en: 'Status:',
+    ar: 'الحالة:',
+    kur: 'دۆخ:'
+  },
+  'property.bedrooms': {
+    en: 'Bedrooms',
+    ar: 'غرف النوم',
+    kur: 'ژووری نوستن'
+  },
+  'property.bathrooms': {
+    en: 'Bathrooms',
+    ar: 'الحمامات',
+    kur: 'حەمام'
+  },
+  'property.sqFt': {
+    en: 'Sq Ft',
+    ar: 'قدم مربع',
+    kur: 'پێی چوارگۆشە'
+  },
+  'property.parking': {
+    en: 'Parking',
+    ar: 'موقف السيارات',
+    kur: 'پارک کردن'
+  },
+  'property.featured': {
+    en: 'Featured',
+    ar: 'مميز',
+    kur: 'تایبەت'
+  },
+
+  // Error states and additional labels
+  'property.notFound': {
+    en: 'Property Not Found',
+    ar: 'العقار غير موجود',
+    kur: 'خانووبەرە نەدۆزرایەوە'
+  },
+  'property.notFoundDescription': {
+    en: "The property you're looking for doesn't exist or has been removed.",
+    ar: 'العقار الذي تبحث عنه غير موجود أو تم حذفه.',
+    kur: 'ئەو خانووبەرەی کە بەدوایدا دەگەڕێیت بوونی نییە یان سڕاوەتەوە.'
+  },
+  'property.perSqFt': {
+    en: '/sq ft',
+    ar: '/قدم مربع',
+    kur: '/پێی چوارگۆشە'
+  },
+  'property.shareOnFacebook': {
+    en: 'Share on Facebook',
+    ar: 'مشاركة على فيسبوك',
+    kur: 'هاوبەشکردن لە فەیسبووک'
+  },
+  'property.shareOnTwitter': {
+    en: 'Share on Twitter',
+    ar: 'مشاركة على تويتر',
+    kur: 'هاوبەشکردن لە تویتەر'
+  },
+  'property.shareOnWhatsApp': {
+    en: 'Share on WhatsApp',
+    ar: 'مشاركة على واتساب',
+    kur: 'هاوبەشکردن لە واتساپ'
+  },
+  'property.shareOnLinkedIn': {
+    en: 'Share on LinkedIn',
+    ar: 'مشاركة على لينكد إن',
+    kur: 'هاوبەشکردن لە لینکدین'
+  },
+  'property.copyLink': {
+    en: 'Copy Link',
+    ar: 'نسخ الرابط',
+    kur: 'کۆپیکردنی بەستەر'
+  },
+  'property.linkCopied': {
+    en: 'Link Copied',
+    ar: 'تم نسخ الرابط',
+    kur: 'بەستەرەکە کۆپی کرا'
+  },
+  'property.linkCopiedDescription': {
+    en: 'Property link has been copied to your clipboard.',
+    ar: 'تم نسخ رابط العقار إلى الحافظة.',
+    kur: 'بەستەری خانووبەرەکە کۆپی کراوە بۆ کلیپ بۆردەکەت.'
   }
 };
 
@@ -164,9 +288,11 @@ export function useTranslation() {
     }
   }, []);
 
-  const changeLanguage = (lang: Language) => {
+  const changeLanguage = (lang: Language, persist: boolean = true) => {
     setLanguage(lang);
-    localStorage.setItem('language', lang);
+    if (persist) {
+      localStorage.setItem('language', lang);
+    }
     
     // Update document direction for RTL languages
     document.documentElement.dir = (lang === 'ar' || lang === 'kur') ? 'rtl' : 'ltr';

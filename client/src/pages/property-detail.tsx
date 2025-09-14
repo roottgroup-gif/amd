@@ -20,10 +20,11 @@ import {
 
 export default function PropertyDetailPage() {
   const { id } = useParams();
-  const { t } = useTranslation();
+  const { t, changeLanguage, language: currentLanguage } = useTranslation();
   const { toast } = useToast();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [userId] = useState("demo-user-id"); // In real app, get from auth context
+  const [originalLanguage, setOriginalLanguage] = useState<string | null>(null);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
       return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
@@ -37,6 +38,48 @@ export default function PropertyDetailPage() {
   const { data: favoriteData } = useIsFavorite(userId, id || "");
 
   const isFavorite = favoriteData?.isFavorite || false;
+
+  // Property language detection and styling
+  const rawPropertyLanguage = property?.language || 'en';
+  // Handle legacy 'ku' language code and map to 'kur'
+  const propertyLanguage = rawPropertyLanguage === 'ku' ? 'kur' : rawPropertyLanguage;
+  const isPropertyRTL = propertyLanguage === 'ar' || propertyLanguage === 'kur';
+  
+  // Get language-specific class names for styling
+  const getLanguageClasses = () => {
+    const baseClasses = "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8";
+    if (isPropertyRTL) {
+      return `${baseClasses} text-right`;
+    }
+    return `${baseClasses} text-left`;
+  };
+
+  // Store original language on mount to restore later
+  useEffect(() => {
+    if (originalLanguage === null) {
+      setOriginalLanguage(currentLanguage);
+    }
+  }, [currentLanguage, originalLanguage]);
+
+  // Set property language without global persistence
+  useEffect(() => {
+    if (property && property.language) {
+      const validatedLanguage = propertyLanguage;
+      if (['en', 'ar', 'kur'].includes(validatedLanguage)) {
+        // Change translation context temporarily without persisting to localStorage
+        changeLanguage(validatedLanguage as 'en' | 'ar' | 'kur', false);
+      }
+    }
+  }, [property, propertyLanguage, changeLanguage]);
+
+  // Restore original language on unmount to prevent global leakage
+  useEffect(() => {
+    return () => {
+      if (originalLanguage && originalLanguage !== propertyLanguage) {
+        changeLanguage(originalLanguage as 'en' | 'ar' | 'kur', false);
+      }
+    };
+  }, [originalLanguage, propertyLanguage, changeLanguage]);
 
   // Generate property structured data
   const getPropertyStructuredData = (property: Property) => {
@@ -166,8 +209,8 @@ export default function PropertyDetailPage() {
         try {
           await navigator.clipboard.writeText(propertyUrl);
           toast({
-            title: "Link Copied",
-            description: "Property link has been copied to your clipboard.",
+            title: t('property.linkCopied'),
+            description: t('property.linkCopiedDescription'),
           });
         } catch (error) {
           // Fallback for older browsers
@@ -178,8 +221,8 @@ export default function PropertyDetailPage() {
           document.execCommand('copy');
           document.body.removeChild(textArea);
           toast({
-            title: "Link Copied",
-            description: "Property link has been copied to your clipboard.",
+            title: t('property.linkCopied'),
+            description: t('property.linkCopiedDescription'),
           });
         }
         break;
@@ -243,12 +286,12 @@ export default function PropertyDetailPage() {
       <div className="min-h-screen bg-background">
         <Navigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-          <h1 className="text-2xl font-bold mb-4">Property Not Found</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('property.notFound')}</h1>
           <p className="text-muted-foreground mb-8">
-            The property you're looking for doesn't exist or has been removed.
+            {t('property.notFoundDescription')}
           </p>
           <Link href="/">
-            <Button>Back to Home</Button>
+            <Button>{t('property.backToHome')}</Button>
           </Link>
         </div>
       </div>
@@ -272,13 +315,13 @@ export default function PropertyDetailPage() {
       )}
       <Navigation />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className={getLanguageClasses()} dir={isPropertyRTL ? 'rtl' : 'ltr'}>
         {/* Top Navigation with Back Button and Theme Toggle */}
         <div className="flex items-center justify-between mb-6">
           <Link href="/">
             <Button variant="ghost" data-testid="back-button">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Home
+              {t('property.backToHome')}
             </Button>
           </Link>
           
@@ -357,23 +400,23 @@ export default function PropertyDetailPage() {
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem onClick={() => handleShare('facebook')} data-testid="share-facebook">
                     <span className="text-blue-600 mr-2">📘</span>
-                    Share on Facebook
+                    {t('property.shareOnFacebook')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleShare('twitter')} data-testid="share-twitter">
                     <span className="text-blue-400 mr-2">🐦</span>
-                    Share on Twitter
+                    {t('property.shareOnTwitter')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleShare('whatsapp')} data-testid="share-whatsapp">
                     <span className="text-green-600 mr-2">💬</span>
-                    Share on WhatsApp
+                    {t('property.shareOnWhatsApp')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleShare('linkedin')} data-testid="share-linkedin">
                     <span className="text-blue-700 mr-2">💼</span>
-                    Share on LinkedIn
+                    {t('property.shareOnLinkedIn')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleShare('copy')} data-testid="share-copy">
                     <Copy className="h-4 w-4 mr-2" />
-                    Copy Link
+                    {t('property.copyLink')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -422,7 +465,7 @@ export default function PropertyDetailPage() {
                     {property.listingType === 'sale' ? t('filter.forSale') : t('filter.forRent')}
                   </Badge>
                   {property.isFeatured && (
-                    <Badge variant="secondary">Featured</Badge>
+                    <Badge variant="secondary">{t('property.featured')}</Badge>
                   )}
                 </div>
                 <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2" data-testid="property-title">
@@ -441,7 +484,7 @@ export default function PropertyDetailPage() {
                 </div>
                 {property.area && (
                   <div className="text-sm text-muted-foreground">
-                    ${Math.round(parseFloat(property.price) / property.area)}/sq ft
+                    ${Math.round(parseFloat(property.price) / property.area)}{t('property.perSqFt')}
                   </div>
                 )}
               </div>
@@ -455,27 +498,27 @@ export default function PropertyDetailPage() {
                     <div className="text-center" data-testid="bedrooms-info">
                       <Bed className="h-8 w-8 text-primary mx-auto mb-2" />
                       <div className="font-semibold text-lg">{property.bedrooms}</div>
-                      <div className="text-sm text-muted-foreground">Bedrooms</div>
+                      <div className="text-sm text-muted-foreground">{t('property.bedrooms')}</div>
                     </div>
                   )}
                   {property.bathrooms && (
                     <div className="text-center" data-testid="bathrooms-info">
                       <Bath className="h-8 w-8 text-primary mx-auto mb-2" />
                       <div className="font-semibold text-lg">{property.bathrooms}</div>
-                      <div className="text-sm text-muted-foreground">Bathrooms</div>
+                      <div className="text-sm text-muted-foreground">{t('property.bathrooms')}</div>
                     </div>
                   )}
                   {property.area && (
                     <div className="text-center" data-testid="area-info">
                       <Square className="h-8 w-8 text-primary mx-auto mb-2" />
                       <div className="font-semibold text-lg">{property.area.toLocaleString()}</div>
-                      <div className="text-sm text-muted-foreground">Sq Ft</div>
+                      <div className="text-sm text-muted-foreground">{t('property.sqFt')}</div>
                     </div>
                   )}
                   <div className="text-center">
                     <Car className="h-8 w-8 text-primary mx-auto mb-2" />
                     <div className="font-semibold text-lg">2</div>
-                    <div className="text-sm text-muted-foreground">Parking</div>
+                    <div className="text-sm text-muted-foreground">{t('property.parking')}</div>
                   </div>
                 </div>
               </CardContent>
@@ -485,7 +528,7 @@ export default function PropertyDetailPage() {
             {property.description && (
               <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 mb-8">
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Description</h3>
+                  <h3 className="text-lg font-semibold mb-4">{t('property.description')}</h3>
                   <p className="text-muted-foreground leading-relaxed" data-testid="property-description">
                     {property.description}
                   </p>
@@ -496,11 +539,11 @@ export default function PropertyDetailPage() {
             {/* Amenities & Features */}
             <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 mb-8">
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Features & Amenities</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('property.featuresAmenities')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {property.features?.length > 0 ? (
                     <div>
-                      <h4 className="font-medium mb-2">Features</h4>
+                      <h4 className="font-medium mb-2">{t('property.features')}</h4>
                       <div className="space-y-2">
                         {property.features.map((feature, index) => (
                           <div key={index} className="flex items-center space-x-2">
@@ -512,7 +555,7 @@ export default function PropertyDetailPage() {
                     </div>
                   ) : (
                     <div>
-                      <h4 className="font-medium mb-2">Features</h4>
+                      <h4 className="font-medium mb-2">{t('property.features')}</h4>
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
                           <Check className="h-4 w-4 text-green-500" />
@@ -532,7 +575,7 @@ export default function PropertyDetailPage() {
                   
                   {property.amenities?.length > 0 ? (
                     <div>
-                      <h4 className="font-medium mb-2">Amenities</h4>
+                      <h4 className="font-medium mb-2">{t('property.amenities')}</h4>
                       <div className="space-y-2">
                         {property.amenities.map((amenity, index) => (
                           <div key={index} className="flex items-center space-x-2">
@@ -544,7 +587,7 @@ export default function PropertyDetailPage() {
                     </div>
                   ) : (
                     <div>
-                      <h4 className="font-medium mb-2">Amenities</h4>
+                      <h4 className="font-medium mb-2">{t('property.amenities')}</h4>
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
                           <Check className="h-4 w-4 text-green-500" />
@@ -568,21 +611,21 @@ export default function PropertyDetailPage() {
             {/* Property Stats */}
             <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10">
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Property Information</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('property.propertyInformation')}</h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Property Type:</span>
+                    <span className="text-muted-foreground">{t('property.propertyType')}</span>
                     <span className="font-medium capitalize">{property.type}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Listed:</span>
+                    <span className="text-muted-foreground">{t('property.listed')}</span>
                     <span className="font-medium">
                       <Calendar className="inline h-4 w-4 mr-1" />
                       {new Date(property.createdAt).toLocaleDateString()}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Status:</span>
+                    <span className="text-muted-foreground">{t('property.status')}</span>
                     <Badge variant="secondary" className="capitalize">{property.status}</Badge>
                   </div>
                 </div>

@@ -18,6 +18,7 @@ export interface Property {
   amenities: string[];
   features: string[];
   status: string;
+  language: string;
   agentId?: string;
   views: number;
   isFeatured: boolean;
