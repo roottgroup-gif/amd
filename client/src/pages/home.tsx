@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
+import { SEOHead } from "@/components/SEOHead";
 import { useTranslation } from "@/lib/i18n";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
 import { useAuth } from "@/hooks/useAuth";
@@ -162,8 +163,50 @@ export default function HomePage() {
     localStorage.setItem('theme', newTheme);
   };
 
+  // Generate homepage structured data
+  const getHomepageStructuredData = () => {
+    return {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "EstateAI",
+      "description": "Find your perfect home with AI-powered recommendations. Discover properties for rent and sale in Kurdistan, Iraq with intelligent search and expert agents.",
+      "url": window.location.origin,
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": `${window.location.origin}/properties?search={search_term_string}`,
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "EstateAI",
+        "url": window.location.origin,
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${window.location.origin}/logo.png`
+        }
+      },
+      "mainEntity": {
+        "@type": "RealEstateAgent",
+        "name": "EstateAI",
+        "description": "AI-powered real estate platform helping you find the perfect property",
+        "areaServed": {
+          "@type": "Place",
+          "name": "Kurdistan, Iraq"
+        }
+      }
+    };
+  };
+
   return (
     <div className="map-page h-screen w-full bg-background relative">
+      <SEOHead
+        title="EstateAI - AI-Powered Real Estate Finder | Properties in Kurdistan, Iraq"
+        description="Find your perfect home with AI-powered recommendations. Discover properties for rent and sale in Kurdistan, Iraq with intelligent search and expert agents. Browse houses, apartments, villas and land."
+        keywords="real estate Kurdistan Iraq, properties for sale, properties for rent, apartments houses villas land, AI real estate search, property finder Iraq, Kurdistan real estate agent, buy rent property Iraq"
+        ogImage={featuredProperties && featuredProperties.length > 0 ? featuredProperties[0].images?.[0] : undefined}
+        canonicalUrl={window.location.origin}
+        structuredData={getHomepageStructuredData()}
+      />
       {/* Full Screen Map Section */}
       <section className="h-full w-full relative">
         <PropertyMap 

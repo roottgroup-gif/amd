@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { SEOHead } from "@/components/SEOHead";
 import { useTranslation } from "@/lib/i18n";
 import { useProperties } from "@/hooks/use-properties";
 import type { PropertyFilters, AISearchResponse } from "@/types";
@@ -82,8 +83,73 @@ export default function PropertiesPage() {
 
   const displayProperties = searchResults ? searchResults.results : properties || [];
 
+  // Generate properties page structured data
+  const getPropertiesStructuredData = () => {
+    const totalProperties = properties?.length || 0;
+    const currentFilter = filters.listingType || 'all';
+    const currentType = filters.type || 'all';
+    const currentCity = filters.city || 'Kurdistan';
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": `Properties for ${currentFilter === 'all' ? 'Sale & Rent' : currentFilter} in ${currentCity}`,
+      "description": `Browse ${totalProperties} ${currentType !== 'all' ? currentType : 'property'} listings for ${currentFilter === 'all' ? 'sale and rent' : currentFilter} in ${currentCity}, Iraq. Find your perfect home with detailed property information and expert agents.`,
+      "numberOfItems": totalProperties,
+      "itemListElement": displayProperties?.slice(0, 10).map((property, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": {
+          "@type": "RealEstateListing",
+          "name": property.title,
+          "url": `${window.location.origin}/property/${property.id}`,
+          "image": property.images && property.images.length > 0 ? property.images.map(img => 
+            img.startsWith('http') ? img : `${window.location.origin}${img}`
+          ) : [],
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": property.address,
+            "addressLocality": property.city,
+            "addressCountry": property.country
+          },
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": property.currency || "USD",
+            "price": property.price,
+            "availability": "https://schema.org/InStock",
+            "priceValidUntil": new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 30 days from now
+          }
+        }
+      })) || []
+    };
+  };
+
+  // Generate dynamic SEO content based on filters
+  const getSEOContent = () => {
+    const listingType = filters.listingType || 'sale and rent';
+    const propertyType = filters.type || 'properties';
+    const city = filters.city || 'Kurdistan';
+    const totalCount = properties?.length || 0;
+    
+    const title = `${propertyType.charAt(0).toUpperCase()}${propertyType.slice(1)} for ${listingType.charAt(0).toUpperCase()}${listingType.slice(1)} in ${city} | EstateAI`;
+    const description = `Browse ${totalCount > 0 ? totalCount : ''} ${propertyType} for ${listingType} in ${city}, Iraq. Find houses, apartments, villas and land with detailed property information, photos, and expert real estate agents.`;
+    const keywords = `${propertyType} for ${listingType} ${city}, real estate ${city} Iraq, ${propertyType} listings ${city}, buy rent ${propertyType} Iraq, ${city} real estate agent, property finder ${city}`;
+    
+    return { title, description, keywords };
+  };
+
+  const seoContent = getSEOContent();
+
   return (
     <div className="properties-page min-h-screen bg-background">
+      <SEOHead
+        title={seoContent.title}
+        description={seoContent.description}
+        keywords={seoContent.keywords}
+        ogImage={properties && properties.length > 0 ? properties[0].images?.[0] : undefined}
+        canonicalUrl={`${window.location.origin}/properties`}
+        structuredData={getPropertiesStructuredData()}
+      />
       <Navigation />
       
       {/* Header */}

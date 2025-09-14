@@ -4,6 +4,7 @@ import Navigation from "@/components/navigation";
 import PropertyCard from "@/components/property-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SEOHead } from "@/components/SEOHead";
 import { useFavorites } from "@/hooks/use-properties";
 import { ArrowLeft, Heart, Home as HomeIcon } from "lucide-react";
 import type { Property } from "@/types";
@@ -18,9 +19,23 @@ export default function FavoritesPage() {
     setLocation(`/?showProperty=${property.id}`);
   };
 
-  useEffect(() => {
-    document.title = "My Favorites - EstateAI";
-  }, []);
+  // Generate favorites page structured data
+  const getFavoritesStructuredData = () => {
+    const totalFavorites = favorites?.length || 0;
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "My Favorite Properties",
+      "description": `View your ${totalFavorites} saved favorite properties. Keep track of properties you're interested in buying or renting.`,
+      "numberOfItems": totalFavorites,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "EstateAI",
+        "url": window.location.origin
+      }
+    };
+  };
 
   if (isLoading) {
     return (
@@ -53,6 +68,13 @@ export default function FavoritesPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
+      <SEOHead
+        title="My Favorite Properties - EstateAI | Saved Property Listings"
+        description={`View your ${favorites?.length || 0} saved favorite properties. Keep track of houses, apartments, and villas you're interested in buying or renting in Kurdistan, Iraq.`}
+        keywords="favorite properties, saved listings, property bookmarks, real estate favorites, Kurdistan Iraq properties"
+        canonicalUrl={`${window.location.origin}/favorites`}
+        structuredData={getFavoritesStructuredData()}
+      />
       <Navigation />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
