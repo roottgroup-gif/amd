@@ -296,7 +296,7 @@ export default function HomePage() {
               </DropdownMenu>
               <img src={logoImage} alt="MapEstate Logo" className="h-6 w-6 sm:h-8 sm:w-8" />
               <h2 className="text-sm sm:text-base md:text-lg font-semibold text-black dark:text-white">MapEstate</h2>
-              <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs hidden sm:inline-flex" style={{backgroundColor: '#FF7800', color: '#fff'}}>
+              <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs hidden sm:inline-flex light-sweep" style={{backgroundColor: '#FF7800', color: '#fff'}}>
                 {(mapProperties || []).length} properties
               </Badge>
             </div>

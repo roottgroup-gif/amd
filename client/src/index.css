@@ -763,3 +763,44 @@
     max-width: 80vw !important;
   }
 }
+
+/* Light Sweep Effect Animation */
+.light-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.light-sweep::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  animation: sweep 3s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes sweep {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
