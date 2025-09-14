@@ -305,6 +305,7 @@ export default function PropertyDetailPage() {
                   className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white dark:bg-black/80 dark:hover:bg-black dark:text-white"
                   onClick={prevImage}
                   data-testid="prev-image-button"
+                  aria-label="View previous image"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
@@ -314,6 +315,7 @@ export default function PropertyDetailPage() {
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white dark:bg-black/80 dark:hover:bg-black dark:text-white"
                   onClick={nextImage}
                   data-testid="next-image-button"
+                  aria-label="View next image"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -337,6 +339,7 @@ export default function PropertyDetailPage() {
                     : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white'
                 }`}
                 data-testid="favorite-button"
+                aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
               >
                 <Heart className={`h-4 w-4 transition-all duration-200 ${
                   isFavorite ? 'fill-current scale-110' : 'hover:scale-105'
@@ -350,6 +353,7 @@ export default function PropertyDetailPage() {
                     size="icon"
                     className="bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white transition-all duration-200"
                     data-testid="share-button"
+                    aria-label="Share property"
                   >
                     <Share2 className="h-4 w-4 hover:scale-105 transition-all duration-200" />
                   </Button>
