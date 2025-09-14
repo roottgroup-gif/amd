@@ -25,16 +25,159 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { apiRequest } from '@/lib/queryClient';
 import type { PropertyWithAgent, PropertyFilters } from '@shared/schema';
+import { SUPPORTED_LANGUAGES, LANGUAGE_NAMES, type Language } from '@shared/schema';
 import { 
   Heart, Search, Filter, LogOut, MapPin, DollarSign,
   Home, Eye, Bed, Bath, Maximize, Phone, Mail, Calendar,
   Star, Bookmark, MessageSquare, User, Settings, Plus,
   Building, University, Mountain, Tag, Key, Edit, Trash2,
   EyeOff, ToggleLeft, ToggleRight, BarChart3, PieChart as PieChartIcon,
-  TrendingUp, Activity, Clock, Users, AlertTriangle
+  TrendingUp, Activity, Clock, Users, AlertTriangle, Globe
 } from 'lucide-react';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+
+// Multi-language support
+const translations = {
+  en: {
+    // Form Labels
+    propertyTitle: 'Property Title',
+    propertyType: 'Property Type',
+    listingType: 'Listing Type',
+    price: 'Price (USD)',
+    area: 'Area (sq ft)',
+    bedrooms: 'Bedrooms',
+    bathrooms: 'Bathrooms',
+    address: 'Address',
+    city: 'City',
+    country: 'Country',
+    contactPhone: 'Contact Phone',
+    propertyWave: 'Property Wave',
+    selectLanguage: 'Select Language',
+    description: 'Description',
+    
+    // Placeholders
+    titlePlaceholder: 'e.g., Beautiful 3-bedroom villa',
+    descriptionPlaceholder: 'Describe your property in detail...',
+    pricePlaceholder: 'e.g., 150000',
+    areaPlaceholder: 'e.g., 1200',
+    bedroomsPlaceholder: 'e.g., 3',
+    bathroomsPlaceholder: 'e.g., 2',
+    addressPlaceholder: 'e.g., 123 Main Street',
+    cityPlaceholder: 'e.g., Erbil',
+    countryPlaceholder: 'e.g., Iraq',
+    phonePlaceholder: 'e.g., +964 750 123 4567',
+    
+    // Property Types
+    house: 'House',
+    apartment: 'Apartment',
+    villa: 'Villa',
+    land: 'Land',
+    
+    // Listing Types
+    sale: 'For Sale',
+    rent: 'For Rent',
+    
+    // UI Text
+    required: 'required',
+    optional: 'optional',
+    selectPropertyType: 'Select property type',
+    selectListingType: 'Select listing type',
+    selectLanguageFirst: 'Please select a language to continue',
+  },
+  ar: {
+    // Form Labels
+    propertyTitle: 'عنوان العقار',
+    propertyType: 'نوع العقار',
+    listingType: 'نوع الإعلان',
+    price: 'السعر (دولار أمريكي)',
+    area: 'المساحة (قدم مربع)',
+    bedrooms: 'غرف النوم',
+    bathrooms: 'دورات المياه',
+    address: 'العنوان',
+    city: 'المدينة',
+    country: 'البلد',
+    contactPhone: 'رقم الاتصال',
+    propertyWave: 'موجة العقار',
+    selectLanguage: 'اختر اللغة',
+    description: 'الوصف',
+    
+    // Placeholders
+    titlePlaceholder: 'مثال: فيلا جميلة من 3 غرف نوم',
+    descriptionPlaceholder: 'صف عقارك بالتفصيل...',
+    pricePlaceholder: 'مثال: 150000',
+    areaPlaceholder: 'مثال: 1200',
+    bedroomsPlaceholder: 'مثال: 3',
+    bathroomsPlaceholder: 'مثال: 2',
+    addressPlaceholder: 'مثال: 123 الشارع الرئيسي',
+    cityPlaceholder: 'مثال: أربيل',
+    countryPlaceholder: 'مثال: العراق',
+    phonePlaceholder: 'مثال: +964 750 123 4567',
+    
+    // Property Types
+    house: 'منزل',
+    apartment: 'شقة',
+    villa: 'فيلا',
+    land: 'أرض',
+    
+    // Listing Types
+    sale: 'للبيع',
+    rent: 'للإيجار',
+    
+    // UI Text
+    required: 'مطلوب',
+    optional: 'اختياري',
+    selectPropertyType: 'اختر نوع العقار',
+    selectListingType: 'اختر نوع الإعلان',
+    selectLanguageFirst: 'يرجى اختيار لغة للمتابعة',
+  },
+  ku: {
+    // Form Labels
+    propertyTitle: 'ناونیشانی موڵک',
+    propertyType: 'جۆری موڵک',
+    listingType: 'جۆری ڕیکلام',
+    price: 'نرخ (دۆلاری ئەمریکی)',
+    area: 'ڕووبەر (پێ چوارگۆشە)',
+    bedrooms: 'ژووری نوستن',
+    bathrooms: 'ژووری ئاو',
+    address: 'ناونیشان',
+    city: 'شار',
+    country: 'وڵات',
+    contactPhone: 'ژمارەی پەیوەندی',
+    propertyWave: 'شەپۆلی موڵک',
+    selectLanguage: 'زمان هەڵبژێرە',
+    description: 'وەسف',
+    
+    // Placeholders
+    titlePlaceholder: 'نموونە: ڤیلایەکی جوان بە 3 ژووری نوستن',
+    descriptionPlaceholder: 'موڵکەکەت بە ورووژی وەسف بکە...',
+    pricePlaceholder: 'نموونە: 150000',
+    areaPlaceholder: 'نموونە: 1200',
+    bedroomsPlaceholder: 'نموونە: 3',
+    bathroomsPlaceholder: 'نموونە: 2',
+    addressPlaceholder: 'نموونە: 123 شەقامی سەرەکی',
+    cityPlaceholder: 'نموونە: هەولێر',
+    countryPlaceholder: 'نموونە: عێراق',
+    phonePlaceholder: 'نموونە: +964 750 123 4567',
+    
+    // Property Types
+    house: 'ماڵ',
+    apartment: 'شوقە',
+    villa: 'ڤیلا',
+    land: 'زەوی',
+    
+    // Listing Types
+    sale: 'بۆ فرۆشتن',
+    rent: 'بۆ کرێ',
+    
+    // UI Text
+    required: 'پێویست',
+    optional: 'ئیختیاری',
+    selectPropertyType: 'جۆری موڵک هەڵبژێرە',
+    selectListingType: 'جۆری ڕیکلام هەڵبژێرە',
+    selectLanguageFirst: 'تکایە زمانێک هەڵبژێرە بۆ بەردەوامبوون',
+  }
+} as const;
 
 // Property form schema for validation
 const propertyFormSchema = z.object({
@@ -58,6 +201,7 @@ const propertyFormSchema = z.object({
   contactPhone: z.string().optional(),
   waveId: z.string().optional(),
   status: z.enum(['active', 'inactive']).default('active'),
+  language: z.enum(SUPPORTED_LANGUAGES).default('en'),
 });
 
 // Profile form schema for validation
@@ -142,6 +286,18 @@ const getExpirationStatus = (daysUntilExpiration: number | null): {
   };
 };
 
+// Helper function to get text direction for language
+const getTextDirection = (language: Language): 'ltr' | 'rtl' => {
+  return language === 'ar' || language === 'ku' ? 'rtl' : 'ltr';
+};
+
+// Helper function to get language-specific CSS classes
+const getLanguageClasses = (language: Language, baseClasses: string = ''): string => {
+  const direction = getTextDirection(language);
+  const directionClasses = direction === 'rtl' ? 'text-right' : 'text-left';
+  return `${baseClasses} ${directionClasses}`.trim();
+};
+
 export default function CustomerDashboard() {
   const { user, logout } = useAuth();
   const [, navigate] = useLocation();
@@ -154,6 +310,8 @@ export default function CustomerDashboard() {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editingProperty, setEditingProperty] = useState<PropertyWithAgent | null>(null);
   const [showBalanceModal, setShowBalanceModal] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>('en');
+  const [showLanguageSelection, setShowLanguageSelection] = useState(true);
 
   // Property form
   const propertyForm = useForm<PropertyFormValues>({
@@ -179,6 +337,7 @@ export default function CustomerDashboard() {
       contactPhone: user?.phone || '',
       waveId: '',
       status: 'active',
+      language: 'en',
     },
   });
 
@@ -211,6 +370,31 @@ export default function CustomerDashboard() {
       propertyForm.setValue('contactPhone', user.phone);
     }
   }, [user, propertyForm]);
+
+  // Get user's allowed languages
+  const userAllowedLanguages = user?.allowedLanguages || ['en'];
+  
+  // Filter translations to only include allowed languages
+  const availableLanguages = SUPPORTED_LANGUAGES.filter(lang => 
+    userAllowedLanguages.includes(lang)
+  );
+
+  // Reset language selection when switching to add-property tab
+  useEffect(() => {
+    if (activeTab === 'add-property' && !editingProperty) {
+      setShowLanguageSelection(true);
+      setSelectedLanguage('en');
+      propertyForm.setValue('language', 'en');
+    }
+  }, [activeTab, editingProperty, propertyForm]);
+
+  // Update form language when language changes
+  useEffect(() => {
+    propertyForm.setValue('language', selectedLanguage);
+  }, [selectedLanguage, propertyForm]);
+
+  // Get current translations
+  const t = translations[selectedLanguage];
 
   // Fetch all properties
   const { data: allProperties = [], isLoading: propertiesLoading } = useQuery<PropertyWithAgent[]>({
@@ -1324,15 +1508,98 @@ export default function CustomerDashboard() {
                 <CardContent>
                   <Form {...propertyForm}>
                     <form onSubmit={propertyForm.handleSubmit(onSubmitProperty)} className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Language Selection Section */}
+                      {showLanguageSelection && (
+                        <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                          <div className="flex items-center gap-3 mb-3">
+                            <Globe className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                            <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200">Select Property Language</h3>
+                          </div>
+                          <p className="text-sm text-blue-700 dark:text-blue-300 mb-4">
+                            Choose the language for your property listing. This will change the form to that language and set the property's display language.
+                          </p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            {availableLanguages.map((lang) => (
+                              <Button
+                                key={lang}
+                                type="button"
+                                variant={selectedLanguage === lang ? 'default' : 'outline'}
+                                className={`p-4 h-auto justify-start ${selectedLanguage === lang 
+                                  ? 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600' 
+                                  : 'border-blue-300 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30'
+                                } ${getTextDirection(lang) === 'rtl' ? 'text-right' : 'text-left'}`}
+                                onClick={() => {
+                                  setSelectedLanguage(lang);
+                                  setShowLanguageSelection(false);
+                                }}
+                                data-testid={`button-language-${lang}`}
+                              >
+                                <div className="flex flex-col items-start w-full">
+                                  <span className="text-sm font-medium">
+                                    {LANGUAGE_NAMES[lang]}
+                                  </span>
+                                  <span className="text-xs opacity-75">
+                                    {lang.toUpperCase()}
+                                  </span>
+                                </div>
+                              </Button>
+                            ))}
+                          </div>
+                          {availableLanguages.length === 1 && (
+                            <p className="text-xs text-muted-foreground mt-3">
+                              Only {LANGUAGE_NAMES[availableLanguages[0]]} is available for your account.
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Form Fields - Show only after language selection */}
+                      {!showLanguageSelection && (
+                        <>
+                          {/* Language indicator and change option */}
+                          <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border" dir={getTextDirection(selectedLanguage)}>
+                            <div className="flex items-center gap-2">
+                              <Globe className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {getTextDirection(selectedLanguage) === 'rtl' ? (
+                                  <>بلغة: {LANGUAGE_NAMES[selectedLanguage]}</>
+                                ) : (
+                                  <>Language: {LANGUAGE_NAMES[selectedLanguage]}</>
+                                )}
+                              </span>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setShowLanguageSelection(true)}
+                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30"
+                              data-testid="button-change-language"
+                            >
+                              {getTextDirection(selectedLanguage) === 'rtl' ? 'تغيير' : 'Change'}
+                            </Button>
+                          </div>
+
+                          <div 
+                            className="grid grid-cols-1 md:grid-cols-2 gap-6" 
+                            dir={getTextDirection(selectedLanguage)}
+                          >
                         <FormField
                           control={propertyForm.control}
                           name="title"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Property Title *</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.propertyTitle} *
+                              </FormLabel>
                               <FormControl>
-                                <Input placeholder="e.g., Beautiful 3-bedroom villa" {...field} data-testid="input-property-title" />
+                                <Input 
+                                  placeholder={t.titlePlaceholder} 
+                                  {...field} 
+                                  className={getLanguageClasses(selectedLanguage)}
+                                  dir={getTextDirection(selectedLanguage)}
+                                  data-testid="input-property-title" 
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -1344,36 +1611,42 @@ export default function CustomerDashboard() {
                           name="type"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Property Type *</FormLabel>
+                              <FormLabel className={getLanguageClasses(selectedLanguage)}>
+                                {t.propertyType} *
+                              </FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
-                                  <SelectTrigger data-testid="select-property-type">
-                                    <SelectValue placeholder="Select property type" />
+                                  <SelectTrigger 
+                                    data-testid="select-property-type"
+                                    className={getLanguageClasses(selectedLanguage)}
+                                    dir={getTextDirection(selectedLanguage)}
+                                  >
+                                    <SelectValue placeholder={t.selectPropertyType} />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
                                   <SelectItem value="house">
                                     <span className="flex items-center gap-2">
                                       <Home className="h-4 w-4 text-orange-600" />
-                                      House
+                                      {t.house}
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="apartment">
                                     <span className="flex items-center gap-2">
                                       <Building className="h-4 w-4 text-orange-600" />
-                                      Apartment
+                                      {t.apartment}
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="villa">
                                     <span className="flex items-center gap-2">
                                       <University className="h-4 w-4 text-orange-600" />
-                                      Villa
+                                      {t.villa}
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="land">
                                     <span className="flex items-center gap-2">
                                       <Mountain className="h-4 w-4 text-orange-600" />
-                                      Land
+                                      {t.land}
                                     </span>
                                   </SelectItem>
                                 </SelectContent>
@@ -1874,36 +2147,38 @@ export default function CustomerDashboard() {
                         />
                       </div>
 
-                      <div className="flex justify-end space-x-4">
-                        {editingProperty && (
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            onClick={handleCancelPropertyEdit}
-                            data-testid="button-cancel-edit"
-                          >
-                            Cancel
-                          </Button>
-                        )}
-                        <Button 
-                          type="button" 
-                          variant="outline" 
-                          onClick={() => propertyForm.reset()}
-                          data-testid="button-reset"
-                        >
-                          Reset Form
-                        </Button>
-                        <Button 
-                          type="submit" 
-                          disabled={createPropertyMutation.isPending || editPropertyMutation.isPending}
-                          data-testid="button-submit-property"
-                        >
-                          {editingProperty ? 
-                            (editPropertyMutation.isPending ? 'Updating Property...' : 'Update Property') : 
-                            (createPropertyMutation.isPending ? 'Adding Property...' : 'Add Property')
-                          }
-                        </Button>
-                      </div>
+                          <div className="flex justify-end space-x-4">
+                            {editingProperty && (
+                              <Button 
+                                type="button" 
+                                variant="outline" 
+                                onClick={handleCancelPropertyEdit}
+                                data-testid="button-cancel-edit"
+                              >
+                                Cancel
+                              </Button>
+                            )}
+                            <Button 
+                              type="button" 
+                              variant="outline" 
+                              onClick={() => propertyForm.reset()}
+                              data-testid="button-reset"
+                            >
+                              Reset Form
+                            </Button>
+                            <Button 
+                              type="submit" 
+                              disabled={createPropertyMutation.isPending || editPropertyMutation.isPending}
+                              data-testid="button-submit-property"
+                            >
+                              {editingProperty ? 
+                                (editPropertyMutation.isPending ? 'Updating Property...' : 'Update Property') : 
+                                (createPropertyMutation.isPending ? 'Adding Property...' : 'Add Property')
+                              }
+                            </Button>
+                          </div>
+                        </>
+                      )}
                     </form>
                   </Form>
                 </CardContent>
