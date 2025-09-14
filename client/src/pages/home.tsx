@@ -16,6 +16,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { useTranslation } from "@/lib/i18n";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
 import { useAuth } from "@/hooks/useAuth";
+import { usePropertyEvents } from "@/hooks/usePropertyEvents";
 import type { Property, AISearchResponse, PropertyFilters } from "@/types";
 import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu, Search, X, User, Heart, Settings, LogOut, University, Sun, Moon, Building, Mountain } from "lucide-react";
 
@@ -45,6 +46,14 @@ export default function HomePage() {
 
   // Load properties for the map with current filters
   const { data: mapProperties } = useProperties(mapFilters);
+
+  // Listen for real-time property updates
+  const { isConnected, isConnecting } = usePropertyEvents({
+    currentFilters: mapFilters,
+    onPropertyCreated: (property) => {
+      console.log('New property created and detected:', property.title);
+    }
+  });
 
   // Check for property to highlight from URL parameter
   useEffect(() => {

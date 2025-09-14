@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
@@ -18,6 +18,23 @@ import {
   cacheControl, handleConditionalRequest, trackQueryPerformance,
   performanceMonitor 
 } from "./middleware/performance";
+
+// SSE client management
+const sseClients = new Set<Response>();
+
+function broadcastToSSEClients(event: string, data: any) {
+  const message = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+  
+  // Send to all connected clients
+  sseClients.forEach(client => {
+    try {
+      client.write(message);
+    } catch (error) {
+      // Remove disconnected clients
+      sseClients.delete(client);
+    }
+  });
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration
@@ -437,6 +454,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // SSE stream for real-time property updates
+  app.get("/api/properties/stream", (req, res) => {
+    // Set SSE headers
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Cache-Control',
+      'X-Accel-Buffering': 'no' // Prevent buffering by Nginx
+    });
+
+    // Flush headers to prevent intermediary buffering
+    res.flushHeaders();
+
+    // Send initial connection event
+    res.write(`data: ${JSON.stringify({ type: 'connected', message: 'SSE connection established' })}\n\n`);
+
+    // Add client to SSE clients set
+    sseClients.add(res);
+
+    // Set up heartbeat to keep connection alive
+    const heartbeat = setInterval(() => {
+      try {
+        res.write(`data: ${JSON.stringify({ type: 'heartbeat', timestamp: new Date().toISOString() })}\n\n`);
+      } catch (error) {
+        clearInterval(heartbeat);
+        sseClients.delete(res);
+      }
+    }, 25000); // Send heartbeat every 25 seconds
+
+    // Handle client disconnect
+    req.on('close', () => {
+      clearInterval(heartbeat);
+      sseClients.delete(res);
+    });
+
+    req.on('error', () => {
+      clearInterval(heartbeat);
+      sseClients.delete(res);
+    });
+  });
+
   app.get("/api/properties/:id", async (req, res) => {
     try {
       const { id } = req.params;
@@ -459,6 +519,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertPropertySchema.parse(req.body);
       const property = await storage.createProperty(validatedData);
+      
+      // Broadcast new property to all SSE clients
+      broadcastToSSEClients('property_created', property);
+      
       res.status(201).json(property);
     } catch (error) {
       if (error instanceof z.ZodError) {
