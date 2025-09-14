@@ -265,7 +265,7 @@ export default function PropertyDetailPage() {
           title={`${property.title} - ${formatPrice(property.price, property.currency || 'USD', property.listingType)} | MapEstate`}
           description={`${property.description || `${property.bedrooms} bedroom ${property.type} for ${property.listingType} in ${property.city}, ${property.country}.`} View details, photos, and contact information.`}
           keywords={`${property.type}, ${property.city}, ${property.country}, ${property.listingType}, real estate, property, ${property.bedrooms} bedroom, ${property.bathrooms} bathroom`}
-          ogImage={property.images && property.images.length > 0 ? property.images[0] : undefined}
+          ogImage={property.images && property.images.length > 0 ? property.images[0] : `${window.location.origin}/logo_1757848527935.png`}
           canonicalUrl={`${window.location.origin}/property/${property.id}`}
           structuredData={getPropertyStructuredData(property)}
         />

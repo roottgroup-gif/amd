@@ -48,18 +48,35 @@ export function SEOHead({
     updateMetaTag('name', 'description', description);
     updateMetaTag('name', 'keywords', keywords);
     
-    // Update Open Graph tags
+    // Comprehensive Open Graph tags for Facebook, LinkedIn, and general sharing
     updateMetaTag('property', 'og:title', title);
     updateMetaTag('property', 'og:description', description);
     updateMetaTag('property', 'og:image', ogImage);
+    updateMetaTag('property', 'og:image:secure_url', ogImage.replace('http://', 'https://'));
+    updateMetaTag('property', 'og:image:width', '1200');
+    updateMetaTag('property', 'og:image:height', '630');
+    updateMetaTag('property', 'og:image:alt', title);
     updateMetaTag('property', 'og:url', canonicalUrl || window.location.href);
-    updateMetaTag('property', 'og:type', 'website');
+    updateMetaTag('property', 'og:type', structuredData ? 'product' : 'website');
+    updateMetaTag('property', 'og:site_name', 'MapEstate');
+    updateMetaTag('property', 'og:locale', 'en_US');
     
-    // Update Twitter tags
+    // Twitter Card tags for Twitter sharing
     updateMetaTag('name', 'twitter:card', 'summary_large_image');
-    updateMetaTag('property', 'twitter:title', title);
-    updateMetaTag('property', 'twitter:description', description);
-    updateMetaTag('property', 'twitter:image', ogImage);
+    updateMetaTag('name', 'twitter:title', title);
+    updateMetaTag('name', 'twitter:description', description);
+    updateMetaTag('name', 'twitter:image', ogImage);
+    updateMetaTag('name', 'twitter:image:alt', title);
+    updateMetaTag('name', 'twitter:site', '@MapEstate');
+    updateMetaTag('name', 'twitter:creator', '@MapEstate');
+    
+    // WhatsApp uses Open Graph tags, ensure mobile compatibility
+    updateMetaTag('name', 'format-detection', 'telephone=no');
+    
+    // Additional meta tags for better social sharing
+    updateMetaTag('name', 'robots', 'index, follow');
+    updateMetaTag('name', 'author', 'MapEstate');
+    updateMetaTag('property', 'article:publisher', 'https://mapestate.com');
     
     // Update canonical URL
     updateCanonicalUrl(canonicalUrl || window.location.href);
