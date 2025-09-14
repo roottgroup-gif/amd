@@ -4,11 +4,11 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Language constants
-export const SUPPORTED_LANGUAGES = ["en", "ar", "ku"] as const;
+export const SUPPORTED_LANGUAGES = ["en", "ar", "kur"] as const;
 export const LANGUAGE_NAMES = {
   en: "English",
   ar: "Arabic", 
-  ku: "Kurdish Sorani"
+  kur: "Kurdish Sorani"
 } as const;
 export type Language = typeof SUPPORTED_LANGUAGES[number];
 

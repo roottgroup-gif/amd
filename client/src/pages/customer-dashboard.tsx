@@ -128,6 +128,7 @@ const translations = {
     noWavesRemaining: 'No Waves Remaining',
     waveBalanceWarning: 'You have used all {total} of your wave assignments. You must buy balance to continue assigning properties to waves.',
     noWave: 'No Wave',
+    premiumWave: 'Premium Wave',
     noWavesAvailable: 'No waves available',
     waveDescription: 'Assign your property to a wave to organize it with similar properties. This helps with map viewing and property management.',
     
@@ -250,6 +251,7 @@ const translations = {
     noWavesRemaining: 'لا توجد موجات متبقية',
     waveBalanceWarning: 'لقد استخدمت جميع مهام الموجة البالغة {total}. يجب عليك شراء رصيد للمتابعة في تعيين العقارات للموجات.',
     noWave: 'بدون موجة',
+    premiumWave: 'موجة مميزة',
     noWavesAvailable: 'لا توجد موجات متاحة',
     waveDescription: 'عين عقارك إلى موجة لتنظيمه مع عقارات مماثلة. هذا يساعد في عرض الخريطة وإدارة العقارات.',
     
@@ -283,7 +285,7 @@ const translations = {
     selectListingType: 'اختر نوع الإعلان',
     selectLanguageFirst: 'يرجى اختيار لغة للمتابعة',
   },
-  ku: {
+  kur: {
     // Form Labels
     propertyTitle: 'ناونیشانی موڵک',
     propertyType: 'جۆری موڵک',
@@ -372,8 +374,9 @@ const translations = {
     noWavesRemaining: 'هیچ شەپۆلێک نەماوە',
     waveBalanceWarning: 'تۆ هەموو {total} ئەرکەکانی شەپۆڵت بەکارهێناوە. دەبێت بڕی پارە بکڕیت بۆ بەردەوامبوون لە دانانی موڵکەکان بۆ شەپۆلەکان.',
     noWave: 'بێ شەپۆل',
+    premiumWave: 'شەپۆلی تایبەت',
     noWavesAvailable: 'هیچ شەپۆلێک بەردەست نییە',
-    waveDescription: 'موڵکەکەت بۆ شەپۆلێک دابنێ بۆ ڕێکخستنی لەگەڵ موڵکە هاوشێوەکان. ئەمە یارمەتی پیشاندانی نەخشە و بەڕێوەبردنی موڵکەکان دەدات.',
+    waveDescription: 'موڵکەکەت بۆ شەپۆلێک دابنێ بۆ ڕێکخستنی لەگەڵ موڵکە هاوشێوەکان. ئەمە یارمەتی پیشاندانی نەخشە و بەڕێوەبردنی موڵکەکان دەدات.'
     
     // Contact Info
     contactPhoneNote: 'ئەم ژمارە تەلەفۆنە بۆ کڕیارە ئارەزووبەکان پیشان دەدرێت بۆ واتساپ و پەیوەندیکردن',
@@ -515,8 +518,8 @@ const getExpirationStatus = (daysUntilExpiration: number | null): {
 };
 
 // Helper function to get text direction for language
-const getTextDirection = (language: Language): 'ltr' | 'rtl' => {
-  return language === 'ar' || language === 'ku' || language === 'kur' ? 'rtl' : 'ltr';
+const getTextDirection = (language: Language | string): 'ltr' | 'rtl' => {
+  return language === 'ar' || language === 'kur' || language === 'ku' ? 'rtl' : 'ltr';
 };
 
 // Helper function to get language-specific CSS classes
@@ -700,16 +703,7 @@ export default function CustomerDashboard() {
     enabled: !!user?.id,
   });
 
-  // Fetch available waves for customer
-  const { data: availableWaves = [] } = useQuery({
-    queryKey: ['/api/waves'],
-    queryFn: async () => {
-      const response = await fetch('/api/waves');
-      if (!response.ok) throw new Error('Failed to fetch waves');
-      return response.json();
-    },
-    enabled: !!user?.id,
-  });
+  // Note: Wave selection simplified to only show "Premium Wave" and "No Wave" options
 
   // Add to favorites mutation
   const addToFavoritesMutation = useMutation({
@@ -2189,17 +2183,11 @@ export default function CustomerDashboard() {
                                       <span className="text-muted-foreground">{t.noWave}</span>
                                     </span>
                                   </SelectItem>
-                                  {availableWaves.map((wave) => (
-                                    <SelectItem key={wave.id} value={wave.id}>
-                                      <span className="flex items-center gap-2">
-                                        <div 
-                                          className="w-3 h-3 rounded-full border"
-                                          style={{ backgroundColor: wave.color }}
-                                        />
-                                        {wave.name}
-                                      </span>
-                                    </SelectItem>
-                                  ))}
+                                  <SelectItem value="premium-wave">
+                                    <span className="flex items-center gap-2">
+                                      <span className="text-muted-foreground">{t.premiumWave}</span>
+                                    </span>
+                                  </SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage />
