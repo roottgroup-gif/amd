@@ -832,6 +832,7 @@ class MemStorage implements IStorage {
       isVerified: true,
       avatar: null,
       waveBalance: 999999,
+      allowedLanguages: ['en', 'ar', 'ku'],
       createdAt: new Date(),
       expiresAt: null,
       isExpired: false
@@ -851,6 +852,7 @@ class MemStorage implements IStorage {
       isVerified: true,
       avatar: null,
       waveBalance: 10,
+      allowedLanguages: ['en'], // Example: only English allowed for this user
       createdAt: new Date(),
       expiresAt: null,
       isExpired: false
@@ -1383,6 +1385,7 @@ async function addExampleProperties() {
     address: "Gulan Street, Downtown",
     city: "Erbil",
     country: "Iraq",
+    language: "en",
     latitude: "36.1911",
     longitude: "44.0093",
     images: [],
@@ -1407,6 +1410,7 @@ async function addExampleProperties() {
     address: "Ainkawa Main Road",
     city: "Erbil",
     country: "Iraq",
+    language: "en",
     latitude: "36.2181",
     longitude: "44.0089",
     images: [],
@@ -1431,6 +1435,7 @@ async function addExampleProperties() {
     address: "Nakhoshkhana Road, Premium District",
     city: "Duhok",
     country: "Iraq",
+    language: "en",
     latitude: "36.8677",
     longitude: "42.9944",
     images: [
