@@ -1304,9 +1304,10 @@ export default function CustomerDashboard() {
                         properties={allProperties}
                         filters={mapFilters}
                         onFilterChange={handleMapFilterChange}
-                      onPropertyClick={handlePropertyInquiry}
-                      className="h-full w-full rounded-lg"
-                    />
+                        onPropertyClick={handlePropertyInquiry}
+                        className="h-full w-full rounded-lg"
+                      />
+                    </Suspense>
                   </div>
                 </CardContent>
               </Card>

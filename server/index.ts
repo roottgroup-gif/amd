@@ -1,40 +1,36 @@
 import express, { type Request, Response, NextFunction } from "express";
+import compression from "compression";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { performanceLogger, requestSizeMonitor } from "./middleware/performance";
 
 const app = express();
+
+// Enable gzip compression for all responses
+app.use(compression({
+  // Compress responses larger than 1kb
+  threshold: 1024,
+  // Set compression level (6 is good balance of speed/compression)
+  level: 6,
+  // Compress these MIME types
+  filter: (req, res) => {
+    // Don't compress responses if the client doesn't support it
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    // Use compression filter
+    return compression.filter(req, res);
+  }
+}));
+
 app.use(express.json({ limit: '10mb' })); // Increased limit for image uploads
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+// Add request size monitoring
+app.use(requestSizeMonitor(10)); // 10MB limit with warnings
 
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
-
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      log(logLine);
-    }
-  });
-
-  next();
-});
+// Use enhanced performance logging
+app.use(performanceLogger);
 
 (async () => {
   const server = await registerRoutes(app);

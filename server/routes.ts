@@ -9,6 +9,15 @@ import { hashPassword, requireAuth, requireRole, requireAnyRole, populateUser } 
 import session from "express-session";
 import { z } from "zod";
 import sitemapRouter from "./routes/sitemap";
+import { registerPerformanceRoutes } from "./routes/performance";
+import { 
+  authRateLimit, searchRateLimit, apiRateLimit, adminRateLimit, 
+  heavyOperationRateLimit, uploadRateLimit 
+} from "./middleware/rateLimiting";
+import { 
+  cacheControl, handleConditionalRequest, trackQueryPerformance,
+  performanceMonitor 
+} from "./middleware/performance";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Session configuration
@@ -29,8 +38,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // SEO routes
   app.use(sitemapRouter);
 
-  // Authentication routes
-  app.post("/api/auth/login", async (req, res) => {
+  // Performance monitoring routes
+  registerPerformanceRoutes(app);
+
+  // Authentication routes with rate limiting
+  app.post("/api/auth/login", authRateLimit, async (req, res) => {
     try {
       const { username, password } = req.body;
       
@@ -56,7 +68,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/auth/logout", (req, res) => {
+  app.post("/api/auth/logout", authRateLimit, (req, res) => {
     req.session.destroy((err) => {
       if (err) {
         return res.status(500).json({ message: "Logout failed" });
@@ -151,8 +163,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin routes - User management
-  app.get("/api/admin/users", requireRole("admin"), async (req, res) => {
+  // Admin routes with rate limiting
+  app.get("/api/admin/users", adminRateLimit, requireRole("admin"), async (req, res) => {
     try {
       const users = await storage.getAllUsers();
       const usersWithoutPasswords = users.map(({ password, ...user }) => user);
@@ -173,7 +185,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/admin/users", requireRole("admin"), async (req, res) => {
+  app.post("/api/admin/users", adminRateLimit, requireRole("admin"), async (req, res) => {
     try {
       // Preprocess the request body to handle date conversion
       const processedBody = { ...req.body };
@@ -349,8 +361,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Properties routes (protected for agents and admins)
-  app.get("/api/properties", async (req, res) => {
+  // Properties routes with caching and optimization
+  app.get("/api/properties", 
+    apiRateLimit,
+    cacheControl({ maxAge: 300 }), // Cache for 5 minutes
+    async (req, res) => {
     try {
       const {
         type,
@@ -385,15 +400,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       const properties = await storage.getProperties(filters);
+      
+      // Handle conditional requests for caching (with error handling)
+      try {
+        if (handleConditionalRequest(req, res, properties)) {
+          return;
+        }
+      } catch (error) {
+        console.warn('Conditional request handling failed:', error);
+      }
+      
       res.json(properties);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch properties" });
     }
   });
 
-  app.get("/api/properties/featured", async (req, res) => {
+  app.get("/api/properties/featured", 
+    cacheControl({ maxAge: 600 }), // Cache for 10 minutes
+    async (req, res) => {
     try {
       const properties = await storage.getFeaturedProperties();
+      
+      // Handle conditional requests for caching (with error handling)
+      try {
+        if (handleConditionalRequest(req, res, properties)) {
+          return;
+        }
+      } catch (error) {
+        console.warn('Conditional request handling failed:', error);
+      }
+      
       res.json(properties);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch featured properties" });
@@ -602,8 +639,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // AI Search endpoint (basic implementation)
-  app.post("/api/search/ai", async (req, res) => {
+  // AI Search endpoint with rate limiting
+  app.post("/api/search/ai", searchRateLimit, async (req, res) => {
     try {
       const { query, userId } = req.body;
       
@@ -649,7 +686,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Add general search term
       filters.search = query;
 
-      const properties = await storage.getProperties(filters);
+      const properties = await trackQueryPerformance(
+        'getPropertiesForSearch',
+        () => storage.getProperties(filters)
+      );
 
       // Save search history if user is provided
       if (userId) {
