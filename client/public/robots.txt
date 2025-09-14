@@ -1,20 +1,24 @@
 User-agent: *
 Allow: /
 
-# Disallow admin areas
-Disallow: /admin/
+# Disallow private/admin areas (matching actual routes)
+Disallow: /admin/login
+Disallow: /admin/dashboard
 Disallow: /customer/dashboard
 Disallow: /dashboard
 
-# Allow important pages
+# Disallow API endpoints (not meant for crawling)
+Disallow: /api/
+
+# Allow important public pages
 Allow: /
 Allow: /properties
 Allow: /property/*
 Allow: /favorites
 Allow: /settings
 
-# Sitemap location
-Sitemap: https://your-domain.com/sitemap.xml
-
-# Crawl delay
+# Crawl delay for all bots (Google ignores this, others respect it)
 Crawl-delay: 1
+
+# Sitemap location
+Sitemap: /sitemap.xml
