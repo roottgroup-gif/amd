@@ -46,15 +46,8 @@ const translations = {
     listingType: 'Listing Type',
     price: 'Price (USD)',
     area: 'Area (sq ft)',
-    bedrooms: 'Bedrooms',
-    bathrooms: 'Bathrooms',
     address: 'Address',
-    city: 'City',
-    country: 'Country',
-    contactPhone: 'Contact Phone',
-    propertyWave: 'Property Wave',
     selectLanguage: 'Select Language',
-    description: 'Description',
     
     // Placeholders
     titlePlaceholder: 'e.g., Beautiful 3-bedroom villa',
@@ -64,8 +57,6 @@ const translations = {
     bedroomsPlaceholder: 'e.g., 3',
     bathroomsPlaceholder: 'e.g., 2',
     addressPlaceholder: 'e.g., 123 Main Street',
-    cityPlaceholder: 'e.g., Erbil',
-    countryPlaceholder: 'e.g., Iraq',
     phonePlaceholder: 'e.g., +964 750 123 4567',
     
     // Property Types
@@ -77,6 +68,71 @@ const translations = {
     // Listing Types
     sale: 'For Sale',
     rent: 'For Rent',
+    
+    // Additional Form Labels
+    bedrooms: 'Bedrooms',
+    bathrooms: 'Bathrooms', 
+    city: 'City',
+    country: 'Country',
+    contactPhone: 'Contact Phone',
+    propertyWave: 'Property Wave',
+    amenities: 'Amenities',
+    features: 'Features',
+    description: 'Description',
+    propertyImages: 'Property Images',
+    propertyLocation: 'Select Property Location',
+    propertyVisibility: 'Property Visibility',
+    
+    // Additional Placeholders
+    contactPhonePlaceholder: 'e.g., +964 750 123 4567',
+    cityPlaceholder: 'e.g., Erbil',
+    countryPlaceholder: 'e.g., Iraq',
+    selectWavePlaceholder: 'Select a wave for this property',
+    
+    // Form Text
+    addNewProperty: 'Add New Property',
+    updateProperty: 'Update Property',
+    sharePropertyText: 'Share your property with others by adding it to our platform',
+    updatePropertyText: 'Update your property details',
+    selectPropertyLanguage: 'Select Property Language',
+    languageDescription: 'Choose the language for your property listing. This will change the form to that language and set the property\'s display language.',
+    language: 'Language',
+    change: 'Change',
+    
+    // Location Section
+    selectLocationTitle: '📍 Select Property Location',
+    selectLocationDesc: 'Click on the map to pinpoint your property\'s exact location. We\'ll automatically fill in the address, city, and country fields for you!',
+    smartAutoFill: 'Smart Auto-Fill Enabled',
+    autoFillDesc: 'Address details will be automatically detected and filled when you click on the map',
+    locationSelected: 'Location Selected',
+    coordinates: 'Coordinates',
+    
+    // Images Section
+    propertyImagesTitle: '📷 Property Images',
+    propertyImagesDesc: 'Upload high-quality images of your property. The first image will be used as the main photo.',
+    
+    // Visibility Section
+    propertyVisibilityTitle: '👁️ Property Visibility',
+    propertyVisibilityDesc: 'Control whether your property appears on the public map and search results.',
+    visibleOnMap: 'Visible on Map',
+    hiddenFromMap: 'Hidden from Map',
+    visibleDesc: 'Your property will be visible to other users on the map and in search results',
+    hiddenDesc: 'Your property will be hidden from the public map and search results',
+    visible: 'Visible',
+    hidden: 'Hidden',
+    
+    // Wave Section
+    waveBalance: 'Property Wave',
+    remaining: 'remaining',
+    unlimited: 'Unlimited',
+    noWavesRemaining: 'No Waves Remaining',
+    waveBalanceWarning: 'You have used all {total} of your wave assignments. You must buy balance to continue assigning properties to waves.',
+    noWave: 'No Wave',
+    noWavesAvailable: 'No waves available',
+    waveDescription: 'Assign your property to a wave to organize it with similar properties. This helps with map viewing and property management.',
+    
+    // Contact Info
+    contactPhoneNote: 'This phone number will be shown to interested buyers for WhatsApp and calls',
     
     // UI Text
     required: 'required',
@@ -92,15 +148,8 @@ const translations = {
     listingType: 'نوع الإعلان',
     price: 'السعر (دولار أمريكي)',
     area: 'المساحة (قدم مربع)',
-    bedrooms: 'غرف النوم',
-    bathrooms: 'دورات المياه',
     address: 'العنوان',
-    city: 'المدينة',
-    country: 'البلد',
-    contactPhone: 'رقم الاتصال',
-    propertyWave: 'موجة العقار',
     selectLanguage: 'اختر اللغة',
-    description: 'الوصف',
     
     // Placeholders
     titlePlaceholder: 'مثال: فيلا جميلة من 3 غرف نوم',
@@ -110,8 +159,6 @@ const translations = {
     bedroomsPlaceholder: 'مثال: 3',
     bathroomsPlaceholder: 'مثال: 2',
     addressPlaceholder: 'مثال: 123 الشارع الرئيسي',
-    cityPlaceholder: 'مثال: أربيل',
-    countryPlaceholder: 'مثال: العراق',
     phonePlaceholder: 'مثال: +964 750 123 4567',
     
     // Property Types
@@ -123,6 +170,71 @@ const translations = {
     // Listing Types
     sale: 'للبيع',
     rent: 'للإيجار',
+    
+    // Additional Form Labels
+    bedrooms: 'غرف النوم',
+    bathrooms: 'دورات المياه',
+    city: 'المدينة',
+    country: 'البلد',
+    contactPhone: 'رقم الاتصال',
+    propertyWave: 'موجة العقار',
+    amenities: 'المرافق',
+    features: 'المميزات',
+    description: 'الوصف',
+    propertyImages: 'صور العقار',
+    propertyLocation: 'اختر موقع العقار',
+    propertyVisibility: 'ظهور العقار',
+    
+    // Additional Placeholders
+    contactPhonePlaceholder: 'مثال: +964 750 123 4567',
+    cityPlaceholder: 'مثال: أربيل',
+    countryPlaceholder: 'مثال: العراق',
+    selectWavePlaceholder: 'اختر موجة لهذا العقار',
+    
+    // Form Text
+    addNewProperty: 'إضافة عقار جديد',
+    updateProperty: 'تحديث العقار',
+    sharePropertyText: 'شارك عقارك مع الآخرين عن طريق إضافته إلى منصتنا',
+    updatePropertyText: 'تحديث تفاصيل عقارك',
+    selectPropertyLanguage: 'اختر لغة العقار',
+    languageDescription: 'اختر لغة قائمة العقار الخاص بك. سيؤدي هذا إلى تغيير النموذج إلى تلك اللغة وتعيين لغة عرض العقار.',
+    language: 'اللغة',
+    change: 'تغيير',
+    
+    // Location Section
+    selectLocationTitle: '📍 اختر موقع العقار',
+    selectLocationDesc: 'انقر على الخريطة لتحديد الموقع الدقيق لعقارك. سنقوم بتعبئة العنوان والمدينة والبلد تلقائياً!',
+    smartAutoFill: 'التعبئة التلقائية الذكية مفعلة',
+    autoFillDesc: 'سيتم اكتشاف تفاصيل العنوان وتعبئتها تلقائياً عند النقر على الخريطة',
+    locationSelected: 'تم اختيار الموقع',
+    coordinates: 'الإحداثيات',
+    
+    // Images Section
+    propertyImagesTitle: '📷 صور العقار',
+    propertyImagesDesc: 'ارفع صوراً عالية الجودة لعقارك. ستُستخدم الصورة الأولى كصورة رئيسية.',
+    
+    // Visibility Section
+    propertyVisibilityTitle: '👁️ ظهور العقار',
+    propertyVisibilityDesc: 'تحكم في ظهور عقارك على الخريطة العامة ونتائج البحث.',
+    visibleOnMap: 'ظاهر على الخريطة',
+    hiddenFromMap: 'مخفي من الخريطة',
+    visibleDesc: 'سيكون عقارك ظاهراً للمستخدمين الآخرين على الخريطة وفي نتائج البحث',
+    hiddenDesc: 'سيكون عقارك مخفياً من الخريطة العامة ونتائج البحث',
+    visible: 'ظاهر',
+    hidden: 'مخفي',
+    
+    // Wave Section
+    waveBalance: 'موجة العقار',
+    remaining: 'متبقي',
+    unlimited: 'غير محدود',
+    noWavesRemaining: 'لا توجد موجات متبقية',
+    waveBalanceWarning: 'لقد استخدمت جميع مهام الموجة البالغة {total}. يجب عليك شراء رصيد للمتابعة في تعيين العقارات للموجات.',
+    noWave: 'بدون موجة',
+    noWavesAvailable: 'لا توجد موجات متاحة',
+    waveDescription: 'عين عقارك إلى موجة لتنظيمه مع عقارات مماثلة. هذا يساعد في عرض الخريطة وإدارة العقارات.',
+    
+    // Contact Info
+    contactPhoneNote: 'سيظهر رقم الهاتف هذا للمشترين المهتمين للواتساب والمكالمات',
     
     // UI Text
     required: 'مطلوب',
@@ -169,6 +281,63 @@ const translations = {
     // Listing Types
     sale: 'بۆ فرۆشتن',
     rent: 'بۆ کرێ',
+    
+    // Additional Form Labels
+    amenities: 'گەرەکیەکان',
+    features: 'تایبەتمەندیەکان',
+    description: 'وەسف',
+    propertyImages: 'وێنەکانی موڵک',
+    propertyLocation: 'شوێنی موڵک هەڵبژێرە',
+    propertyVisibility: 'دیارکردنی موڵک',
+    
+    // Additional Placeholders
+    contactPhonePlaceholder: 'نموونە: +964 750 123 4567',
+    selectWavePlaceholder: 'شەپۆلێک بۆ ئەم موڵکە هەڵبژێرە',
+    
+    // Form Text
+    addNewProperty: 'موڵکی نوێ زیاد بکە',
+    updateProperty: 'موڵک نوێ بکەرەوە',
+    sharePropertyText: 'موڵکەکەت لەگەڵ کەسانی دیکە هاوبەش بکە بە زیادکردنی بۆ سەکۆمان',
+    updatePropertyText: 'وردەکارییەکانی موڵکەکەت نوێ بکەرەوە',
+    selectPropertyLanguage: 'زمانی موڵک هەڵبژێرە',
+    languageDescription: 'زمانێک بۆ لیستی موڵکەکەت هەڵبژێرە. ئەمە فۆڕمەکە دەگۆڕێت بۆ ئەو زمانە و زمانی پیشاندانی موڵکەکە دادەنێت.',
+    language: 'زمان',
+    change: 'گۆڕین',
+    
+    // Location Section
+    selectLocationTitle: '📍 شوێنی موڵک هەڵبژێرە',
+    selectLocationDesc: 'لەسەر نەخشەکە کلیک بکە بۆ دیاریکردنی شوێنی وردی موڵکەکەت. ئێمە بە شێوەیەکی خۆکارانە ناونیشان و شار و وڵات پڕ دەکەینەوە!',
+    smartAutoFill: 'پڕکردنەوەی زیرەکانەی خۆکارانە چالاککراوە',
+    autoFillDesc: 'وردەکارییەکانی ناونیشان بە شێوەیەکی خۆکارانە دەدۆزرێنەوە و پڕ دەکرێنەوە کاتێک لەسەر نەخشەکە کلیک دەکەیت',
+    locationSelected: 'شوێن هەڵبژێردرا',
+    coordinates: 'هاوپەیمانیەکان',
+    
+    // Images Section
+    propertyImagesTitle: '📷 وێنەکانی موڵک',
+    propertyImagesDesc: 'وێنەی بەرزی کوالیتی بۆ موڵکەکەت بارپێچ بکە. یەکەم وێنە وەک وێنەی سەرەکی بەکار دەهێنرێت.',
+    
+    // Visibility Section
+    propertyVisibilityTitle: '👁️ دیارکردنی موڵک',
+    propertyVisibilityDesc: 'کۆنترۆڵی ئەوە بکە کە موڵکەکەت لەسەر نەخشەی گشتی و ئەنجامەکانی گەڕان دەردەکەوێت.',
+    visibleOnMap: 'لەسەر نەخشە دیارە',
+    hiddenFromMap: 'لە نەخشە شاراوەیە',
+    visibleDesc: 'موڵکەکەت بۆ بەکارهێنەرانی دیکە لەسەر نەخشە و لە ئەنجامەکانی گەڕان دیار دەبێت',
+    hiddenDesc: 'موڵکەکەت لە نەخشەی گشتی و ئەنجامەکانی گەڕان شاردراوە دەبێت',
+    visible: 'دیار',
+    hidden: 'شاراوە',
+    
+    // Wave Section
+    waveBalance: 'شەپۆلی موڵک',
+    remaining: 'ماوە',
+    unlimited: 'سنووردار نییە',
+    noWavesRemaining: 'هیچ شەپۆلێک نەماوە',
+    waveBalanceWarning: 'تۆ هەموو {total} ئەرکەکانی شەپۆڵت بەکارهێناوە. دەبێت بڕی پارە بکڕیت بۆ بەردەوامبوون لە دانانی موڵکەکان بۆ شەپۆلەکان.',
+    noWave: 'بێ شەپۆل',
+    noWavesAvailable: 'هیچ شەپۆلێک بەردەست نییە',
+    waveDescription: 'موڵکەکەت بۆ شەپۆلێک دابنێ بۆ ڕێکخستنی لەگەڵ موڵکە هاوشێوەکان. ئەمە یارمەتی پیشاندانی نەخشە و بەڕێوەبردنی موڵکەکان دەدات.',
+    
+    // Contact Info
+    contactPhoneNote: 'ئەم ژمارە تەلەفۆنە بۆ کڕیارە ئارەزووبەکان پیشان دەدرێت بۆ واتساپ و پەیوەندیکردن',
     
     // UI Text
     required: 'پێویست',
