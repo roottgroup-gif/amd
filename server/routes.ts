@@ -194,6 +194,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Clear all properties (admin only)
+  app.delete("/api/admin/properties/all", adminRateLimit, requireRole("admin"), async (req, res) => {
+    try {
+      const count = await storage.clearAllProperties();
+      
+      // Broadcast to all SSE clients that properties were cleared
+      broadcastToSSEClients('properties_cleared', { count });
+      
+      res.json({ 
+        message: `Successfully deleted ${count} properties and related data`,
+        deletedCount: count 
+      });
+    } catch (error) {
+      console.error("Error clearing all properties:", error);
+      res.status(500).json({ message: "Failed to clear all properties" });
+    }
+  });
+
   // Admin and super admin - get users with passwords
   app.get("/api/admin/users/with-passwords", requireRole("admin"), async (req, res) => {
     try {

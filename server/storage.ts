@@ -338,6 +338,25 @@ export class DatabaseStorage implements IStorage {
     return (result.rowCount ?? 0) > 0;
   }
 
+  async clearAllProperties(): Promise<number> {
+    // Use transaction to ensure atomic deletion
+    return await db().transaction(async (tx) => {
+      // First, get the count of properties before deletion
+      const countResult = await tx.select({ count: sql<number>`count(*)` }).from(properties);
+      const count = countResult[0]?.count || 0;
+
+      // Delete all related data first (due to foreign key constraints)
+      // Order matters: delete child records before parent records
+      await tx.delete(favorites); // Clear all favorites
+      await tx.delete(inquiries); // Clear all inquiries  
+      await tx.delete(searchHistory); // Clear all search histories (fixed table name)
+      await tx.delete(properties); // Clear all properties
+
+      console.log(`Cleared ${count} properties and related data`);
+      return count;
+    });
+  }
+
   async incrementPropertyViews(id: string): Promise<void> {
     await db()
       .update(properties)
@@ -1978,80 +1997,17 @@ async function initializeWaves() {
 
 // Initialize properties for in-memory storage
 if (storage instanceof MemStorage) {
-  // Add sample properties to in-memory storage
-  setTimeout(async () => {
+  // Clear all properties from in-memory storage immediately
+  (async () => {
     try {
       await storage.clearAllProperties();
       
-      // Add 3 sample properties
-      await storage.createProperty({
-        title: "Modern Villa in Ankawa",
-        description: "Luxury 4-bedroom villa with private garden and swimming pool in prestigious Ankawa district. Recently renovated with modern amenities.",
-        type: "villa",
-        listingType: "sale",
-        price: "450000",
-        currency: "USD",
-        bedrooms: 4,
-        bathrooms: 3,
-        area: 3500,
-        address: "Ankawa Main Street",
-        city: "Erbil",
-        country: "Iraq",
-        latitude: "36.2148",
-        longitude: "44.0188",
-        images: ["https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"],
-        amenities: ["Swimming Pool", "Private Garden", "Parking", "Security System", "Air Conditioning"],
-        features: ["Modern Kitchen", "Master Suite", "Balcony", "Marble Floors"],
-        contactPhone: "+964 750 123 4567"
-      });
-
-      await storage.createProperty({
-        title: "Downtown Apartment for Rent",
-        description: "Spacious 2-bedroom apartment in the heart of Erbil downtown. Walking distance to shops, restaurants and public transport.",
-        type: "apartment",
-        listingType: "rent",
-        price: "800",
-        currency: "USD",
-        bedrooms: 2,
-        bathrooms: 2,
-        area: 1200,
-        address: "Gulan Street, Downtown",
-        city: "Erbil",
-        country: "Iraq",
-        latitude: "36.1948",
-        longitude: "44.0088",
-        images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"],
-        amenities: ["Central Heating", "Internet", "Furnished", "Elevator"],
-        features: ["City View", "Modern Appliances", "Hardwood Floors"],
-        contactPhone: "+964 750 234 5678"
-      });
-
-      await storage.createProperty({
-        title: "Family House in Ainkawa",
-        description: "Comfortable 3-bedroom family house with garden. Perfect for families looking for a quiet neighborhood with good schools nearby.",
-        type: "house",
-        listingType: "sale",
-        price: "280000",
-        currency: "USD",
-        bedrooms: 3,
-        bathrooms: 2,
-        area: 2200,
-        address: "Ainkawa Residential Area",
-        city: "Erbil",
-        country: "Iraq",
-        latitude: "36.2248",
-        longitude: "44.0288",
-        images: ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"],
-        amenities: ["Garden", "Garage", "Central Heating", "Security"],
-        features: ["Family Room", "Dining Area", "Storage Space"],
-        contactPhone: "+964 750 345 6789"
-      });
-
-      console.log("✅ Added 3 sample properties to the database");
+      // Properties have been cleared - no sample properties will be added
+      console.log("✅ All properties have been cleared from the database");
     } catch (error) {
-      console.error("Failed to add properties:", error);
+      console.error("Failed to clear properties:", error);
     }
-  }, 1000);
+  })();
 } else {
   // Initialize database without loading sample properties
   initializeDatabase().then(() => {
