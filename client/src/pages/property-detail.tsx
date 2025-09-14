@@ -4,6 +4,7 @@ import Navigation from "@/components/navigation";
 import ContactForm from "@/components/contact-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useTranslation } from "@/lib/i18n";
@@ -14,7 +15,7 @@ import type { Property } from "@/types";
 import { 
   Heart, Bed, Bath, Square, Car, MapPin, ArrowLeft, 
   ChevronLeft, ChevronRight, Check, Calendar,
-  Eye, Phone, MessageSquare, Mail, Sun, Moon
+  Eye, Phone, MessageSquare, Mail, Sun, Moon, Share2, Copy
 } from "lucide-react";
 
 export default function PropertyDetailPage() {
@@ -123,6 +124,68 @@ export default function PropertyDetailPage() {
         description: "Failed to update favorites. Please try again.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleShare = async (platform?: string) => {
+    if (!property) return;
+
+    const propertyUrl = `${window.location.origin}/property/${property.id}`;
+    const shareTitle = `${property.title} - MapEstate`;
+    const shareText = `Check out this amazing ${property.type} in ${property.city}! ${formatPrice(property.price, property.currency || 'USD', property.listingType)}`;
+
+    // Try Web Share API first (mainly for mobile)
+    if (navigator.share && !platform) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: propertyUrl,
+        });
+        return;
+      } catch (error) {
+        // Fall back to manual sharing if user cancels or API fails
+      }
+    }
+
+    // Manual sharing based on platform
+    switch (platform) {
+      case 'facebook':
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(propertyUrl)}`, '_blank');
+        break;
+      case 'twitter':
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(propertyUrl)}`, '_blank');
+        break;
+      case 'whatsapp':
+        window.open(`https://wa.me/?text=${encodeURIComponent(`${shareText} ${propertyUrl}`)}`, '_blank');
+        break;
+      case 'linkedin':
+        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(propertyUrl)}`, '_blank');
+        break;
+      case 'copy':
+        try {
+          await navigator.clipboard.writeText(propertyUrl);
+          toast({
+            title: "Link Copied",
+            description: "Property link has been copied to your clipboard.",
+          });
+        } catch (error) {
+          // Fallback for older browsers
+          const textArea = document.createElement('textarea');
+          textArea.value = propertyUrl;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          toast({
+            title: "Link Copied",
+            description: "Property link has been copied to your clipboard.",
+          });
+        }
+        break;
+      default:
+        // If no platform specified and Web Share API failed, show copy functionality
+        handleShare('copy');
     }
   };
 
@@ -279,6 +342,41 @@ export default function PropertyDetailPage() {
                   isFavorite ? 'fill-current scale-110' : 'hover:scale-105'
                 }`} />
               </Button>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white transition-all duration-200"
+                    data-testid="share-button"
+                  >
+                    <Share2 className="h-4 w-4 hover:scale-105 transition-all duration-200" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => handleShare('facebook')} data-testid="share-facebook">
+                    <span className="text-blue-600 mr-2">📘</span>
+                    Share on Facebook
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleShare('twitter')} data-testid="share-twitter">
+                    <span className="text-blue-400 mr-2">🐦</span>
+                    Share on Twitter
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleShare('whatsapp')} data-testid="share-whatsapp">
+                    <span className="text-green-600 mr-2">💬</span>
+                    Share on WhatsApp
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleShare('linkedin')} data-testid="share-linkedin">
+                    <span className="text-blue-700 mr-2">💼</span>
+                    Share on LinkedIn
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleShare('copy')} data-testid="share-copy">
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy Link
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           
