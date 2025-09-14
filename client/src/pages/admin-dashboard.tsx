@@ -384,7 +384,7 @@ export default function AdminDashboard() {
       waveBalance: user.waveBalance || 0,
       expiresAt: formattedExpiresAt,
       isVerified: user.isVerified || false,
-      allowedLanguages: user.allowedLanguages || ['en'],
+      allowedLanguages: (user.allowedLanguages as Array<typeof SUPPORTED_LANGUAGES[number]>) || ['en'],
     });
     setAvatarPreview(user.avatar || '');
     setIsEditUserOpen(true);
