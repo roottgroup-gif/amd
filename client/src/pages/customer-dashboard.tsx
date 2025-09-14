@@ -37,6 +37,14 @@ import {
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from '@/components/ui/chart';
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
+// Type definitions
+interface WaveBalance {
+  hasUnlimited: boolean;
+  totalBalance: number;
+  currentUsage: number;
+  remainingWaves: number;
+}
+
 // Multi-language support
 const translations = {
   en: {
@@ -376,7 +384,7 @@ const translations = {
     noWave: 'بێ شەپۆل',
     premiumWave: 'شەپۆلی تایبەت',
     noWavesAvailable: 'هیچ شەپۆلێک بەردەست نییە',
-    waveDescription: 'موڵکەکەت بۆ شەپۆلێک دابنێ بۆ ڕێکخستنی لەگەڵ موڵکە هاوشێوەکان. ئەمە یارمەتی پیشاندانی نەخشە و بەڕێوەبردنی موڵکەکان دەدات.'
+    waveDescription: 'موڵکەکەت بۆ شەپۆلێک دابنێ بۆ ڕێکخستنی لەگەڵ موڵکە هاوشێوەکان. ئەمە یارمەتی پیشاندانی نەخشە و بەڕێوەبردنی موڵکەکان دەدات.',
     
     // Contact Info
     contactPhoneNote: 'ئەم ژمارە تەلەفۆنە بۆ کڕیارە ئارەزووبەکان پیشان دەدرێت بۆ واتساپ و پەیوەندیکردن',
@@ -657,7 +665,7 @@ export default function CustomerDashboard() {
   });
 
   // Fetch user's wave balance information
-  const { data: waveBalance, isLoading: waveBalanceLoading } = useQuery({
+  const { data: waveBalance, isLoading: waveBalanceLoading } = useQuery<WaveBalance>({
     queryKey: ['/api/auth/wave-balance'],
     enabled: !!user?.id,
     refetchOnWindowFocus: true,
@@ -678,7 +686,9 @@ export default function CustomerDashboard() {
       }, {} as Record<string, number>) || {};
       
       const byStatus = data?.reduce((acc, prop) => {
-        acc[prop.status] = (acc[prop.status] || 0) + 1;
+        if (prop.status) {
+          acc[prop.status] = (acc[prop.status] || 0) + 1;
+        }
         return acc;
       }, {} as Record<string, number>) || {};
       
@@ -1279,19 +1289,19 @@ export default function CustomerDashboard() {
                         <>
                           <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900 dark:to-indigo-800 rounded-lg">
                             <div className="text-lg sm:text-xl md:text-2xl font-bold text-indigo-600 dark:text-indigo-300">
-                              {(waveBalance as any).hasUnlimited ? '∞' : (waveBalance as any).totalBalance || 0}
+                              {waveBalance.hasUnlimited ? '∞' : waveBalance.totalBalance || 0}
                             </div>
                             <div className="text-xs sm:text-sm text-indigo-500 dark:text-indigo-400">Total Balance</div>
                           </div>
                           <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900 dark:to-orange-800 rounded-lg">
                             <div className="text-lg sm:text-xl md:text-2xl font-bold text-orange-600 dark:text-orange-300">
-                              {(waveBalance as any).currentUsage || 0}
+                              {waveBalance.currentUsage || 0}
                             </div>
                             <div className="text-xs sm:text-sm text-orange-500 dark:text-orange-400">In Use</div>
                           </div>
                           <div className="text-center p-2 sm:p-3 md:p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900 dark:to-emerald-800 rounded-lg">
                             <div className="text-lg sm:text-xl md:text-2xl font-bold text-emerald-600 dark:text-emerald-300">
-                              {(waveBalance as any).hasUnlimited ? '∞' : (waveBalance as any).remainingWaves || 0}
+                              {waveBalance.hasUnlimited ? '∞' : waveBalance.remainingWaves || 0}
                             </div>
                             <div className="text-xs sm:text-sm text-emerald-500 dark:text-emerald-400">Remaining</div>
                           </div>
