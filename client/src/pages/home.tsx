@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { usePropertyEvents } from "@/hooks/usePropertyEvents";
 import type { Property, AISearchResponse, PropertyFilters } from "@/types";
 import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu, Search, X, User, Heart, Settings, LogOut, University, Sun, Moon, Building, Mountain } from "lucide-react";
+import logoImage from "@assets/logo_1757848527935.png";
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -293,7 +294,7 @@ export default function HomePage() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Filter className="h-4 w-4 sm:h-5 sm:w-5" style={{color: '#FF7800'}} />
+              <img src={logoImage} alt="MapEstate Logo" className="h-4 w-4 sm:h-5 sm:w-5" />
               <h2 className="text-sm sm:text-base md:text-lg font-semibold text-black dark:text-white">MapEstate</h2>
               <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs hidden sm:inline-flex" style={{backgroundColor: '#FF7800', color: '#fff'}}>
                 {(mapProperties || []).length} properties
