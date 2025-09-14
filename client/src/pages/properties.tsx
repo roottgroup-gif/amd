@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import Navigation from "@/components/navigation";
 import PropertyCard from "@/components/property-card";
 import SearchBar from "@/components/search-bar";
 import { Button } from "@/components/ui/button";
@@ -150,7 +149,6 @@ export default function PropertiesPage() {
         canonicalUrl={`${window.location.origin}/properties`}
         structuredData={getPropertiesStructuredData()}
       />
-      <Navigation />
       
       {/* Header */}
       <div className="bg-muted/30 py-8">
