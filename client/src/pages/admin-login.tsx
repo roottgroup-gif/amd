@@ -102,7 +102,7 @@ export default function AdminLogin() {
               </div>
             </div>
             <CardTitle className="text-2xl font-bold text-center text-orange-900 dark:text-orange-100">
-              EstateAI Admin
+              MapEstate Admin
             </CardTitle>
             <CardDescription className="text-center text-orange-600 dark:text-orange-400">
               Sign in to access your admin dashboard

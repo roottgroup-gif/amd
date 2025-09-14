@@ -1,8 +1,8 @@
-# EstateAI - AI-Powered Real Estate Finder
+# MapEstate - AI-Powered Real Estate Finder
 
 ## Overview
 
-EstateAI is a modern, multilingual real estate web application designed for the Kurdistan/Iraq market. The platform combines intelligent property search with AI-powered recommendations to help users find their perfect home. Built with a full-stack TypeScript architecture, it features property listings with interactive maps, advanced filtering capabilities, agent management, and multilingual support (English, Arabic, Kurdish).
+MapEstate is a modern, multilingual real estate web application designed for the Kurdistan/Iraq market. The platform combines intelligent property search with AI-powered recommendations to help users find their perfect home. Built with a full-stack TypeScript architecture, it features property listings with interactive maps, advanced filtering capabilities, agent management, and multilingual support (English, Arabic, Kurdish).
 
 The application serves multiple user types: property seekers who can browse and search listings, real estate agents who can manage their property portfolios, and includes AI-driven features for personalized property recommendations and natural language search queries.
 

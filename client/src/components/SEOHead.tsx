@@ -31,8 +31,8 @@ function addPreconnectHints() {
 }
 
 export function SEOHead({ 
-  title = "EstateAI - AI-Powered Real Estate Finder",
-  description = "Find your perfect home with AI-powered recommendations. Discover properties for rent and sale in Kurdistan, Iraq with intelligent search and expert agents.",
+  title = "MapEstate - AI-Powered Real Estate Finder",
+  description = "Find your perfect home with AI-powered recommendations. Discover properties for rent and sale in Kurdistan, Iraq with intelligent search and expert agents on MapEstate.",
   keywords = "real estate, Kurdistan, Iraq, properties for sale, properties for rent, apartments, houses, villas, land",
   ogImage = "https://your-domain.com/og-image.jpg",
   canonicalUrl,

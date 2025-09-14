@@ -1,7 +1,7 @@
-// EstateAI Service Worker
+// MapEstate Service Worker
 // Provides caching strategies and offline functionality
 
-const CACHE_NAME = 'estateai-v1';
+const CACHE_NAME = 'mapestate-v1';
 const CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 // Resources to cache immediately when SW installs

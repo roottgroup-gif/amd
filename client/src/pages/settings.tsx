@@ -51,7 +51,7 @@ export default function SettingsPage() {
   });
 
   useEffect(() => {
-    document.title = "Settings - EstateAI";
+    document.title = "Settings - MapEstate";
   }, []);
 
   const handleSave = () => {

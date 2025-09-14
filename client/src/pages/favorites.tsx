@@ -31,7 +31,7 @@ export default function FavoritesPage() {
       "numberOfItems": totalFavorites,
       "isPartOf": {
         "@type": "WebSite",
-        "name": "EstateAI",
+        "name": "MapEstate",
         "url": window.location.origin
       }
     };
@@ -69,7 +69,7 @@ export default function FavoritesPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEOHead
-        title="My Favorite Properties - EstateAI | Saved Property Listings"
+        title="My Favorite Properties - MapEstate | Saved Property Listings"
         description={`View your ${favorites?.length || 0} saved favorite properties. Keep track of houses, apartments, and villas you're interested in buying or renting in Kurdistan, Iraq.`}
         keywords="favorite properties, saved listings, property bookmarks, real estate favorites, Kurdistan Iraq properties"
         canonicalUrl={`${window.location.origin}/favorites`}

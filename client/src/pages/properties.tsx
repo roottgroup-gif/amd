@@ -131,7 +131,7 @@ export default function PropertiesPage() {
     const city = filters.city || 'Kurdistan';
     const totalCount = properties?.length || 0;
     
-    const title = `${propertyType.charAt(0).toUpperCase()}${propertyType.slice(1)} for ${listingType.charAt(0).toUpperCase()}${listingType.slice(1)} in ${city} | EstateAI`;
+    const title = `${propertyType.charAt(0).toUpperCase()}${propertyType.slice(1)} for ${listingType.charAt(0).toUpperCase()}${listingType.slice(1)} in ${city} | MapEstate`;
     const description = `Browse ${totalCount > 0 ? totalCount : ''} ${propertyType} for ${listingType} in ${city}, Iraq. Find houses, apartments, villas and land with detailed property information, photos, and expert real estate agents.`;
     const keywords = `${propertyType} for ${listingType} ${city}, real estate ${city} Iraq, ${propertyType} listings ${city}, buy rent ${propertyType} Iraq, ${city} real estate agent, property finder ${city}`;
     

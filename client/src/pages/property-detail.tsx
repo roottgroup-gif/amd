@@ -199,7 +199,7 @@ export default function PropertyDetailPage() {
     <div className="min-h-screen bg-background">
       {property && (
         <SEOHead
-          title={`${property.title} - ${formatPrice(property.price, property.currency || 'USD', property.listingType)} | EstateAI`}
+          title={`${property.title} - ${formatPrice(property.price, property.currency || 'USD', property.listingType)} | MapEstate`}
           description={`${property.description || `${property.bedrooms} bedroom ${property.type} for ${property.listingType} in ${property.city}, ${property.country}.`} View details, photos, and contact information.`}
           keywords={`${property.type}, ${property.city}, ${property.country}, ${property.listingType}, real estate, property, ${property.bedrooms} bedroom, ${property.bathrooms} bathroom`}
           ogImage={property.images && property.images.length > 0 ? property.images[0] : undefined}
