@@ -248,6 +248,11 @@ export default function AdminDashboard() {
         delete transformedData.expiresAt; // Empty or null, remove it
       }
       
+      // Only super admins can set language permissions
+      if (user?.role !== 'super_admin') {
+        delete transformedData.allowedLanguages;
+      }
+      
       const response = await apiRequest('POST', '/api/admin/users', transformedData);
       return await response.json();
     },
@@ -287,6 +292,11 @@ export default function AdminDashboard() {
         }
       } else {
         delete transformedData.expiresAt; // Empty or null, remove it
+      }
+      
+      // Only super admins can set language permissions
+      if (user?.role !== 'super_admin') {
+        delete transformedData.allowedLanguages;
       }
       
       const response = await apiRequest('PUT', `/api/admin/users/${id}`, transformedData);
