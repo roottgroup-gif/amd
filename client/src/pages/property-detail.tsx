@@ -230,7 +230,7 @@ export default function PropertyDetailPage() {
               className="w-full h-full object-cover"
               data-testid="property-main-image"
               loading="eager"
-              fetchPriority="high"
+              decoding="async"
             />
             
             {/* Image Navigation */}
