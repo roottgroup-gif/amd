@@ -402,6 +402,198 @@ const translations: Translations = {
     en: 'Garage Parking',
     ar: 'موقف السيارات',
     kur: 'پارک کردنی گاراژ'
+  },
+
+  // Settings Page
+  'settings.title': {
+    en: 'Settings - MapEstate',
+    ar: 'الإعدادات - MapEstate',
+    kur: 'ڕێکخستنەکان - MapEstate'
+  },
+  'settings.backToHome': {
+    en: 'Back to Home',
+    ar: 'العودة للرئيسية',
+    kur: 'گەڕانەوە بۆ سەرەتا'
+  },
+  'settings.languageRegion': {
+    en: 'Language & Region',
+    ar: 'اللغة والمنطقة',
+    kur: 'زمان و ناوچە'
+  },
+  'settings.language': {
+    en: 'Language',
+    ar: 'اللغة',
+    kur: 'زمان'
+  },
+  'settings.currency': {
+    en: 'Currency',
+    ar: 'العملة',
+    kur: 'دراو'
+  },
+  'settings.dateFormat': {
+    en: 'Date Format',
+    ar: 'تنسيق التاريخ',
+    kur: 'شێوازی بەروار'
+  },
+  'settings.notifications': {
+    en: 'Notifications',
+    ar: 'الإشعارات',
+    kur: 'ئاگاداریەکان'
+  },
+  'settings.emailNotifications': {
+    en: 'Email Notifications',
+    ar: 'إشعارات البريد الإلكتروني',
+    kur: 'ئاگاداری ئیمەیڵ'
+  },
+  'settings.emailNotificationsDesc': {
+    en: 'Receive updates via email',
+    ar: 'تلقي التحديثات عبر البريد الإلكتروني',
+    kur: 'وەرگرتنی نوێکردنەوە بە ئیمەیڵ'
+  },
+  'settings.pushNotifications': {
+    en: 'Push Notifications',
+    ar: 'الإشعارات الفورية',
+    kur: 'ئاگاداری فوری'
+  },
+  'settings.pushNotificationsDesc': {
+    en: 'Browser notifications',
+    ar: 'إشعارات المتصفح',
+    kur: 'ئاگاداری وێبگەڕ'
+  },
+  'settings.favoriteUpdates': {
+    en: 'Favorite Property Updates',
+    ar: 'تحديثات العقارات المفضلة',
+    kur: 'نوێکردنەوەی خانووبەرە بەرگریکراوەکان'
+  },
+  'settings.favoriteUpdatesDesc': {
+    en: 'Notify when favorite properties change',
+    ar: 'تنبيه عند تغيير العقارات المفضلة',
+    kur: 'ئاگادارکردنەوە کاتێک خانووبەرە بەرگریکراوەکان دەگۆڕێن'
+  },
+  'settings.priceAlerts': {
+    en: 'Price Drop Alerts',
+    ar: 'تنبيهات انخفاض الأسعار',
+    kur: 'ئاگاداری دابەزینی نرخ'
+  },
+  'settings.priceAlertsDesc': {
+    en: 'Alert when property prices drop',
+    ar: 'تنبيه عند انخفاض أسعار العقارات',
+    kur: 'ئاگادارکردنەوە کاتێک نرخی خانووبەرەکان دادەبەزێت'
+  },
+  'settings.displayPreferences': {
+    en: 'Display Preferences',
+    ar: 'تفضيلات العرض',
+    kur: 'ویستی نیشاندان'
+  },
+  'settings.mapStyle': {
+    en: 'Map Style',
+    ar: 'نمط الخريطة',
+    kur: 'شێوازی نەخشە'
+  },
+  'settings.showPropertyPrices': {
+    en: 'Show Property Prices',
+    ar: 'إظهار أسعار العقارات',
+    kur: 'نیشاندانی نرخی خانووبەرەکان'
+  },
+  'settings.showPropertyPricesDesc': {
+    en: 'Display prices on map markers',
+    ar: 'عرض الأسعار على علامات الخريطة',
+    kur: 'نیشاندانی نرخەکان لەسەر نیشانەکانی نەخشە'
+  },
+  'settings.showDistance': {
+    en: 'Show Distance',
+    ar: 'إظهار المسافة',
+    kur: 'نیشاندانی مەودا'
+  },
+  'settings.showDistanceDesc': {
+    en: 'Show distance from your location',
+    ar: 'إظهار المسافة من موقعك',
+    kur: 'نیشاندانی مەودا لە شوێنت'
+  },
+  'settings.autoZoom': {
+    en: 'Auto Zoom to Results',
+    ar: 'تكبير تلقائي للنتائج',
+    kur: 'گەورەکردنەوەی خۆکارانە بۆ ئەنجامەکان'
+  },
+  'settings.autoZoomDesc': {
+    en: 'Automatically zoom map to show search results',
+    ar: 'تكبير الخريطة تلقائياً لإظهار نتائج البحث',
+    kur: 'گەورەکردنەوەی نەخشە بە شێوەی خۆکارانە بۆ نیشاندانی ئەنجامی گەڕان'
+  },
+  'settings.cancel': {
+    en: 'Cancel',
+    ar: 'إلغاء',
+    kur: 'هەڵوەشاندنەوە'
+  },
+  'settings.saveSettings': {
+    en: 'Save Settings',
+    ar: 'حفظ الإعدادات',
+    kur: 'پاشەکەوتکردنی ڕێکخستنەکان'
+  },
+  'settings.settingsSaved': {
+    en: 'Settings saved successfully!',
+    ar: 'تم حفظ الإعدادات بنجاح!',
+    kur: 'ڕێکخستنەکان بە سەرکەوتوویی پاشەکەوت کران!'
+  },
+  'settings.mapStyleDefault': {
+    en: 'Default',
+    ar: 'افتراضي',
+    kur: 'بنەڕەتی'
+  },
+  'settings.mapStyleSatellite': {
+    en: 'Satellite',
+    ar: 'قمر صناعي',
+    kur: 'هەواربەرە'
+  },
+  'settings.mapStyleTerrain': {
+    en: 'Terrain',
+    ar: 'تضاريس',
+    kur: 'دۆزران'
+  },
+  'settings.profileInformation': {
+    en: 'Profile Information',
+    ar: 'معلومات الملف الشخصي',
+    kur: 'زانیاری پڕۆفایل'
+  },
+  'settings.displayName': {
+    en: 'Display Name',
+    ar: 'اسم العرض',
+    kur: 'ناوی نیشاندان'
+  },
+  'settings.displayNamePlaceholder': {
+    en: 'Your name',
+    ar: 'اسمك',
+    kur: 'ناوت'
+  },
+  'settings.email': {
+    en: 'Email',
+    ar: 'البريد الإلكتروني',
+    kur: 'ئیمەیڵ'
+  },
+  'settings.emailPlaceholder': {
+    en: 'your.email@example.com',
+    ar: 'your.email@example.com',
+    kur: 'your.email@example.com'
+  },
+  'settings.phone': {
+    en: 'Phone Number',
+    ar: 'رقم الهاتف',
+    kur: 'ژمارەی تەلەفۆن'
+  },
+  'settings.phonePlaceholder': {
+    en: '+964 xxx xxx xxxx',
+    ar: '+964 xxx xxx xxxx',
+    kur: '+964 xxx xxx xxxx'
+  },
+  'settings.settingsPreferences': {
+    en: 'Settings & Preferences',
+    ar: 'الإعدادات والتفضيلات',
+    kur: 'ڕێکخستن و ویستەکان'
+  },
+  'settings.settingsDescription': {
+    en: 'Customize your profile, language, notifications, and display preferences.',
+    ar: 'تخصيص ملفك الشخصي واللغة والإشعارات وتفضيلات العرض.',
+    kur: 'دەستکاریکردنی پڕۆفایل، زمان، ئاگاداری و ویستی نیشاندان.'
   }
 };
 

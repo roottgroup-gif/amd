@@ -6,6 +6,7 @@ import {
   DialogTitle,
   DialogDescription
 } from "@/components/ui/dialog";
+import { useTranslation } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,14 +33,15 @@ interface SettingsModalProps {
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   console.log('SettingsModal rendered with isOpen:', isOpen);
+  const { language, changeLanguage, t } = useTranslation();
   const [userSettings, setUserSettings] = useState({
     // Profile Settings
     displayName: "",
     email: "",
     phone: "",
     
-    // Language & Region
-    language: "en",
+    // Language & Region (will sync with global language)
+    language: language,
     currency: "USD",
     dateFormat: "MM/DD/YYYY",
     
@@ -67,10 +69,15 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   };
 
   const updateSetting = (key: string, value: any) => {
-    setUserSettings(prev => ({
-      ...prev,
-      [key]: value
-    }));
+    if (key === 'language') {
+      // Update global language state when language is changed
+      changeLanguage(value as 'en' | 'ar' | 'kur');
+    } else {
+      setUserSettings(prev => ({
+        ...prev,
+        [key]: value
+      }));
+    }
   };
 
   return (
@@ -83,10 +90,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
-            Settings & Preferences
+            {t('settings.settingsPreferences')}
           </DialogTitle>
           <DialogDescription>
-            Customize your profile, language, notifications, and display preferences.
+            {t('settings.settingsDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -96,40 +103,40 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <User className="h-4 w-4" />
-                Profile Information
+                {t('settings.profileInformation')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="displayName">Display Name</Label>
+                  <Label htmlFor="displayName">{t('settings.displayName')}</Label>
                   <Input
                     id="displayName"
                     value={userSettings.displayName}
                     onChange={(e) => updateSetting('displayName', e.target.value)}
-                    placeholder="Your name"
+                    placeholder={t('settings.displayNamePlaceholder')}
                     data-testid="display-name-input"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('settings.email')}</Label>
                   <Input
                     id="email"
                     type="email"
                     value={userSettings.email}
                     onChange={(e) => updateSetting('email', e.target.value)}
-                    placeholder="your.email@example.com"
+                    placeholder={t('settings.emailPlaceholder')}
                     data-testid="email-input"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phone">{t('settings.phone')}</Label>
                 <Input
                   id="phone"
                   value={userSettings.phone}
                   onChange={(e) => updateSetting('phone', e.target.value)}
-                  placeholder="+964 xxx xxx xxxx"
+                  placeholder={t('settings.phonePlaceholder')}
                   data-testid="phone-input"
                 />
               </div>
@@ -141,13 +148,13 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Globe className="h-4 w-4" />
-                Language & Region
+                {t('settings.languageRegion')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label>Language</Label>
+                  <Label>{t('settings.language')}</Label>
                   <Select value={userSettings.language} onValueChange={(value) => updateSetting('language', value)}>
                     <SelectTrigger data-testid="language-select">
                       <SelectValue />
@@ -160,7 +167,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Currency</Label>
+                  <Label>{t('settings.currency')}</Label>
                   <Select value={userSettings.currency} onValueChange={(value) => updateSetting('currency', value)}>
                     <SelectTrigger data-testid="currency-select">
                       <SelectValue />
@@ -173,7 +180,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>Date Format</Label>
+                  <Label>{t('settings.dateFormat')}</Label>
                   <Select value={userSettings.dateFormat} onValueChange={(value) => updateSetting('dateFormat', value)}>
                     <SelectTrigger data-testid="date-format-select">
                       <SelectValue />
@@ -194,7 +201,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Bell className="h-4 w-4" />
-                Notifications
+                {t('settings.notifications')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -202,9 +209,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="space-y-0.5">
                   <Label className="flex items-center gap-2">
                     <Mail className="h-4 w-4" />
-                    Email Notifications
+                    {t('settings.emailNotifications')}
                   </Label>
-                  <p className="text-sm text-muted-foreground">Receive updates via email</p>
+                  <p className="text-sm text-muted-foreground">{t('settings.emailNotificationsDesc')}</p>
                 </div>
                 <Switch
                   checked={userSettings.emailNotifications}
@@ -217,9 +224,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="space-y-0.5">
                   <Label className="flex items-center gap-2">
                     <Bell className="h-4 w-4" />
-                    Push Notifications
+                    {t('settings.pushNotifications')}
                   </Label>
-                  <p className="text-sm text-muted-foreground">Browser notifications</p>
+                  <p className="text-sm text-muted-foreground">{t('settings.pushNotificationsDesc')}</p>
                 </div>
                 <Switch
                   checked={userSettings.pushNotifications}
@@ -232,9 +239,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="space-y-0.5">
                   <Label className="flex items-center gap-2">
                     <Heart className="h-4 w-4" />
-                    Favorite Property Updates
+                    {t('settings.favoriteUpdates')}
                   </Label>
-                  <p className="text-sm text-muted-foreground">Notify when favorite properties change</p>
+                  <p className="text-sm text-muted-foreground">{t('settings.favoriteUpdatesDesc')}</p>
                 </div>
                 <Switch
                   checked={userSettings.favoriteUpdates}
@@ -245,8 +252,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <Separator />
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Price Drop Alerts</Label>
-                  <p className="text-sm text-muted-foreground">Alert when property prices drop</p>
+                  <Label>{t('settings.priceAlerts')}</Label>
+                  <p className="text-sm text-muted-foreground">{t('settings.priceAlertsDesc')}</p>
                 </div>
                 <Switch
                   checked={userSettings.priceAlerts}
@@ -262,20 +269,20 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Monitor className="h-4 w-4" />
-                Display Preferences
+                {t('settings.displayPreferences')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>Map Style</Label>
+                <Label>{t('settings.mapStyle')}</Label>
                 <Select value={userSettings.mapStyle} onValueChange={(value) => updateSetting('mapStyle', value)}>
                   <SelectTrigger data-testid="map-style-select">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="satellite">Satellite</SelectItem>
-                    <SelectItem value="terrain">Terrain</SelectItem>
+                    <SelectItem value="default">{t('settings.mapStyleDefault')}</SelectItem>
+                    <SelectItem value="satellite">{t('settings.mapStyleSatellite')}</SelectItem>
+                    <SelectItem value="terrain">{t('settings.mapStyleTerrain')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -284,9 +291,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="space-y-0.5">
                   <Label className="flex items-center gap-2">
                     <Eye className="h-4 w-4" />
-                    Show Property Prices
+                    {t('settings.showPropertyPrices')}
                   </Label>
-                  <p className="text-sm text-muted-foreground">Display prices on map markers</p>
+                  <p className="text-sm text-muted-foreground">{t('settings.showPropertyPricesDesc')}</p>
                 </div>
                 <Switch
                   checked={userSettings.showPropertyPrices}
@@ -299,9 +306,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="space-y-0.5">
                   <Label className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
-                    Show Distance
+                    {t('settings.showDistance')}
                   </Label>
-                  <p className="text-sm text-muted-foreground">Show distance from your location</p>
+                  <p className="text-sm text-muted-foreground">{t('settings.showDistanceDesc')}</p>
                 </div>
                 <Switch
                   checked={userSettings.showDistance}
@@ -312,8 +319,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <Separator />
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Auto Zoom to Results</Label>
-                  <p className="text-sm text-muted-foreground">Automatically zoom map to show search results</p>
+                  <Label>{t('settings.autoZoom')}</Label>
+                  <p className="text-sm text-muted-foreground">{t('settings.autoZoomDesc')}</p>
                 </div>
                 <Switch
                   checked={userSettings.autoZoom}
@@ -327,11 +334,11 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           {/* Action Buttons */}
           <div className="flex justify-end gap-3 pt-4">
             <Button variant="outline" onClick={onClose} data-testid="cancel-settings">
-              Cancel
+              {t('settings.cancel')}
             </Button>
             <Button onClick={handleSave} className="flex items-center gap-2" data-testid="save-settings">
               <Save className="h-4 w-4" />
-              Save Settings
+              {t('settings.saveSettings')}
             </Button>
           </div>
         </div>
