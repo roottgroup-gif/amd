@@ -929,6 +929,7 @@ class MemStorage implements IStorage {
       avatar: user.avatar || null,
       isVerified: user.isVerified || null,
       waveBalance: user.waveBalance || null,
+      allowedLanguages: user.allowedLanguages || ["en"],
       createdAt: new Date(),
       expiresAt: user.expiresAt ? new Date(user.expiresAt) : null,
       isExpired: false
@@ -1068,6 +1069,10 @@ class MemStorage implements IStorage {
       contactPhone: property.contactPhone || null,
       waveId: property.waveId || null,
       isFeatured: property.isFeatured || null,
+      images: property.images || [],
+      amenities: property.amenities || [],
+      features: property.features || [],
+      language: property.language || 'en',
       views: 0, 
       createdAt: new Date(), 
       updatedAt: new Date() 
@@ -1494,6 +1499,7 @@ async function addExampleProperties() {
     features: ["Floor-to-Ceiling Windows", "Designer Kitchen", "Smart Home Technology", "City Views"],
     status: "active",
     agentId: "customer-001",
+    language: "en",
     isFeatured: true
   });
 
