@@ -12,9 +12,12 @@ export function useProperties(filters?: PropertyFilters) {
 
   return useQuery<Property[]>({
     queryKey: ["/api/properties", normalizedFilters],
-    staleTime: 1 * 60 * 1000, // 1 minute cache for property lists
-    gcTime: 3 * 60 * 1000, // 3 minutes in memory
+    staleTime: 10 * 1000, // 10 seconds - shorter cache for real-time updates
+    gcTime: 30 * 1000, // 30 seconds in memory
+    refetchInterval: 15 * 1000, // Poll every 15 seconds for real-time updates
+    refetchIntervalInBackground: true, // Keep polling even when window is not focused
     queryFn: async () => {
+      console.log('🔄 Fetching properties from API...');
       const params = new URLSearchParams();
       if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
@@ -26,7 +29,9 @@ export function useProperties(filters?: PropertyFilters) {
       const url = `/api/properties${params.toString() ? `?${params}` : ''}`;
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch properties');
-      return response.json();
+      const data = await response.json();
+      console.log('✅ Properties fetched:', data.length, 'properties');
+      return data;
     },
   });
 }
