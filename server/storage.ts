@@ -1368,11 +1368,12 @@ class MemStorage implements IStorage {
       latitude: property.latitude || null,
       longitude: property.longitude || null,
       contactPhone: property.contactPhone || null,
+      agentId: property.agentId ?? null,
       waveId: property.waveId || null,
       isFeatured: property.isFeatured || null,
-      images: property.images || [],
-      amenities: property.amenities || [],
-      features: property.features || [],
+      images: (property.images as string[]) || [],
+      amenities: (property.amenities as string[]) || [],
+      features: (property.features as string[]) || [],
       language: property.language || 'en',
       views: 0, 
       createdAt: new Date(), 
@@ -1385,11 +1386,15 @@ class MemStorage implements IStorage {
     const propertyIndex = this.properties.findIndex(p => p.id === id);
     if (propertyIndex === -1) return undefined;
     
-    this.properties[propertyIndex] = {
+    const updatedProperty = {
       ...this.properties[propertyIndex],
       ...property,
+      images: property.images ? (property.images as string[]) : this.properties[propertyIndex].images,
+      amenities: property.amenities ? (property.amenities as string[]) : this.properties[propertyIndex].amenities,
+      features: property.features ? (property.features as string[]) : this.properties[propertyIndex].features,
       updatedAt: new Date()
     };
+    this.properties[propertyIndex] = updatedProperty;
     return this.properties[propertyIndex];
   }
   
