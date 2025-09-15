@@ -95,6 +95,7 @@ export interface PropertyFilters {
   bathrooms?: number;
   city?: string;
   country?: string;
+  language?: string;
   features?: string[];
   search?: string;
   sortBy?: "price" | "date" | "views";
@@ -200,6 +201,9 @@ export class DatabaseStorage implements IStorage {
     }
     if (filters.country) {
       conditions.push(eq(properties.country, filters.country));
+    }
+    if (filters.language) {
+      conditions.push(eq(properties.language, filters.language));
     }
     if (filters.search) {
       conditions.push(

@@ -22,7 +22,7 @@ import { Tag, Key, Home, Building2, MapPin, Filter, DollarSign, Bed, Bath, Menu,
 import logoImage from "@assets/logo_1757848527935.png";
 
 export default function HomePage() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { user } = useAuth();
   const [, setLocation] = useLocation();
   const { data: featuredProperties, isLoading: featuredLoading } = useFeaturedProperties();
@@ -94,6 +94,15 @@ export default function HomePage() {
       }
     }
   }, []);
+
+  // Filter properties by language when language changes
+  useEffect(() => {
+    setMapFilters(prevFilters => ({
+      ...prevFilters,
+      language: language, // Filter properties to show only those matching the selected language
+      limit: 100 // Always maintain the limit for map
+    }));
+  }, [language]);
 
   const handleSearchResults = (results: AISearchResponse) => {
     setSearchResults(results);
