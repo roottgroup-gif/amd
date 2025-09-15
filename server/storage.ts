@@ -1311,6 +1311,9 @@ class MemStorage implements IStorage {
       if (filters.country) {
         filteredProperties = filteredProperties.filter(p => p.country === filters.country);
       }
+      if (filters.language) {
+        filteredProperties = filteredProperties.filter(p => p.language === filters.language);
+      }
       if (filters.search) {
         const searchTerm = filters.search.toLowerCase();
         filteredProperties = filteredProperties.filter(p => 

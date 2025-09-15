@@ -29,7 +29,8 @@ export default function HomePage() {
   const [searchResults, setSearchResults] = useState<AISearchResponse | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>('sale');
   const [mapFilters, setMapFilters] = useState<PropertyFilters>({
-    limit: 100 // Get more properties for the map
+    limit: 100, // Get more properties for the map
+    language: language // Initialize with current language
   });
   const [priceRange, setPriceRange] = useState([1, 10000000]);
   const [cityInput, setCityInput] = useState('');
@@ -95,8 +96,14 @@ export default function HomePage() {
     }
   }, []);
 
-  // Note: Language selection is for interface only, not for filtering properties
-  // Users should see all properties regardless of interface language
+  // Filter properties by language when language changes
+  useEffect(() => {
+    setMapFilters(prevFilters => ({
+      ...prevFilters,
+      language: language, // Filter properties to show only those matching the selected language
+      limit: 100 // Always maintain the limit for map
+    }));
+  }, [language]);
 
   const handleSearchResults = (results: AISearchResponse) => {
     setSearchResults(results);
@@ -163,7 +170,7 @@ export default function HomePage() {
   };
 
   const clearFilters = () => {
-    setMapFilters({ limit: 100 }); // Show all properties regardless of language
+    setMapFilters({ limit: 100, language: language }); // Retain current language when clearing filters
     setPriceRange([0, 1000000]);
     setCityInput('');
   };
