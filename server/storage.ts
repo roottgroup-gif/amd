@@ -2325,6 +2325,7 @@ async function addExampleProperties() {
     features: ["Persian Architecture", "Traditional Tiles", "High Ceilings", "Courtyard"],
     status: "active",
     agentId: "customer-001",
+    language: "en",
     isFeatured: false
   });
 
@@ -2353,6 +2354,7 @@ async function addExampleProperties() {
     features: ["Traditional Design", "Modern Kitchen", "Garden Views", "Artistic Details"],
     status: "active",
     agentId: "customer-001",
+    language: "en",
     isFeatured: true
   });
 }
