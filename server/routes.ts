@@ -23,8 +23,11 @@ import {
 const sseClients = new Set<Response>();
 
 function broadcastToSSEClients(event: string, data: any) {
-  // Include event type in the payload for reliable delivery
-  const payload = { type: event, ...data };
+  // Structure payload to avoid property type field overwriting event type
+  const payload = { 
+    eventType: event,
+    data: data
+  };
   
   // Send both custom event and default message for maximum compatibility
   const customEventMessage = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;

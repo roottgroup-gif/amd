@@ -172,26 +172,26 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
         } else if (data.type === 'heartbeat') {
           // Handle heartbeat - just keep connection alive
           console.log('💓 SSE heartbeat received');
-        } else if (data.type === 'property_created') {
-          // Handle property created via onmessage as fallback
-          console.log('🏠 New property created - forcing immediate map update:', data.title);
-          handlePropertyCreated(data);
+        } else if (data.eventType === 'property_created') {
+          // Handle property created with new payload structure
+          console.log('🏠 New property created - forcing immediate map update:', data.data.title);
+          handlePropertyCreated(data.data);
           // Force immediate refetch to bypass polling delay
           queryClient.refetchQueries({ queryKey: ['/api/properties'] });
-        } else if (data.type === 'property_updated') {
-          // Handle property updated via onmessage as fallback
-          console.log('🔄 Property updated - forcing immediate map update:', data.title);
-          handlePropertyUpdated(data);
+        } else if (data.eventType === 'property_updated') {
+          // Handle property updated with new payload structure
+          console.log('🔄 Property updated - forcing immediate map update:', data.data.title);
+          handlePropertyUpdated(data.data);
           // Force immediate refetch to bypass polling delay
           queryClient.refetchQueries({ queryKey: ['/api/properties'] });
-        } else if (data.type === 'property_deleted') {
-          // Handle property deleted via onmessage as fallback
-          console.log('🗑️ Property deleted - forcing immediate map update:', data.title || data.id);
-          handlePropertyDeleted(data);
+        } else if (data.eventType === 'property_deleted') {
+          // Handle property deleted with new payload structure
+          console.log('🗑️ Property deleted - forcing immediate map update:', data.data.title || data.data.id);
+          handlePropertyDeleted(data.data);
           // Force immediate refetch to bypass polling delay
           queryClient.refetchQueries({ queryKey: ['/api/properties'] });
         } else {
-          console.log('❓ Unknown SSE message type:', data.type, data);
+          console.log('❓ Unknown SSE message type:', data.type || data.eventType, data);
         }
       } catch (error) {
         console.error('❌ Error parsing SSE message:', error, 'Raw data:', event.data);
