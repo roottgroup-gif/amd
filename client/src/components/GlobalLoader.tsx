@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
-import { Loader2 } from 'lucide-react';
+import logoImage from "@assets/logo_1757848527935.png";
 
 interface GlobalLoaderProps {
   isLoading: boolean;
@@ -34,7 +34,14 @@ export function GlobalLoader({ isLoading, message }: GlobalLoaderProps) {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
       <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-xl max-w-sm mx-4">
         <div className="flex items-center space-x-3">
-          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+          <div className="relative">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-transparent border-t-primary border-r-primary"></div>
+            <img 
+              src={logoImage} 
+              alt="MapEstate Logo" 
+              className="absolute inset-1 h-6 w-6 object-contain"
+            />
+          </div>
           <div>
             <div className="font-medium text-foreground">
               {message || 'Loading...'}
