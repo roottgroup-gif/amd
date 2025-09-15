@@ -19,6 +19,7 @@ const PropertyMap = lazy(() => import('@/components/property-map'));
 const LocationSelectionMap = lazy(() => import('@/components/location-selection-map'));
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { usePropertyEvents } from '@/hooks/usePropertyEvents';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -551,6 +552,13 @@ export default function CustomerDashboard() {
   const [showBalanceModal, setShowBalanceModal] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<Language>('en');
   const [showLanguageSelection, setShowLanguageSelection] = useState(true);
+
+  // Listen for real-time property updates
+  usePropertyEvents({
+    onPropertyCreated: (property) => {
+      console.log('New property created in dashboard:', property.title);
+    }
+  });
 
   // Property form
   const propertyForm = useForm<PropertyFormValues>({
