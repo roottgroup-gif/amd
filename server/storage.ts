@@ -1192,7 +1192,7 @@ class MemStorage implements IStorage {
         images: property.images || [],
         amenities: property.amenities || [],
         features: property.features || [],
-        language: 'en',
+        language: property.language || 'en',
         views: Math.floor(Math.random() * 100) + 1,
         createdAt: new Date(),
         updatedAt: new Date()
