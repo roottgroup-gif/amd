@@ -44,7 +44,8 @@ async function seedData() {
         amenities: ["Swimming Pool", "Garden", "Parking", "Security System"],
         features: ["Central AC", "Modern Kitchen", "Balcony", "Storage Room"],
         agentId: agent.id,
-        isFeatured: true
+        isFeatured: true,
+        language: "en"
       },
       {
         title: "Modern Apartment in Baghdad",
@@ -69,7 +70,8 @@ async function seedData() {
         amenities: ["Elevator", "Parking", "24/7 Security"],
         features: ["Modern Kitchen", "Balcony", "Internet Ready"],
         agentId: agent.id,
-        isFeatured: true
+        isFeatured: true,
+        language: "ar"
       },
       {
         title: "Family House in Sulaymaniyah",
@@ -94,7 +96,8 @@ async function seedData() {
         amenities: ["Garden", "Parking", "Basement"],
         features: ["Fireplace", "Large Windows", "Storage"],
         agentId: agent.id,
-        isFeatured: false
+        isFeatured: false,
+        language: "kur"
       },
       {
         title: "Elegant Penthouse in Baghdad",
@@ -119,7 +122,8 @@ async function seedData() {
         amenities: ["Rooftop Terrace", "Elevator", "Concierge", "Parking"],
         features: ["City Views", "High Ceilings", "Floor-to-Ceiling Windows"],
         agentId: agent.id,
-        isFeatured: true
+        isFeatured: true,
+        language: "ar"
       },
       {
         title: "Traditional House in Mosul",
@@ -144,7 +148,8 @@ async function seedData() {
         amenities: ["Courtyard", "Traditional Architecture", "Parking"],
         features: ["Restored Historic Building", "High Ceilings", "Natural Light"],
         agentId: agent.id,
-        isFeatured: false
+        isFeatured: false,
+        language: "kur"
       },
       {
         title: "Modern Villa with Pool in Duhok",
@@ -169,7 +174,8 @@ async function seedData() {
         amenities: ["Swimming Pool", "Garden", "Mountain Views", "Garage"],
         features: ["Open Plan Living", "Master Suite", "Entertainment Area"],
         agentId: agent.id,
-        isFeatured: true
+        isFeatured: true,
+        language: "en"
       },
       {
         title: "Cozy Studio Apartment",
@@ -194,7 +200,8 @@ async function seedData() {
         amenities: ["Furnished", "WiFi", "Utilities Included"],
         features: ["Compact Design", "Modern Appliances", "Near University"],
         agentId: agent.id,
-        isFeatured: true
+        isFeatured: true,
+        language: "ar"
       },
       {
         title: "Countryside House in Kirkuk",
@@ -219,7 +226,8 @@ async function seedData() {
         amenities: ["Large Garden", "Fruit Trees", "Peaceful Location"],
         features: ["Country Style", "Natural Setting", "Private Well"],
         agentId: agent.id,
-        isFeatured: false
+        isFeatured: false,
+        language: "kur"
       },
       {
         title: "Commercial Land in Erbil",
@@ -244,7 +252,8 @@ async function seedData() {
         amenities: ["Main Road Access", "Utilities Available"],
         features: ["Corner Lot", "High Traffic Area", "Development Ready"],
         agentId: agent.id,
-        isFeatured: false
+        isFeatured: false,
+        language: "en"
       },
       {
         title: "Luxury Duplex with Private Garden",
@@ -269,7 +278,8 @@ async function seedData() {
         amenities: ["Private Garden", "Duplex Design", "Premium Location"],
         features: ["Modern Architecture", "Open Concept", "Designer Finishes"],
         agentId: agent.id,
-        isFeatured: true
+        isFeatured: true,
+        language: "kur"
       },
       {
         title: "Waterfront Apartment with Marina Views",
@@ -294,7 +304,8 @@ async function seedData() {
         amenities: ["Marina Views", "Swimming Pool", "Fitness Center", "Concierge"],
         features: ["Floor-to-Ceiling Windows", "Premium Appliances", "Waterfront Balcony"],
         agentId: agent.id,
-        isFeatured: true
+        isFeatured: true,
+        language: "ar"
       },
       {
         title: "Mountain View Villa in Zakho",
@@ -319,7 +330,8 @@ async function seedData() {
         amenities: ["Mountain Views", "Private Driveway", "Landscaped Gardens", "Security System"],
         features: ["Panoramic Terraces", "Luxury Finishes", "Multiple Living Areas"],
         agentId: agent.id,
-        isFeatured: true
+        isFeatured: true,
+        language: "en"
       },
       {
         title: "Historic Townhouse in Najaf",
@@ -344,7 +356,8 @@ async function seedData() {
         amenities: ["Historic Character", "Renovated Kitchen", "Private Courtyard", "Guest Parking"],
         features: ["Original Architectural Details", "Modern Updates", "Cultural Heritage"],
         agentId: agent.id,
-        isFeatured: false
+        isFeatured: false,
+        language: "kur"
       }
     ];
 
