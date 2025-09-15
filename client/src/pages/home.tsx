@@ -225,7 +225,7 @@ export default function HomePage() {
           <div className="h-full w-full flex items-center justify-center bg-muted rounded-lg">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-              <p className="text-muted-foreground">Loading map...</p>
+              <p className="text-muted-foreground">{t('home.loadingMap')}</p>
             </div>
           </div>
         }>
@@ -271,7 +271,7 @@ export default function HomePage() {
                     data-testid="my-favorites-menu"
                   >
                     <Heart className="h-4 w-4" />
-                    <span>My Favorites</span>
+                    <span>{t('menu.myFavorites')}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="flex items-center gap-2 cursor-pointer"
@@ -279,25 +279,25 @@ export default function HomePage() {
                     data-testid="settings-menu"
                   >
                     <Settings className="h-4 w-4" />
-                    <span>Settings</span>
+                    <span>{t('menu.settings')}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     className="flex items-center gap-2 cursor-pointer" 
                     onClick={toggleTheme}
                   >
                     {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-                    <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                    <span>{theme === 'light' ? t('menu.darkMode') : t('menu.lightMode')}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 dark:text-red-400">
                     <LogOut className="h-4 w-4" />
-                    <span>Sign Out</span>
+                    <span>{t('menu.signOut')}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               <img src={logoImage} alt="MapEstate Logo" className="h-6 w-6 sm:h-8 sm:w-8" />
               <h2 className="text-sm sm:text-base md:text-lg font-semibold text-black dark:text-white">MapEstate</h2>
               <Badge variant="secondary" className="ml-1 sm:ml-2 text-[10px] sm:text-xs inline-flex light-sweep" style={{backgroundColor: '#FF7800', color: '#fff'}}>
-                {(mapProperties || []).length} properties
+                {(mapProperties || []).length} {t('home.properties')}
               </Badge>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
@@ -318,7 +318,7 @@ export default function HomePage() {
             <div className="mb-3 sm:mb-4">
               <SearchBar 
                 onResults={handleSearchResults}
-                placeholder="Ask AI: 'Find me a 3-bedroom villa under $300k in Erbil'"
+                placeholder={t('search.aiPlaceholder')}
                 className="w-full"
               />
             </div>
@@ -331,20 +331,20 @@ export default function HomePage() {
               <div className="space-y-2">
                 <label className="text-xs sm:text-sm font-medium text-black dark:text-gray-300 flex items-center gap-1">
                   <Tag className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Listing Type</span>
-                  <span className="sm:hidden">Type</span>
+                  <span className="hidden sm:inline">{t('filter.listingType')}</span>
+                  <span className="sm:hidden">{t('filter.listingType')}</span>
                 </label>
                 <Select 
                   value={mapFilters.listingType || ''} 
                   onValueChange={(value) => handleFilterChange('listingType', value)}
                 >
                   <SelectTrigger className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400" data-testid="listing-type-select" style={{borderColor: '#FF7800'}}>
-                    <SelectValue placeholder="All Types" />
+                    <SelectValue placeholder={t('filter.allTypes')} />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
-                    <SelectItem value="all"><span className="flex items-center gap-2"><Filter className="h-4 w-4" style={{color: '#FF7800'}} />All Types</span></SelectItem>
-                    <SelectItem value="sale"><span className="flex items-center gap-2"><Tag className="h-4 w-4" style={{color: '#FF7800'}} />For Sale</span></SelectItem>
-                    <SelectItem value="rent"><span className="flex items-center gap-2"><Key className="h-4 w-4" style={{color: '#FF7800'}} />For Rent</span></SelectItem>
+                    <SelectItem value="all"><span className="flex items-center gap-2"><Filter className="h-4 w-4" style={{color: '#FF7800'}} />{t('filter.allTypes')}</span></SelectItem>
+                    <SelectItem value="sale"><span className="flex items-center gap-2"><Tag className="h-4 w-4" style={{color: '#FF7800'}} />{t('filter.forSale')}</span></SelectItem>
+                    <SelectItem value="rent"><span className="flex items-center gap-2"><Key className="h-4 w-4" style={{color: '#FF7800'}} />{t('filter.forRent')}</span></SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -353,22 +353,22 @@ export default function HomePage() {
               <div className="space-y-2">
                 <label className="text-xs sm:text-sm font-medium text-black dark:text-gray-300 flex items-center gap-1">
                   <Home className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Property Type</span>
-                  <span className="sm:hidden">Property</span>
+                  <span className="hidden sm:inline">{t('filter.propertyType')}</span>
+                  <span className="sm:hidden">{t('filter.propertyType')}</span>
                 </label>
                 <Select 
                   value={mapFilters.type || ''} 
                   onValueChange={(value) => handleFilterChange('type', value)}
                 >
                   <SelectTrigger className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400" data-testid="property-type-select" style={{borderColor: '#FF7800'}}>
-                    <SelectValue placeholder="All Properties" />
+                    <SelectValue placeholder={t('filter.allProperties')} />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
-                    <SelectItem value="all"><span className="flex items-center gap-2"><Home className="h-4 w-4" style={{color: '#FF7800'}} />All Properties</span></SelectItem>
-                    <SelectItem value="house"><span className="flex items-center gap-2"><Home className="h-4 w-4" style={{color: '#FF7800'}} />House</span></SelectItem>
-                    <SelectItem value="apartment"><span className="flex items-center gap-2"><Building className="h-4 w-4" style={{color: '#FF7800'}} />Apartment</span></SelectItem>
-                    <SelectItem value="villa"><span className="flex items-center gap-2"><University className="h-4 w-4" style={{color: '#FF7800'}} />Villa</span></SelectItem>
-                    <SelectItem value="land"><span className="flex items-center gap-2"><Mountain className="h-4 w-4" style={{color: '#FF7800'}} />Land</span></SelectItem>
+                    <SelectItem value="all"><span className="flex items-center gap-2"><Home className="h-4 w-4" style={{color: '#FF7800'}} />{t('filter.allProperties')}</span></SelectItem>
+                    <SelectItem value="house"><span className="flex items-center gap-2"><Home className="h-4 w-4" style={{color: '#FF7800'}} />{t('filter.house')}</span></SelectItem>
+                    <SelectItem value="apartment"><span className="flex items-center gap-2"><Building className="h-4 w-4" style={{color: '#FF7800'}} />{t('filter.apartment')}</span></SelectItem>
+                    <SelectItem value="villa"><span className="flex items-center gap-2"><University className="h-4 w-4" style={{color: '#FF7800'}} />{t('filter.villa')}</span></SelectItem>
+                    <SelectItem value="land"><span className="flex items-center gap-2"><Mountain className="h-4 w-4" style={{color: '#FF7800'}} />{t('filter.land')}</span></SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -377,18 +377,18 @@ export default function HomePage() {
               <div className="space-y-2">
                 <label className="text-xs sm:text-sm font-medium text-black dark:text-gray-300 flex items-center gap-1">
                   <Bed className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Bedrooms</span>
-                  <span className="sm:hidden">Beds</span>
+                  <span className="hidden sm:inline">{t('filter.bedrooms')}</span>
+                  <span className="sm:hidden">{t('filter.beds')}</span>
                 </label>
                 <Select 
                   value={mapFilters.bedrooms?.toString() || ''} 
                   onValueChange={(value) => handleFilterChange('bedrooms', (value === 'any' || !value) ? undefined : parseInt(value))}
                 >
                   <SelectTrigger className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400" data-testid="bedrooms-select" style={{borderColor: '#FF7800'}}>
-                    <SelectValue placeholder="Any" />
+                    <SelectValue placeholder="{t('filter.any')}" />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
-                    <SelectItem value="any">Any</SelectItem>
+                    <SelectItem value="any">{t('filter.any')}</SelectItem>
                     <SelectItem value="1">1+</SelectItem>
                     <SelectItem value="2">2+</SelectItem>
                     <SelectItem value="3">3+</SelectItem>
@@ -402,18 +402,18 @@ export default function HomePage() {
               <div className="space-y-2">
                 <label className="text-xs sm:text-sm font-medium text-black dark:text-gray-300 flex items-center gap-1">
                   <Bath className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Bathrooms</span>
-                  <span className="sm:hidden">Baths</span>
+                  <span className="hidden sm:inline">{t('filter.bathrooms')}</span>
+                  <span className="sm:hidden">{t('filter.baths')}</span>
                 </label>
                 <Select 
                   value={mapFilters.bathrooms?.toString() || ''} 
                   onValueChange={(value) => handleFilterChange('bathrooms', (value === 'any' || !value) ? undefined : parseInt(value))}
                 >
                   <SelectTrigger className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400" data-testid="bathrooms-select" style={{borderColor: '#FF7800'}}>
-                    <SelectValue placeholder="Any" />
+                    <SelectValue placeholder="{t('filter.any')}" />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
-                    <SelectItem value="any">Any</SelectItem>
+                    <SelectItem value="any">{t('filter.any')}</SelectItem>
                     <SelectItem value="1">1+</SelectItem>
                     <SelectItem value="2">2+</SelectItem>
                     <SelectItem value="3">3+</SelectItem>
@@ -426,11 +426,11 @@ export default function HomePage() {
               <div className="space-y-2">
                 <label className="text-xs sm:text-sm font-medium text-black dark:text-gray-300 flex items-center gap-1">
                   <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
-                  City
+                  {t('filter.city')}
                 </label>
                 <Input
                   type="text"
-                  placeholder="e.g. Erbil, Baghdad"
+                  placeholder={t('filter.cityPlaceholder')}
                   value={cityInput}
                   onChange={(e) => handleCityChange(e.target.value)}
                   className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400"
@@ -449,7 +449,7 @@ export default function HomePage() {
                   style={{borderColor: '#FF7800'}}
                   data-testid="clear-filters"
                 >
-                  Clear All
+                  {t('filter.clearAll')}
                 </Button>
               </div>
             </div>

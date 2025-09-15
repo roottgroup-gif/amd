@@ -594,6 +594,139 @@ const translations: Translations = {
     en: 'Customize your profile, language, notifications, and display preferences.',
     ar: 'تخصيص ملفك الشخصي واللغة والإشعارات وتفضيلات العرض.',
     kur: 'دەستکاریکردنی پڕۆفایل، زمان، ئاگاداری و ویستی نیشاندان.'
+  },
+
+  // Home page and menu items
+  'menu.myFavorites': {
+    en: 'My Favorites',
+    ar: 'المفضلة',
+    kur: 'بەرگریەکانم'
+  },
+  'menu.settings': {
+    en: 'Settings',
+    ar: 'الإعدادات',
+    kur: 'ڕێکخستنەکان'
+  },
+  'menu.darkMode': {
+    en: 'Dark Mode',
+    ar: 'الوضع المظلم',
+    kur: 'دۆخی تاریک'
+  },
+  'menu.lightMode': {
+    en: 'Light Mode',
+    ar: 'الوضع الفاتح',
+    kur: 'دۆخی ڕووناک'
+  },
+  'menu.signOut': {
+    en: 'Sign Out',
+    ar: 'تسجيل الخروج',
+    kur: 'چوونەدەرەوە'
+  },
+  'home.properties': {
+    en: 'properties',
+    ar: 'عقار',
+    kur: 'خانووبەرە'
+  },
+  'home.loadingMap': {
+    en: 'Loading map...',
+    ar: 'تحميل الخريطة...',
+    kur: 'بارکردنی نەخشە...'
+  },
+
+  // Filter labels
+  'filter.listingType': {
+    en: 'Listing Type',
+    ar: 'نوع الإعلان',
+    kur: 'جۆری لیستکردن'
+  },
+  'filter.propertyType': {
+    en: 'Property Type',
+    ar: 'نوع العقار',
+    kur: 'جۆری خانووبەرە'
+  },
+  'filter.bedrooms': {
+    en: 'Bedrooms',
+    ar: 'غرف النوم',
+    kur: 'ژووری نوستن'
+  },
+  'filter.beds': {
+    en: 'Beds',
+    ar: 'أسرة',
+    kur: 'جێخەوەکان'
+  },
+  'filter.bathrooms': {
+    en: 'Bathrooms',
+    ar: 'الحمامات',
+    kur: 'حەمامەکان'
+  },
+  'filter.baths': {
+    en: 'Baths',
+    ar: 'حمامات',
+    kur: 'حەمام'
+  },
+  'filter.city': {
+    en: 'City',
+    ar: 'المدينة',
+    kur: 'شار'
+  },
+  'filter.cityPlaceholder': {
+    en: 'e.g. Erbil, Baghdad',
+    ar: 'مثل: أربيل، بغداد',
+    kur: 'وەک: هەولێر، بەغدا'
+  },
+  'filter.priceRange': {
+    en: 'Price Range',
+    ar: 'نطاق السعر',
+    kur: 'نرخی نێوان'
+  },
+
+  // Filter options
+  'filter.allTypes': {
+    en: 'All Types',
+    ar: 'جميع الأنواع',
+    kur: 'هەموو جۆرەکان'
+  },
+  'filter.allProperties': {
+    en: 'All Properties',
+    ar: 'جميع العقارات',
+    kur: 'هەموو خانووبەرەکان'
+  },
+  'filter.house': {
+    en: 'House',
+    ar: 'منزل',
+    kur: 'ماڵ'
+  },
+  'filter.apartment': {
+    en: 'Apartment',
+    ar: 'شقة',
+    kur: 'شوقە'
+  },
+  'filter.villa': {
+    en: 'Villa',
+    ar: 'فيلا',
+    kur: 'ڤیلا'
+  },
+  'filter.land': {
+    en: 'Land',
+    ar: 'أرض',
+    kur: 'زەوی'
+  },
+  'filter.any': {
+    en: 'Any',
+    ar: 'أي',
+    kur: 'هەر'
+  },
+  'filter.clearAll': {
+    en: 'Clear All',
+    ar: 'مسح الكل',
+    kur: 'پاککردنەوەی هەموو'
+  },
+
+  // Search and AI
+  'search.aiPlaceholder': {
+    en: "Ask AI: 'Find me a 3-bedroom villa under $300k in Erbil'",
+    ar: "اسأل الذكاء الاصطناعي: 'ابحث لي عن فيلا بـ 3 غرف نوم تحت 300 ألف دولار في أربيل'",
+    kur: "لە AI بپرسە: 'ڤیلایەکی 3 ژووری نوستن بدۆزەرەوە کە کەمتر لە 300 هەزار دۆلار بێت لە هەولێر'"
   }
 };
 
