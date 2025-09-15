@@ -23,14 +23,21 @@ import {
 const sseClients = new Set<Response>();
 
 function broadcastToSSEClients(event: string, data: any) {
-  const message = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+  // Include event type in the payload for reliable delivery
+  const payload = { type: event, ...data };
+  
+  // Send both custom event and default message for maximum compatibility
+  const customEventMessage = `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+  const defaultMessage = `data: ${JSON.stringify(payload)}\n\n`;
   
   console.log(`📡 Broadcasting ${event} to ${sseClients.size} connected clients:`, data.title || data.id);
   
   // Send to all connected clients
   sseClients.forEach(client => {
     try {
-      client.write(message);
+      // Send both formats to ensure compatibility
+      client.write(customEventMessage);
+      client.write(defaultMessage);
     } catch (error) {
       console.error(`❌ Failed to send ${event} to client:`, error);
       // Remove disconnected clients

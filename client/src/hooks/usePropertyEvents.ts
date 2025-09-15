@@ -29,6 +29,75 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
     const eventSource = new EventSource('/api/properties/stream');
     eventSourceRef.current = eventSource;
 
+    // Helper functions for handling events
+    const handlePropertyCreated = (property: Property) => {
+      // Invalidate properties queries to trigger refetch
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/properties'] 
+      });
+
+      // If we have current filters, also invalidate the specific filtered query
+      if (currentFiltersRef.current) {
+        queryClient.invalidateQueries({ 
+          queryKey: ['/api/properties', currentFiltersRef.current] 
+        });
+      }
+
+      // Invalidate featured properties
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/properties/featured'] 
+      });
+
+      // Call custom callback if provided
+      callbacksRef.current.onPropertyCreated?.(property);
+    };
+
+    const handlePropertyUpdated = (property: Property) => {
+      // Invalidate properties queries
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/properties'] 
+      });
+
+      // Invalidate specific property query
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/properties', property.id] 
+      });
+
+      // If we have current filters, also invalidate the specific filtered query
+      if (currentFiltersRef.current) {
+        queryClient.invalidateQueries({ 
+          queryKey: ['/api/properties', currentFiltersRef.current] 
+        });
+      }
+
+      // Call custom callback if provided
+      callbacksRef.current.onPropertyUpdated?.(property);
+    };
+
+    const handlePropertyDeleted = (data: any) => {
+      const propertyId = data.propertyId || data.id;
+      
+      // Invalidate properties queries
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/properties'] 
+      });
+
+      // Remove specific property from cache
+      queryClient.removeQueries({ 
+        queryKey: ['/api/properties', propertyId] 
+      });
+
+      // If we have current filters, also invalidate the specific filtered query
+      if (currentFiltersRef.current) {
+        queryClient.invalidateQueries({ 
+          queryKey: ['/api/properties', currentFiltersRef.current] 
+        });
+      }
+
+      // Call custom callback if provided
+      callbacksRef.current.onPropertyDeleted?.(propertyId);
+    };
+
     // Handle connection established
     eventSource.onopen = () => {
       console.log('SSE connection established');
@@ -44,37 +113,30 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
         } else if (data.type === 'heartbeat') {
           // Handle heartbeat - just keep connection alive
           console.debug('SSE heartbeat received');
+        } else if (data.type === 'property_created') {
+          // Handle property created via onmessage as fallback
+          console.log('🏠 New property created and detected (via onmessage):', data.title);
+          handlePropertyCreated(data);
+        } else if (data.type === 'property_updated') {
+          // Handle property updated via onmessage as fallback
+          console.log('🔄 Property updated and detected (via onmessage):', data.title);
+          handlePropertyUpdated(data);
+        } else if (data.type === 'property_deleted') {
+          // Handle property deleted via onmessage as fallback
+          console.log('🗑️ Property deleted and detected (via onmessage):', data.title || data.id);
+          handlePropertyDeleted(data);
         }
       } catch (error) {
         console.error('Error parsing SSE message:', error);
       }
     };
 
-    // Handle custom events
+    // Handle custom events (primary path - fallback to onmessage if these don't fire)
     eventSource.addEventListener('property_created', (event) => {
       try {
         const property: Property = JSON.parse((event as MessageEvent).data);
-        console.log('🏠 New property created and detected:', property.title);
-
-        // Invalidate properties queries to trigger refetch
-        queryClient.invalidateQueries({ 
-          queryKey: ['/api/properties'] 
-        });
-
-        // If we have current filters, also invalidate the specific filtered query
-        if (currentFiltersRef.current) {
-          queryClient.invalidateQueries({ 
-            queryKey: ['/api/properties', currentFiltersRef.current] 
-          });
-        }
-
-        // Invalidate featured properties
-        queryClient.invalidateQueries({ 
-          queryKey: ['/api/properties/featured'] 
-        });
-
-        // Call custom callback if provided
-        callbacksRef.current.onPropertyCreated?.(property);
+        console.log('🏠 New property created and detected (via addEventListener):', property.title);
+        handlePropertyCreated(property);
       } catch (error) {
         console.error('❌ Error handling property_created event:', error);
       }
@@ -83,27 +145,8 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
     eventSource.addEventListener('property_updated', (event) => {
       try {
         const property: Property = JSON.parse((event as MessageEvent).data);
-        console.log('🔄 Property updated and detected:', property.title);
-
-        // Invalidate properties queries
-        queryClient.invalidateQueries({ 
-          queryKey: ['/api/properties'] 
-        });
-
-        // Invalidate specific property query
-        queryClient.invalidateQueries({ 
-          queryKey: ['/api/properties', property.id] 
-        });
-
-        // If we have current filters, also invalidate the specific filtered query
-        if (currentFiltersRef.current) {
-          queryClient.invalidateQueries({ 
-            queryKey: ['/api/properties', currentFiltersRef.current] 
-          });
-        }
-
-        // Call custom callback if provided
-        callbacksRef.current.onPropertyUpdated?.(property);
+        console.log('🔄 Property updated and detected (via addEventListener):', property.title);
+        handlePropertyUpdated(property);
       } catch (error) {
         console.error('❌ Error handling property_updated event:', error);
       }
@@ -112,28 +155,8 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
     eventSource.addEventListener('property_deleted', (event) => {
       try {
         const data = JSON.parse((event as MessageEvent).data);
-        const propertyId = data.propertyId || data.id;
-        console.log('🗑️ Property deleted and detected:', data.title || propertyId);
-
-        // Invalidate properties queries
-        queryClient.invalidateQueries({ 
-          queryKey: ['/api/properties'] 
-        });
-
-        // Remove specific property from cache
-        queryClient.removeQueries({ 
-          queryKey: ['/api/properties', propertyId] 
-        });
-
-        // If we have current filters, also invalidate the specific filtered query
-        if (currentFiltersRef.current) {
-          queryClient.invalidateQueries({ 
-            queryKey: ['/api/properties', currentFiltersRef.current] 
-          });
-        }
-
-        // Call custom callback if provided
-        callbacksRef.current.onPropertyDeleted?.(propertyId);
+        console.log('🗑️ Property deleted and detected (via addEventListener):', data.title || data.id);
+        handlePropertyDeleted(data);
       } catch (error) {
         console.error('❌ Error handling property_deleted event:', error);
       }
