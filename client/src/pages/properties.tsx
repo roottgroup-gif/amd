@@ -15,12 +15,13 @@ import type { PropertyFilters, AISearchResponse } from "@/types";
 import { Search, Filter, Grid, List, MapPin, Home, Building, Castle, Mountain, Tag, Key, Bed, Bath } from "lucide-react";
 
 export default function PropertiesPage() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [filters, setFilters] = useState<PropertyFilters>({
     sortBy: 'date',
     sortOrder: 'desc',
     limit: 20,
-    offset: 0
+    offset: 0,
+    language: language
   });
   const [priceRange, setPriceRange] = useState([0, 1000000]);
   const [cityInput, setCityInput] = useState('');
@@ -28,6 +29,15 @@ export default function PropertiesPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const { data: properties, isLoading } = useProperties(filters);
+
+  // Filter properties by language when language changes
+  useEffect(() => {
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      language: language,
+      offset: 0 // Reset pagination when language changes
+    }));
+  }, [language]);
 
   // Debounced city filter
   useEffect(() => {
@@ -74,12 +84,13 @@ export default function PropertiesPage() {
       sortBy: 'date',
       sortOrder: 'desc',
       limit: 20,
-      offset: 0
+      offset: 0,
+      language: language // Retain current language when clearing filters
     });
     setPriceRange([0, 1000000]);
     setCityInput('');
     setSearchResults(null);
-  }, []);
+  }, [language]);
 
   const displayProperties = searchResults ? searchResults.results : properties || [];
 

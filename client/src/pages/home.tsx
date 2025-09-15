@@ -29,7 +29,8 @@ export default function HomePage() {
   const [searchResults, setSearchResults] = useState<AISearchResponse | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>('sale');
   const [mapFilters, setMapFilters] = useState<PropertyFilters>({
-    limit: 100 // Get more properties for the map
+    limit: 100, // Get more properties for the map
+    language: language // Initialize with current language to avoid redundant fetches
   });
   const [priceRange, setPriceRange] = useState([1, 10000000]);
   const [cityInput, setCityInput] = useState('');
@@ -113,10 +114,11 @@ export default function HomePage() {
   };
 
   const handleMapFilterChange = (filters: PropertyFilters) => {
-    setMapFilters({
-      ...filters,
+    setMapFilters(prev => ({ 
+      ...prev, 
+      ...filters, 
       limit: 100 // Always maintain the limit for map
-    });
+    }));
   };
 
   const handleFilterChange = (key: keyof PropertyFilters, value: any) => {
@@ -168,7 +170,7 @@ export default function HomePage() {
   };
 
   const clearFilters = () => {
-    setMapFilters({ limit: 100 });
+    setMapFilters({ limit: 100, language: language }); // Retain current language when clearing filters
     setPriceRange([0, 1000000]);
     setCityInput('');
   };

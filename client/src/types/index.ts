@@ -61,6 +61,8 @@ export interface PropertyFilters {
   bathrooms?: number;
   city?: string;
   country?: string;
+  language?: "en" | "ar" | "kur";
+  features?: string[];
   search?: string;
   sortBy?: "price" | "date" | "views";
   sortOrder?: "asc" | "desc";
