@@ -122,7 +122,7 @@ export default function SettingsPage() {
                     <SelectContent>
                       <SelectItem value="en">English</SelectItem>
                       <SelectItem value="ar">العربية (Arabic)</SelectItem>
-                      <SelectItem value="ku">کوردی (Kurdish)</SelectItem>
+                      <SelectItem value="kur">کوردی (Kurdish)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
