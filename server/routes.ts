@@ -431,7 +431,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Properties routes with caching and optimization
   app.get("/api/properties", 
     apiRateLimit,
-    cacheControl({ maxAge: 300 }), // Cache for 5 minutes
+    cacheControl({ maxAge: 0 }), // No caching for real-time updates
     async (req, res) => {
     try {
       const {
@@ -467,15 +467,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       const properties = await storage.getProperties(filters);
-      
-      // Handle conditional requests for caching (with error handling)
-      try {
-        if (handleConditionalRequest(req, res, properties)) {
-          return;
-        }
-      } catch (error) {
-        console.warn('Conditional request handling failed:', error);
-      }
       
       res.json(properties);
     } catch (error) {
