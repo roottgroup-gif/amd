@@ -1175,9 +1175,9 @@ export default function PropertyMap({
             ${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === "rent" ? "/mo" : ""}
           </p>
           <div class="popup-details" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; font-size: 12px; color: ${subTextColor};">
-            ${property.bedrooms ? `<span style="color: ${subTextColor};"><i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} beds</span>` : ""} 
-            ${property.bathrooms ? `<span style="color: ${subTextColor};"><i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} baths</span>` : ""}
-            ${property.area ? `<span style="color: ${subTextColor};"><i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} sq ft</span>` : ""}
+            ${property.bedrooms ? `<span style="color: ${subTextColor};"><i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} ${t('property.beds')}</span>` : ""} 
+            ${property.bathrooms ? `<span style="color: ${subTextColor};"><i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} ${t('property.baths')}</span>` : ""}
+            ${property.area ? `<span style="color: ${subTextColor};"><i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} ${t('property.sqft')}</span>` : ""}
           </div>
           ${(() => {
             // Priority: Customer contact (from inquiries) > Property contact phone > Agent phone
