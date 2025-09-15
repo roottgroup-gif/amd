@@ -503,6 +503,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // SSE stream for real-time property updates
   app.get("/api/properties/stream", (req, res) => {
+    console.log('🔌 New SSE connection established');
+    
     // Set SSE headers
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
@@ -521,26 +523,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     // Add client to SSE clients set
     sseClients.add(res);
+    console.log(`📊 SSE clients connected: ${sseClients.size}`);
 
     // Set up heartbeat to keep connection alive
     const heartbeat = setInterval(() => {
       try {
         res.write(`data: ${JSON.stringify({ type: 'heartbeat', timestamp: new Date().toISOString() })}\n\n`);
       } catch (error) {
+        console.log('💔 SSE heartbeat failed, removing client');
         clearInterval(heartbeat);
         sseClients.delete(res);
+        console.log(`📊 SSE clients connected: ${sseClients.size}`);
       }
-    }, 25000); // Send heartbeat every 25 seconds
+    }, 15000); // Send heartbeat every 15 seconds for better stability
 
     // Handle client disconnect
     req.on('close', () => {
+      console.log('🔌 SSE client disconnected (close)');
       clearInterval(heartbeat);
       sseClients.delete(res);
+      console.log(`📊 SSE clients connected: ${sseClients.size}`);
     });
 
-    req.on('error', () => {
+    req.on('error', (error) => {
+      console.log('🔌 SSE client disconnected (error):', error.message);
       clearInterval(heartbeat);
       sseClients.delete(res);
+      console.log(`📊 SSE clients connected: ${sseClients.size}`);
     });
   });
 

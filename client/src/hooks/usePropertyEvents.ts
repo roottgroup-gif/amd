@@ -31,21 +31,41 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
 
     // Helper functions for handling events
     const handlePropertyCreated = (property: Property) => {
-      // Invalidate properties queries to trigger refetch
+      console.log('🔄 Handling property created - invalidating queries and forcing refetch');
+      
+      // Aggressively invalidate and refetch all property-related queries
       queryClient.invalidateQueries({ 
-        queryKey: ['/api/properties'] 
+        queryKey: ['/api/properties'],
+        refetchType: 'all'
+      });
+
+      // Force immediate refetch to bypass any caching
+      queryClient.refetchQueries({ 
+        queryKey: ['/api/properties']
       });
 
       // If we have current filters, also invalidate the specific filtered query
       if (currentFiltersRef.current) {
+        const normalizedFilters = Object.fromEntries(
+          Object.entries(currentFiltersRef.current)
+            .filter(([, value]) => value !== undefined && value !== null && value !== '')
+            .sort(([a], [b]) => a.localeCompare(b))
+        );
+        
         queryClient.invalidateQueries({ 
-          queryKey: ['/api/properties', currentFiltersRef.current] 
+          queryKey: ['/api/properties', normalizedFilters],
+          refetchType: 'all'
+        });
+
+        queryClient.refetchQueries({ 
+          queryKey: ['/api/properties', normalizedFilters]
         });
       }
 
       // Invalidate featured properties
       queryClient.invalidateQueries({ 
-        queryKey: ['/api/properties/featured'] 
+        queryKey: ['/api/properties/featured'],
+        refetchType: 'all'
       });
 
       // Call custom callback if provided
@@ -53,20 +73,39 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
     };
 
     const handlePropertyUpdated = (property: Property) => {
-      // Invalidate properties queries
+      console.log('🔄 Handling property updated - invalidating queries and forcing refetch');
+      
+      // Aggressively invalidate and refetch all property-related queries
       queryClient.invalidateQueries({ 
-        queryKey: ['/api/properties'] 
+        queryKey: ['/api/properties'],
+        refetchType: 'all'
+      });
+
+      queryClient.refetchQueries({ 
+        queryKey: ['/api/properties']
       });
 
       // Invalidate specific property query
       queryClient.invalidateQueries({ 
-        queryKey: ['/api/properties', property.id] 
+        queryKey: ['/api/properties', property.id],
+        refetchType: 'all'
       });
 
       // If we have current filters, also invalidate the specific filtered query
       if (currentFiltersRef.current) {
+        const normalizedFilters = Object.fromEntries(
+          Object.entries(currentFiltersRef.current)
+            .filter(([, value]) => value !== undefined && value !== null && value !== '')
+            .sort(([a], [b]) => a.localeCompare(b))
+        );
+        
         queryClient.invalidateQueries({ 
-          queryKey: ['/api/properties', currentFiltersRef.current] 
+          queryKey: ['/api/properties', normalizedFilters],
+          refetchType: 'all'
+        });
+
+        queryClient.refetchQueries({ 
+          queryKey: ['/api/properties', normalizedFilters]
         });
       }
 
@@ -76,10 +115,16 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
 
     const handlePropertyDeleted = (data: any) => {
       const propertyId = data.propertyId || data.id;
+      console.log('🔄 Handling property deleted - invalidating queries and forcing refetch');
       
-      // Invalidate properties queries
+      // Aggressively invalidate and refetch all property-related queries
       queryClient.invalidateQueries({ 
-        queryKey: ['/api/properties'] 
+        queryKey: ['/api/properties'],
+        refetchType: 'all'
+      });
+
+      queryClient.refetchQueries({ 
+        queryKey: ['/api/properties']
       });
 
       // Remove specific property from cache
@@ -89,8 +134,19 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
 
       // If we have current filters, also invalidate the specific filtered query
       if (currentFiltersRef.current) {
+        const normalizedFilters = Object.fromEntries(
+          Object.entries(currentFiltersRef.current)
+            .filter(([, value]) => value !== undefined && value !== null && value !== '')
+            .sort(([a], [b]) => a.localeCompare(b))
+        );
+        
         queryClient.invalidateQueries({ 
-          queryKey: ['/api/properties', currentFiltersRef.current] 
+          queryKey: ['/api/properties', normalizedFilters],
+          refetchType: 'all'
+        });
+
+        queryClient.refetchQueries({ 
+          queryKey: ['/api/properties', normalizedFilters]
         });
       }
 
