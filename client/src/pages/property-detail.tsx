@@ -545,12 +545,18 @@ export default function PropertyDetailPage() {
                     <div>
                       <h4 className="font-medium mb-2">{t('property.features')}</h4>
                       <div className="space-y-2">
-                        {property.features.map((feature, index) => (
-                          <div key={index} className="flex items-center space-x-2">
-                            <Check className="h-4 w-4 text-green-500" />
-                            <span className="text-sm text-muted-foreground">{feature}</span>
-                          </div>
-                        ))}
+                        {property.features.map((feature, index) => {
+                          // Try to translate the key, fallback to the original value if translation doesn't exist
+                          const translatedFeature = t(`property.features.${feature}`) !== `property.features.${feature}` 
+                            ? t(`property.features.${feature}`) 
+                            : feature;
+                          return (
+                            <div key={index} className="flex items-center space-x-2">
+                              <Check className="h-4 w-4 text-green-500" />
+                              <span className="text-sm text-muted-foreground">{translatedFeature}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   ) : (
@@ -577,12 +583,18 @@ export default function PropertyDetailPage() {
                     <div>
                       <h4 className="font-medium mb-2">{t('property.amenities')}</h4>
                       <div className="space-y-2">
-                        {property.amenities.map((amenity, index) => (
-                          <div key={index} className="flex items-center space-x-2">
-                            <Check className="h-4 w-4 text-green-500" />
-                            <span className="text-sm text-muted-foreground">{amenity}</span>
-                          </div>
-                        ))}
+                        {property.amenities.map((amenity, index) => {
+                          // Try to translate the key, fallback to the original value if translation doesn't exist
+                          const translatedAmenity = t(`property.amenities.${amenity}`) !== `property.amenities.${amenity}` 
+                            ? t(`property.amenities.${amenity}`) 
+                            : amenity;
+                          return (
+                            <div key={index} className="flex items-center space-x-2">
+                              <Check className="h-4 w-4 text-green-500" />
+                              <span className="text-sm text-muted-foreground">{translatedAmenity}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   ) : (

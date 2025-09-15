@@ -308,32 +308,95 @@ const translations: Translations = {
   },
 
   // Property Features
-  'property.features.centralAC': {
-    en: 'Central Air Conditioning',
-    ar: 'تكييف مركزي',
-    kur: 'ڕەش‌کردنەوەی ناوەندی'
+  // Property Amenities (Keys from customer dashboard form)
+  'property.amenities.swimmingPool': {
+    en: 'Swimming Pool',
+    ar: 'مسبح',
+    kur: 'حەوزی مەلەکردن'
   },
-  'property.features.hardwoodFloors': {
-    en: 'Hardwood Floors',
-    ar: 'أرضيات خشبية',
-    kur: 'زەوی دارین'
+  'property.amenities.garden': {
+    en: 'Garden',
+    ar: 'حديقة',
+    kur: 'باخچە'
+  },
+  'property.amenities.parking': {
+    en: 'Parking',
+    ar: 'موقف سيارات',
+    kur: 'پارک کردن'
+  },
+  'property.amenities.securitySystem': {
+    en: 'Security System',
+    ar: 'نظام الأمان',
+    kur: 'سیستەمی ئاسایش'
+  },
+  'property.amenities.elevator': {
+    en: 'Elevator',
+    ar: 'مصعد',
+    kur: 'ئاسانسۆر'
+  },
+  'property.amenities.gym': {
+    en: 'Gym',
+    ar: 'نادي رياضي',
+    kur: 'زالی وەرزش'
+  },
+  'property.amenities.balcony': {
+    en: 'Balcony',
+    ar: 'شرفة',
+    kur: 'بالاخانە'
+  },
+  'property.amenities.terrace': {
+    en: 'Terrace',
+    ar: 'تراس',
+    kur: 'تاراسە'
+  },
+
+  // Property Features (Keys from customer dashboard form)
+  'property.features.airConditioning': {
+    en: 'Air Conditioning',
+    ar: 'تكييف الهواء',
+    kur: 'ڕەش‌کردنەوە'
+  },
+  'property.features.heating': {
+    en: 'Heating',
+    ar: 'تدفئة',
+    kur: 'گەرمکردنەوە'
+  },
+  'property.features.furnished': {
+    en: 'Furnished',
+    ar: 'مؤثث',
+    kur: 'فەرنیچەردار'
+  },
+  'property.features.petFriendly': {
+    en: 'Pet Friendly',
+    ar: 'مناسب للحيوانات الأليفة',
+    kur: 'گونجاو بۆ ئاژەڵی ماڵی'
+  },
+  'property.features.fireplace': {
+    en: 'Fireplace',
+    ar: 'مدفأة',
+    kur: 'بخاری'
+  },
+  'property.features.highCeilings': {
+    en: 'High Ceilings',
+    ar: 'أسقف عالية',
+    kur: 'سەقفی بەرز'
   },
   'property.features.modernKitchen': {
     en: 'Modern Kitchen',
     ar: 'مطبخ عصري',
     kur: 'چێشتخانەی مۆدێرن'
   },
+  'property.features.storageRoom': {
+    en: 'Storage Room',
+    ar: 'غرفة تخزين',
+    kur: 'ژووری هەڵگرتن'
+  },
 
-  // Property Amenities
+  // Legacy translations for backward compatibility
   'property.amenities.gardenPatio': {
     en: 'Garden & Patio',
     ar: 'حديقة وشرفة',
     kur: 'باخچە و بالاخانە'
-  },
-  'property.amenities.securitySystem': {
-    en: 'Security System',
-    ar: 'نظام الأمان',
-    kur: 'سیستەمی ئاسایش'
   },
   'property.amenities.garageParking': {
     en: 'Garage Parking',
