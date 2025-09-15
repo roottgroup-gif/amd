@@ -104,6 +104,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Skip SSE (Server-Sent Events) requests - these must not be cached or intercepted
+  if (isSSERequest(request, url)) {
+    console.log('[SW] Bypassing SSE request:', url.pathname);
+    return; // Let the browser handle SSE requests directly
+  }
+
   // Handle different resource types with appropriate strategies
   if (isApiRequest(url)) {
     // API requests: Network-first with cache fallback
@@ -119,6 +125,18 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(handleNetworkFirst(request));
   }
 });
+
+// Check if request is for SSE (Server-Sent Events)
+function isSSERequest(request, url) {
+  // Check if the accept header indicates SSE
+  const acceptHeader = request.headers.get('accept');
+  if (acceptHeader && acceptHeader.includes('text/event-stream')) {
+    return true;
+  }
+  
+  // Check if the URL is for SSE stream endpoints
+  return url.pathname.includes('/stream') || url.pathname.endsWith('/events');
+}
 
 // Check if request is for API
 function isApiRequest(url) {

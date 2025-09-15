@@ -505,11 +505,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/properties/stream", (req, res) => {
     console.log('🔌 New SSE connection established');
     
-    // Set SSE headers
+    // Set SSE headers with anti-buffering measures
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
+      'Cache-Control': 'no-cache, no-transform',
       'Connection': 'keep-alive',
+      'Keep-Alive': 'timeout=60, max=1000',
+      'Content-Encoding': 'identity',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': 'Cache-Control',
       'X-Accel-Buffering': 'no' // Prevent buffering by Nginx
@@ -518,8 +520,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Flush headers to prevent intermediary buffering
     res.flushHeaders();
 
+    // Send 2KB padding to force streaming start (prevents proxy buffering)
+    res.write(':' + ' '.repeat(2048) + '\n');
+    res.write('retry: 10000\n\n');
+    if (res.flush) res.flush();
+    console.log('📡 SSE padding sent, forcing stream start');
+
     // Send initial connection event
     res.write(`data: ${JSON.stringify({ type: 'connected', message: 'SSE connection established' })}\n\n`);
+    if (res.flush) res.flush();
+    console.log('📡 SSE initial connection message sent and flushed');
 
     // Add client to SSE clients set
     sseClients.add(res);
@@ -528,14 +538,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Set up heartbeat to keep connection alive
     const heartbeat = setInterval(() => {
       try {
-        res.write(`data: ${JSON.stringify({ type: 'heartbeat', timestamp: new Date().toISOString() })}\n\n`);
+        const heartbeatData = `data: ${JSON.stringify({ type: 'heartbeat', timestamp: new Date().toISOString() })}\n\n`;
+        res.write(heartbeatData);
+        if (res.flush) res.flush();
+        console.log('💓 SSE heartbeat sent and flushed');
       } catch (error) {
-        console.log('💔 SSE heartbeat failed, removing client');
+        console.log('💔 SSE heartbeat failed, removing client:', (error as Error).message);
         clearInterval(heartbeat);
         sseClients.delete(res);
         console.log(`📊 SSE clients connected: ${sseClients.size}`);
       }
-    }, 15000); // Send heartbeat every 15 seconds for better stability
+    }, 15000); // Send heartbeat every 15 seconds
 
     // Handle client disconnect
     req.on('close', () => {

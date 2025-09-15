@@ -157,6 +157,7 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
     // Handle connection established
     eventSource.onopen = () => {
       console.log('✅ SSE connection established and ready');
+      console.log('📊 EventSource readyState:', eventSource.readyState);
     };
 
     // Handle messages
