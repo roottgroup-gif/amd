@@ -100,13 +100,15 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
 
     // Handle connection established
     eventSource.onopen = () => {
-      console.log('SSE connection established');
+      console.log('✅ SSE connection established and ready');
     };
 
     // Handle messages
     eventSource.onmessage = (event) => {
+      console.log('📨 SSE onmessage received:', event.data);
       try {
         const data = JSON.parse(event.data);
+        console.log('📨 Parsed SSE data:', data);
         
         if (data.type === 'connected') {
           console.log('SSE connected:', data.message);
@@ -125,9 +127,11 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
           // Handle property deleted via onmessage as fallback
           console.log('🗑️ Property deleted and detected (via onmessage):', data.title || data.id);
           handlePropertyDeleted(data);
+        } else {
+          console.log('🔍 Unknown SSE message type:', data.type, data);
         }
       } catch (error) {
-        console.error('Error parsing SSE message:', error);
+        console.error('❌ Error parsing SSE message:', error, 'Raw data:', event.data);
       }
     };
 
