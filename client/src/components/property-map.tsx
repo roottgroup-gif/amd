@@ -38,7 +38,7 @@ export default function PropertyMap({
   userId,
   className,
 }: PropertyMapProps) {
-  const { t, getLocalized } = useTranslation();
+  const { t, getLocalized, language } = useTranslation();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
@@ -1329,6 +1329,13 @@ export default function PropertyMap({
     currentPropertiesRef.current = properties;
     updateMarkersForProperties(properties);
   }, [properties]);
+
+  // Update markers when language changes to refresh translations
+  useEffect(() => {
+    if (currentPropertiesRef.current.length > 0) {
+      updateMarkersForProperties(currentPropertiesRef.current);
+    }
+  }, [language]);
 
   // Update markers function that accepts properties array - always show all markers
   const updateMarkersForProperties = (
