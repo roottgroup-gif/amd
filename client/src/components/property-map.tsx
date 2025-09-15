@@ -17,6 +17,7 @@ import {
   useIsFavorite,
 } from "@/hooks/use-properties";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "@/lib/i18n";
 
 interface PropertyMapProps {
   properties: PropertyWithAgent[];
@@ -37,6 +38,7 @@ export default function PropertyMap({
   userId,
   className,
 }: PropertyMapProps) {
+  const { t } = useTranslation();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
@@ -1537,7 +1539,7 @@ export default function PropertyMap({
                   <span
                     className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === "sale" ? "text-red-700 dark:text-red-300" : "text-black dark:text-white"}`}
                   >
-                    🏷️ For Sale
+                    🏷️ {t('filter.forSale')}
                   </span>
                 </div>
                 <div
@@ -1554,7 +1556,7 @@ export default function PropertyMap({
                   <span
                     className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === "rent" ? "text-green-700 dark:text-green-300" : "text-black dark:text-white"}`}
                   >
-                    🔑 For Rent
+                    🔑 {t('filter.forRent')}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
@@ -1573,7 +1575,7 @@ export default function PropertyMap({
                     <span
                       className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "house" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
-                      Houses
+                      {t('filter.houses')}
                     </span>
                   </div>
                   <div
@@ -1591,7 +1593,7 @@ export default function PropertyMap({
                     <span
                       className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "apartment" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
-                      Apartments
+                      {t('filter.apartments')}
                     </span>
                   </div>
                   <div
@@ -1609,7 +1611,7 @@ export default function PropertyMap({
                     <span
                       className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "villa" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
-                      Villas
+                      {t('filter.villa')}
                     </span>
                   </div>
                   <div
@@ -1627,7 +1629,7 @@ export default function PropertyMap({
                     <span
                       className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "land" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
-                      Land
+                      {t('filter.land')}
                     </span>
                   </div>
                 </div>
@@ -1650,10 +1652,10 @@ export default function PropertyMap({
                   ></div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  Loading Interactive Map
+                  {t('map.loadingTitle')}
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Discovering amazing properties for you...
+                  {t('map.loadingDescription')}
                 </p>
                 <div className="flex items-center justify-center space-x-1 mb-4">
                   <div
@@ -1676,7 +1678,7 @@ export default function PropertyMap({
                   ></div>
                 </div>
                 <p className="text-sm text-gray-500 font-medium">
-                  🗺️ Powered by OpenStreetMap & Leaflet.js
+                  {t('map.poweredBy')}
                 </p>
               </div>
             </div>

@@ -727,6 +727,23 @@ const translations: Translations = {
     en: "Ask AI: 'Find me a 3-bedroom villa under $300k in Erbil'",
     ar: "اسأل الذكاء الاصطناعي: 'ابحث لي عن فيلا بـ 3 غرف نوم تحت 300 ألف دولار في أربيل'",
     kur: "لە AI بپرسە: 'ڤیلایەکی 3 ژووری نوستن بدۆزەرەوە کە کەمتر لە 300 هەزار دۆلار بێت لە هەولێر'"
+  },
+
+  // Map
+  'map.loadingTitle': {
+    en: 'Loading Interactive Map',
+    ar: 'تحميل الخريطة التفاعلية',
+    kur: 'بارکردنی نەخشەی کارلێکەر'
+  },
+  'map.loadingDescription': {
+    en: 'Discovering amazing properties for you...',
+    ar: 'نكتشف عقارات مذهلة لك...',
+    kur: 'خانووبەرە نایابەکان بۆت دەدۆزینەوە...'
+  },
+  'map.poweredBy': {
+    en: '🗺️ Powered by OpenStreetMap & Leaflet.js',
+    ar: '🗺️ مدعوم بواسطة OpenStreetMap و Leaflet.js',
+    kur: '🗺️ پشتگیری لەلایەن OpenStreetMap و Leaflet.js'
   }
 };
 
