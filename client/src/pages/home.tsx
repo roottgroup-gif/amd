@@ -385,7 +385,7 @@ export default function HomePage() {
                   onValueChange={(value) => handleFilterChange('bedrooms', (value === 'any' || !value) ? undefined : parseInt(value))}
                 >
                   <SelectTrigger className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400" data-testid="bedrooms-select" style={{borderColor: '#FF7800'}}>
-                    <SelectValue placeholder="{t('filter.any')}" />
+                    <SelectValue placeholder={t('filter.any')} />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
                     <SelectItem value="any">{t('filter.any')}</SelectItem>
@@ -410,7 +410,7 @@ export default function HomePage() {
                   onValueChange={(value) => handleFilterChange('bathrooms', (value === 'any' || !value) ? undefined : parseInt(value))}
                 >
                   <SelectTrigger className="bg-orange-100/80 dark:bg-orange-900/80 backdrop-blur-sm border-orange-300 dark:border-orange-600 focus:border-orange-500 dark:focus:border-orange-400" data-testid="bathrooms-select" style={{borderColor: '#FF7800'}}>
-                    <SelectValue placeholder="{t('filter.any')}" />
+                    <SelectValue placeholder={t('filter.any')} />
                   </SelectTrigger>
                   <SelectContent className="z-[10000]">
                     <SelectItem value="any">{t('filter.any')}</SelectItem>
