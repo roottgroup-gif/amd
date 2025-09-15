@@ -105,14 +105,16 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
 
     // Handle messages
     eventSource.onmessage = (event) => {
+      console.log('📨 SSE Raw message received:', event.data);
       try {
         const data = JSON.parse(event.data);
+        console.log('📨 SSE Parsed message:', data);
         
         if (data.type === 'connected') {
-          console.log('SSE connected:', data.message);
+          console.log('✅ SSE connected:', data.message);
         } else if (data.type === 'heartbeat') {
           // Handle heartbeat - just keep connection alive
-          // console.debug('SSE heartbeat received');
+          console.log('💓 SSE heartbeat received');
         } else if (data.type === 'property_created') {
           // Handle property created via onmessage as fallback
           console.log('🏠 New property created - forcing immediate map update:', data.title);
@@ -131,9 +133,11 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
           handlePropertyDeleted(data);
           // Force immediate refetch to bypass polling delay
           queryClient.refetchQueries({ queryKey: ['/api/properties'] });
+        } else {
+          console.log('❓ Unknown SSE message type:', data.type, data);
         }
       } catch (error) {
-        console.error('❌ Error parsing SSE message:', error);
+        console.error('❌ Error parsing SSE message:', error, 'Raw data:', event.data);
       }
     };
 
