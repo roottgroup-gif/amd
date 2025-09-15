@@ -559,15 +559,15 @@ export default function PropertyDetailPage() {
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
                           <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Central Air Conditioning</span>
+                          <span className="text-sm text-muted-foreground">{t('property.features.centralAC')}</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Hardwood Floors</span>
+                          <span className="text-sm text-muted-foreground">{t('property.features.hardwoodFloors')}</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Modern Kitchen</span>
+                          <span className="text-sm text-muted-foreground">{t('property.features.modernKitchen')}</span>
                         </div>
                       </div>
                     </div>
@@ -591,15 +591,15 @@ export default function PropertyDetailPage() {
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2">
                           <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Garden & Patio</span>
+                          <span className="text-sm text-muted-foreground">{t('property.amenities.gardenPatio')}</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Security System</span>
+                          <span className="text-sm text-muted-foreground">{t('property.amenities.securitySystem')}</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Check className="h-4 w-4 text-green-500" />
-                          <span className="text-sm text-muted-foreground">Garage Parking</span>
+                          <span className="text-sm text-muted-foreground">{t('property.amenities.garageParking')}</span>
                         </div>
                       </div>
                     </div>

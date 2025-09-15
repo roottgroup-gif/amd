@@ -305,6 +305,40 @@ const translations: Translations = {
     en: 'Failed to update favorites. Please try again.',
     ar: 'فشل في تحديث المفضلة. حاول مرة أخرى.',
     kur: 'سەرکەوتوو نەبوو لە نوێکردنەوەی بەرگری. دووبارە هەوڵبدەوە.'
+  },
+
+  // Property Features
+  'property.features.centralAC': {
+    en: 'Central Air Conditioning',
+    ar: 'تكييف مركزي',
+    kur: 'ڕەش‌کردنەوەی ناوەندی'
+  },
+  'property.features.hardwoodFloors': {
+    en: 'Hardwood Floors',
+    ar: 'أرضيات خشبية',
+    kur: 'زەوی دارین'
+  },
+  'property.features.modernKitchen': {
+    en: 'Modern Kitchen',
+    ar: 'مطبخ عصري',
+    kur: 'چێشتخانەی مۆدێرن'
+  },
+
+  // Property Amenities
+  'property.amenities.gardenPatio': {
+    en: 'Garden & Patio',
+    ar: 'حديقة وشرفة',
+    kur: 'باخچە و بالاخانە'
+  },
+  'property.amenities.securitySystem': {
+    en: 'Security System',
+    ar: 'نظام الأمان',
+    kur: 'سیستەمی ئاسایش'
+  },
+  'property.amenities.garageParking': {
+    en: 'Garage Parking',
+    ar: 'موقف السيارات',
+    kur: 'پارک کردنی گاراژ'
   }
 };
 
