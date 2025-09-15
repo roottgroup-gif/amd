@@ -345,6 +345,7 @@ export interface PropertyFilters {
   bathrooms?: number;
   city?: string;
   country?: string;
+  language?: Language;
   features?: string[];
   search?: string;
   sortBy?: "price" | "date" | "views";
