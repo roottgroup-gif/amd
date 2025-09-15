@@ -17,7 +17,7 @@ interface PropertyCardProps {
 }
 
 export default function PropertyCard({ property, userId, className, onMapClick, showMapButton = false }: PropertyCardProps) {
-  const { t } = useTranslation();
+  const { t, getLocalized } = useTranslation();
   const [, navigate] = useLocation();
   const addToFavorites = useAddToFavorites();
   const removeFromFavorites = useRemoveFromFavorites();
@@ -166,7 +166,7 @@ export default function PropertyCard({ property, userId, className, onMapClick, 
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white truncate" data-testid={`property-title-${property.id}`}>
-            {property.title}
+            {getLocalized(property.title, property.title)}
           </h3>
           <span 
             className="text-2xl font-bold text-orange-600 dark:text-orange-400"

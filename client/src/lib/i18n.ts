@@ -775,10 +775,26 @@ export function useTranslation() {
     return translations[key]?.[language] || key;
   };
 
+  // Localization fallback helper for property content
+  const getLocalized = (content: any, fallback: string = '') => {
+    if (!content) return fallback;
+    
+    // If content is already a string, return it
+    if (typeof content === 'string') return content;
+    
+    // If content is an object with language keys, use fallback logic
+    if (typeof content === 'object') {
+      return content[language] || content.en || content.ar || content.kur || fallback;
+    }
+    
+    return fallback;
+  };
+
   return {
     language,
     changeLanguage,
     t,
+    getLocalized,
     isRTL: language === 'ar' || language === 'kur'
   };
 }

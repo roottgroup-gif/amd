@@ -38,7 +38,7 @@ export default function PropertyMap({
   userId,
   className,
 }: PropertyMapProps) {
-  const { t } = useTranslation();
+  const { t, getLocalized } = useTranslation();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
@@ -55,6 +55,11 @@ export default function PropertyMap({
   const [localFilters, setLocalFilters] = useState<PropertyFilters>(
     filters || {},
   );
+
+  // Helper function to get localized property title with fallback
+  const getPropertyTitle = (property: any) => {
+    return getLocalized(property.title, property.title || 'Untitled Property');
+  };
 
   // Check for dark mode and update markers when theme changes
   useEffect(() => {
@@ -808,7 +813,7 @@ export default function PropertyMap({
                     background: #e2e8f0;
                   ">
                     <img src="${propertyImage}" 
-                         alt="${property.title}" 
+                         alt="${getPropertyTitle(property)}" 
                          style="
                            width: 100%; 
                            height: 100%; 
@@ -827,7 +832,7 @@ export default function PropertyMap({
                       overflow: hidden;
                       text-overflow: ellipsis;
                       line-height: 1.3;
-                    ">${property.title}</div>
+                    ">${getPropertyTitle(property)}</div>
                     
                     <div style="
                       font-size: clamp(10px, 2.5vw, 12px); 
@@ -1080,7 +1085,7 @@ export default function PropertyMap({
               ${images
                 .map(
                   (img: string, index: number) => `
-                <img src="${img}" alt="${property.title} - Image ${index + 1}" 
+                <img src="${img}" alt="${getPropertyTitle(property)} - Image ${index + 1}" 
                      class="popup-slide" 
                      style="
                        width: 100%; 
@@ -1164,7 +1169,7 @@ export default function PropertyMap({
             : ""
         }
         <div class="popup-content" style="padding: 16px; background: ${popupBg};">
-          <h4 class="popup-title" style="color: ${textColor}; font-weight: 600; font-size: 16px; margin-bottom: 8px;">${property.title}</h4>
+          <h4 class="popup-title" style="color: ${textColor}; font-weight: 600; font-size: 16px; margin-bottom: 8px;">${getPropertyTitle(property)}</h4>
           <p class="popup-address" style="color: ${subTextColor}; font-size: 12px; margin-bottom: 8px;">${property.address}</p>
           <p class="popup-price" style="color: #FF7800; font-weight: 700; font-size: 18px; margin-bottom: 12px;">
             ${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === "rent" ? "/mo" : ""}
@@ -1282,7 +1287,7 @@ export default function PropertyMap({
                     <i class="fas fa-phone" style="color: white;"></i>
                   </button>
                   <button class="popup-button" 
-                          onclick="window.open('https://wa.me/${cleanPhone}?text=Hi, I\\'m interested in this property: ${encodeURIComponent(property.title)} - ${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}', '_blank')"
+                          onclick="window.open('https://wa.me/${cleanPhone}?text=Hi, I\\'m interested in this property: ${encodeURIComponent(getPropertyTitle(property))} - ${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}', '_blank')"
                           onmouseover="this.style.background='${whatsappBtnHoverColor}'"
                           onmouseout="this.style.background='${whatsappBtnColor}'"
                           style="background: ${whatsappBtnColor}; flex: 0 0 40px; width: 40px; height: 40px; min-width: 40px; display: flex; align-items: center; justify-content: center;"
