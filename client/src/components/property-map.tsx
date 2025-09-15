@@ -1225,7 +1225,7 @@ export default function PropertyMap({
                     onmouseover="this.style.background='#e56600'"
                     onmouseout="this.style.background='#FF7800'"
                     style="flex: 1; min-width: 100px; background: #FF7800; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: background-color 0.2s ease; z-index: 9999; position: relative;">
-              View Property
+              ${t('property.viewProperty')}
             </button>
             ${
               userId

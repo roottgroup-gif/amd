@@ -108,6 +108,11 @@ const translations: Translations = {
     ar: 'عرض التفاصيل',
     kur: 'بینینی وردەکارییەکان'
   },
+  'property.viewProperty': {
+    en: 'View Property',
+    ar: 'عرض العقار',
+    kur: 'بینینی خانووبەرە'
+  },
 
   // Contact
   'contact.callNow': {
