@@ -539,7 +539,10 @@ export default function HomePage() {
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  onClick={() => setMapFilters({ limit: 100 })}
+                  onClick={() => setMapFilters(prevFilters => ({ 
+                    limit: 100, 
+                    language: prevFilters.language 
+                  }))}
                   className="h-6 px-2 text-xs border-red-300 dark:border-red-600 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                   data-testid="clear-filters-button"
                 >
