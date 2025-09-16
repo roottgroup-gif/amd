@@ -24,6 +24,9 @@ import {
 
 export default function SettingsPage() {
   const { language, changeLanguage, t } = useTranslation();
+  
+  // Check if current language is RTL (Arabic or Kurdish)
+  const isRTL = language === 'ar' || language === 'kur';
   const [userSettings, setUserSettings] = useState({
     // Profile Settings
     displayName: "",
@@ -178,6 +181,7 @@ export default function SettingsPage() {
                     checked={userSettings.emailNotifications}
                     onCheckedChange={(checked) => updateSetting('emailNotifications', checked)}
                     data-testid="email-notifications-switch"
+                    className={isRTL ? 'rtl:transform rtl:scale-x-[-1] rtl:bg-blue-600 rtl:data-[state=checked]:bg-green-600' : ''}
                   />
                 </div>
               </div>
@@ -195,6 +199,7 @@ export default function SettingsPage() {
                     checked={userSettings.pushNotifications}
                     onCheckedChange={(checked) => updateSetting('pushNotifications', checked)}
                     data-testid="push-notifications-switch"
+                    className={isRTL ? 'rtl:transform rtl:scale-x-[-1] rtl:bg-blue-600 rtl:data-[state=checked]:bg-green-600' : ''}
                   />
                 </div>
               </div>
@@ -212,6 +217,7 @@ export default function SettingsPage() {
                     checked={userSettings.favoriteUpdates}
                     onCheckedChange={(checked) => updateSetting('favoriteUpdates', checked)}
                     data-testid="favorite-updates-switch"
+                    className={isRTL ? 'rtl:transform rtl:scale-x-[-1] rtl:bg-blue-600 rtl:data-[state=checked]:bg-green-600' : ''}
                   />
                 </div>
               </div>
@@ -226,6 +232,7 @@ export default function SettingsPage() {
                     checked={userSettings.priceAlerts}
                     onCheckedChange={(checked) => updateSetting('priceAlerts', checked)}
                     data-testid="price-alerts-switch"
+                    className={isRTL ? 'rtl:transform rtl:scale-x-[-1] rtl:bg-blue-600 rtl:data-[state=checked]:bg-green-600' : ''}
                   />
                 </div>
               </div>
@@ -268,6 +275,7 @@ export default function SettingsPage() {
                     checked={userSettings.showPropertyPrices}
                     onCheckedChange={(checked) => updateSetting('showPropertyPrices', checked)}
                     data-testid="show-prices-switch"
+                    className={isRTL ? 'rtl:transform rtl:scale-x-[-1] rtl:bg-blue-600 rtl:data-[state=checked]:bg-green-600' : ''}
                   />
                 </div>
               </div>
@@ -285,6 +293,7 @@ export default function SettingsPage() {
                     checked={userSettings.showDistance}
                     onCheckedChange={(checked) => updateSetting('showDistance', checked)}
                     data-testid="show-distance-switch"
+                    className={isRTL ? 'rtl:transform rtl:scale-x-[-1] rtl:bg-blue-600 rtl:data-[state=checked]:bg-green-600' : ''}
                   />
                 </div>
               </div>
@@ -299,6 +308,7 @@ export default function SettingsPage() {
                     checked={userSettings.autoZoom}
                     onCheckedChange={(checked) => updateSetting('autoZoom', checked)}
                     data-testid="auto-zoom-switch"
+                    className={isRTL ? 'rtl:transform rtl:scale-x-[-1] rtl:bg-blue-600 rtl:data-[state=checked]:bg-green-600' : ''}
                   />
                 </div>
               </div>
