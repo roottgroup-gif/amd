@@ -24,7 +24,7 @@ const NotFound = lazy(() => import("@/pages/not-found.tsx"));
 
 function Router() {
   useNetworkError(); // Hook to handle network errors globally
-  
+
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Switch>

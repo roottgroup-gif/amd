@@ -58,7 +58,7 @@ export default function PropertyMap({
 
   // Helper function to get localized property title with fallback
   const getPropertyTitle = (property: any) => {
-    return getLocalized(property.title, property.title || 'Untitled Property');
+    return getLocalized(property.title, property.title || "Untitled Property");
   };
 
   // Check for dark mode and update markers when theme changes
@@ -182,55 +182,62 @@ export default function PropertyMap({
     (window as any).viewPropertyFromMap = (propertyId: string) => {
       try {
         // Navigate to property detail page using multiple approaches
-        console.log('Navigating to property:', propertyId);
-        
+        console.log("Navigating to property:", propertyId);
+
         // First try: Direct window navigation
         if (window.location) {
           window.location.href = `/property/${propertyId}`;
           return;
         }
-        
+
         // Fallback: Open in new window if direct navigation fails
-        window.open(`/property/${propertyId}`, '_self');
+        window.open(`/property/${propertyId}`, "_self");
       } catch (error) {
-        console.error('Navigation failed:', error);
+        console.error("Navigation failed:", error);
         // Last resort: Open in new tab
-        window.open(`/property/${propertyId}`, '_blank');
+        window.open(`/property/${propertyId}`, "_blank");
       }
     };
 
     // Define global function for zooming to property from cluster popup with smooth motion
-    (window as any).zoomToPropertyFromCluster = (propertyId: string, lat: string, lng: string) => {
+    (window as any).zoomToPropertyFromCluster = (
+      propertyId: string,
+      lat: string,
+      lng: string,
+    ) => {
       if (mapInstanceRef.current && lat && lng) {
         const latitude = parseFloat(lat);
         const longitude = parseFloat(lng);
         const L = (window as any).L;
-        
+
         // Add visual feedback - highlight the clicked item temporarily
-        const clickedItem = document.querySelector(`[onclick*="${propertyId}"]`) as HTMLElement;
+        const clickedItem = document.querySelector(
+          `[onclick*="${propertyId}"]`,
+        ) as HTMLElement;
         if (clickedItem) {
-          clickedItem.style.background = 'linear-gradient(135deg, #FF7800 0%, #e56600 100%)';
-          clickedItem.style.color = 'white';
-          clickedItem.style.transform = 'scale(1.02)';
-          clickedItem.style.transition = 'all 0.3s ease';
-          
+          clickedItem.style.background =
+            "linear-gradient(135deg, #FF7800 0%, #e56600 100%)";
+          clickedItem.style.color = "white";
+          clickedItem.style.transform = "scale(1.02)";
+          clickedItem.style.transition = "all 0.3s ease";
+
           // Reset after animation
           setTimeout(() => {
             if (clickedItem) {
-              clickedItem.style.background = 'transparent';
-              clickedItem.style.color = '';
-              clickedItem.style.transform = 'scale(1)';
+              clickedItem.style.background = "transparent";
+              clickedItem.style.color = "";
+              clickedItem.style.transform = "scale(1)";
             }
           }, 1500);
         }
-        
+
         // Close any open popups first with animation
         mapInstanceRef.current.closePopup();
-        
+
         // First, zoom out slightly to show movement, then zoom to target
         const currentZoom = mapInstanceRef.current.getZoom();
         const targetZoom = Math.max(16, currentZoom + 2);
-        
+
         // Create smooth multi-stage animation
         setTimeout(() => {
           if (mapInstanceRef.current) {
@@ -238,9 +245,9 @@ export default function PropertyMap({
             mapInstanceRef.current.flyTo([latitude, longitude], targetZoom, {
               animate: true,
               duration: 1.5,
-              easeLinearity: 0.1
+              easeLinearity: 0.1,
             });
-            
+
             // Stage 2: Add a temporary pulse marker to show the target
             setTimeout(() => {
               if (mapInstanceRef.current && L) {
@@ -274,13 +281,15 @@ export default function PropertyMap({
                       }
                     </style>
                   `,
-                  className: 'pulse-marker',
+                  className: "pulse-marker",
                   iconSize: [60, 60],
                   iconAnchor: [30, 30],
                 });
-                
-                const tempMarker = L.marker([latitude, longitude], { icon: pulseMarker }).addTo(mapInstanceRef.current);
-                
+
+                const tempMarker = L.marker([latitude, longitude], {
+                  icon: pulseMarker,
+                }).addTo(mapInstanceRef.current);
+
                 // Remove the pulse marker after animation
                 setTimeout(() => {
                   if (tempMarker && mapInstanceRef.current) {
@@ -291,10 +300,10 @@ export default function PropertyMap({
             }, 800);
           }
         }, 200);
-        
+
         // Optional: trigger property selection callback if available
         if (onPropertySelect) {
-          const property = properties.find(p => p.id === propertyId);
+          const property = properties.find((p) => p.id === propertyId);
           if (property) {
             setTimeout(() => {
               onPropertySelect(property);
@@ -462,11 +471,10 @@ export default function PropertyMap({
     };
   }, []);
 
-
   // Function to create zoom-based clusters
   const createZoomBasedClusters = (
     propertiesToCluster: PropertyWithAgent[],
-    zoomLevel: number
+    zoomLevel: number,
   ) => {
     // Enhanced zoom-based clustering with better grouping when zooming out
     // If zoomed very far out (zoom < 7), group by country
@@ -488,16 +496,18 @@ export default function PropertyMap({
   };
 
   // Function to create country-based clusters
-  const createCountryBasedClusters = (propertiesToCluster: PropertyWithAgent[]) => {
+  const createCountryBasedClusters = (
+    propertiesToCluster: PropertyWithAgent[],
+  ) => {
     const countryGroups: { [key: string]: PropertyWithAgent[] } = {};
-    
+
     // Group properties by country
     propertiesToCluster.forEach((property) => {
       if (!property.latitude || !property.longitude) return;
-      
+
       // Use country as grouping key, fallback to 'Unknown Country'
-      const country = property.country || 'Unknown Country';
-      
+      const country = property.country || "Unknown Country";
+
       if (!countryGroups[country]) {
         countryGroups[country] = [];
       }
@@ -508,25 +518,35 @@ export default function PropertyMap({
     return Object.entries(countryGroups).map(([country, properties]) => ({
       properties,
       country,
-      clusterType: 'country',
+      clusterType: "country",
       center: {
-        lat: properties.reduce((sum, p) => sum + parseFloat(p.latitude || "0"), 0) / properties.length,
-        lng: properties.reduce((sum, p) => sum + parseFloat(p.longitude || "0"), 0) / properties.length,
+        lat:
+          properties.reduce(
+            (sum, p) => sum + parseFloat(p.latitude || "0"),
+            0,
+          ) / properties.length,
+        lng:
+          properties.reduce(
+            (sum, p) => sum + parseFloat(p.longitude || "0"),
+            0,
+          ) / properties.length,
       },
     }));
   };
 
   // Function to create city-based clusters
-  const createCityBasedClusters = (propertiesToCluster: PropertyWithAgent[]) => {
+  const createCityBasedClusters = (
+    propertiesToCluster: PropertyWithAgent[],
+  ) => {
     const cityGroups: { [key: string]: PropertyWithAgent[] } = {};
-    
+
     // Group properties by city
     propertiesToCluster.forEach((property) => {
       if (!property.latitude || !property.longitude) return;
-      
+
       // Use city as grouping key, fallback to 'Unknown City'
-      const city = property.city || 'Unknown City';
-      
+      const city = property.city || "Unknown City";
+
       if (!cityGroups[city]) {
         cityGroups[city] = [];
       }
@@ -537,10 +557,18 @@ export default function PropertyMap({
     return Object.entries(cityGroups).map(([city, properties]) => ({
       properties,
       city,
-      clusterType: 'city',
+      clusterType: "city",
       center: {
-        lat: properties.reduce((sum, p) => sum + parseFloat(p.latitude || "0"), 0) / properties.length,
-        lng: properties.reduce((sum, p) => sum + parseFloat(p.longitude || "0"), 0) / properties.length,
+        lat:
+          properties.reduce(
+            (sum, p) => sum + parseFloat(p.latitude || "0"),
+            0,
+          ) / properties.length,
+        lng:
+          properties.reduce(
+            (sum, p) => sum + parseFloat(p.longitude || "0"),
+            0,
+          ) / properties.length,
       },
     }));
   };
@@ -548,17 +576,21 @@ export default function PropertyMap({
   // Function to create distance-based clusters
   const createDistanceBasedClusters = (
     propertiesToCluster: PropertyWithAgent[],
-    zoomLevel: number
+    zoomLevel: number,
   ) => {
     const clusters: any[] = [];
     const processed = new Set<number>();
     // Enhanced cluster distance based on zoom level for better grouping
-    const CLUSTER_DISTANCE = 
-      zoomLevel > 15 ? 0.003 :  // Very close clustering for high zoom
-      zoomLevel > 13 ? 0.005 :  // Close clustering
-      zoomLevel > 11 ? 0.01 :   // Medium clustering
-      zoomLevel > 9 ? 0.03 :    // Larger clustering for medium zoom
-      0.05;                     // Very large clustering for lower zoom
+    const CLUSTER_DISTANCE =
+      zoomLevel > 15
+        ? 0.003 // Very close clustering for high zoom
+        : zoomLevel > 13
+          ? 0.005 // Close clustering
+          : zoomLevel > 11
+            ? 0.01 // Medium clustering
+            : zoomLevel > 9
+              ? 0.03 // Larger clustering for medium zoom
+              : 0.05; // Very large clustering for lower zoom
 
     propertiesToCluster.forEach((property, index) => {
       if (processed.has(index) || !property.latitude || !property.longitude)
@@ -594,8 +626,14 @@ export default function PropertyMap({
       clusters.push({
         properties: cluster,
         center: {
-          lat: cluster.reduce((sum, p) => sum + parseFloat(p.latitude || "0"), 0) / cluster.length,
-          lng: cluster.reduce((sum, p) => sum + parseFloat(p.longitude || "0"), 0) / cluster.length,
+          lat:
+            cluster.reduce((sum, p) => sum + parseFloat(p.latitude || "0"), 0) /
+            cluster.length,
+          lng:
+            cluster.reduce(
+              (sum, p) => sum + parseFloat(p.longitude || "0"),
+              0,
+            ) / cluster.length,
         },
       });
     });
@@ -606,31 +644,35 @@ export default function PropertyMap({
   // Helper function to get property type icon
   const getPropertyTypeIcon = (type: string) => {
     switch (type) {
-      case 'house':
-        return 'fas fa-home';
-      case 'apartment':
-        return 'fas fa-building';
-      case 'villa':
-        return 'fas fa-university';
-      case 'land':
-        return 'fas fa-mountain';
+      case "house":
+        return "fas fa-home";
+      case "apartment":
+        return "fas fa-building";
+      case "villa":
+        return "fas fa-university";
+      case "land":
+        return "fas fa-mountain";
       default:
-        return 'fas fa-home';
+        return "fas fa-home";
     }
   };
 
   // Helper function to analyze cluster property types
   const analyzeClusterTypes = (properties: PropertyWithAgent[]) => {
     const typeCount: { [key: string]: number } = {};
-    properties.forEach(prop => {
-      const type = prop.type || 'house';
+    properties.forEach((prop) => {
+      const type = prop.type || "house";
       typeCount[type] = (typeCount[type] || 0) + 1;
     });
     return typeCount;
   };
 
   // Function to create cluster marker
-  const createClusterMarker = (cluster: any, L: any, isCityCluster: boolean = false) => {
+  const createClusterMarker = (
+    cluster: any,
+    L: any,
+    isCityCluster: boolean = false,
+  ) => {
     const count = cluster.properties.length;
     const { lat, lng } = cluster.center;
 
@@ -642,13 +684,14 @@ export default function PropertyMap({
 
     // Analyze property types in this cluster
     const typeAnalysis = analyzeClusterTypes(cluster.properties);
-    const hasActiveFilter = localFilters.type && localFilters.type !== 'all';
-    
+    const hasActiveFilter = localFilters.type && localFilters.type !== "all";
+
     // If there's an active filter, check if this cluster contains that type
-    const hasFilteredType = hasActiveFilter && typeAnalysis[localFilters.type!] > 0;
-    
+    const hasFilteredType =
+      hasActiveFilter && typeAnalysis[localFilters.type!] > 0;
+
     // Determine which icon to show based on filter and cluster content
-    let iconToShow = 'fas fa-home'; // default
+    let iconToShow = "fas fa-home"; // default
     if (hasActiveFilter && hasFilteredType) {
       // Show the filtered type icon if this cluster contains that type
       iconToShow = getPropertyTypeIcon(localFilters.type!);
@@ -661,9 +704,13 @@ export default function PropertyMap({
     // Determine cluster size and styling based on count and type
     const isLargeCluster = count > 10;
     const clusterSize = isCityCluster ? (isLargeCluster ? 60 : 50) : 44;
-    const fontSize = isCityCluster ? (isLargeCluster ? '12px' : '11px') : '14px';
-    const iconSize = isCityCluster ? '10px' : '12px';
-    
+    const fontSize = isCityCluster
+      ? isLargeCluster
+        ? "12px"
+        : "11px"
+      : "14px";
+    const iconSize = isCityCluster ? "10px" : "12px";
+
     const clusterIcon = L.divIcon({
       html: `
         <div class="cluster-marker" style="
@@ -674,7 +721,7 @@ export default function PropertyMap({
           display: flex;
           align-items: center;
           justify-content: center;
-          flex-direction: ${isCityCluster ? 'column' : 'row'};
+          flex-direction: ${isCityCluster ? "column" : "row"};
           box-shadow: 0 10px 30px ${shadowColor}, 0 6px 15px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.2);
           border: 3px solid ${borderColor};
           cursor: pointer;
@@ -690,33 +737,42 @@ export default function PropertyMap({
         "
         onmouseover="this.style.transform='scale(1.2) translateZ(15px) rotateX(15deg) rotateY(15deg)'; this.style.boxShadow='0 20px 50px ${shadowColor}, 0 12px 25px rgba(0,0,0,0.3), inset 0 3px 0 rgba(255,255,255,0.3)';"
         onmouseout="this.style.transform='translateZ(0) rotateX(8deg) rotateY(8deg)'; this.style.boxShadow='0 10px 30px ${shadowColor}, 0 6px 15px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.2)';">
-          ${cluster.clusterType === 'country' ? 
-            (() => {
-              if (hasActiveFilter && hasFilteredType) {
-                // Show only the filtered type icon for country clusters
-                return `<i class="${iconToShow}" style="font-size: 12px; margin-bottom: 2px; color: white;"></i>
+          ${
+            cluster.clusterType === "country"
+              ? (() => {
+                  if (hasActiveFilter && hasFilteredType) {
+                    // Show only the filtered type icon for country clusters
+                    return `<i class="${iconToShow}" style="font-size: 12px; margin-bottom: 2px; color: white;"></i>
                         <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>`;
-              } else {
-                // Show all icons when no filter is active
-                const uniqueTypes = Object.keys(typeAnalysis);
-                const iconsToShow = uniqueTypes.length <= 4 ? uniqueTypes : uniqueTypes.slice(0, 4);
-                const gridCols = iconsToShow.length === 1 ? '1fr' : iconsToShow.length === 2 ? '1fr 1fr' : '1fr 1fr';
-                return `<div style="display: grid; grid-template-columns: ${gridCols}; gap: 1px; margin-bottom: 2px;">
-                        ${iconsToShow.map(type => `<i class="${getPropertyTypeIcon(type)}" style="font-size: 8px; color: white;"></i>`).join('')}
+                  } else {
+                    // Show all icons when no filter is active
+                    const uniqueTypes = Object.keys(typeAnalysis);
+                    const iconsToShow =
+                      uniqueTypes.length <= 4
+                        ? uniqueTypes
+                        : uniqueTypes.slice(0, 4);
+                    const gridCols =
+                      iconsToShow.length === 1
+                        ? "1fr"
+                        : iconsToShow.length === 2
+                          ? "1fr 1fr"
+                          : "1fr 1fr";
+                    return `<div style="display: grid; grid-template-columns: ${gridCols}; gap: 1px; margin-bottom: 2px;">
+                        ${iconsToShow.map((type) => `<i class="${getPropertyTypeIcon(type)}" style="font-size: 8px; color: white;"></i>`).join("")}
                         </div>
                         <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>`;
-              }
-            })() :
-            cluster.clusterType === 'city' ?
-            `<i class="fas fa-city" style="font-size: ${iconSize}; margin-bottom: 2px; color: white;"></i>
-             <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>` :
-`<i class="${iconToShow}" style="margin-right: 4px; font-size: ${iconSize}; color: white;"></i><span style="color: white;">${count}</span>`
+                  }
+                })()
+              : cluster.clusterType === "city"
+                ? `<i class="fas fa-city" style="font-size: ${iconSize}; margin-bottom: 2px; color: white;"></i>
+             <div style="font-size: 10px; line-height: 1; color: white;">${count}</div>`
+                : `<i class="${iconToShow}" style="margin-right: 4px; font-size: ${iconSize}; color: white;"></i><span style="color: white;">${count}</span>`
           }
         </div>
       `,
       className: "custom-cluster-marker",
       iconSize: [clusterSize, clusterSize],
-      iconAnchor: [clusterSize/2, clusterSize/2],
+      iconAnchor: [clusterSize / 2, clusterSize / 2],
     });
 
     const marker = L.marker([lat, lng], { icon: clusterIcon }).addTo(
@@ -729,14 +785,14 @@ export default function PropertyMap({
     const popupBorderColor = isDark ? "#374151" : "#e5e7eb";
 
     let popupTitle;
-    if (cluster.clusterType === 'country' && cluster.country) {
+    if (cluster.clusterType === "country" && cluster.country) {
       popupTitle = `${count} Properties in ${cluster.country}`;
-    } else if (cluster.clusterType === 'city' && cluster.city) {
+    } else if (cluster.clusterType === "city" && cluster.city) {
       popupTitle = `${count} Properties in ${cluster.city}`;
     } else {
       popupTitle = `${count} Properties in this area`;
     }
-      
+
     const popupContent = `
       <div class="cluster-popup responsive-cluster-popup" style="
         width: 100%; 
@@ -782,13 +838,13 @@ export default function PropertyMap({
             .cluster-popup::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
           </style>
           ${cluster.properties
-            .map(
-              (property: any) => {
-                const propertyImage = property.images && property.images.length > 0 
-                  ? property.images[0] 
+            .map((property: any) => {
+              const propertyImage =
+                property.images && property.images.length > 0
+                  ? property.images[0]
                   : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=250&fit=crop&crop=center";
-                
-                return `
+
+              return `
                 <div style="
                   display: flex; 
                   gap: clamp(8px, 2vw, 12px); 
@@ -801,7 +857,7 @@ export default function PropertyMap({
                   margin-bottom: clamp(4px, 1vw, 8px);
                 " 
                 onclick="window.zoomToPropertyFromCluster('${property.id}', ${property.latitude}, ${property.longitude})"
-                onmouseover="this.style.backgroundColor='${isDark ? '#374151' : '#f8fafc'}'"
+                onmouseover="this.style.backgroundColor='${isDark ? "#374151" : "#f8fafc"}'"
                 onmouseout="this.style.backgroundColor='transparent'">
                   
                   <div style="
@@ -872,22 +928,23 @@ export default function PropertyMap({
                         font-weight: 600;
                         text-transform: uppercase;
                         letter-spacing: 0.5px;
-                        ${property.listingType === 'rent' 
-                          ? 'background: rgba(34, 197, 94, 0.15); color: #059669; border: 1px solid rgba(34, 197, 94, 0.3);' 
-                          : 'background: rgba(239, 68, 68, 0.15); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.3);'
+                        ${
+                          property.listingType === "rent"
+                            ? "background: rgba(34, 197, 94, 0.15); color: #059669; border: 1px solid rgba(34, 197, 94, 0.3);"
+                            : "background: rgba(239, 68, 68, 0.15); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.3);"
                         }
                       ">
-                        ${property.listingType === 'rent' 
-                          ? '<span style="color: #059669;">🔑</span><span>Rent</span>' 
-                          : '<span style="color: #dc2626;">🏷️</span><span>Sale</span>'
+                        ${
+                          property.listingType === "rent"
+                            ? '<span style="color: #059669;">🔑</span><span>Rent</span>'
+                            : '<span style="color: #dc2626;">🏷️</span><span>Sale</span>'
                         }
                       </div>
                     </div>
                   </div>
                 </div>
               `;
-              }
-            )
+            })
             .join("")}
         </div>
       </div>
@@ -895,7 +952,7 @@ export default function PropertyMap({
 
     // Add cluster marker to map
     marker.addTo(mapInstanceRef.current);
-    
+
     marker.bindPopup(popupContent, {
       maxWidth: 350,
       className: "custom-cluster-popup",
@@ -1124,6 +1181,7 @@ export default function PropertyMap({
                         justify-content: center;
                         font-size: 14px;
                         z-index: 1000;
+                        direction: ltr;
                       "
                       onmouseover="this.style.background='rgba(0,0,0,0.7)'"
                       onmouseout="this.style.background='rgba(0,0,0,0.5)'">‹</button>
@@ -1145,6 +1203,7 @@ export default function PropertyMap({
                         justify-content: center;
                         font-size: 14px;
                         z-index: 1000;
+                        direction: ltr;
                       "
                       onmouseover="this.style.background='rgba(0,0,0,0.7)'"
                       onmouseout="this.style.background='rgba(0,0,0,0.5)'">›</button>
@@ -1168,16 +1227,16 @@ export default function PropertyMap({
         `
             : ""
         }
-        <div class="popup-content" style="padding: 16px; background: ${popupBg}; direction: ${language === 'ar' || language === 'kur' ? 'rtl' : 'ltr'}; text-align: ${language === 'ar' || language === 'kur' ? 'right' : 'left'};">
+        <div class="popup-content" style="padding: 16px; background: ${popupBg}; direction: ${language === "ar" || language === "kur" ? "rtl" : "ltr"}; text-align: ${language === "ar" || language === "kur" ? "right" : "left"};">
           <h4 class="popup-title" style="color: ${textColor}; font-weight: 600; font-size: 16px; margin-bottom: 8px;">${getPropertyTitle(property)}</h4>
           <p class="popup-address" style="color: ${subTextColor}; font-size: 12px; margin-bottom: 8px;">${property.address}</p>
           <p class="popup-price" style="color: #FF7800; font-weight: 700; font-size: 18px; margin-bottom: 12px;">
             ${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === "rent" ? "/mo" : ""}
           </p>
-          <div class="popup-details" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; font-size: 12px; color: ${subTextColor}; justify-content: ${language === 'ar' || language === 'kur' ? 'flex-end' : 'flex-start'};">
-            ${property.bedrooms ? `<span style="color: ${subTextColor};">${language === 'ar' || language === 'kur' ? `${property.bedrooms} ${t('property.beds')} <i class="fas fa-bed" style="color: #FF7800; margin-left: 4px;"></i>` : `<i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} ${t('property.beds')}`}</span>` : ""} 
-            ${property.bathrooms ? `<span style="color: ${subTextColor};">${language === 'ar' || language === 'kur' ? `${property.bathrooms} ${t('property.baths')} <i class="fas fa-bath" style="color: #FF7800; margin-left: 4px;"></i>` : `<i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} ${t('property.baths')}`}</span>` : ""}
-            ${property.area ? `<span style="color: ${subTextColor};">${language === 'ar' || language === 'kur' ? `${property.area} ${t('property.sqft')} <i class="fas fa-ruler-combined" style="color: #FF7800; margin-left: 4px;"></i>` : `<i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} ${t('property.sqft')}`}</span>` : ""}
+          <div class="popup-details" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; font-size: 12px; color: ${subTextColor}; justify-content: ${language === "ar" || language === "kur" ? "flex-end" : "flex-start"};">
+            ${property.bedrooms ? `<span style="color: ${subTextColor};">${language === "ar" || language === "kur" ? `${property.bedrooms} ${t("property.beds")} <i class="fas fa-bed" style="color: #FF7800; margin-left: 4px;"></i>` : `<i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} ${t("property.beds")}`}</span>` : ""} 
+            ${property.bathrooms ? `<span style="color: ${subTextColor};">${language === "ar" || language === "kur" ? `${property.bathrooms} ${t("property.baths")} <i class="fas fa-bath" style="color: #FF7800; margin-left: 4px;"></i>` : `<i class="fas fa-bath" style="color: #FF7800; margin-right: 4px;"></i>${property.bathrooms} ${t("property.baths")}`}</span>` : ""}
+            ${property.area ? `<span style="color: ${subTextColor};">${language === "ar" || language === "kur" ? `${property.area} ${t("property.sqft")} <i class="fas fa-ruler-combined" style="color: #FF7800; margin-left: 4px;"></i>` : `<i class="fas fa-ruler-combined" style="color: #FF7800; margin-right: 4px;"></i>${property.area} ${t("property.sqft")}`}</span>` : ""}
           </div>
           ${(() => {
             // Priority: Customer contact (from inquiries) > Property contact phone > Agent phone
@@ -1225,7 +1284,7 @@ export default function PropertyMap({
                     onmouseover="this.style.background='#e56600'"
                     onmouseout="this.style.background='#FF7800'"
                     style="flex: 1; min-width: 100px; background: #FF7800; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: background-color 0.2s ease; z-index: 9999; position: relative;">
-              ${t('property.viewProperty')}
+              ${t("property.viewProperty")}
             </button>
             ${
               userId
@@ -1306,7 +1365,7 @@ export default function PropertyMap({
 
     // Add marker to map
     marker.addTo(mapInstanceRef.current);
-    
+
     marker.bindPopup(popupContent, {
       maxWidth: 350,
       minWidth: 240,
@@ -1371,7 +1430,7 @@ export default function PropertyMap({
     const currentZoom = mapInstanceRef.current.getZoom();
     const clusters = createZoomBasedClusters(propertiesToShow, currentZoom);
     const isClusteringEnabled = currentZoom < 10;
-    
+
     clusters.forEach((cluster) => {
       if (cluster.properties.length === 1) {
         // Show individual marker if only one property in cluster
@@ -1551,7 +1610,7 @@ export default function PropertyMap({
                   <span
                     className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === "sale" ? "text-red-700 dark:text-red-300" : "text-black dark:text-white"}`}
                   >
-                    🏷️ {t('filter.forSale')}
+                    🏷️ {t("filter.forSale")}
                   </span>
                 </div>
                 <div
@@ -1568,7 +1627,7 @@ export default function PropertyMap({
                   <span
                     className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === "rent" ? "text-green-700 dark:text-green-300" : "text-black dark:text-white"}`}
                   >
-                    🔑 {t('filter.forRent')}
+                    🔑 {t("filter.forRent")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
@@ -1587,7 +1646,7 @@ export default function PropertyMap({
                     <span
                       className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "house" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
-                      {t('filter.houses')}
+                      {t("filter.houses")}
                     </span>
                   </div>
                   <div
@@ -1605,7 +1664,7 @@ export default function PropertyMap({
                     <span
                       className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "apartment" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
-                      {t('filter.apartments')}
+                      {t("filter.apartments")}
                     </span>
                   </div>
                   <div
@@ -1623,7 +1682,7 @@ export default function PropertyMap({
                     <span
                       className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "villa" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
-                      {t('filter.villa')}
+                      {t("filter.villa")}
                     </span>
                   </div>
                   <div
@@ -1641,7 +1700,7 @@ export default function PropertyMap({
                     <span
                       className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "land" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
-                      {t('filter.land')}
+                      {t("filter.land")}
                     </span>
                   </div>
                 </div>
@@ -1664,10 +1723,10 @@ export default function PropertyMap({
                   ></div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  {t('map.loadingTitle')}
+                  {t("map.loadingTitle")}
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  {t('map.loadingDescription')}
+                  {t("map.loadingDescription")}
                 </p>
                 <div className="flex items-center justify-center space-x-1 mb-4">
                   <div
@@ -1690,7 +1749,7 @@ export default function PropertyMap({
                   ></div>
                 </div>
                 <p className="text-sm text-gray-500 font-medium">
-                  {t('map.poweredBy')}
+                  {t("map.poweredBy")}
                 </p>
               </div>
             </div>
