@@ -6,20 +6,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { 
-  User, 
-  Globe, 
-  Bell, 
-  Monitor, 
+import {
+  User,
+  Globe,
+  Bell,
+  Monitor,
   Save,
   Eye,
   MapPin,
   Heart,
   Mail,
-  ArrowLeft
+  ArrowLeft,
 } from "lucide-react";
 
 export default function SettingsPage() {
@@ -29,38 +35,38 @@ export default function SettingsPage() {
     displayName: "",
     email: "",
     phone: "",
-    
+
     // Language & Region (will sync with global language)
     language: language,
     currency: "USD",
     dateFormat: "MM/DD/YYYY",
-    
+
     // Notifications
     emailNotifications: true,
     pushNotifications: true,
     favoriteUpdates: true,
     priceAlerts: false,
-    
+
     // Display Preferences
     mapStyle: "default",
     showPropertyPrices: true,
     showDistance: true,
     autoZoom: true,
-    
+
     // Privacy
     showProfile: true,
-    shareLocation: false
+    shareLocation: false,
   });
 
   useEffect(() => {
-    document.title = t('settings.title');
+    document.title = t("settings.title");
   }, [t]);
 
   // Sync local language state with global language state
   useEffect(() => {
-    setUserSettings(prev => ({
+    setUserSettings((prev) => ({
       ...prev,
-      language: language
+      language: language,
     }));
   }, [language]);
 
@@ -68,17 +74,17 @@ export default function SettingsPage() {
     // In a real app, this would save to the backend
     console.log("Saving settings:", userSettings);
     // You could show a toast notification here
-    alert(t('settings.settingsSaved'));
+    alert(t("settings.settingsSaved"));
   };
 
   const updateSetting = (key: string, value: any) => {
-    if (key === 'language') {
+    if (key === "language") {
       // Update global language state when language is changed
-      changeLanguage(value as 'en' | 'ar' | 'kur');
+      changeLanguage(value as "en" | "ar" | "kur");
     } else {
-      setUserSettings(prev => ({
+      setUserSettings((prev) => ({
         ...prev,
-        [key]: value
+        [key]: value,
       }));
     }
   };
@@ -91,31 +97,37 @@ export default function SettingsPage() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Link href="/">
-              <Button variant="ghost" size="sm" className="flex items-center gap-2" data-testid="back-to-home">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-2"
+                data-testid="back-to-home"
+              >
                 <ArrowLeft className="h-4 w-4" />
-                {t('settings.backToHome')}
+                {t("settings.backToHome")}
               </Button>
             </Link>
-            <div>
-            </div>
+            <div></div>
           </div>
         </div>
 
         <div className="space-y-6">
-
           {/* Language & Region */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Globe className="h-4 w-4" />
-                {t('settings.languageRegion')}
+                {t("settings.languageRegion")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label>{t('settings.language')}</Label>
-                  <Select value={userSettings.language} onValueChange={(value) => updateSetting('language', value)}>
+                  <Label>{t("settings.language")}</Label>
+                  <Select
+                    value={userSettings.language}
+                    onValueChange={(value) => updateSetting("language", value)}
+                  >
                     <SelectTrigger data-testid="language-select">
                       <SelectValue />
                     </SelectTrigger>
@@ -127,8 +139,11 @@ export default function SettingsPage() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>{t('settings.currency')}</Label>
-                  <Select value={userSettings.currency} onValueChange={(value) => updateSetting('currency', value)}>
+                  <Label>{t("settings.currency")}</Label>
+                  <Select
+                    value={userSettings.currency}
+                    onValueChange={(value) => updateSetting("currency", value)}
+                  >
                     <SelectTrigger data-testid="currency-select">
                       <SelectValue />
                     </SelectTrigger>
@@ -140,8 +155,13 @@ export default function SettingsPage() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>{t('settings.dateFormat')}</Label>
-                  <Select value={userSettings.dateFormat} onValueChange={(value) => updateSetting('dateFormat', value)}>
+                  <Label>{t("settings.dateFormat")}</Label>
+                  <Select
+                    value={userSettings.dateFormat}
+                    onValueChange={(value) =>
+                      updateSetting("dateFormat", value)
+                    }
+                  >
                     <SelectTrigger data-testid="date-format-select">
                       <SelectValue />
                     </SelectTrigger>
@@ -161,7 +181,7 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Bell className="h-4 w-4" />
-                {t('settings.notifications')}
+                {t("settings.notifications")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -169,14 +189,18 @@ export default function SettingsPage() {
                 <div className="space-y-0.5 flex-1">
                   <Label className="flex items-center gap-2">
                     <Mail className="h-4 w-4" />
-                    {t('settings.emailNotifications')}
+                    {t("settings.emailNotifications")}
                   </Label>
-                  <p className="text-sm text-muted-foreground">{t('settings.emailNotificationsDesc')}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.emailNotificationsDesc")}
+                  </p>
                 </div>
                 <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.emailNotifications}
-                    onCheckedChange={(checked) => updateSetting('emailNotifications', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("emailNotifications", checked)
+                    }
                     data-testid="email-notifications-switch"
                   />
                 </div>
@@ -186,14 +210,18 @@ export default function SettingsPage() {
                 <div className="space-y-0.5 flex-1">
                   <Label className="flex items-center gap-2">
                     <Bell className="h-4 w-4" />
-                    {t('settings.pushNotifications')}
+                    {t("settings.pushNotifications")}
                   </Label>
-                  <p className="text-sm text-muted-foreground">{t('settings.pushNotificationsDesc')}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.pushNotificationsDesc")}
+                  </p>
                 </div>
                 <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.pushNotifications}
-                    onCheckedChange={(checked) => updateSetting('pushNotifications', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("pushNotifications", checked)
+                    }
                     data-testid="push-notifications-switch"
                   />
                 </div>
@@ -203,14 +231,18 @@ export default function SettingsPage() {
                 <div className="space-y-0.5 flex-1">
                   <Label className="flex items-center gap-2">
                     <Heart className="h-4 w-4" />
-                    {t('settings.favoriteUpdates')}
+                    {t("settings.favoriteUpdates")}
                   </Label>
-                  <p className="text-sm text-muted-foreground">{t('settings.favoriteUpdatesDesc')}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.favoriteUpdatesDesc")}
+                  </p>
                 </div>
-                <div className="flex-shrink-0" dir="ltr">
+                <div className="flex-shrink-0">
                   <Switch
                     checked={userSettings.favoriteUpdates}
-                    onCheckedChange={(checked) => updateSetting('favoriteUpdates', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("favoriteUpdates", checked)
+                    }
                     data-testid="favorite-updates-switch"
                   />
                 </div>
@@ -218,13 +250,17 @@ export default function SettingsPage() {
               <Separator />
               <div className="flex items-center justify-between gap-4">
                 <div className="space-y-0.5 flex-1">
-                  <Label>{t('settings.priceAlerts')}</Label>
-                  <p className="text-sm text-muted-foreground">{t('settings.priceAlertsDesc')}</p>
+                  <Label>{t("settings.priceAlerts")}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.priceAlertsDesc")}
+                  </p>
                 </div>
                 <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.priceAlerts}
-                    onCheckedChange={(checked) => updateSetting('priceAlerts', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("priceAlerts", checked)
+                    }
                     data-testid="price-alerts-switch"
                   />
                 </div>
@@ -237,20 +273,29 @@ export default function SettingsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Monitor className="h-4 w-4" />
-                {t('settings.displayPreferences')}
+                {t("settings.displayPreferences")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>{t('settings.mapStyle')}</Label>
-                <Select value={userSettings.mapStyle} onValueChange={(value) => updateSetting('mapStyle', value)}>
+                <Label>{t("settings.mapStyle")}</Label>
+                <Select
+                  value={userSettings.mapStyle}
+                  onValueChange={(value) => updateSetting("mapStyle", value)}
+                >
                   <SelectTrigger data-testid="map-style-select">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="default">{t('settings.mapStyleDefault')}</SelectItem>
-                    <SelectItem value="satellite">{t('settings.mapStyleSatellite')}</SelectItem>
-                    <SelectItem value="terrain">{t('settings.mapStyleTerrain')}</SelectItem>
+                    <SelectItem value="default">
+                      {t("settings.mapStyleDefault")}
+                    </SelectItem>
+                    <SelectItem value="satellite">
+                      {t("settings.mapStyleSatellite")}
+                    </SelectItem>
+                    <SelectItem value="terrain">
+                      {t("settings.mapStyleTerrain")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -259,14 +304,18 @@ export default function SettingsPage() {
                 <div className="space-y-0.5 flex-1">
                   <Label className="flex items-center gap-2">
                     <Eye className="h-4 w-4" />
-                    {t('settings.showPropertyPrices')}
+                    {t("settings.showPropertyPrices")}
                   </Label>
-                  <p className="text-sm text-muted-foreground">{t('settings.showPropertyPricesDesc')}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.showPropertyPricesDesc")}
+                  </p>
                 </div>
                 <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.showPropertyPrices}
-                    onCheckedChange={(checked) => updateSetting('showPropertyPrices', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("showPropertyPrices", checked)
+                    }
                     data-testid="show-prices-switch"
                   />
                 </div>
@@ -276,14 +325,18 @@ export default function SettingsPage() {
                 <div className="space-y-0.5 flex-1">
                   <Label className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
-                    {t('settings.showDistance')}
+                    {t("settings.showDistance")}
                   </Label>
-                  <p className="text-sm text-muted-foreground">{t('settings.showDistanceDesc')}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.showDistanceDesc")}
+                  </p>
                 </div>
                 <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.showDistance}
-                    onCheckedChange={(checked) => updateSetting('showDistance', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("showDistance", checked)
+                    }
                     data-testid="show-distance-switch"
                   />
                 </div>
@@ -291,13 +344,17 @@ export default function SettingsPage() {
               <Separator />
               <div className="flex items-center justify-between gap-4">
                 <div className="space-y-0.5 flex-1">
-                  <Label>{t('settings.autoZoom')}</Label>
-                  <p className="text-sm text-muted-foreground">{t('settings.autoZoomDesc')}</p>
+                  <Label>{t("settings.autoZoom")}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {t("settings.autoZoomDesc")}
+                  </p>
                 </div>
                 <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.autoZoom}
-                    onCheckedChange={(checked) => updateSetting('autoZoom', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("autoZoom", checked)
+                    }
                     data-testid="auto-zoom-switch"
                   />
                 </div>
@@ -309,12 +366,16 @@ export default function SettingsPage() {
           <div className="flex justify-end gap-3 pt-4">
             <Link href="/">
               <Button variant="outline" data-testid="cancel-settings">
-                {t('settings.cancel')}
+                {t("settings.cancel")}
               </Button>
             </Link>
-            <Button onClick={handleSave} className="flex items-center gap-2" data-testid="save-settings">
+            <Button
+              onClick={handleSave}
+              className="flex items-center gap-2"
+              data-testid="save-settings"
+            >
               <Save className="h-4 w-4" />
-              {t('settings.saveSettings')}
+              {t("settings.saveSettings")}
             </Button>
           </div>
         </div>
