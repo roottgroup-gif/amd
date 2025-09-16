@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from '@/lib/i18n';
 
 // Reverse geocoding function using Nominatim (OpenStreetMap)
 const reverseGeocode = async (lat: number, lng: number): Promise<LocationData> => {
@@ -67,6 +68,7 @@ export default function LocationSelectionMap({
   selectedLocation, 
   className = '' 
 }: LocationSelectionMapProps) {
+  const { t } = useTranslation();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
@@ -238,7 +240,7 @@ export default function LocationSelectionMap({
         <div className="absolute inset-0 bg-gray-100 dark:bg-gray-800 flex items-center justify-center rounded-lg">
           <div className="text-center">
             <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-2"></div>
-            <p className="text-sm text-muted-foreground">Loading map...</p>
+            <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
           </div>
         </div>
       )}

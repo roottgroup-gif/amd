@@ -1,6 +1,9 @@
 import logoImage from "@assets/logo_1757848527935.png";
+import { useTranslation } from "@/lib/i18n";
 
 export function LoadingSpinner() {
+  const { t } = useTranslation();
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
       <div className="flex flex-col items-center space-y-4">
@@ -12,7 +15,7 @@ export function LoadingSpinner() {
             className="absolute inset-2 h-12 w-12 object-contain"
           />
         </div>
-        <p className="text-muted-foreground text-sm">Loading...</p>
+        <p className="text-muted-foreground text-sm">{t('common.loading')}</p>
       </div>
     </div>
   );
