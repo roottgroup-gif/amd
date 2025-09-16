@@ -108,6 +108,65 @@ export const customerPoints = pgTable("customer_points", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// User preference profiles for personalized recommendations
+export const userPreferences = pgTable("user_preferences", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id).notNull().unique(),
+  preferredPropertyTypes: jsonb("preferred_property_types").$type<string[]>().default([]), // ["apartment", "house", "villa"]
+  preferredListingTypes: jsonb("preferred_listing_types").$type<string[]>().default([]), // ["sale", "rent"]
+  budgetRange: jsonb("budget_range").$type<{ min: number; max: number; currency: string }>(),
+  preferredLocations: jsonb("preferred_locations").$type<string[]>().default([]), // ["erbil", "baghdad"]
+  preferredBedrooms: jsonb("preferred_bedrooms").$type<number[]>().default([]), // [2, 3, 4]
+  preferredAmenities: jsonb("preferred_amenities").$type<string[]>().default([]), // ["parking", "pool"]
+  viewingHistory: jsonb("viewing_history").$type<Record<string, number>>().default({}), // propertyId -> view_count
+  interactionScores: jsonb("interaction_scores").$type<Record<string, number>>().default({}), // propertyId -> score
+  lastRecommendationUpdate: timestamp("last_recommendation_update").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// AI-generated recommendations for users
+export const userRecommendations = pgTable("user_recommendations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  propertyId: varchar("property_id").references(() => properties.id).notNull(),
+  recommendationType: text("recommendation_type").notNull(), // "personalized", "similar", "trending", "location_based"
+  confidence: decimal("confidence", { precision: 3, scale: 2 }).notNull().default("0.50"), // 0.0 - 1.0
+  reasoning: jsonb("reasoning").$type<string[]>().default([]), // ["matches_price_range", "similar_to_favorites"]
+  isViewed: boolean("is_viewed").default(false),
+  isClicked: boolean("is_clicked").default(false),
+  isFavorited: boolean("is_favorited").default(false),
+  feedbackScore: integer("feedback_score"), // User feedback: -1 (negative), 0 (neutral), 1 (positive)
+  createdAt: timestamp("created_at").defaultNow(),
+  expiresAt: timestamp("expires_at").default(sql`now() + interval '7 days'`),
+});
+
+// Property similarity matrix for content-based recommendations
+export const propertySimilarity = pgTable("property_similarity", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  propertyId1: varchar("property_id_1").references(() => properties.id).notNull(),
+  propertyId2: varchar("property_id_2").references(() => properties.id).notNull(),
+  similarityScore: decimal("similarity_score", { precision: 3, scale: 2 }).notNull(), // 0.0 - 1.0
+  similarityFactors: jsonb("similarity_factors").$type<Record<string, number>>().default({}), // {"price": 0.8, "location": 0.9}
+  calculatedAt: timestamp("calculated_at").defaultNow(),
+});
+
+// Recommendation analytics and performance tracking
+export const recommendationAnalytics = pgTable("recommendation_analytics", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").references(() => users.id),
+  recommendationType: text("recommendation_type").notNull(),
+  totalGenerated: integer("total_generated").default(0),
+  totalViewed: integer("total_viewed").default(0),
+  totalClicked: integer("total_clicked").default(0),
+  totalFavorited: integer("total_favorited").default(0),
+  clickThroughRate: decimal("click_through_rate", { precision: 3, scale: 2 }).default("0.00"),
+  conversionRate: decimal("conversion_rate", { precision: 3, scale: 2 }).default("0.00"),
+  avgConfidenceScore: decimal("avg_confidence_score", { precision: 3, scale: 2 }).default("0.50"),
+  period: text("period").notNull(), // "daily", "weekly", "monthly"
+  date: timestamp("date").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Wave management tables
 export const waves = pgTable("waves", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
