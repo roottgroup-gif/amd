@@ -765,6 +765,15 @@ function globalChangeLanguage(lang: Language, persist: boolean = true) {
   document.documentElement.dir = (lang === 'ar' || lang === 'kur') ? 'rtl' : 'ltr';
   document.documentElement.lang = lang;
   
+  // Apply Arabic font when Arabic language is selected
+  if (lang === 'ar') {
+    document.body.classList.add('arabic-font');
+    document.body.style.fontFamily = 'var(--font-arabic)';
+  } else {
+    document.body.classList.remove('arabic-font');
+    document.body.style.fontFamily = 'var(--font-sans)';
+  }
+  
   // Dispatch event to notify all useTranslation hooks
   window.dispatchEvent(new CustomEvent(LANGUAGE_CHANGE_EVENT, { detail: { language: lang } }));
 }
@@ -780,6 +789,15 @@ export function useTranslation() {
     // Apply document direction and language on initial load
     document.documentElement.dir = (language === 'ar' || language === 'kur') ? 'rtl' : 'ltr';
     document.documentElement.lang = language;
+    
+    // Apply Arabic font when Arabic language is selected
+    if (language === 'ar') {
+      document.body.classList.add('arabic-font');
+      document.body.style.fontFamily = 'var(--font-arabic)';
+    } else {
+      document.body.classList.remove('arabic-font');
+      document.body.style.fontFamily = 'var(--font-sans)';
+    }
   }, [language]);
 
   useEffect(() => {

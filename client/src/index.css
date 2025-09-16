@@ -35,7 +35,8 @@
   --sidebar-accent-foreground: hsl(25 95% 20%);
   --sidebar-border: hsl(205.0000 25.0000% 90.5882%);
   --sidebar-ring: hsl(25 95% 53%);
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-arabic: "Tajawal", "Cairo", "Geeza Pro", "SF Arabic", "Segoe UI Arabic", "Noto Naskh Arabic", sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 1.3rem;
@@ -84,7 +85,8 @@
   --sidebar-accent-foreground: hsl(25 95% 85%);
   --sidebar-border: hsl(205.7143 15.7895% 26.0784%);
   --sidebar-ring: hsl(25 95% 53%);
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-arabic: "Tajawal", "Cairo", "Geeza Pro", "SF Arabic", "Segoe UI Arabic", "Noto Naskh Arabic", sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 1.3rem;
@@ -133,6 +135,13 @@
     height: 100dvh; /* Dynamic viewport height for mobile */
     overflow: hidden;
   }
+
+  /* Arabic Language Support */
+  [lang="ar"], [lang="ar"] *, .arabic-font, .arabic-font * {
+    font-family: var(--font-arabic) !important;
+    direction: rtl;
+    text-align: right;
+  }
 }
 
 /* Custom Leaflet Popup Styles with Animations */
@@ -149,7 +158,7 @@
 .leaflet-popup-content {
   margin: 0 !important;
   padding: 0 !important;
-  font-family: 'Inter', sans-serif !important;
+  font-family: var(--font-sans) !important;
   overflow: hidden !important;
   border-radius: 16px !important;
 }
