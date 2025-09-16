@@ -386,7 +386,7 @@ export default function HomePage() {
                   alt="MapEstate Logo"
                   className="h-6 w-6 sm:h-8 sm:w-8"
                 />
-                <h2 className="text-sm sm:text-base md:text-lg font-semibold text-black dark:text-white">
+                <h2 className="text-sm sm:text-base md:text-lg font-semibold text-black dark:text-white company-name">
                   MapEstate
                 </h2>
                 <Badge

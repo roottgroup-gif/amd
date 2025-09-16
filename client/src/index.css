@@ -139,20 +139,20 @@
   }
 
   /* Arabic Language Support */
-  [lang="ar"]:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]), 
-  [lang="ar"] *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]), 
-  .arabic-font:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]), 
-  .arabic-font *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]) {
+  [lang="ar"]:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(.company-name), 
+  [lang="ar"] *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]):not(.company-name), 
+  .arabic-font:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(.company-name), 
+  .arabic-font *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]):not(.company-name) {
     font-family: var(--font-arabic) !important;
     direction: rtl;
     text-align: right;
   }
 
   /* Kurdish Language Support */
-  [lang="kur"]:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]), 
-  [lang="kur"] *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]), 
-  .kurdish-font:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]), 
-  .kurdish-font *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]) {
+  [lang="kur"]:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(.company-name), 
+  [lang="kur"] *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]):not(.company-name), 
+  .kurdish-font:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(.company-name), 
+  .kurdish-font *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]):not(.company-name) {
     font-family: var(--font-kurdish) !important;
     direction: rtl;
     text-align: right;
