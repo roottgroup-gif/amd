@@ -11,22 +11,33 @@ import { useToast } from "@/hooks/use-toast";
 import type { Property, User } from "@/types";
 import { Phone, MessageSquare, Mail, Star, Send, CheckCircle } from "lucide-react";
 
-// Helper function to convert English digits to Arabic numerals
-const formatPhoneNumberArabic = (phoneNumber: string): string => {
-  const arabicDigits: { [key: string]: string } = {
-    '0': '٠',
-    '1': '١',
-    '2': '٢',
-    '3': '٣',
-    '4': '٤',
-    '5': '٥',
-    '6': '٦',
-    '7': '٧',
-    '8': '٨',
-    '9': '٩'
-  };
+// Helper function to format phone number in international format
+const formatPhoneNumberInternational = (phoneNumber: string): string => {
+  if (!phoneNumber) return '';
   
-  return phoneNumber.replace(/[0-9]/g, (digit) => arabicDigits[digit] || digit);
+  // Remove all non-digit characters except +
+  const cleaned = phoneNumber.replace(/[^\d+]/g, '');
+  
+  // If it already starts with +, use as is, otherwise add + if it looks like international format
+  if (cleaned.startsWith('+')) {
+    // Format: +964 750 123 4567
+    const countryCode = cleaned.substring(1, 4); // 964
+    const number = cleaned.substring(4);
+    
+    if (number.length >= 9) {
+      return `+${countryCode} ${number.substring(0, 3)} ${number.substring(3, 6)} ${number.substring(6)}`;
+    }
+  }
+  
+  // If no + and starts with 964, add + and format
+  if (cleaned.startsWith('964') && cleaned.length >= 12) {
+    const countryCode = cleaned.substring(0, 3);
+    const number = cleaned.substring(3);
+    return `+${countryCode} ${number.substring(0, 3)} ${number.substring(3, 6)} ${number.substring(6)}`;
+  }
+  
+  // Return original if can't format
+  return phoneNumber;
 };
 
 interface ContactFormProps {
@@ -124,7 +135,7 @@ export default function ContactForm({ property, agent, className }: ContactFormP
               <p className="text-sm font-medium text-blue-800 dark:text-blue-300">Contact Number</p>
             </div>
             <p className="font-bold text-lg text-center text-gray-900 dark:text-gray-100 tracking-wide">
-              {(property as any).contactPhone || agent?.phone}
+              {formatPhoneNumberInternational((property as any).contactPhone || agent?.phone)}
             </p>
           </div>
         )}
