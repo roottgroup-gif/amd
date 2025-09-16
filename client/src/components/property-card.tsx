@@ -17,7 +17,7 @@ interface PropertyCardProps {
 }
 
 export default function PropertyCard({ property, userId, className, onMapClick, showMapButton = false }: PropertyCardProps) {
-  const { t, getLocalized } = useTranslation();
+  const { t, getLocalized, isRTL } = useTranslation();
   const [, navigate] = useLocation();
   const addToFavorites = useAddToFavorites();
   const removeFromFavorites = useRemoveFromFavorites();
@@ -111,23 +111,23 @@ export default function PropertyCard({ property, userId, className, onMapClick, 
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={prevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
+                onClick={isRTL ? nextImage : prevImage}
+                className={`absolute ${isRTL ? 'right-2' : 'left-2'} top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8`}
               >
-                <ChevronLeft className="h-4 w-4" />
+                {isRTL ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
               </Button>
               
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={nextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
+                onClick={isRTL ? prevImage : nextImage}
+                className={`absolute ${isRTL ? 'left-2' : 'right-2'} top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8`}
               >
-                <ChevronRight className="h-4 w-4" />
+                {isRTL ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
               </Button>
               
               {/* Image counter */}
-              <div className="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+              <div className={`absolute bottom-2 ${isRTL ? 'left-2' : 'right-2'} bg-black/50 text-white px-2 py-1 rounded text-xs`}>
                 {currentImageIndex + 1} / {images.length}
               </div>
             </>
@@ -135,7 +135,7 @@ export default function PropertyCard({ property, userId, className, onMapClick, 
         </div>
         
         <Badge 
-          className={`absolute top-4 left-4 ${
+          className={`absolute top-4 ${isRTL ? 'right-4' : 'left-4'} ${
             property.listingType === 'sale' 
               ? 'bg-primary text-primary-foreground' 
               : 'bg-emerald-600 text-white'
@@ -149,7 +149,7 @@ export default function PropertyCard({ property, userId, className, onMapClick, 
             variant="ghost"
             size="icon"
             onClick={handleFavoriteClick}
-            className={`absolute top-4 right-4 rounded-full p-2 transition-all duration-200 ${
+            className={`absolute top-4 ${isRTL ? 'left-4' : 'right-4'} rounded-full p-2 transition-all duration-200 ${
               isFavorite 
                 ? 'bg-red-50 hover:bg-red-100 text-red-500 border border-red-200' 
                 : 'bg-black/50 hover:bg-black/70 text-white'
