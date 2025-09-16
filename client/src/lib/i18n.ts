@@ -765,12 +765,17 @@ function globalChangeLanguage(lang: Language, persist: boolean = true) {
   document.documentElement.dir = (lang === 'ar' || lang === 'kur') ? 'rtl' : 'ltr';
   document.documentElement.lang = lang;
   
-  // Apply Arabic font when Arabic language is selected
+  // Apply appropriate font based on language
   if (lang === 'ar') {
     document.body.classList.add('arabic-font');
+    document.body.classList.remove('kurdish-font');
     document.body.style.fontFamily = 'var(--font-arabic)';
-  } else {
+  } else if (lang === 'kur') {
+    document.body.classList.add('kurdish-font');
     document.body.classList.remove('arabic-font');
+    document.body.style.fontFamily = 'var(--font-kurdish)';
+  } else {
+    document.body.classList.remove('arabic-font', 'kurdish-font');
     document.body.style.fontFamily = 'var(--font-sans)';
   }
   
@@ -790,12 +795,17 @@ export function useTranslation() {
     document.documentElement.dir = (language === 'ar' || language === 'kur') ? 'rtl' : 'ltr';
     document.documentElement.lang = language;
     
-    // Apply Arabic font when Arabic language is selected
+    // Apply appropriate font based on language
     if (language === 'ar') {
       document.body.classList.add('arabic-font');
+      document.body.classList.remove('kurdish-font');
       document.body.style.fontFamily = 'var(--font-arabic)';
-    } else {
+    } else if (language === 'kur') {
+      document.body.classList.add('kurdish-font');
       document.body.classList.remove('arabic-font');
+      document.body.style.fontFamily = 'var(--font-kurdish)';
+    } else {
+      document.body.classList.remove('arabic-font', 'kurdish-font');
       document.body.style.fontFamily = 'var(--font-sans)';
     }
   }, [language]);

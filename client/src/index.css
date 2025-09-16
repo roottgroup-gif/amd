@@ -37,6 +37,7 @@
   --sidebar-ring: hsl(25 95% 53%);
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-arabic: "Tajawal", "Cairo", "Geeza Pro", "SF Arabic", "Segoe UI Arabic", "Noto Naskh Arabic", sans-serif;
+  --font-kurdish: "Noto Sans Kurdish", "Noto Naskh Arabic", "Cairo", "Tajawal", "Geeza Pro", "SF Arabic", "Segoe UI Arabic", "Tahoma", sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 1.3rem;
@@ -87,6 +88,7 @@
   --sidebar-ring: hsl(25 95% 53%);
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-arabic: "Tajawal", "Cairo", "Geeza Pro", "SF Arabic", "Segoe UI Arabic", "Noto Naskh Arabic", sans-serif;
+  --font-kurdish: "Noto Sans Kurdish", "Noto Naskh Arabic", "Cairo", "Tajawal", "Geeza Pro", "SF Arabic", "Segoe UI Arabic", "Tahoma", sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 1.3rem;
@@ -142,6 +144,16 @@
   .arabic-font:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]), 
   .arabic-font *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]) {
     font-family: var(--font-arabic) !important;
+    direction: rtl;
+    text-align: right;
+  }
+
+  /* Kurdish Language Support */
+  [lang="kur"]:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]), 
+  [lang="kur"] *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]), 
+  .kurdish-font:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]), 
+  .kurdish-font *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]) {
+    font-family: var(--font-kurdish) !important;
     direction: rtl;
     text-align: right;
   }
