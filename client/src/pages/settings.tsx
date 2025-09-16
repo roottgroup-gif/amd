@@ -165,61 +165,69 @@ export default function SettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-0.5 flex-1">
                   <Label className="flex items-center gap-2">
                     <Mail className="h-4 w-4" />
                     {t('settings.emailNotifications')}
                   </Label>
                   <p className="text-sm text-muted-foreground">{t('settings.emailNotificationsDesc')}</p>
                 </div>
-                <Switch
-                  checked={userSettings.emailNotifications}
-                  onCheckedChange={(checked) => updateSetting('emailNotifications', checked)}
-                  data-testid="email-notifications-switch"
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    checked={userSettings.emailNotifications}
+                    onCheckedChange={(checked) => updateSetting('emailNotifications', checked)}
+                    data-testid="email-notifications-switch"
+                  />
+                </div>
               </div>
               <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-0.5 flex-1">
                   <Label className="flex items-center gap-2">
                     <Bell className="h-4 w-4" />
                     {t('settings.pushNotifications')}
                   </Label>
                   <p className="text-sm text-muted-foreground">{t('settings.pushNotificationsDesc')}</p>
                 </div>
-                <Switch
-                  checked={userSettings.pushNotifications}
-                  onCheckedChange={(checked) => updateSetting('pushNotifications', checked)}
-                  data-testid="push-notifications-switch"
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    checked={userSettings.pushNotifications}
+                    onCheckedChange={(checked) => updateSetting('pushNotifications', checked)}
+                    data-testid="push-notifications-switch"
+                  />
+                </div>
               </div>
               <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-0.5 flex-1">
                   <Label className="flex items-center gap-2">
                     <Heart className="h-4 w-4" />
                     {t('settings.favoriteUpdates')}
                   </Label>
                   <p className="text-sm text-muted-foreground">{t('settings.favoriteUpdatesDesc')}</p>
                 </div>
-                <Switch
-                  checked={userSettings.favoriteUpdates}
-                  onCheckedChange={(checked) => updateSetting('favoriteUpdates', checked)}
-                  data-testid="favorite-updates-switch"
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    checked={userSettings.favoriteUpdates}
+                    onCheckedChange={(checked) => updateSetting('favoriteUpdates', checked)}
+                    data-testid="favorite-updates-switch"
+                  />
+                </div>
               </div>
               <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-0.5 flex-1">
                   <Label>{t('settings.priceAlerts')}</Label>
                   <p className="text-sm text-muted-foreground">{t('settings.priceAlertsDesc')}</p>
                 </div>
-                <Switch
-                  checked={userSettings.priceAlerts}
-                  onCheckedChange={(checked) => updateSetting('priceAlerts', checked)}
-                  data-testid="price-alerts-switch"
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    checked={userSettings.priceAlerts}
+                    onCheckedChange={(checked) => updateSetting('priceAlerts', checked)}
+                    data-testid="price-alerts-switch"
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -247,46 +255,52 @@ export default function SettingsPage() {
                 </Select>
               </div>
               <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-0.5 flex-1">
                   <Label className="flex items-center gap-2">
                     <Eye className="h-4 w-4" />
                     {t('settings.showPropertyPrices')}
                   </Label>
                   <p className="text-sm text-muted-foreground">{t('settings.showPropertyPricesDesc')}</p>
                 </div>
-                <Switch
-                  checked={userSettings.showPropertyPrices}
-                  onCheckedChange={(checked) => updateSetting('showPropertyPrices', checked)}
-                  data-testid="show-prices-switch"
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    checked={userSettings.showPropertyPrices}
+                    onCheckedChange={(checked) => updateSetting('showPropertyPrices', checked)}
+                    data-testid="show-prices-switch"
+                  />
+                </div>
               </div>
               <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-0.5 flex-1">
                   <Label className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
                     {t('settings.showDistance')}
                   </Label>
                   <p className="text-sm text-muted-foreground">{t('settings.showDistanceDesc')}</p>
                 </div>
-                <Switch
-                  checked={userSettings.showDistance}
-                  onCheckedChange={(checked) => updateSetting('showDistance', checked)}
-                  data-testid="show-distance-switch"
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    checked={userSettings.showDistance}
+                    onCheckedChange={(checked) => updateSetting('showDistance', checked)}
+                    data-testid="show-distance-switch"
+                  />
+                </div>
               </div>
               <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-0.5 flex-1">
                   <Label>{t('settings.autoZoom')}</Label>
                   <p className="text-sm text-muted-foreground">{t('settings.autoZoomDesc')}</p>
                 </div>
-                <Switch
-                  checked={userSettings.autoZoom}
-                  onCheckedChange={(checked) => updateSetting('autoZoom', checked)}
-                  data-testid="auto-zoom-switch"
-                />
+                <div className="flex-shrink-0">
+                  <Switch
+                    checked={userSettings.autoZoom}
+                    onCheckedChange={(checked) => updateSetting('autoZoom', checked)}
+                    data-testid="auto-zoom-switch"
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
