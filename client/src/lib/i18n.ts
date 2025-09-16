@@ -752,28 +752,51 @@ const translations: Translations = {
   }
 };
 
+// Global language change event system
+const LANGUAGE_CHANGE_EVENT = 'languageChange';
+
+// Global function to change language and notify all components
+function globalChangeLanguage(lang: Language, persist: boolean = true) {
+  if (persist) {
+    localStorage.setItem('language', lang);
+  }
+  
+  // Update document direction for RTL languages
+  document.documentElement.dir = (lang === 'ar' || lang === 'kur') ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+  
+  // Dispatch event to notify all useTranslation hooks
+  window.dispatchEvent(new CustomEvent(LANGUAGE_CHANGE_EVENT, { detail: { language: lang } }));
+}
+
 export function useTranslation() {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>(() => {
+    // Initialize from localStorage
+    const savedLanguage = localStorage.getItem('language') as Language;
+    return (savedLanguage && ['en', 'ar', 'kur'].includes(savedLanguage)) ? savedLanguage : 'en';
+  });
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language') as Language;
-    if (savedLanguage && ['en', 'ar', 'kur'].includes(savedLanguage)) {
-      setLanguage(savedLanguage);
-      // Apply document direction and language on initial load
-      document.documentElement.dir = (savedLanguage === 'ar' || savedLanguage === 'kur') ? 'rtl' : 'ltr';
-      document.documentElement.lang = savedLanguage;
-    }
+    // Apply document direction and language on initial load
+    document.documentElement.dir = (language === 'ar' || language === 'kur') ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+  }, [language]);
+
+  useEffect(() => {
+    // Listen for global language change events
+    const handleLanguageChange = (event: CustomEvent) => {
+      setLanguage(event.detail.language);
+    };
+
+    window.addEventListener(LANGUAGE_CHANGE_EVENT, handleLanguageChange as EventListener);
+    
+    return () => {
+      window.removeEventListener(LANGUAGE_CHANGE_EVENT, handleLanguageChange as EventListener);
+    };
   }, []);
 
   const changeLanguage = (lang: Language, persist: boolean = true) => {
-    setLanguage(lang);
-    if (persist) {
-      localStorage.setItem('language', lang);
-    }
-    
-    // Update document direction for RTL languages
-    document.documentElement.dir = (lang === 'ar' || lang === 'kur') ? 'rtl' : 'ltr';
-    document.documentElement.lang = lang;
+    globalChangeLanguage(lang, persist);
   };
 
   const t = (key: string): string => {
@@ -803,3 +826,4 @@ export function useTranslation() {
     isRTL: language === 'ar' || language === 'kur'
   };
 }
+
