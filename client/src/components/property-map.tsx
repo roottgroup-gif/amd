@@ -1594,45 +1594,50 @@ export default function PropertyMap({
                 </Button>
               </div>
 
-              {/* Filter buttons row */}
-              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-sm">
-                <div
-                  className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
-                    localFilters.listingType === "sale"
-                      ? "bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-600"
-                      : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
-                  }`}
-                  onClick={() => handleFilterChange("listingType", "sale")}
-                >
+              {/* Filter buttons row - Fully responsive */}
+              <div className="flex flex-wrap items-center justify-center gap-2 xs:gap-3 sm:gap-4 lg:gap-6 text-xs sm:text-sm">
+                {/* Listing Type Filters */}
+                <div className="flex flex-wrap items-center gap-2 xs:gap-3 sm:gap-4">
                   <div
-                    className={`w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === "sale" ? "animate-pulse" : ""}`}
-                  ></div>
-                  <span
-                    className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === "sale" ? "text-red-700 dark:text-red-300" : "text-black dark:text-white"}`}
+                    className={`flex items-center space-x-1 xs:space-x-2 sm:space-x-3 p-1.5 xs:p-2 rounded-lg xs:rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer min-w-fit ${
+                      localFilters.listingType === "sale"
+                        ? "bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-600"
+                        : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
+                    }`}
+                    onClick={() => handleFilterChange("listingType", "sale")}
                   >
-                    🏷️ {t("filter.forSale")}
-                  </span>
-                </div>
-                <div
-                  className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
-                    localFilters.listingType === "rent"
-                      ? "bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-600"
-                      : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
-                  }`}
-                  onClick={() => handleFilterChange("listingType", "rent")}
-                >
+                    <div
+                      className={`w-2.5 h-2.5 xs:w-3 xs:h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === "sale" ? "animate-pulse" : ""}`}
+                    ></div>
+                    <span
+                      className={`font-semibold text-xs xs:text-sm drop-shadow-lg whitespace-nowrap ${localFilters.listingType === "sale" ? "text-red-700 dark:text-red-300" : "text-black dark:text-white"}`}
+                    >
+                      🏷️ {t("filter.forSale")}
+                    </span>
+                  </div>
                   <div
-                    className={`w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === "rent" ? "animate-pulse" : ""}`}
-                  ></div>
-                  <span
-                    className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === "rent" ? "text-green-700 dark:text-green-300" : "text-black dark:text-white"}`}
+                    className={`flex items-center space-x-1 xs:space-x-2 sm:space-x-3 p-1.5 xs:p-2 rounded-lg xs:rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer min-w-fit ${
+                      localFilters.listingType === "rent"
+                        ? "bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-600"
+                        : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
+                    }`}
+                    onClick={() => handleFilterChange("listingType", "rent")}
                   >
-                    🔑 {t("filter.forRent")}
-                  </span>
+                    <div
+                      className={`w-2.5 h-2.5 xs:w-3 xs:h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === "rent" ? "animate-pulse" : ""}`}
+                    ></div>
+                    <span
+                      className={`font-semibold text-xs xs:text-sm drop-shadow-lg whitespace-nowrap ${localFilters.listingType === "rent" ? "text-green-700 dark:text-green-300" : "text-black dark:text-white"}`}
+                    >
+                      🔑 {t("filter.forRent")}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-3 sm:space-x-4 md:space-x-6">
+
+                {/* Property Type Filters */}
+                <div className="flex flex-wrap items-center gap-1.5 xs:gap-2 sm:gap-3 lg:gap-4">
                   <div
-                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center space-x-1 xs:space-x-2 p-1.5 xs:p-2 rounded-lg xs:rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer min-w-fit ${
                       localFilters.type === "house"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1640,17 +1645,17 @@ export default function PropertyMap({
                     onClick={() => handleFilterChange("type", "house")}
                   >
                     <i
-                      className="fas fa-home text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
+                      className="fas fa-home text-xs xs:text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
                       style={{ color: "#FF7800" }}
                     ></i>
                     <span
-                      className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "house" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
+                      className={`text-xs xs:text-sm font-medium drop-shadow-lg whitespace-nowrap ${localFilters.type === "house" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
                       {t("filter.houses")}
                     </span>
                   </div>
                   <div
-                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center space-x-1 xs:space-x-2 p-1.5 xs:p-2 rounded-lg xs:rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer min-w-fit ${
                       localFilters.type === "apartment"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1658,17 +1663,17 @@ export default function PropertyMap({
                     onClick={() => handleFilterChange("type", "apartment")}
                   >
                     <i
-                      className="fas fa-building text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
+                      className="fas fa-building text-xs xs:text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
                       style={{ color: "#FF7800" }}
                     ></i>
                     <span
-                      className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "apartment" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
+                      className={`text-xs xs:text-sm font-medium drop-shadow-lg whitespace-nowrap ${localFilters.type === "apartment" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
                       {t("filter.apartments")}
                     </span>
                   </div>
                   <div
-                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center space-x-1 xs:space-x-2 p-1.5 xs:p-2 rounded-lg xs:rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer min-w-fit ${
                       localFilters.type === "villa"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1676,17 +1681,17 @@ export default function PropertyMap({
                     onClick={() => handleFilterChange("type", "villa")}
                   >
                     <i
-                      className="fas fa-university text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
+                      className="fas fa-university text-xs xs:text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
                       style={{ color: "#FF7800" }}
                     ></i>
                     <span
-                      className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "villa" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
+                      className={`text-xs xs:text-sm font-medium drop-shadow-lg whitespace-nowrap ${localFilters.type === "villa" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
                       {t("filter.villa")}
                     </span>
                   </div>
                   <div
-                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center space-x-1 xs:space-x-2 p-1.5 xs:p-2 rounded-lg xs:rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer min-w-fit ${
                       localFilters.type === "land"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1694,11 +1699,11 @@ export default function PropertyMap({
                     onClick={() => handleFilterChange("type", "land")}
                   >
                     <i
-                      className="fas fa-map-marked-alt text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
+                      className="fas fa-map-marked-alt text-xs xs:text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
                       style={{ color: "#FF7800" }}
                     ></i>
                     <span
-                      className={`text-sm font-medium drop-shadow-lg ${localFilters.type === "land" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
+                      className={`text-xs xs:text-sm font-medium drop-shadow-lg whitespace-nowrap ${localFilters.type === "land" ? "text-orange-700 dark:text-orange-300" : "text-black dark:text-white"}`}
                     >
                       {t("filter.land")}
                     </span>
