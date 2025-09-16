@@ -111,19 +111,19 @@ export default function PropertyCard({ property, userId, className, onMapClick, 
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={isRTL ? nextImage : prevImage}
-                className={`absolute ${isRTL ? 'right-2' : 'left-2'} top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8`}
+                onClick={prevImage}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className={`h-4 w-4 transition-transform ${isRTL ? 'scale-x-[-1]' : ''}`} />
               </Button>
               
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={isRTL ? prevImage : nextImage}
-                className={`absolute ${isRTL ? 'left-2' : 'right-2'} top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8`}
+                onClick={nextImage}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className={`h-4 w-4 transition-transform ${isRTL ? 'scale-x-[-1]' : ''}`} />
               </Button>
               
               {/* Image counter */}
