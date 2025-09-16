@@ -134,9 +134,11 @@ export default function ContactForm({ property, agent, className }: ContactFormP
               <Phone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
               <p className="text-sm font-medium text-blue-800 dark:text-blue-300">Contact Number</p>
             </div>
-            <p className="font-bold text-lg text-center text-gray-900 dark:text-gray-100 tracking-wide">
-              {formatPhoneNumberInternational((property as any).contactPhone || agent?.phone)}
-            </p>
+            <div className="flex justify-center">
+              <p className="font-bold text-lg text-center text-gray-900 dark:text-gray-100 tracking-wide">
+                {formatPhoneNumberInternational((property as any).contactPhone || agent?.phone)}
+              </p>
+            </div>
           </div>
         )}
         
