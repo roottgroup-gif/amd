@@ -122,7 +122,7 @@ export default function ContactForm({ property, agent, className }: ContactFormP
             </Badge>
           )}
         </div>
-        <p className="text-sm font-medium text-orange-700 dark:text-orange-300 bg-white/50 dark:bg-gray-800/50 px-3 py-1 rounded-full inline-block">Licensed Real Estate Agent</p>
+        <p className="text-sm font-medium text-orange-700 dark:text-orange-300 bg-white/50 dark:bg-gray-800/50 px-3 py-1 rounded-full inline-block">{t('contact.agentTitle')}</p>
         
       </CardHeader>
       
@@ -132,7 +132,7 @@ export default function ContactForm({ property, agent, className }: ContactFormP
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 p-4 rounded-lg border border-blue-100 dark:border-gray-600">
             <div className="flex items-center justify-center gap-2 mb-2">
               <Phone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-              <p className="text-sm font-medium text-blue-800 dark:text-blue-300">Contact Number</p>
+              <p className="text-sm font-medium text-blue-800 dark:text-blue-300">{t('contact.contactNumber')}</p>
             </div>
             <div className="flex justify-center">
               <p className="font-bold text-lg text-center text-gray-900 dark:text-gray-100 tracking-wide" dir="ltr">
@@ -173,7 +173,7 @@ export default function ContactForm({ property, agent, className }: ContactFormP
             data-testid="whatsapp-button"
           >
             <MessageSquare className="mr-3 h-5 w-5 drop-shadow-lg" />
-            <span className="text-lg tracking-wide">WhatsApp</span>
+            <span className="text-lg tracking-wide">{t('contact.whatsapp')}</span>
           </Button>
         </div>
       </CardContent>

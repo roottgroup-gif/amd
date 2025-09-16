@@ -140,6 +140,28 @@ const translations: Translations = {
     ar: 'رسالتك',
     kur: 'نامەکەت'
   },
+  'contact.contactNumber': {
+    en: 'Contact Number',
+    ar: 'رقم الاتصال',
+    kur: 'ژمارەی پەیوەندی'
+  },
+  'contact.whatsapp': {
+    en: 'WhatsApp',
+    ar: 'واتساب',
+    kur: 'واتساپ'
+  },
+  'contact.agentTitle': {
+    en: 'Licensed Real Estate Agent',
+    ar: 'وكيل عقارات مرخص',
+    kur: 'بریکاری خانووبەرەی مۆڵەتدار'
+  },
+
+  // Property Status
+  'property.status.active': {
+    en: 'Active',
+    ar: 'نشط',
+    kur: 'چالاک'
+  },
 
   // Common
   'common.loading': {

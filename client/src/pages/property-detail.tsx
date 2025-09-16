@@ -627,7 +627,11 @@ export default function PropertyDetailPage() {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{t('property.propertyType')}</span>
-                    <span className="font-medium capitalize">{property.type}</span>
+                    <span className="font-medium capitalize">
+                      {t(`filter.${property.type}`) !== `filter.${property.type}` 
+                        ? t(`filter.${property.type}`) 
+                        : property.type}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{t('property.listed')}</span>
@@ -638,7 +642,11 @@ export default function PropertyDetailPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{t('property.status')}</span>
-                    <Badge variant="secondary" className="capitalize">{property.status}</Badge>
+                    <Badge variant="secondary" className="capitalize">
+                      {t(`property.status.${property.status}`) !== `property.status.${property.status}` 
+                        ? t(`property.status.${property.status}`) 
+                        : property.status}
+                    </Badge>
                   </div>
                 </div>
               </CardContent>
