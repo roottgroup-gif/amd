@@ -108,23 +108,21 @@ export default function PropertyCard({ property, userId, className, onMapClick, 
           {/* Navigation arrows - only show if multiple images */}
           {hasMultipleImages && (
             <>
-              <Button
-                variant="ghost"
-                size="icon"
+              <button
                 onClick={prevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20"
+                aria-label="Previous image"
               >
-                <ChevronLeft className={`h-4 w-4 transition-transform ${isRTL ? 'scale-x-[-1]' : ''}`} />
-              </Button>
+                <ChevronLeft className={`h-5 w-5 ${isRTL ? 'scale-x-[-1]' : ''}`} />
+              </button>
               
-              <Button
-                variant="ghost"
-                size="icon"
+              <button
                 onClick={nextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20"
+                aria-label="Next image"
               >
-                <ChevronRight className="h-4 w-4 transition-transform" />
-              </Button>
+                <ChevronRight className="h-5 w-5" />
+              </button>
               
               {/* Image counter */}
               <div className={`absolute bottom-2 ${isRTL ? 'left-2' : 'right-2'} bg-black/50 text-white px-2 py-1 rounded text-xs`}>
