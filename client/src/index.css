@@ -137,7 +137,10 @@
   }
 
   /* Arabic Language Support */
-  [lang="ar"], [lang="ar"] *, .arabic-font, .arabic-font * {
+  [lang="ar"]:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]), 
+  [lang="ar"] *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]), 
+  .arabic-font:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]), 
+  .arabic-font *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]) {
     font-family: var(--font-arabic) !important;
     direction: rtl;
     text-align: right;
