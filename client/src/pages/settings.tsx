@@ -173,7 +173,7 @@ export default function SettingsPage() {
                   </Label>
                   <p className="text-sm text-muted-foreground">{t('settings.emailNotificationsDesc')}</p>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.emailNotifications}
                     onCheckedChange={(checked) => updateSetting('emailNotifications', checked)}
@@ -190,7 +190,7 @@ export default function SettingsPage() {
                   </Label>
                   <p className="text-sm text-muted-foreground">{t('settings.pushNotificationsDesc')}</p>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.pushNotifications}
                     onCheckedChange={(checked) => updateSetting('pushNotifications', checked)}
@@ -207,7 +207,7 @@ export default function SettingsPage() {
                   </Label>
                   <p className="text-sm text-muted-foreground">{t('settings.favoriteUpdatesDesc')}</p>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.favoriteUpdates}
                     onCheckedChange={(checked) => updateSetting('favoriteUpdates', checked)}
@@ -221,7 +221,7 @@ export default function SettingsPage() {
                   <Label>{t('settings.priceAlerts')}</Label>
                   <p className="text-sm text-muted-foreground">{t('settings.priceAlertsDesc')}</p>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.priceAlerts}
                     onCheckedChange={(checked) => updateSetting('priceAlerts', checked)}
@@ -263,7 +263,7 @@ export default function SettingsPage() {
                   </Label>
                   <p className="text-sm text-muted-foreground">{t('settings.showPropertyPricesDesc')}</p>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.showPropertyPrices}
                     onCheckedChange={(checked) => updateSetting('showPropertyPrices', checked)}
@@ -280,7 +280,7 @@ export default function SettingsPage() {
                   </Label>
                   <p className="text-sm text-muted-foreground">{t('settings.showDistanceDesc')}</p>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.showDistance}
                     onCheckedChange={(checked) => updateSetting('showDistance', checked)}
@@ -294,7 +294,7 @@ export default function SettingsPage() {
                   <Label>{t('settings.autoZoom')}</Label>
                   <p className="text-sm text-muted-foreground">{t('settings.autoZoomDesc')}</p>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0" dir="ltr">
                   <Switch
                     checked={userSettings.autoZoom}
                     onCheckedChange={(checked) => updateSetting('autoZoom', checked)}
