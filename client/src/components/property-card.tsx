@@ -114,7 +114,7 @@ export default function PropertyCard({ property, userId, className, onMapClick, 
                 onClick={prevImage}
                 className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 h-8 w-8"
               >
-                <ChevronLeft className="h-4 w-4 transition-transform" />
+                <ChevronLeft className={`h-4 w-4 transition-transform ${isRTL ? 'scale-x-[-1]' : ''}`} />
               </Button>
               
               <Button
