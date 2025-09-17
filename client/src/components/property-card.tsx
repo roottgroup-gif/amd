@@ -121,15 +121,15 @@ export default function PropertyCard({
 
   return (
     <Card
-      className={`property-card bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-1 ${className}`}
+      className={`property-card bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl shadow-lg group ${className}`}
       data-testid={`property-card-${property.id}`}
     >
       <div className="relative">
-        <div className="relative h-48 overflow-hidden">
+        <div className="relative h-48 sm:h-52 md:h-56 lg:h-48 xl:h-52 overflow-hidden">
           <img
             src={images[currentImageIndex]}
             alt={property.title}
-            className="w-full h-48 object-cover transition-transform duration-300"
+            className="w-full h-48 sm:h-52 md:h-56 lg:h-48 xl:h-52 object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
             decoding="async"
             onError={(e) => {
@@ -200,16 +200,17 @@ export default function PropertyCard({
         )}
       </div>
 
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between mb-2">
+      <CardContent className="p-4 sm:p-5 md:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
           <h3
-            className="text-xl font-semibold text-gray-900 dark:text-white truncate"
+            className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white line-clamp-2 sm:line-clamp-1 flex-1 pr-2"
             data-testid={`property-title-${property.id}`}
+            title={getLocalized(property.title, property.title)}
           >
             {getLocalized(property.title, property.title)}
           </h3>
           <span
-            className="text-2xl font-bold text-orange-600 dark:text-orange-400"
+            className="text-xl sm:text-2xl font-bold text-orange-600 dark:text-orange-400 whitespace-nowrap"
             data-testid={`property-price-${property.id}`}
           >
             {formatPrice(
@@ -220,64 +221,66 @@ export default function PropertyCard({
           </span>
         </div>
 
-        <div className="flex items-center text-gray-600 dark:text-gray-300 mb-4">
-          <MapPin className="h-4 w-4 mr-1" />
+        <div className="flex items-start text-gray-600 dark:text-gray-300 mb-4">
+          <MapPin className="h-4 w-4 mr-2 mt-0.5 flex-shrink-0" />
           <p
-            className="truncate"
+            className="text-sm sm:text-base line-clamp-2 leading-relaxed"
             data-testid={`property-address-${property.id}`}
+            title={`${property.address}, ${property.city}`}
           >
             {property.address}, {property.city}
           </p>
         </div>
 
-        <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300 mb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-4">
           {property.bedrooms && (
-            <span className="flex items-center">
-              <Bed className="h-4 w-4 mr-1" style={{ color: "#FF7800" }} />
-              {property.bedrooms} {t("property.beds")}
-            </span>
+            <div className="flex items-center">
+              <Bed className="h-3 w-3 sm:h-4 sm:w-4 mr-1" style={{ color: "#FF7800" }} />
+              <span className="truncate">{property.bedrooms} {t("property.beds")}</span>
+            </div>
           )}
           {property.bathrooms && (
-            <span className="flex items-center">
-              <Bath className="h-4 w-4 mr-1" style={{ color: "#FF7800" }} />
-              {property.bathrooms} {t("property.baths")}
-            </span>
+            <div className="flex items-center">
+              <Bath className="h-3 w-3 sm:h-4 sm:w-4 mr-1" style={{ color: "#FF7800" }} />
+              <span className="truncate">{property.bathrooms} {t("property.baths")}</span>
+            </div>
           )}
           {property.area && (
-            <span className="flex items-center">
-              <Square className="h-4 w-4 mr-1" style={{ color: "#FF7800" }} />
-              {property.area.toLocaleString()} {t("property.sqft")}
-            </span>
+            <div className="flex items-center col-span-2 sm:col-span-1">
+              <Square className="h-3 w-3 sm:h-4 sm:w-4 mr-1" style={{ color: "#FF7800" }} />
+              <span className="truncate">{property.area.toLocaleString()} {t("property.sqft")}</span>
+            </div>
           )}
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="space-y-3">
           {property.agent && (
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
-                <User className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center">
+                <User className="h-3 w-3 sm:h-4 sm:w-4 text-orange-600 dark:text-orange-400" />
               </div>
-              <span className="text-sm text-gray-600 dark:text-gray-300">
+              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 truncate">
                 {property.agent.firstName} {property.agent.lastName}
               </span>
             </div>
           )}
 
-          <div className="flex items-center gap-2 ml-auto">
+          <div className="flex items-center gap-2">
             {showMapButton && (
               <Button
                 onClick={handleMapClick}
                 variant="outline"
-                size="icon"
-                className="bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-600"
+                size="sm"
+                className="bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-600 px-3 h-8 sm:h-9"
                 data-testid={`map-button-${property.id}`}
                 title="Show on map"
               >
-                <Map className="h-4 w-4" />
+                <Map className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             )}
             <Button
               onClick={handleViewProperty}
+              className="flex-1 h-8 sm:h-9 text-xs sm:text-sm"
               data-testid={`view-details-button-${property.id}`}
             >
               {t("property.viewDetails")}
