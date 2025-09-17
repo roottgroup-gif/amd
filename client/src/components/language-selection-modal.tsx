@@ -3,7 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Languages, Globe } from "lucide-react";
-import kurdishFlag from "@assets/generated_images/Kurdish_flag_emoji_style_4ea5c45f.png";
+import usFlag from "@assets/generated_images/US_flag_circular_design_55844ad0.png";
+import saudiFlag from "@assets/generated_images/Saudi_flag_circular_design_3c46c604.png";
+import kurdishFlag from "@assets/generated_images/Kurdish_flag_circular_design_55e28463.png";
 
 interface LanguageSelectionModalProps {
   isOpen: boolean;
@@ -23,19 +25,19 @@ export default function LanguageSelectionModal({
       code: 'en',
       name: 'English',
       nativeName: 'English',
-      flag: '🇺🇸'
+      flag: usFlag
     },
     {
       code: 'ar',
       name: 'Arabic',
       nativeName: 'العربية',
-      flag: '🇸🇦'
+      flag: saudiFlag
     },
     {
       code: 'kur',
       name: 'Kurdish',
       nativeName: 'کوردی',
-      flag: '🏳️'
+      flag: kurdishFlag
     }
   ];
 
@@ -96,17 +98,11 @@ export default function LanguageSelectionModal({
               >
                 <CardContent className="p-4">
                   <div className="flex items-center space-x-4">
-                    {language.code === 'kur' ? (
-                      <img 
-                        src={kurdishFlag} 
-                        alt={language.name}
-                        className="w-8 h-8 object-contain"
-                      />
-                    ) : (
-                      <span className="text-2xl" role="img" aria-label={language.name}>
-                        {language.flag}
-                      </span>
-                    )}
+                    <img 
+                      src={language.flag} 
+                      alt={language.name}
+                      className="w-8 h-8 object-contain rounded-full"
+                    />
                     <div className="flex-1 text-left">
                       <h3 className="font-medium">{language.name}</h3>
                       <p className="text-sm text-muted-foreground">
