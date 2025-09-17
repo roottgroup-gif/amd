@@ -212,7 +212,7 @@ export default function PropertiesPage() {
             className="text-3xl font-bold mb-4"
             data-testid="properties-title"
           >
-            Properties for Sale & Rent
+            {t('properties.title')}
           </h1>
           <SearchBar onResults={handleSearchResults} />
         </div>
@@ -227,7 +227,7 @@ export default function PropertiesPage() {
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-semibold flex items-center">
                     <Filter className="mr-2 h-4 w-4" />
-                    Filters
+                    {t('properties.filters')}
                   </h3>
                   <Button
                     variant="ghost"
@@ -235,7 +235,7 @@ export default function PropertiesPage() {
                     onClick={clearFilters}
                     data-testid="clear-filters"
                   >
-                    Clear
+                    {t('properties.clear')}
                   </Button>
                 </div>
 
@@ -243,7 +243,7 @@ export default function PropertiesPage() {
                   {/* Listing Type */}
                   <div>
                     <label className="text-sm font-medium mb-2 block">
-                      Listing Type
+                      {t('filter.listingType')}
                     </label>
                     <Select
                       value={filters.listingType || ""}
@@ -252,25 +252,25 @@ export default function PropertiesPage() {
                       }
                     >
                       <SelectTrigger data-testid="listing-type-select">
-                        <SelectValue placeholder="All Types" />
+                        <SelectValue placeholder={t('properties.allTypes')} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">
                           <span className="flex items-center gap-2">
                             <Filter className="h-4 w-4" />
-                            All Types
+                            {t('properties.allTypes')}
                           </span>
                         </SelectItem>
                         <SelectItem value="sale">
                           <span className="flex items-center gap-2">
                             <Tag className="h-4 w-4" />
-                            For Sale
+                            {t('filter.forSale')}
                           </span>
                         </SelectItem>
                         <SelectItem value="rent">
                           <span className="flex items-center gap-2">
                             <Key className="h-4 w-4" />
-                            For Rent
+                            {t('filter.forRent')}
                           </span>
                         </SelectItem>
                       </SelectContent>
@@ -280,7 +280,7 @@ export default function PropertiesPage() {
                   {/* Property Type */}
                   <div>
                     <label className="text-sm font-medium mb-2 block">
-                      Property Type
+                      {t('filter.propertyType')}
                     </label>
                     <Select
                       value={filters.type || ""}
@@ -289,7 +289,7 @@ export default function PropertiesPage() {
                       }
                     >
                       <SelectTrigger data-testid="property-type-select">
-                        <SelectValue placeholder="All Properties" />
+                        <SelectValue placeholder={t('properties.allProperties')} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">
@@ -298,7 +298,7 @@ export default function PropertiesPage() {
                               className="h-4 w-4"
                               style={{ color: "#FF7800" }}
                             />
-                            All Properties
+                            {t('properties.allProperties')}
                           </span>
                         </SelectItem>
                         <SelectItem value="house">

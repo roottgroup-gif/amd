@@ -381,6 +381,48 @@ const translations: Translations = {
     kur: 'خانووبەرە بەرگریکراوە پاشەکەوتکراوەکان. شوێنکەوتن بکە بۆ خانووبەرەکان کە بەرامبەرت بە کڕین یان کرێ.'
   },
 
+  // Properties Page
+  'properties.title': {
+    en: 'Properties for Sale & Rent',
+    ar: 'العقارات للبيع والإيجار',
+    kur: 'خانووبەرە بۆ فرۆشتن و کرێ'
+  },
+  'properties.propertiesInIraq': {
+    en: 'Properties in Iraq',
+    ar: 'العقارات في العراق',
+    kur: 'خانووبەرە لە عێراق'
+  },
+  'properties.propertiesInKurdistan': {
+    en: 'Properties in Kurdistan',
+    ar: 'العقارات في كردستان',
+    kur: 'خانووبەرە لە کوردستان'
+  },
+  'properties.propertiesInKurdistanIraq': {
+    en: 'Properties in Kurdistan, Iraq',
+    ar: 'العقارات في كردستان، العراق',
+    kur: 'خانووبەرە لە کوردستان، عێراق'
+  },
+  'properties.filters': {
+    en: 'Filters',
+    ar: 'المرشحات',
+    kur: 'پاڵاوتنەکان'
+  },
+  'properties.clear': {
+    en: 'Clear',
+    ar: 'مسح',
+    kur: 'پاککردنەوە'
+  },
+  'properties.allTypes': {
+    en: 'All Types',
+    ar: 'جميع الأنواع',
+    kur: 'هەموو جۆرەکان'
+  },
+  'properties.allProperties': {
+    en: 'All Properties',
+    ar: 'جميع العقارات',
+    kur: 'هەموو خانووبەرەکان'
+  },
+
   // Property Features
   // Property Amenities (Keys from customer dashboard form)
   'property.amenities.swimmingPool': {
