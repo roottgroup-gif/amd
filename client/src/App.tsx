@@ -10,6 +10,7 @@ import { useNetworkError } from "@/hooks/useNetworkError";
 import { Suspense, lazy, useState, useEffect } from "react";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import LanguageSelectionModal from "@/components/language-selection-modal";
+import { globalChangeLanguage } from "@/lib/i18n";
 
 // Lazy load page components for better performance
 const Home = lazy(() => import("@/pages/home.tsx"));
@@ -61,14 +62,12 @@ function App() {
   }, []);
 
   const handleLanguageSelect = (languageCode: string) => {
-    // Import the global language change function
-    import('./lib/i18n').then(({ globalChangeLanguage }) => {
-      globalChangeLanguage(languageCode as any);
-      localStorage.setItem('language-selected', 'true');
-      setShowLanguageModal(false);
-      // Keep blur for a moment after selection
-      setTimeout(() => setShowBlur(false), 300);
-    });
+    // Call the global language change function directly
+    globalChangeLanguage(languageCode as any);
+    localStorage.setItem('language-selected', 'true');
+    setShowLanguageModal(false);
+    // Keep blur for a moment after selection
+    setTimeout(() => setShowBlur(false), 300);
   };
 
   return (
