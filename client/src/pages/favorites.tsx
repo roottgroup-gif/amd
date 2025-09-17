@@ -97,10 +97,10 @@ export default function FavoritesPage() {
         {!favorites || favorites.length === 0 ? (
           <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10">
             <CardContent className="py-16 text-center">
-              <div className="text-center">
+              <div className="text-center" style={{ textAlign: 'center' }}>
                 <Heart className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-foreground mb-2">{t('favorites.noFavoritesYet')}</h3>
-                <p className="text-muted-foreground mb-6">
+                <h3 className="text-xl font-semibold text-foreground mb-2" style={{ textAlign: 'center' }}>{t('favorites.noFavoritesYet')}</h3>
+                <p className="text-muted-foreground mb-6" style={{ textAlign: 'center' }}>
                   {t('favorites.noFavoritesDescription')}
                 </p>
               </div>
