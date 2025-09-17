@@ -56,8 +56,18 @@ export default function LanguageSelectionModal({
       )}
       
       {/* Language Selection Modal */}
-      <Dialog open={isOpen} onOpenChange={() => {}}>
-        <DialogContent className="sm:max-w-md z-50" data-testid="language-selection-modal">
+      <Dialog open={isOpen} onOpenChange={(open) => {
+        // Prevent the modal from closing automatically
+        // Only allow closing through our handleConfirm function
+        return false;
+      }}>
+        <DialogContent 
+          className="sm:max-w-md z-50" 
+          data-testid="language-selection-modal"
+          onEscapeKeyDown={(e) => e.preventDefault()}
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onInteractOutside={(e) => e.preventDefault()}
+        >
           <DialogHeader className="text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
               <Globe className="h-8 w-8" />
