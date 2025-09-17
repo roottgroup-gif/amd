@@ -712,6 +712,123 @@ const translations: Translations = {
     kur: 'نرخی نێوان:'
   },
 
+  // About Us Page
+  'about.title': {
+    en: 'About MapEstate',
+    ar: 'حول MapEstate',
+    kur: 'دەربارەی MapEstate'
+  },
+  'about.subtitle': {
+    en: 'Your Trusted Real Estate Partner',
+    ar: 'شريكك الموثوق في العقارات',
+    kur: 'هاوبەشی متمانەپێکراوت لە خانووبەرە'
+  },
+  'about.ourMission': {
+    en: 'Our Mission',
+    ar: 'مهمتنا',
+    kur: 'ئامانجمان'
+  },
+  'about.missionText': {
+    en: 'At MapEstate, we are dedicated to revolutionizing the real estate experience through cutting-edge technology and personalized service. Our mission is to make property buying, selling, and renting accessible, transparent, and efficient for everyone.',
+    ar: 'في MapEstate، نحن ملتزمون بثورة تجربة العقارات من خلال التكنولوجيا المتطورة والخدمة الشخصية. مهمتنا هي جعل شراء وبيع وتأجير العقارات في متناول الجميع وشفافة وفعالة.',
+    kur: 'لە MapEstate، ئێمە پابەندین بە شۆڕشگێڕی ئەزموونی خانووبەرە لە ڕێگەی تەکنەلۆژیای پێشکەوتوو و خزمەتگوزاری کەسی. ئامانجمان ئەوەیە کە کڕین و فرۆشتن و کرێدانی خانووبەرە بکەینە دەستڕاگەیشتوو، ڕوونی و کاریگەر بۆ هەمووان.'
+  },
+  'about.ourStory': {
+    en: 'Our Story',
+    ar: 'قصتنا',
+    kur: 'چیرۆکمان'
+  },
+  'about.storyText': {
+    en: 'Founded with a vision to bridge the gap between traditional real estate practices and modern technology, MapEstate has grown to become a leading platform in the region. We combine local market expertise with innovative AI-powered search capabilities to help you find your perfect property.',
+    ar: 'تأسست برؤية لسد الفجوة بين ممارسات العقارات التقليدية والتكنولوجيا الحديثة، نمت MapEstate لتصبح منصة رائدة في المنطقة. نحن نجمع بين خبرة السوق المحلية وقدرات البحث المبتكرة المدعومة بالذكاء الاصطناعي لمساعدتك في العثور على العقار المثالي.',
+    kur: 'بە بینینێک دامەزراوە بۆ پڕکردنەوەی بۆشاییەکە لە نێوان پراکتیزەکانی خانووبەرەی نەریتی و تەکنەلۆژیای مۆدێرن، MapEstate گەشەی کردووە و بووەتە پلاتفۆرمێکی پێشەنگ لە هەرێمەکە. ئێمە شارەزایی بازاڕی خۆجێیی تێکەڵ دەکەین لەگەڵ توانای گەڕانی داهێنەری پاڵپشتیکراو بە AIەوە بۆ یارمەتیدانت لە دۆزینەوەی خانووبەرە تەواوەکەت.'
+  },
+  'about.ourValues': {
+    en: 'Our Values',
+    ar: 'قيمنا',
+    kur: 'بەهاکانمان'
+  },
+  'about.valueTransparency': {
+    en: 'Transparency',
+    ar: 'الشفافية',
+    kur: 'ڕوونی'
+  },
+  'about.valueTransparencyText': {
+    en: 'We believe in complete transparency in all our dealings, providing accurate and up-to-date information.',
+    ar: 'نؤمن بالشفافية الكاملة في جميع تعاملاتنا، وتوفير معلومات دقيقة ومحدثة.',
+    kur: 'ئێمە باوەڕمان بە ڕوونی تەواو هەیە لە هەموو مامەڵەکانماندا، پێدانی زانیاری وردی نوێکراوە.'
+  },
+  'about.valueInnovation': {
+    en: 'Innovation',
+    ar: 'الابتكار',
+    kur: 'داهێنان'
+  },
+  'about.valueInnovationText': {
+    en: 'We continuously innovate to provide the best user experience with cutting-edge technology.',
+    ar: 'نبتكر باستمرار لتوفير أفضل تجربة مستخدم بتكنولوجيا متطورة.',
+    kur: 'ئێمە بەردەوام داهێنان دەکەین بۆ دابینکردنی باشترین ئەزموونی بەکارهێنەر بە تەکنەلۆژیای پێشکەوتوو.'
+  },
+  'about.valueExcellence': {
+    en: 'Excellence',
+    ar: 'التميز',
+    kur: 'باشی'
+  },
+  'about.valueExcellenceText': {
+    en: 'We strive for excellence in every aspect of our service, from customer support to property listings.',
+    ar: 'نسعى للتميز في كل جانب من جوانب خدمتنا، من دعم العملاء إلى قوائم العقارات.',
+    kur: 'ئێمە هەوڵ دەدەین بۆ باشی لە هەموو لایەکی خزمەتگوزاریەکانمان، لە پاڵپشتی کڕیارەوە تا لیستی خانووبەرەکان.'
+  },
+  'about.whyChooseUs': {
+    en: 'Why Choose MapEstate?',
+    ar: 'لماذا تختار MapEstate؟',
+    kur: 'بۆچی MapEstate هەڵبژێریت؟'
+  },
+  'about.featureAI': {
+    en: 'AI-Powered Search',
+    ar: 'بحث مدعوم بالذكاء الاصطناعي',
+    kur: 'گەڕانی پاڵپشتیکراو بە AI'
+  },
+  'about.featureAIText': {
+    en: 'Find properties using natural language queries and get intelligent recommendations.',
+    ar: 'ابحث عن العقارات باستخدام استعلامات اللغة الطبيعية واحصل على توصيات ذكية.',
+    kur: 'خانووبەرەکان بدۆزەرەوە بە بەکارهێنانی پرسیاری زمانی سروشتی و پێشنیاری زیرەک وەربگرە.'
+  },
+  'about.featureLocal': {
+    en: 'Local Expertise',
+    ar: 'خبرة محلية',
+    kur: 'شارەزایی خۆجێیی'
+  },
+  'about.featureLocalText': {
+    en: 'Our team has deep knowledge of the local real estate market and regulations.',
+    ar: 'فريقنا لديه معرفة عميقة بسوق العقارات المحلي واللوائح.',
+    kur: 'تیمەکەمان زانیاری قووڵی هەیە لە بازاڕی خانووبەرەی خۆجێیی و یاساکان.'
+  },
+  'about.featureSupport': {
+    en: '24/7 Support',
+    ar: 'دعم على مدار الساعة',
+    kur: 'پشتگیری ٢٤/٧'
+  },
+  'about.featureSupportText': {
+    en: 'Get assistance whenever you need it with our dedicated customer support team.',
+    ar: 'احصل على المساعدة متى احتجت إليها مع فريق دعم العملاء المخصص لدينا.',
+    kur: 'یارمەتی وەربگرە کاتێک پێویستت پێیەتی لەگەڵ تیمی تایبەتی پشتگیری کڕیارەکانمان.'
+  },
+  'about.contactUs': {
+    en: 'Contact Us',
+    ar: 'اتصل بنا',
+    kur: 'پەیوەندیمان پێوە بکە'
+  },
+  'about.contactText': {
+    en: 'Ready to find your dream property? Get in touch with our team today.',
+    ar: 'جاهز للعثور على عقار أحلامك؟ تواصل مع فريقنا اليوم.',
+    kur: 'ئامادەیت بۆ دۆزینەوەی خانووبەرەی خەونەکانت؟ ئەمڕۆ پەیوەندی بە تیمەکەمانەوە بکە.'
+  },
+  'about.backToHome': {
+    en: 'Back to Home',
+    ar: 'العودة للرئيسية',
+    kur: 'گەڕانەوە بۆ سەرەتا'
+  },
+
   // Filter options
   'filter.allTypes': {
     en: 'All Types',
