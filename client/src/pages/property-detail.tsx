@@ -17,6 +17,7 @@ import {
   ChevronLeft, ChevronRight, Check, Calendar,
   Eye, Phone, MessageSquare, Mail, Sun, Moon, Share2, Copy
 } from "lucide-react";
+import { SiFacebook, SiX, SiWhatsapp, SiLinkedin } from "react-icons/si";
 
 export default function PropertyDetailPage() {
   const { id } = useParams();
@@ -399,19 +400,19 @@ export default function PropertyDetailPage() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem onClick={() => handleShare('facebook')} data-testid="share-facebook">
-                    <span className="text-blue-600 mr-2">📘</span>
+                    <SiFacebook className="h-4 w-4 mr-2 text-blue-600" />
                     {t('property.shareOnFacebook')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleShare('twitter')} data-testid="share-twitter">
-                    <span className="text-blue-400 mr-2">🐦</span>
+                    <SiX className="h-4 w-4 mr-2 text-gray-800 dark:text-white" />
                     {t('property.shareOnTwitter')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleShare('whatsapp')} data-testid="share-whatsapp">
-                    <span className="text-green-600 mr-2">💬</span>
+                    <SiWhatsapp className="h-4 w-4 mr-2 text-green-600" />
                     {t('property.shareOnWhatsApp')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleShare('linkedin')} data-testid="share-linkedin">
-                    <span className="text-blue-700 mr-2">💼</span>
+                    <SiLinkedin className="h-4 w-4 mr-2 text-blue-700" />
                     {t('property.shareOnLinkedIn')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleShare('copy')} data-testid="share-copy">
