@@ -39,6 +39,11 @@ export default function PropertyMap({
   className,
 }: PropertyMapProps) {
   const { t, getLocalized, language } = useTranslation();
+  
+  // Add conditional spacing for Arabic and Kurdish languages
+  const isRTL = language === 'ar' || language === 'kur';
+  const spacingFilter = isRTL ? 'space-x-3 sm:space-x-4' : 'space-x-2 sm:space-x-3';
+  const spacingType = isRTL ? 'space-x-3' : 'space-x-2';
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
@@ -1609,7 +1614,7 @@ export default function PropertyMap({
               {/* Filter buttons row */}
               <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 text-sm">
                 <div
-                  className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                  className={`flex items-center ${spacingFilter} p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                     localFilters.listingType === "sale"
                       ? "bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-600"
                       : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1630,7 +1635,7 @@ export default function PropertyMap({
                   </span>
                 </div>
                 <div
-                  className={`flex items-center space-x-2 sm:space-x-3 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                  className={`flex items-center ${spacingFilter} p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                     localFilters.listingType === "rent"
                       ? "bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-600"
                       : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1652,7 +1657,7 @@ export default function PropertyMap({
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
                   <div
-                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center ${spacingType} p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "house"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1674,7 +1679,7 @@ export default function PropertyMap({
                     </span>
                   </div>
                   <div
-                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center ${spacingType} p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "apartment"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1696,7 +1701,7 @@ export default function PropertyMap({
                     </span>
                   </div>
                   <div
-                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center ${spacingType} p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "villa"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1718,7 +1723,7 @@ export default function PropertyMap({
                     </span>
                   </div>
                   <div
-                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center ${spacingType} p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "land"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
