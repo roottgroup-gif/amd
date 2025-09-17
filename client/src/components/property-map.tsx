@@ -1244,7 +1244,7 @@ export default function PropertyMap({
           <h4 class="popup-title" style="color: ${textColor}; font-weight: 600; font-size: 16px; margin-bottom: 8px;">${getPropertyTitle(property)}</h4>
           <p class="popup-address" style="color: ${subTextColor}; font-size: 12px; margin-bottom: 8px;">${property.address}</p>
           <p class="popup-price" style="color: #FF7800; font-weight: 700; font-size: 18px; margin-bottom: 12px;">
-            ${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === "rent" ? "/mo" : ""}
+            ${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === "rent" ? t('property.perMonth') : ""}
           </p>
           <div class="popup-details" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; font-size: 12px; color: ${subTextColor}; justify-content: ${language === "ar" || language === "kur" ? "flex-end" : "flex-start"};">
             ${property.bedrooms ? `<span style="color: ${subTextColor};">${language === "ar" || language === "kur" ? `${property.bedrooms} ${t("property.beds")} <i class="fas fa-bed" style="color: #FF7800; margin-left: 4px;"></i>` : `<i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} ${t("property.beds")}`}</span>` : ""} 
