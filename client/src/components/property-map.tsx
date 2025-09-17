@@ -805,11 +805,11 @@ export default function PropertyMap({
 
     let popupTitle;
     if (cluster.clusterType === "country" && cluster.country) {
-      popupTitle = `${count} Properties in ${cluster.country}`;
+      popupTitle = `${count} ${t('map.propertiesIn')} ${cluster.country}`;
     } else if (cluster.clusterType === "city" && cluster.city) {
-      popupTitle = `${count} Properties in ${cluster.city}`;
+      popupTitle = `${count} ${t('map.propertiesIn')} ${cluster.city}`;
     } else {
-      popupTitle = `${count} Properties in this area`;
+      popupTitle = `${count} ${t('map.propertiesInThisArea')}`;
     }
 
     const popupContent = `
