@@ -1652,7 +1652,7 @@ export default function PropertyMap({
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
                   <div
-                    className={`flex items-center space-x-2.5 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "house"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1674,7 +1674,7 @@ export default function PropertyMap({
                     </span>
                   </div>
                   <div
-                    className={`flex items-center space-x-2.5 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "apartment"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1696,7 +1696,7 @@ export default function PropertyMap({
                     </span>
                   </div>
                   <div
-                    className={`flex items-center space-x-2.5 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "villa"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
@@ -1718,7 +1718,7 @@ export default function PropertyMap({
                     </span>
                   </div>
                   <div
-                    className={`flex items-center space-x-2.5 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
+                    className={`flex items-center space-x-2 p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "land"
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
