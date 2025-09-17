@@ -65,7 +65,7 @@ export default function LanguageSelectionModal({
         return false;
       }}>
         <DialogContent 
-          className="sm:max-w-md" 
+          className="w-[95vw] max-w-[400px] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto p-4 sm:p-6" 
           data-testid="language-selection-modal"
           onEscapeKeyDown={(e) => e.preventDefault()}
           onPointerDownOutside={(e) => e.preventDefault()}
@@ -73,18 +73,18 @@ export default function LanguageSelectionModal({
           style={{ zIndex: 9999 }}
         >
           <DialogHeader className="text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-              <Globe className="h-8 w-8" />
+            <div className="mx-auto mb-4 sm:mb-6 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+              <Globe className="h-6 w-6 sm:h-8 sm:w-8" />
             </div>
-            <DialogTitle className="text-xl font-bold">
+            <DialogTitle className="text-lg sm:text-xl md:text-2xl font-bold">
               Choose Your Language
             </DialogTitle>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="text-xs sm:text-sm text-muted-foreground mt-2">
               Select your preferred language to continue
             </p>
           </DialogHeader>
 
-          <div className="space-y-3 py-4">
+          <div className="space-y-2 sm:space-y-3 py-4 sm:py-6">
             {languages.map((language) => (
               <Card 
                 key={language.code}
@@ -96,20 +96,20 @@ export default function LanguageSelectionModal({
                 onClick={() => handleLanguageSelect(language.code)}
                 data-testid={`language-option-${language.code}`}
               >
-                <CardContent className="p-4">
-                  <div className="flex items-center space-x-4">
+                <CardContent className="p-3 sm:p-4 md:p-5">
+                  <div className="flex items-center space-x-3 sm:space-x-4">
                     <img 
                       src={language.flag} 
                       alt={language.name}
-                      className="w-8 h-8 object-contain rounded-full"
+                      className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 object-contain rounded-full flex-shrink-0"
                     />
-                    <div className="flex-1 text-left">
-                      <h3 className="font-medium">{language.name}</h3>
-                      <p className="text-sm text-muted-foreground">
+                    <div className="flex-1 text-left min-w-0">
+                      <h3 className="font-medium text-sm sm:text-base md:text-lg truncate">{language.name}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground truncate">
                         {language.nativeName}
                       </p>
                     </div>
-                    <div className={`h-4 w-4 rounded-full border-2 ${
+                    <div className={`h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 rounded-full border-2 flex-shrink-0 ${
                       selectedLanguage === language.code
                         ? 'bg-blue-500 border-blue-500'
                         : 'border-gray-300 dark:border-gray-600'
@@ -124,17 +124,17 @@ export default function LanguageSelectionModal({
             ))}
           </div>
 
-          <div className="flex flex-col space-y-2 pt-4">
+          <div className="flex flex-col space-y-2 sm:space-y-3 pt-4 sm:pt-6">
             <Button
               onClick={handleConfirm}
               disabled={!selectedLanguage}
-              className="w-full"
+              className="w-full h-10 sm:h-12 text-sm sm:text-base"
               data-testid="confirm-language-button"
             >
-              <Languages className="mr-2 h-4 w-4" />
+              <Languages className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               Continue
             </Button>
-            <p className="text-xs text-center text-muted-foreground">
+            <p className="text-xs sm:text-sm text-center text-muted-foreground px-2">
               You can change this later in settings
             </p>
           </div>
