@@ -65,7 +65,7 @@ export default function LanguageSelectionModal({
         return false;
       }}>
         <DialogContent 
-          className="w-[95vw] max-w-[400px] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto p-4 sm:p-6" 
+          className="w-[95vw] max-w-[400px] sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto p-4 sm:p-6 rounded-2xl border-0 shadow-2xl" 
           data-testid="language-selection-modal"
           onEscapeKeyDown={(e) => e.preventDefault()}
           onPointerDownOutside={(e) => e.preventDefault()}
