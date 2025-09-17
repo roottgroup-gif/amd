@@ -22,3 +22,27 @@ Crawl-delay: 1
 
 # Sitemap location
 Sitemap: /sitemap.xml
+
+# Additional SEO-friendly directives
+# Allow manifest and important static files
+Allow: /manifest.json
+Allow: /offline.html
+Allow: /*.js$
+Allow: /*.css$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.webp$
+
+# Block common attack vectors and unnecessary files
+Disallow: /.env
+Disallow: /package*.json
+Disallow: /*.config.*
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /.git/
+
+# Cache directive for robots.txt itself
+# Cache-directive: max-age=86400

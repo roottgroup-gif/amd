@@ -228,9 +228,10 @@ export function generateETag(data: any): string {
       .digest('hex');
   } catch (error) {
     console.warn('ETag generation failed:', error);
-    // Fallback to timestamp-based ETag
+    // Fallback to a deterministic ETag based on error and data type
+    const fallbackData = `etag-error-fallback-${typeof data}-${String(data).slice(0, 100)}`;
     return createHash('md5')
-      .update(Date.now().toString())
+      .update(fallbackData)
       .digest('hex');
   }
 }

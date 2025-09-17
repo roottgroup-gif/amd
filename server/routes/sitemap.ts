@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/sitemap.xml', async (req, res) => {
   try {
-    const baseUrl = process.env.BASE_URL || 'https://your-domain.com';
+    const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
     
     // Get all properties for sitemap
     const properties = await storage.getProperties({ limit: 1000 });
