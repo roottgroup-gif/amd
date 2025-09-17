@@ -135,7 +135,7 @@ export default function ContactForm({ property, agent, className }: ContactFormP
               <p className="text-sm font-medium text-blue-800 dark:text-blue-300">{t('contact.contactNumber')}</p>
             </div>
             <div className="flex justify-center">
-              <p className="font-bold text-lg text-center text-gray-900 dark:text-gray-100 tracking-wide" dir="ltr">
+              <p className="font-mono font-bold text-lg text-center text-gray-900 dark:text-gray-100 tracking-wider bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-lg border" dir="ltr" style={{ direction: 'ltr', unicodeBidi: 'embed' }}>
                 {formatPhoneNumberInternational((property as any).contactPhone || agent?.phone)}
               </p>
             </div>
