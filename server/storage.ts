@@ -13,7 +13,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, like, gte, lte, desc, asc, sql, inArray } from "drizzle-orm";
-import { generatePropertySlug } from "@shared/slug-utils";
+import { generatePropertySlug, generateUniqueSlug } from "@shared/slug-utils";
 
 export interface IStorage {
   // Users
@@ -30,12 +30,14 @@ export interface IStorage {
 
   // Properties
   getProperty(id: string): Promise<PropertyWithAgent | undefined>;
+  getPropertyBySlug(slug: string): Promise<PropertyWithAgent | undefined>;
   getProperties(filters?: PropertyFilters): Promise<PropertyWithAgent[]>;
   getFeaturedProperties(): Promise<PropertyWithAgent[]>;
   createProperty(property: InsertProperty): Promise<Property>;
   updateProperty(id: string, property: Partial<InsertProperty>): Promise<Property | undefined>;
   deleteProperty(id: string): Promise<boolean>;
   incrementPropertyViews(id: string): Promise<void>;
+  isSlugTaken(slug: string, excludePropertyId?: string): Promise<boolean>;
 
   // Inquiries
   getInquiry(id: string): Promise<Inquiry | undefined>;
@@ -176,6 +178,37 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
+  async getPropertyBySlug(slug: string): Promise<PropertyWithAgent | undefined> {
+    const [property] = await db()
+      .select()
+      .from(properties)
+      .leftJoin(users, eq(properties.agentId, users.id))
+      .where(eq(properties.slug, slug));
+
+    if (!property) return undefined;
+
+    return {
+      ...property.properties,
+      agent: property.users,
+      wave: null,
+    };
+  }
+
+  async isSlugTaken(slug: string, excludePropertyId?: string): Promise<boolean> {
+    let query = db()
+      .select({ id: properties.id })
+      .from(properties);
+
+    if (excludePropertyId) {
+      query = query.where(and(eq(properties.slug, slug), sql`${properties.id} != ${excludePropertyId}`));
+    } else {
+      query = query.where(eq(properties.slug, slug));
+    }
+
+    const [result] = await query;
+    return !!result;
+  }
+
   async getProperties(filters: PropertyFilters = {}): Promise<PropertyWithAgent[]> {
     const conditions = [];
 
@@ -305,9 +338,29 @@ export class DatabaseStorage implements IStorage {
       }
     }
 
+    // Generate unique slug
+    const baseSlug = generatePropertySlug(insertProperty);
+    let slug = baseSlug;
+    let counter = 1;
+    
+    // Check slug uniqueness manually since we need async
+    while (await this.isSlugTaken(slug)) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+      if (counter > 1000) {
+        slug = `${baseSlug}-${Date.now()}`;
+        break;
+      }
+    }
+
+    const propertyData = {
+      ...insertProperty,
+      slug
+    };
+
     const [property] = await db()
       .insert(properties)
-      .values(insertProperty as any)
+      .values(propertyData as any)
       .returning();
     return property;
   }
@@ -327,7 +380,32 @@ export class DatabaseStorage implements IStorage {
       }
     }
 
-    const updateData = { ...updateProperty, updatedAt: new Date() } as any;
+    // Check if slug-affecting fields have changed and regenerate slug if needed
+    const slugAffectingFields = ['title', 'city', 'type', 'listingType', 'bedrooms'];
+    const shouldRegenerateSlug = slugAffectingFields.some(field => 
+      updateProperty[field as keyof typeof updateProperty] !== undefined
+    );
+
+    let updateData = { ...updateProperty, updatedAt: new Date() } as any;
+
+    if (shouldRegenerateSlug) {
+      const updatedPropertyData = { ...currentProperty, ...updateProperty };
+      const baseSlug = generatePropertySlug(updatedPropertyData);
+      let slug = baseSlug;
+      let counter = 1;
+      
+      // Check slug uniqueness manually since we need async
+      while (await this.isSlugTaken(slug, id)) {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+        if (counter > 1000) {
+          slug = `${baseSlug}-${Date.now()}`;
+          break;
+        }
+      }
+      updateData.slug = slug;
+    }
+
     const [property] = await db()
       .update(properties)
       .set(updateData)
@@ -1293,6 +1371,24 @@ class MemStorage implements IStorage {
       wave: null
     };
   }
+
+  async getPropertyBySlug(slug: string): Promise<PropertyWithAgent | undefined> {
+    const property = this.properties.find(p => p.slug === slug);
+    if (!property) return undefined;
+
+    const agent = this.users.find(u => u.id === property.agentId);
+    return {
+      ...property,
+      agent: agent || null,
+      wave: null,
+    };
+  }
+
+  async isSlugTaken(slug: string, excludePropertyId?: string): Promise<boolean> {
+    return this.properties.some(p => 
+      p.slug === slug && (!excludePropertyId || p.id !== excludePropertyId)
+    );
+  }
   
   async getProperties(filters?: PropertyFilters): Promise<PropertyWithAgent[]> { 
     let filteredProperties = [...this.properties];
@@ -1368,16 +1464,20 @@ class MemStorage implements IStorage {
     });
   }
   async createProperty(property: InsertProperty): Promise<Property> { 
-    // Generate slug for the new property
-    const propertyForSlug = {
-      ...property,
-      city: property.city || '',
-      type: property.type || '',
-      listingType: property.listingType || 'sale',
-      bedrooms: property.bedrooms || null,
-      title: property.title || ''
-    };
-    const slug = generatePropertySlug(propertyForSlug);
+    // Generate unique slug
+    const baseSlug = generatePropertySlug(property);
+    let slug = baseSlug;
+    let counter = 1;
+    
+    // Check slug uniqueness manually since we need async
+    while (await this.isSlugTaken(slug)) {
+      slug = `${baseSlug}-${counter}`;
+      counter++;
+      if (counter > 1000) {
+        slug = `${baseSlug}-${Date.now()}`;
+        break;
+      }
+    }
     
     const newProperty: Property = { 
       id: `prop-${Date.now()}`, 
@@ -1410,13 +1510,43 @@ class MemStorage implements IStorage {
     const propertyIndex = this.properties.findIndex(p => p.id === id);
     if (propertyIndex === -1) return undefined;
     
-    const updatedProperty = {
-      ...this.properties[propertyIndex],
+    const currentProperty = this.properties[propertyIndex];
+    
+    // Check if slug-affecting fields have changed and regenerate slug if needed
+    const slugAffectingFields = ['title', 'city', 'type', 'listingType', 'bedrooms'];
+    const shouldRegenerateSlug = slugAffectingFields.some(field => 
+      property[field as keyof typeof property] !== undefined
+    );
+
+    let updateData = { 
       ...property,
-      images: property.images ? (property.images as string[]) : this.properties[propertyIndex].images,
-      amenities: property.amenities ? (property.amenities as string[]) : this.properties[propertyIndex].amenities,
-      features: property.features ? (property.features as string[]) : this.properties[propertyIndex].features,
-      updatedAt: new Date()
+      images: property.images ? (property.images as string[]) : currentProperty.images,
+      amenities: property.amenities ? (property.amenities as string[]) : currentProperty.amenities,
+      features: property.features ? (property.features as string[]) : currentProperty.features,
+      updatedAt: new Date() 
+    } as any;
+
+    if (shouldRegenerateSlug) {
+      const updatedPropertyData = { ...currentProperty, ...property };
+      const baseSlug = generatePropertySlug(updatedPropertyData);
+      let slug = baseSlug;
+      let counter = 1;
+      
+      // Check slug uniqueness manually since we need async
+      while (await this.isSlugTaken(slug, id)) {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+        if (counter > 1000) {
+          slug = `${baseSlug}-${Date.now()}`;
+          break;
+        }
+      }
+      updateData.slug = slug;
+    }
+    
+    const updatedProperty = {
+      ...currentProperty,
+      ...updateData
     };
     this.properties[propertyIndex] = updatedProperty;
     return this.properties[propertyIndex];
