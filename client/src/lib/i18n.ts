@@ -334,6 +334,48 @@ const translations: Translations = {
     kur: 'سەرکەوتوو نەبوو لە نوێکردنەوەی بەرگری. دووبارە هەوڵبدەوە.'
   },
 
+  // Favorites Page
+  'favorites.title': {
+    en: 'My Favorite Properties - MapEstate | Saved Property Listings',
+    ar: 'خصائصي المفضلة - MapEstate | قوائم العقارات المحفوظة',
+    kur: 'خانووبەرە بەرگریکراوەکانم - MapEstate | لیستی خانووبەرە پاشەکەوتکراوەکان'
+  },
+  'favorites.description': {
+    en: 'View your saved favorite properties. Keep track of houses, apartments, and villas you\'re interested in buying or renting in Kurdistan, Iraq.',
+    ar: 'اعرض خصائصك المفضلة المحفوظة. تتبع المنازل والشقق والفيلات التي تهتم بشرائها أو استئجارها في كردستان، العراق.',
+    kur: 'خانووبەرە بەرگریکراوەکانت ببینە. شوێنکەوتن بکە بۆ ماڵ، شوقە و ڤیلاکان کە بەرامبەرت بە کڕین یان کرێ لە کوردستان، عێراق.'
+  },
+  'favorites.loadingFavorites': {
+    en: 'Loading your favorites...',
+    ar: 'تحميل مفضلتك...',
+    kur: 'بارکردنی بەرگریەکانت...'
+  },
+  'favorites.errorLoading': {
+    en: 'Error loading favorites. Please try again.',
+    ar: 'خطأ في تحميل المفضلة. يرجى المحاولة مرة أخرى.',
+    kur: 'هەڵە لە بارکردنی بەرگریەکان. تکایە دووبارە هەوڵبدەوە.'
+  },
+  'favorites.noFavoritesYet': {
+    en: 'No favorites yet',
+    ar: 'لا توجد مفضلة بعد',
+    kur: 'هێشتا هیچ بەرگریەک نییە'
+  },
+  'favorites.noFavoritesDescription': {
+    en: 'Start adding properties to your favorites by clicking the heart icon on property listings.',
+    ar: 'ابدأ في إضافة العقارات إلى مفضلتك بالنقر على أيقونة القلب في قوائم العقارات.',
+    kur: 'دەست بکە بە زیادکردنی خانووبەرەکان بۆ بەرگریەکانت لە ڕێگەی کرتەکردن لەسەر نیشانەی دڵ لە لیستی خانووبەرەکان.'
+  },
+  'favorites.structuredDataName': {
+    en: 'My Favorite Properties',
+    ar: 'خصائصي المفضلة',
+    kur: 'خانووبەرە بەرگریکراوەکانم'
+  },
+  'favorites.structuredDataDescription': {
+    en: 'saved favorite properties. Keep track of properties you\'re interested in buying or renting.',
+    ar: 'خصائص مفضلة محفوظة. تتبع العقارات التي تهتم بشرائها أو استئجارها.',
+    kur: 'خانووبەرە بەرگریکراوە پاشەکەوتکراوەکان. شوێنکەوتن بکە بۆ خانووبەرەکان کە بەرامبەرت بە کڕین یان کرێ.'
+  },
+
   // Property Features
   // Property Amenities (Keys from customer dashboard form)
   'property.amenities.swimmingPool': {
