@@ -143,18 +143,18 @@ export default function PropertyCard({
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 scale-x-[-1]"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20"
                 aria-label="Previous image"
               >
-                <span className="text-sm font-bold">&lt;</span>
+                <ChevronLeft className="h-5 w-5" />
               </button>
 
               <button
                 onClick={nextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20 scale-x-[-1]"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 h-10 w-10 flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/20"
                 aria-label="Next image"
               >
-                <span className="text-sm font-bold">&lt;</span>
+                <ChevronRight className="h-5 w-5" />
               </button>
 
               {/* Image counter */}
