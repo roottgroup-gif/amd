@@ -170,8 +170,8 @@ export default function PropertyCard({
         <Badge
           className={`absolute top-4 ${isRTL ? "right-4" : "left-4"} ${
             property.listingType === "sale"
-              ? "bg-primary text-primary-foreground"
-              : "bg-emerald-600 text-white"
+              ? "bg-red-600 text-white"
+              : "bg-green-600 text-white"
           }`}
         >
           {property.listingType === "sale"
