@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Languages, Globe } from "lucide-react";
-import kurdishFlag from "@assets/pngwing.com_1758101425052.png";
+import kurdishFlag from "@assets/generated_images/Kurdish_flag_emoji_style_4ea5c45f.png";
 
 interface LanguageSelectionModalProps {
   isOpen: boolean;
