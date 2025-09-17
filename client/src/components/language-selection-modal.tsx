@@ -55,7 +55,7 @@ export default function LanguageSelectionModal({
     <>
       {/* Persistent Blur Overlay */}
       {showBlur && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-xs transition-all duration-300" style={{ zIndex: 9998 }} />
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-md transition-all duration-300" style={{ zIndex: 9998 }} />
       )}
       
       {/* Language Selection Modal */}
