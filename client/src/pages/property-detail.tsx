@@ -403,26 +403,6 @@ export default function PropertyDetailPage() {
               <Button
                 variant="secondary"
                 size="icon"
-                onClick={toggleAutoSlide}
-                className="bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white transition-all duration-200"
-                data-testid="auto-slide-button"
-                title={isAutoSliding ? 'Pause auto slide' : 'Play auto slide'}
-              >
-                {isAutoSliding ? (
-                  <div className="h-4 w-4 flex items-center justify-center">
-                    <div className="w-1 h-3 bg-current mr-0.5"></div>
-                    <div className="w-1 h-3 bg-current"></div>
-                  </div>
-                ) : (
-                  <div className="h-4 w-4 flex items-center justify-center">
-                    <div className="w-0 h-0 border-l-4 border-l-current border-t-2 border-t-transparent border-b-2 border-b-transparent"></div>
-                  </div>
-                )}
-              </Button>
-              
-              <Button
-                variant="secondary"
-                size="icon"
                 onClick={openFullScreen}
                 className="bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white transition-all duration-200"
                 data-testid="fullscreen-button"
