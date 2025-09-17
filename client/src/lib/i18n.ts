@@ -706,6 +706,11 @@ const translations: Translations = {
     ar: 'نطاق السعر',
     kur: 'نرخی نێوان'
   },
+  'filter.priceRangeLabel': {
+    en: 'Price Range:',
+    ar: 'نطاق السعر:',
+    kur: 'نرخی نێوان:'
+  },
 
   // Filter options
   'filter.allTypes': {

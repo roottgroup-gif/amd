@@ -666,11 +666,11 @@ export default function HomePage() {
                   <label className="text-xs sm:text-sm font-medium text-black dark:text-gray-300 flex items-center gap-1 flex-wrap">
                     <DollarSign className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span className="hidden sm:inline">
-                      Price Range: ${priceRange[0].toLocaleString()} - $
+                      {t('filter.priceRangeLabel')} ${priceRange[0].toLocaleString()} - $
                       {priceRange[1].toLocaleString()}
                     </span>
                     <span className="sm:hidden">
-                      Price: $
+                      {t('filter.priceRange')}: $
                       {priceRange[0] < 1000
                         ? priceRange[0]
                         : priceRange[0] < 1000000
