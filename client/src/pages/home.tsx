@@ -161,11 +161,10 @@ export default function HomePage() {
   };
 
   const handleMapFilterChange = (filters: PropertyFilters) => {
-    setMapFilters((prev) => ({
-      ...prev,
+    setMapFilters({
       ...filters,
       limit: 100, // Always maintain the limit for map
-    }));
+    });
   };
 
   const handleFilterChange = (key: keyof PropertyFilters, value: any) => {
