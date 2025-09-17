@@ -637,7 +637,7 @@ export default function PropertyDetailPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-right">
                   <div className="text-right">
                     <span className="text-muted-foreground">{t('property.propertyType')}: </span>
-                    <span className="font-medium capitalize bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md text-xs">
+                    <span className="font-medium capitalize bg-orange-500 text-white dark:bg-orange-600 px-2 py-1 rounded-md text-xs">
                       {t(`filter.${property.type}`) !== `filter.${property.type}` 
                         ? t(`filter.${property.type}`) 
                         : property.type}
@@ -652,7 +652,7 @@ export default function PropertyDetailPage() {
                   </div>
                   <div className="text-right">
                     <span className="text-muted-foreground">{t('property.status')}: </span>
-                    <Badge variant="secondary" className="capitalize bg-green-100 dark:bg-green-700 text-xs">
+                    <Badge variant="secondary" className="capitalize bg-green-500 text-white dark:bg-green-600 text-xs">
                       {t(`property.status.${property.status}`) !== `property.status.${property.status}` 
                         ? t(`property.status.${property.status}`) 
                         : property.status}
