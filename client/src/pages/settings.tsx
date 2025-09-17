@@ -27,6 +27,9 @@ import {
   Mail,
   ArrowLeft,
 } from "lucide-react";
+import usFlag from "@assets/generated_images/US_flag_circular_design_55844ad0.png";
+import saudiFlag from "@assets/generated_images/Saudi_flag_circular_design_3c46c604.png";
+import kurdishFlag from "@assets/generated_images/Kurdish_flag_circular_design_55e28463.png";
 
 export default function SettingsPage() {
   const { language, changeLanguage, t } = useTranslation();
@@ -132,9 +135,36 @@ export default function SettingsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="ar">العربية (Arabic)</SelectItem>
-                      <SelectItem value="kur">کوردی (Kurdish)</SelectItem>
+                      <SelectItem value="en">
+                        <div className="flex items-center gap-2">
+                          <img 
+                            src={usFlag} 
+                            alt="English"
+                            className="w-4 h-4 object-contain rounded-sm flex-shrink-0"
+                          />
+                          <span>English</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="ar">
+                        <div className="flex items-center gap-2">
+                          <img 
+                            src={saudiFlag} 
+                            alt="Arabic"
+                            className="w-4 h-4 object-contain rounded-sm flex-shrink-0"
+                          />
+                          <span>العربية (Arabic)</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="kur">
+                        <div className="flex items-center gap-2">
+                          <img 
+                            src={kurdishFlag} 
+                            alt="Kurdish"
+                            className="w-4 h-4 object-contain rounded-sm flex-shrink-0"
+                          />
+                          <span>کوردی (Kurdish)</span>
+                        </div>
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
