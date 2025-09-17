@@ -52,7 +52,7 @@ export default function LanguageSelectionModal({
     <>
       {/* Persistent Blur Overlay */}
       {showBlur && (
-        <div className="fixed inset-0 bg-black/20 backdrop-blur-md z-40 transition-all duration-300" />
+        <div className="fixed inset-0 bg-black/20 backdrop-blur-md transition-all duration-300" style={{ zIndex: 9998 }} />
       )}
       
       {/* Language Selection Modal */}
@@ -62,11 +62,12 @@ export default function LanguageSelectionModal({
         return false;
       }}>
         <DialogContent 
-          className="sm:max-w-md z-50" 
+          className="sm:max-w-md" 
           data-testid="language-selection-modal"
           onEscapeKeyDown={(e) => e.preventDefault()}
           onPointerDownOutside={(e) => e.preventDefault()}
           onInteractOutside={(e) => e.preventDefault()}
+          style={{ zIndex: 9999 }}
         >
           <DialogHeader className="text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
