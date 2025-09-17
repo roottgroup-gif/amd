@@ -403,17 +403,6 @@ export default function PropertyDetailPage() {
               <Button
                 variant="secondary"
                 size="icon"
-                onClick={openFullScreen}
-                className="bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white transition-all duration-200"
-                data-testid="fullscreen-button"
-                title="View full screen"
-              >
-                <Eye className="h-4 w-4 hover:scale-105 transition-all duration-200" />
-              </Button>
-              
-              <Button
-                variant="secondary"
-                size="icon"
                 onClick={handleFavoriteClick}
                 className={`transition-all duration-200 ${
                   isFavorite 
