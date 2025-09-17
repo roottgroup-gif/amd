@@ -799,32 +799,24 @@
   position: absolute;
   top: 0;
   left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.6) 50%,
-    transparent 100%
-  );
-  animation: sweep 3s ease-in-out infinite;
-  z-index: 1;
-  pointer-events: none;
 }
 
+/* Language Modal Orange Light Sweep Animation */
 @keyframes sweep {
   0% {
-    left: -100%;
+    transform: translateX(-100%) skewX(-12deg);
     opacity: 0;
   }
-  20% {
-    opacity: 1;
-  }
-  80% {
+  50% {
     opacity: 1;
   }
   100% {
-    left: 100%;
+    transform: translateX(200%) skewX(-12deg);
     opacity: 0;
   }
+}
+
+.animate-sweep {
+  animation: sweep 2s ease-in-out infinite;
+  animation-delay: 1s;
 }

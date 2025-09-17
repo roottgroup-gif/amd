@@ -73,8 +73,9 @@ export default function LanguageSelectionModal({
           style={{ zIndex: 9999 }}
         >
           <DialogHeader className="text-center">
-            <div className="mx-auto mb-4 sm:mb-6 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-              <Globe className="h-6 w-6 sm:h-8 sm:w-8" />
+            <div className="mx-auto mb-4 sm:mb-6 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 animate-sweep"></div>
+              <Globe className="h-6 w-6 sm:h-8 sm:w-8 relative z-10" />
             </div>
             <DialogTitle className="text-lg sm:text-xl md:text-2xl font-bold">
               Choose Your Language
