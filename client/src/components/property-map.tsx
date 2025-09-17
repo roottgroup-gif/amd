@@ -39,11 +39,13 @@ export default function PropertyMap({
   className,
 }: PropertyMapProps) {
   const { t, getLocalized, language } = useTranslation();
-  
+
   // Add conditional spacing for Arabic and Kurdish languages
-  const isRTL = language === 'ar' || language === 'kur';
-  const spacingFilter = isRTL ? 'space-x-3 sm:space-x-4' : 'space-x-2 sm:space-x-3';
-  const spacingType = isRTL ? 'space-x-3' : 'space-x-2';
+  const isRTL = language === "ar" || language === "kur";
+  const spacingFilter = isRTL
+    ? "space-x-3 sm:space-x-4"
+    : "space-x-2 sm:space-x-3";
+  const spacingType = isRTL ? "space-x-3" : "space-x-2";
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
@@ -947,8 +949,8 @@ export default function PropertyMap({
                       ">
                         ${
                           property.listingType === "rent"
-                            ? '<span style="color: #059669;">🔑</span><span>Rent</span>'
-                            : '<span style="color: #dc2626;">🏷️</span><span>Sale</span>'
+                            ? '<span style="color: #059669;"></span><span>Rent</span>'
+                            : '<span style="color: #dc2626;"></span><span>Sale</span>'
                         }
                       </div>
                     </div>
@@ -1454,11 +1456,11 @@ export default function PropertyMap({
   };
 
   const handleFilterChange = (key: string, value: string) => {
-    // Prevent duplicate calls within 100ms 
+    // Prevent duplicate calls within 100ms
     const now = Date.now();
     if (clickGuard.current && now - clickGuard.current < 100) return;
     clickGuard.current = now;
-    
+
     console.log(`Filter change: ${key} = ${value}`);
     isLocalUpdate.current = true;
     const newFilters = { ...localFilters };
@@ -1631,7 +1633,7 @@ export default function PropertyMap({
                   <span
                     className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === "sale" ? "text-red-700 dark:text-red-300" : "text-black dark:text-white"}`}
                   >
-                    🏷️ {t("filter.forSale")}
+                    {t("filter.forSale")}
                   </span>
                 </div>
                 <div
@@ -1652,12 +1654,14 @@ export default function PropertyMap({
                   <span
                     className={`font-semibold text-sm drop-shadow-lg ${localFilters.listingType === "rent" ? "text-green-700 dark:text-green-300" : "text-black dark:text-white"}`}
                   >
-                    🔑 {t("filter.forRent")}
+                    {t("filter.forRent")}
                   </span>
                 </div>
-                <div className={`flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 ${
-                  isRTL ? 'flex-wrap' : 'flex-nowrap'
-                }`}>
+                <div
+                  className={`flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 ${
+                    isRTL ? "flex-wrap" : "flex-nowrap"
+                  }`}
+                >
                   <div
                     className={`flex items-center ${spacingType} p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "house"
