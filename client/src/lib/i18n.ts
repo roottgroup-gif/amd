@@ -748,6 +748,16 @@ const translations: Translations = {
     ar: 'مسح الكل',
     kur: 'پاککردنەوەی هەموو'
   },
+  'filter.activeFilters': {
+    en: 'Active filters:',
+    ar: 'المرشحات النشطة:',
+    kur: 'فلتەرە چالاکەکان:'
+  },
+  'filter.clear': {
+    en: 'Clear',
+    ar: 'مسح',
+    kur: 'پاککردنەوە'
+  },
 
   // Search and AI
   'search.aiPlaceholder': {

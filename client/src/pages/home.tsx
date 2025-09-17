@@ -713,7 +713,7 @@ export default function HomePage() {
                 <div className="flex flex-wrap items-center justify-between gap-1 sm:gap-2">
                   <div className="flex flex-wrap items-center gap-1 sm:gap-2">
                     <span className="text-xs sm:text-sm font-medium text-black dark:text-gray-300">
-                      Active filters:
+                      {t('filter.activeFilters')}
                     </span>
                     {mapFilters.listingType && (
                       <Badge
@@ -728,8 +728,8 @@ export default function HomePage() {
                         }}
                       >
                         {mapFilters.listingType === "sale"
-                          ? "For Sale"
-                          : "For Rent"}
+                          ? t('filter.forSale')
+                          : t('filter.forRent')}
                       </Badge>
                     )}
                     {mapFilters.type && (
@@ -737,8 +737,7 @@ export default function HomePage() {
                         variant="secondary"
                         className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs"
                       >
-                        {mapFilters.type.charAt(0).toUpperCase() +
-                          mapFilters.type.slice(1)}
+                        {t(`filter.${mapFilters.type}` as any) || mapFilters.type.charAt(0).toUpperCase() + mapFilters.type.slice(1)}
                       </Badge>
                     )}
                     {mapFilters.bedrooms && (
@@ -746,7 +745,7 @@ export default function HomePage() {
                         variant="secondary"
                         className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs"
                       >
-                        {mapFilters.bedrooms}+ bed
+                        {mapFilters.bedrooms}+ {t('filter.beds')}
                       </Badge>
                     )}
                     {mapFilters.bathrooms && (
@@ -754,7 +753,7 @@ export default function HomePage() {
                         variant="secondary"
                         className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 text-xs"
                       >
-                        {mapFilters.bathrooms}+ bath
+                        {mapFilters.bathrooms}+ {t('filter.baths')}
                       </Badge>
                     )}
                     {mapFilters.city && (
@@ -794,7 +793,7 @@ export default function HomePage() {
                     data-testid="clear-filters-button"
                   >
                     <X className="h-3 w-3 mr-1" />
-                    Clear
+                    {t('filter.clear')}
                   </Button>
                 </div>
               </div>
