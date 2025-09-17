@@ -910,7 +910,7 @@ const translations: Translations = {
 const LANGUAGE_CHANGE_EVENT = 'languageChange';
 
 // Global function to change language and notify all components
-function globalChangeLanguage(lang: Language, persist: boolean = true) {
+export function globalChangeLanguage(lang: Language, persist: boolean = true) {
   if (persist) {
     localStorage.setItem('language', lang);
   }

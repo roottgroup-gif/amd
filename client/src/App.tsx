@@ -7,8 +7,9 @@ import { AuthProvider } from "@/components/AuthProvider";
 import { NetworkStatus } from "@/components/NetworkStatus";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { useNetworkError } from "@/hooks/useNetworkError";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import LanguageSelectionModal from "@/components/language-selection-modal";
 
 // Lazy load page components for better performance
 const Home = lazy(() => import("@/pages/home.tsx"));
@@ -47,6 +48,25 @@ function Router() {
 }
 
 function App() {
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+
+  useEffect(() => {
+    // Check if user has already selected a language
+    const hasSelectedLanguage = localStorage.getItem('language-selected');
+    if (!hasSelectedLanguage) {
+      setShowLanguageModal(true);
+    }
+  }, []);
+
+  const handleLanguageSelect = (languageCode: string) => {
+    // Import the global language change function
+    import('./lib/i18n').then(({ globalChangeLanguage }) => {
+      globalChangeLanguage(languageCode as any);
+      localStorage.setItem('language-selected', 'true');
+      setShowLanguageModal(false);
+    });
+  };
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -54,6 +74,10 @@ function App() {
           <TooltipProvider>
             <NetworkStatus />
             <Toaster />
+            <LanguageSelectionModal 
+              isOpen={showLanguageModal}
+              onLanguageSelect={handleLanguageSelect}
+            />
             <Router />
           </TooltipProvider>
         </AuthProvider>
