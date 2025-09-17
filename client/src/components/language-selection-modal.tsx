@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Languages, Globe } from "lucide-react";
+import kurdishFlag from "@assets/pngwing.com_1758101425052.png";
 
 interface LanguageSelectionModalProps {
   isOpen: boolean;
@@ -95,9 +96,17 @@ export default function LanguageSelectionModal({
               >
                 <CardContent className="p-4">
                   <div className="flex items-center space-x-4">
-                    <span className="text-2xl" role="img" aria-label={language.name}>
-                      {language.flag}
-                    </span>
+                    {language.code === 'kur' ? (
+                      <img 
+                        src={kurdishFlag} 
+                        alt={language.name}
+                        className="w-8 h-8 object-contain"
+                      />
+                    ) : (
+                      <span className="text-2xl" role="img" aria-label={language.name}>
+                        {language.flag}
+                      </span>
+                    )}
                     <div className="flex-1 text-left">
                       <h3 className="font-medium">{language.name}</h3>
                       <p className="text-sm text-muted-foreground">
