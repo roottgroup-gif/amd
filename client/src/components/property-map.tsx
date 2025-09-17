@@ -55,6 +55,7 @@ export default function PropertyMap({
   const [localFilters, setLocalFilters] = useState<PropertyFilters>(
     filters || {},
   );
+  const isLocalUpdate = useRef(false);
 
   // Helper function to get localized property title with fallback
   const getPropertyTitle = (property: any) => {
@@ -85,8 +86,12 @@ export default function PropertyMap({
     return () => observer.disconnect();
   }, []);
 
-  // Sync local filters with prop changes
+  // Sync local filters with prop changes, but don't overwrite local updates
   useEffect(() => {
+    if (isLocalUpdate.current) {
+      isLocalUpdate.current = false;
+      return;
+    }
     setLocalFilters(filters || {});
   }, [filters]);
 
@@ -1444,6 +1449,7 @@ export default function PropertyMap({
 
   const handleFilterChange = (key: string, value: string) => {
     console.log(`Filter change: ${key} = ${value}`);
+    isLocalUpdate.current = true;
     const newFilters = { ...localFilters };
 
     // Handle special "clear" values
