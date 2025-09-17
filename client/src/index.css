@@ -166,19 +166,11 @@
   }
 
   /* Kurdish Language Support - using higher specificity instead of !important */
-  html [lang="kur"]:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(.company-name), 
-  html [lang="kur"] *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]):not(.company-name), 
-  html .kurdish-font:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(.company-name), 
-  html .kurdish-font *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]):not(.company-name) {
+  html [lang="kur"]:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(.company-name):not(button):not([role="button"]), 
+  html [lang="kur"] *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]):not(.company-name):not(button):not([role="button"]), 
+  html .kurdish-font:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(.company-name):not(button):not([role="button"]), 
+  html .kurdish-font *:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab):not([class*="icon"]):not(svg):not([data-lucide]):not(.company-name):not(button):not([role="button"]) {
     font-family: var(--font-kurdish);
-    direction: rtl;
-    text-align: right;
-  }
-
-  /* Arabic font for text-based icons when Kurdish is active */
-  html[lang="kur"] .ui-icon-text,
-  html .kurdish-font .ui-icon-text {
-    font-family: var(--font-arabic);
     direction: rtl;
     text-align: right;
   }
