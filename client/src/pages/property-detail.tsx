@@ -370,22 +370,6 @@ export default function PropertyDetailPage() {
 
             {/* Action Buttons */}
             <div className="absolute top-4 right-4 flex space-x-2">
-              <Button
-                variant="secondary"
-                size="icon"
-                onClick={handleFavoriteClick}
-                className={`transition-all duration-200 ${
-                  isFavorite 
-                    ? 'bg-red-50 hover:bg-red-100 text-red-500 border-red-200 dark:bg-red-900/20 dark:hover:bg-red-900/30 dark:text-red-400 dark:border-red-800' 
-                    : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white'
-                }`}
-                data-testid="favorite-button"
-              >
-                <Heart className={`h-4 w-4 transition-all duration-200 ${
-                  isFavorite ? 'fill-current scale-110' : 'hover:scale-105'
-                }`} />
-              </Button>
-              
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -420,6 +404,22 @@ export default function PropertyDetailPage() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={handleFavoriteClick}
+                className={`transition-all duration-200 ${
+                  isFavorite 
+                    ? 'bg-red-50 hover:bg-red-100 text-red-500 border-red-200 dark:bg-red-900/20 dark:hover:bg-red-900/30 dark:text-red-400 dark:border-red-800' 
+                    : 'bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white'
+                }`}
+                data-testid="favorite-button"
+              >
+                <Heart className={`h-4 w-4 transition-all duration-200 ${
+                  isFavorite ? 'fill-current scale-110' : 'hover:scale-105'
+                }`} />
+              </Button>
             </div>
           </div>
           
