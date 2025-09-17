@@ -12,6 +12,7 @@ import { useProperty, useAddToFavorites, useRemoveFromFavorites, useIsFavorite }
 import { useToast } from "@/hooks/use-toast";
 import { SEOHead } from "@/components/SEOHead";
 import type { Property } from "@/types";
+import { extractPropertyIdentifier } from "@shared/slug-utils";
 import { 
   Heart, Bed, Bath, Square, Car, MapPin, ArrowLeft, 
   ChevronLeft, ChevronRight, Check, Calendar,
@@ -38,7 +39,7 @@ export default function PropertyDetailPage() {
   const { data: property, isLoading, error } = useProperty(id!);
   const addToFavorites = useAddToFavorites();
   const removeFromFavorites = useRemoveFromFavorites();
-  const { data: favoriteData } = useIsFavorite(userId, id || "");
+  const { data: favoriteData } = useIsFavorite(userId, property?.id || "");
 
   const isFavorite = favoriteData?.isFavorite || false;
 
@@ -93,7 +94,7 @@ export default function PropertyDetailPage() {
       "@type": "RealEstateListing",
       "name": property.title,
       "description": property.description || `${property.title} in ${property.city}, ${property.country}`,
-      "url": `${window.location.origin}/property/${property.id}`,
+      "url": `${window.location.origin}/property/${property.slug || property.id}`,
       "image": images,
       "price": {
         "@type": "MonetaryAmount",
@@ -176,7 +177,7 @@ export default function PropertyDetailPage() {
   const handleShare = async (platform?: string) => {
     if (!property) return;
 
-    const propertyUrl = `${window.location.origin}/property/${property.id}`;
+    const propertyUrl = `${window.location.origin}/property/${property.slug || property.id}`;
     const shareTitle = `${property.title} - MapEstate`;
     const shareText = `Check out this amazing ${property.type} in ${property.city}! ${formatPrice(property.price, property.currency || 'USD', property.listingType)}`;
 
@@ -339,7 +340,7 @@ export default function PropertyDetailPage() {
           description={`${property.description || `${property.bedrooms} bedroom ${property.type} for ${property.listingType} in ${property.city}, ${property.country}.`} View details, photos, and contact information.`}
           keywords={`${property.type}, ${property.city}, ${property.country}, ${property.listingType}, real estate, property, ${property.bedrooms} bedroom, ${property.bathrooms} bathroom`}
           ogImage={property.images && property.images.length > 0 ? property.images[0] : `${window.location.origin}/logo_1757848527935.png`}
-          canonicalUrl={`${window.location.origin}/property/${property.id}`}
+          canonicalUrl={`${window.location.origin}/property/${property.slug || property.id}`}
           structuredData={getPropertyStructuredData(property)}
         />
       )}

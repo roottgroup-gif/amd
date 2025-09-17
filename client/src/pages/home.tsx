@@ -305,7 +305,8 @@ export default function HomePage() {
             filters={mapFilters}
             onFilterChange={handleMapFilterChange}
             onPropertyClick={(property) => {
-              window.location.href = `/property/${property.id}`;
+              const identifier = property.slug || property.id;
+              window.location.href = `/property/${identifier}`;
             }}
             onPropertySelect={(property) => {
               // Handle property selection for highlighting

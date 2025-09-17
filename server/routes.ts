@@ -5,6 +5,7 @@ import {
   insertPropertySchema, updatePropertySchema, insertInquirySchema, insertFavoriteSchema, insertUserSchema,
   insertWaveSchema, insertCustomerWavePermissionSchema
 } from "@shared/schema";
+import { extractPropertyIdentifier } from "@shared/slug-utils";
 import { hashPassword, requireAuth, requireRole, requireAnyRole, populateUser, validateLanguagePermission } from "./auth";
 import session from "express-session";
 import { z } from "zod";
@@ -562,20 +563,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
-  app.get("/api/properties/:id", async (req, res) => {
+  app.get("/api/properties/:idOrSlug", async (req, res) => {
     try {
-      const { id } = req.params;
-      const property = await storage.getProperty(id);
+      const { idOrSlug } = req.params;
+      console.log(`🔍 Fetching property with ID or slug: ${idOrSlug}`);
+      
+      // Implement fallback mechanism: try slug first, then ID
+      let property = await storage.getPropertyBySlug(idOrSlug);
       
       if (!property) {
+        console.log(`🔄 Slug lookup failed, trying ID lookup for: ${idOrSlug}`);
+        property = await storage.getProperty(idOrSlug);
+      }
+      
+      if (!property) {
+        console.log(`❌ Property not found with slug or ID: ${idOrSlug}`);
         return res.status(404).json({ message: "Property not found" });
       }
 
-      // Increment views
-      await storage.incrementPropertyViews(id);
+      // Increment views using the property ID
+      await storage.incrementPropertyViews(property.id);
       
+      console.log(`✅ Property found: ${property.title}`);
       res.json(property);
     } catch (error) {
+      console.error('Error fetching property:', error);
       res.status(500).json({ message: "Failed to fetch property" });
     }
   });

@@ -22,6 +22,7 @@ export interface Property {
   agentId?: string;
   views: number;
   isFeatured: boolean;
+  slug?: string;
   createdAt: string;
   updatedAt: string;
   agent?: User;

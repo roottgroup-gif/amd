@@ -105,8 +105,9 @@ export default function PropertyCard({
     e.preventDefault();
     e.stopPropagation();
 
-    // Navigate to property detail page immediately
-    navigate(`/property/${property.id}`);
+    // Navigate to property detail page using slug if available, fallback to ID
+    const identifier = property.slug || property.id;
+    navigate(`/property/${identifier}`);
   };
 
   const handleMapClick = (e: React.MouseEvent) => {

@@ -38,9 +38,11 @@ router.get('/sitemap.xml', async (req, res) => {
   </url>
   
   <!-- Property pages -->
-  ${properties.map(property => `
+  ${properties.map(property => {
+    const identifier = property.slug || property.id;
+    return `
   <url>
-    <loc>${baseUrl}/property/${property.id}</loc>
+    <loc>${baseUrl}/property/${identifier}</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <lastmod>${property.updatedAt ? new Date(property.updatedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}</lastmod>
@@ -50,7 +52,8 @@ router.get('/sitemap.xml', async (req, res) => {
       <image:title>${property.title}</image:title>
       <image:caption>${property.description || property.title}</image:caption>
     </image:image>` : ''}
-  </url>`).join('')}
+  </url>`;
+  }).join('')}
 </urlset>`;
 
     res.set('Content-Type', 'application/xml');

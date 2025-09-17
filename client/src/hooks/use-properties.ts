@@ -44,17 +44,17 @@ export function useFeaturedProperties() {
   });
 }
 
-export function useProperty(id: string) {
+export function useProperty(idOrSlug: string) {
   return useQuery<Property>({
-    queryKey: ["/api/properties", id],
+    queryKey: ["/api/properties", idOrSlug],
     queryFn: async () => {
-      const response = await fetch(`/api/properties/${id}`);
+      const response = await fetch(`/api/properties/${idOrSlug}`);
       if (!response.ok) {
         throw new Error(`Failed to fetch property: ${response.status}`);
       }
       return response.json();
     },
-    enabled: !!id,
+    enabled: !!idOrSlug,
     staleTime: 5 * 60 * 1000, // 5 minutes cache
     gcTime: 10 * 60 * 1000, // 10 minutes in memory
   });
@@ -86,6 +86,10 @@ export function useUpdateProperty() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/properties"] });
       queryClient.invalidateQueries({ queryKey: ["/api/properties", data.id] });
+      // Also invalidate slug-based cache if slug exists
+      if (data.slug) {
+        queryClient.invalidateQueries({ queryKey: ["/api/properties", data.slug] });
+      }
     },
   });
 }

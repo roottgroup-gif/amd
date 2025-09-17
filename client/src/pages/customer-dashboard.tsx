@@ -933,7 +933,8 @@ export default function CustomerDashboard() {
 
   const handlePropertyInquiry = (property: PropertyWithAgent) => {
     // Open inquiry modal or navigate to property detail
-    navigate(`/property/${property.id}`);
+    const identifier = property.slug || property.id;
+    navigate(`/property/${identifier}`);
   };
 
   const onSubmitProperty = (data: PropertyFormValues) => {

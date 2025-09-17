@@ -194,21 +194,27 @@ export default function PropertyMap({
     // Define global function for viewing property details from map popup
     (window as any).viewPropertyFromMap = (propertyId: string) => {
       try {
+        // Find the property to get its slug
+        const property = properties.find(p => p.id === propertyId);
+        const identifier = property?.slug || propertyId;
+        
         // Navigate to property detail page using multiple approaches
-        console.log("Navigating to property:", propertyId);
+        console.log("Navigating to property:", propertyId, "using identifier:", identifier);
 
         // First try: Direct window navigation
         if (window.location) {
-          window.location.href = `/property/${propertyId}`;
+          window.location.href = `/property/${identifier}`;
           return;
         }
 
         // Fallback: Open in new window if direct navigation fails
-        window.open(`/property/${propertyId}`, "_self");
+        window.open(`/property/${identifier}`, "_self");
       } catch (error) {
         console.error("Navigation failed:", error);
-        // Last resort: Open in new tab
-        window.open(`/property/${propertyId}`, "_blank");
+        // Last resort: Open in new tab with the identifier
+        const property = properties.find(p => p.id === propertyId);
+        const identifier = property?.slug || propertyId;
+        window.open(`/property/${identifier}`, "_blank");
       }
     };
 
