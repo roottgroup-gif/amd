@@ -20,6 +20,7 @@ const CustomerDashboard = lazy(() => import("@/pages/customer-dashboard"));
 const AdminLogin = lazy(() => import("@/pages/admin-login.tsx"));
 const AdminDashboard = lazy(() => import("@/pages/admin-dashboard"));
 const DashboardRedirect = lazy(() => import("@/pages/dashboard-redirect.tsx"));
+const AboutPage = lazy(() => import("@/pages/about.tsx"));
 const NotFound = lazy(() => import("@/pages/not-found.tsx"));
 
 function Router() {
@@ -37,6 +38,7 @@ function Router() {
         <Route path="/customer/dashboard" component={CustomerDashboard} />
         <Route path="/admin/login" component={AdminLogin} />
         <Route path="/admin/dashboard" component={AdminDashboard} />
+        <Route path="/about" component={AboutPage} />
         {/* Fallback to 404 */}
         <Route component={NotFound} />
       </Switch>
