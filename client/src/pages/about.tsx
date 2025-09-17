@@ -42,11 +42,11 @@ export default function AboutPage() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 space-y-12">
         {/* Hero Section */}
-        <section className="text-center space-y-4">
+        <section className="text-left space-y-4">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white" data-testid="text-about-title">
             {t('about.title')}
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto" data-testid="text-about-subtitle">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl" data-testid="text-about-subtitle">
             {t('about.subtitle')}
           </p>
         </section>
@@ -54,14 +54,14 @@ export default function AboutPage() {
         {/* Mission Section */}
         <section className="max-w-4xl mx-auto">
           <Card className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl text-gray-900 dark:text-white flex items-center justify-center gap-2" data-testid="text-mission-title">
+            <CardHeader className="text-left">
+              <CardTitle className="text-3xl text-gray-900 dark:text-white flex items-center gap-2" data-testid="text-mission-title">
                 <Shield className="h-8 w-8 text-orange-600" />
                 {t('about.ourMission')}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed text-center" data-testid="text-mission-content">
+              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed text-left" data-testid="text-mission-content">
                 {t('about.missionText')}
               </p>
             </CardContent>
@@ -71,13 +71,13 @@ export default function AboutPage() {
         {/* Story Section */}
         <section className="max-w-4xl mx-auto">
           <Card className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm">
-            <CardHeader className="text-center">
+            <CardHeader className="text-left">
               <CardTitle className="text-3xl text-gray-900 dark:text-white" data-testid="text-story-title">
                 {t('about.ourStory')}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed text-center" data-testid="text-story-content">
+              <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed text-left" data-testid="text-story-content">
                 {t('about.storyText')}
               </p>
             </CardContent>
@@ -86,47 +86,47 @@ export default function AboutPage() {
 
         {/* Values Section */}
         <section className="space-y-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white" data-testid="text-values-title">
+          <h2 className="text-3xl font-bold text-left text-gray-900 dark:text-white" data-testid="text-values-title">
             {t('about.ourValues')}
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm hover:shadow-lg transition-shadow">
-              <CardHeader className="text-center">
-                <Shield className="h-12 w-12 text-blue-600 mx-auto mb-2" />
+              <CardHeader className="text-left">
+                <Shield className="h-12 w-12 text-blue-600 mb-2" />
                 <CardTitle className="text-xl text-gray-900 dark:text-white" data-testid="text-value-transparency">
                   {t('about.valueTransparency')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 dark:text-gray-300 text-center" data-testid="text-value-transparency-desc">
+                <p className="text-gray-700 dark:text-gray-300 text-left" data-testid="text-value-transparency-desc">
                   {t('about.valueTransparencyText')}
                 </p>
               </CardContent>
             </Card>
 
             <Card className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm hover:shadow-lg transition-shadow">
-              <CardHeader className="text-center">
-                <Lightbulb className="h-12 w-12 text-yellow-600 mx-auto mb-2" />
+              <CardHeader className="text-left">
+                <Lightbulb className="h-12 w-12 text-yellow-600 mb-2" />
                 <CardTitle className="text-xl text-gray-900 dark:text-white" data-testid="text-value-innovation">
                   {t('about.valueInnovation')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 dark:text-gray-300 text-center" data-testid="text-value-innovation-desc">
+                <p className="text-gray-700 dark:text-gray-300 text-left" data-testid="text-value-innovation-desc">
                   {t('about.valueInnovationText')}
                 </p>
               </CardContent>
             </Card>
 
             <Card className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm hover:shadow-lg transition-shadow">
-              <CardHeader className="text-center">
-                <Award className="h-12 w-12 text-green-600 mx-auto mb-2" />
+              <CardHeader className="text-left">
+                <Award className="h-12 w-12 text-green-600 mb-2" />
                 <CardTitle className="text-xl text-gray-900 dark:text-white" data-testid="text-value-excellence">
                   {t('about.valueExcellence')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 dark:text-gray-300 text-center" data-testid="text-value-excellence-desc">
+                <p className="text-gray-700 dark:text-gray-300 text-left" data-testid="text-value-excellence-desc">
                   {t('about.valueExcellenceText')}
                 </p>
               </CardContent>
@@ -136,47 +136,47 @@ export default function AboutPage() {
 
         {/* Why Choose Us Section */}
         <section className="space-y-8">
-          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white" data-testid="text-why-choose-title">
+          <h2 className="text-3xl font-bold text-left text-gray-900 dark:text-white" data-testid="text-why-choose-title">
             {t('about.whyChooseUs')}
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 backdrop-blur-sm hover:shadow-lg transition-shadow">
-              <CardHeader className="text-center">
-                <Brain className="h-12 w-12 text-orange-600 mx-auto mb-2" />
+              <CardHeader className="text-left">
+                <Brain className="h-12 w-12 text-orange-600 mb-2" />
                 <CardTitle className="text-xl text-gray-900 dark:text-white" data-testid="text-feature-ai">
                   {t('about.featureAI')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 dark:text-gray-300 text-center" data-testid="text-feature-ai-desc">
+                <p className="text-gray-700 dark:text-gray-300 text-left" data-testid="text-feature-ai-desc">
                   {t('about.featureAIText')}
                 </p>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 backdrop-blur-sm hover:shadow-lg transition-shadow">
-              <CardHeader className="text-center">
-                <Users className="h-12 w-12 text-blue-600 mx-auto mb-2" />
+              <CardHeader className="text-left">
+                <Users className="h-12 w-12 text-blue-600 mb-2" />
                 <CardTitle className="text-xl text-gray-900 dark:text-white" data-testid="text-feature-local">
                   {t('about.featureLocal')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 dark:text-gray-300 text-center" data-testid="text-feature-local-desc">
+                <p className="text-gray-700 dark:text-gray-300 text-left" data-testid="text-feature-local-desc">
                   {t('about.featureLocalText')}
                 </p>
               </CardContent>
             </Card>
 
             <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 backdrop-blur-sm hover:shadow-lg transition-shadow">
-              <CardHeader className="text-center">
-                <Headphones className="h-12 w-12 text-green-600 mx-auto mb-2" />
+              <CardHeader className="text-left">
+                <Headphones className="h-12 w-12 text-green-600 mb-2" />
                 <CardTitle className="text-xl text-gray-900 dark:text-white" data-testid="text-feature-support">
                   {t('about.featureSupport')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700 dark:text-gray-300 text-center" data-testid="text-feature-support-desc">
+                <p className="text-gray-700 dark:text-gray-300 text-left" data-testid="text-feature-support-desc">
                   {t('about.featureSupportText')}
                 </p>
               </CardContent>
@@ -185,7 +185,7 @@ export default function AboutPage() {
         </section>
 
         {/* Contact Section */}
-        <section className="text-center bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-8 text-white">
+        <section className="text-left bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-8 text-white">
           <h2 className="text-3xl font-bold mb-4" data-testid="text-contact-title">
             {t('about.contactUs')}
           </h2>
