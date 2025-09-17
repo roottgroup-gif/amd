@@ -374,10 +374,6 @@ export default function HomePage() {
                           : t("menu.lightMode")}
                       </span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 dark:text-red-400">
-                      <LogOut className="h-4 w-4" />
-                      <span>{t("menu.signOut")}</span>
-                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <img
