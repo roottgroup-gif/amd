@@ -56,6 +56,7 @@ export default function PropertyMap({
     filters || {},
   );
   const isLocalUpdate = useRef(false);
+  const clickGuard = useRef<number | null>(null);
 
   // Helper function to get localized property title with fallback
   const getPropertyTitle = (property: any) => {
@@ -1448,6 +1449,11 @@ export default function PropertyMap({
   };
 
   const handleFilterChange = (key: string, value: string) => {
+    // Prevent duplicate calls within 100ms 
+    const now = Date.now();
+    if (clickGuard.current && now - clickGuard.current < 100) return;
+    clickGuard.current = now;
+    
     console.log(`Filter change: ${key} = ${value}`);
     isLocalUpdate.current = true;
     const newFilters = { ...localFilters };
@@ -1608,7 +1614,11 @@ export default function PropertyMap({
                       ? "bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-600"
                       : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                   }`}
-                  onClick={() => handleFilterChange("listingType", "sale")}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleFilterChange("listingType", "sale");
+                  }}
                 >
                   <div
                     className={`w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === "sale" ? "animate-pulse" : ""}`}
@@ -1625,7 +1635,11 @@ export default function PropertyMap({
                       ? "bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-600"
                       : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                   }`}
-                  onClick={() => handleFilterChange("listingType", "rent")}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleFilterChange("listingType", "rent");
+                  }}
                 >
                   <div
                     className={`w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full flex-shrink-0 shadow-lg ${localFilters.listingType === "rent" ? "animate-pulse" : ""}`}
@@ -1643,7 +1657,11 @@ export default function PropertyMap({
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                     }`}
-                    onClick={() => handleFilterChange("type", "house")}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleFilterChange("type", "house");
+                    }}
                   >
                     <i
                       className="fas fa-home text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
@@ -1661,7 +1679,11 @@ export default function PropertyMap({
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                     }`}
-                    onClick={() => handleFilterChange("type", "apartment")}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleFilterChange("type", "apartment");
+                    }}
                   >
                     <i
                       className="fas fa-building text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
@@ -1679,7 +1701,11 @@ export default function PropertyMap({
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                     }`}
-                    onClick={() => handleFilterChange("type", "villa")}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleFilterChange("type", "villa");
+                    }}
                   >
                     <i
                       className="fas fa-university text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
@@ -1697,7 +1723,11 @@ export default function PropertyMap({
                         ? "bg-orange-100 dark:bg-orange-900/40 border-orange-300 dark:border-orange-600"
                         : "bg-white/95 dark:bg-gray-900/95 border-gray-200/50 dark:border-gray-600/50 hover:bg-white dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-500"
                     }`}
-                    onClick={() => handleFilterChange("type", "land")}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleFilterChange("type", "land");
+                    }}
                   >
                     <i
                       className="fas fa-map-marked-alt text-sm sm:text-base flex-shrink-0 drop-shadow-lg"
