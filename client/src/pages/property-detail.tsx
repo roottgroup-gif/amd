@@ -541,7 +541,7 @@ export default function PropertyDetailPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 bg-white">
+          <div className="lg:col-span-2">
             {/* Property Header */}
             <div className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 mb-8 border border-blue-200/30 dark:border-blue-700/30 backdrop-blur-sm">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between">
