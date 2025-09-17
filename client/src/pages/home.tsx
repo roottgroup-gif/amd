@@ -348,7 +348,7 @@ export default function HomePage() {
                       onClick={() => setLocation("/favorites")}
                       data-testid="my-favorites-menu"
                     >
-                      <Heart className="h-4 w-4" />
+                      <Heart className="h-4 w-4" style={{ color: "#FF7800" }} />
                       <span>{t("menu.myFavorites")}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
@@ -356,7 +356,7 @@ export default function HomePage() {
                       onClick={() => setLocation("/settings")}
                       data-testid="settings-menu"
                     >
-                      <Settings className="h-4 w-4" />
+                      <Settings className="h-4 w-4" style={{ color: "#FF7800" }} />
                       <span>{t("menu.settings")}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
@@ -364,7 +364,7 @@ export default function HomePage() {
                       onClick={() => setLocation("/about")}
                       data-testid="about-menu"
                     >
-                      <Info className="h-4 w-4" />
+                      <Info className="h-4 w-4" style={{ color: "#FF7800" }} />
                       <span>{t("nav.about")}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
@@ -372,9 +372,9 @@ export default function HomePage() {
                       onClick={toggleTheme}
                     >
                       {theme === "light" ? (
-                        <Moon className="h-4 w-4" />
+                        <Moon className="h-4 w-4" style={{ color: "#FF7800" }} />
                       ) : (
-                        <Sun className="h-4 w-4" />
+                        <Sun className="h-4 w-4" style={{ color: "#FF7800" }} />
                       )}
                       <span>
                         {theme === "light"
