@@ -122,7 +122,7 @@ export default function ContactForm({ property, agent, className }: ContactFormP
             </Badge>
           )}
         </div>
-        <p className="text-sm font-medium text-orange-700 dark:text-orange-300 bg-white/50 dark:bg-gray-800/50 px-3 py-1 rounded-full inline-block text-center">{t('contact.agentTitle')}</p>
+        <p className="text-sm font-medium text-orange-700 dark:text-orange-300 bg-white/50 dark:bg-gray-800/50 px-3 py-1 rounded-full mx-auto text-center w-fit">{t('contact.agentTitle')}</p>
         
       </CardHeader>
       
