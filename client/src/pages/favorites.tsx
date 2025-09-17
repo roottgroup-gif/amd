@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SEOHead } from "@/components/SEOHead";
 import { useFavorites } from "@/hooks/use-properties";
+import { useTranslation } from "@/lib/i18n";
 import { ArrowLeft, Heart, Home as HomeIcon } from "lucide-react";
 import type { Property } from "@/types";
 
@@ -13,6 +14,7 @@ export default function FavoritesPage() {
   const [userId] = useState("demo-user-id"); // In real app, get from auth context
   const { data: favorites, isLoading, error } = useFavorites(userId);
   const [, setLocation] = useLocation();
+  const { t } = useTranslation();
 
   const handleMapClick = (property: Property) => {
     // Navigate to home page with property ID to show on map
@@ -26,8 +28,8 @@ export default function FavoritesPage() {
     return {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      "name": "My Favorite Properties",
-      "description": `View your ${totalFavorites} saved favorite properties. Keep track of properties you're interested in buying or renting.`,
+      "name": t('favorites.structuredDataName'),
+      "description": `View your ${totalFavorites} ${t('favorites.structuredDataDescription')}`,
       "numberOfItems": totalFavorites,
       "isPartOf": {
         "@type": "WebSite",
@@ -45,7 +47,7 @@ export default function FavoritesPage() {
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Loading your favorites...</p>
+              <p className="text-muted-foreground">{t('favorites.loadingFavorites')}</p>
             </div>
           </div>
         </div>
@@ -59,7 +61,7 @@ export default function FavoritesPage() {
         <Navigation />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
-            <p className="text-red-600 dark:text-red-400">Error loading favorites. Please try again.</p>
+            <p className="text-red-600 dark:text-red-400">{t('favorites.errorLoading')}</p>
           </div>
         </div>
       </div>
@@ -69,8 +71,8 @@ export default function FavoritesPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEOHead
-        title="My Favorite Properties - MapEstate | Saved Property Listings"
-        description={`View your ${favorites?.length || 0} saved favorite properties. Keep track of houses, apartments, and villas you're interested in buying or renting in Kurdistan, Iraq.`}
+        title={t('favorites.title')}
+        description={t('favorites.description')}
         keywords="favorite properties, saved listings, property bookmarks, real estate favorites, Kurdistan Iraq properties"
         canonicalUrl={`${window.location.origin}/favorites`}
         structuredData={getFavoritesStructuredData()}
@@ -83,7 +85,7 @@ export default function FavoritesPage() {
             <Link href="/">
               <Button variant="ghost" size="sm" className="flex items-center gap-2" data-testid="back-to-home">
                 <ArrowLeft className="h-4 w-4" />
-                Back to Home
+                {t('property.backToHome')}
               </Button>
             </Link>
             <div>
@@ -97,9 +99,9 @@ export default function FavoritesPage() {
             <CardContent className="py-16">
               <div className="text-center">
                 <Heart className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-foreground mb-2">No favorites yet</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-2">{t('favorites.noFavoritesYet')}</h3>
                 <p className="text-muted-foreground mb-6">
-                  Start adding properties to your favorites by clicking the heart icon on property listings.
+                  {t('favorites.noFavoritesDescription')}
                 </p>
               </div>
             </CardContent>
