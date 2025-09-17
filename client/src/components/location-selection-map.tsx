@@ -73,6 +73,28 @@ export default function LocationSelectionMap({
   const mapInstanceRef = useRef<any>(null);
   const markerRef = useRef<any>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+
+  // Get user's location for auto-centering the map
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.warn('Geolocation failed:', error.message);
+          // Will fall back to default location (Kurdistan)
+        },
+        {
+          enableHighAccuracy: false,
+          timeout: 10000,
+          maximumAge: 300000 // 5 minutes
+        }
+      );
+    }
+  }, []);
 
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
@@ -92,8 +114,12 @@ export default function LocationSelectionMap({
             return;
           }
 
-          // Center on Kurdistan/Iraq region
-          const map = L.map(mapRef.current).setView([36.1911, 44.0094], 8);
+          // Center on user's location if available, otherwise Kurdistan/Iraq region
+          const defaultLocation = [36.1911, 44.0094]; // Kurdistan/Iraq fallback
+          const centerLocation = userLocation ? [userLocation.lat, userLocation.lng] : defaultLocation;
+          const zoomLevel = userLocation ? 10 : 8; // Closer zoom if we have user location
+          
+          const map = L.map(mapRef.current).setView(centerLocation, zoomLevel);
 
           // Add OpenStreetMap tiles
           L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -195,7 +221,18 @@ export default function LocationSelectionMap({
         markerRef.current = null;
       }
     };
-  }, [onLocationSelect]);
+  }, [onLocationSelect, userLocation]);
+
+  // Re-center map when user location is detected
+  useEffect(() => {
+    if (mapInstanceRef.current && userLocation && isMapLoaded) {
+      // Smoothly animate to user's location
+      mapInstanceRef.current.setView([userLocation.lat, userLocation.lng], 10, {
+        animate: true,
+        duration: 1.5
+      });
+    }
+  }, [userLocation, isMapLoaded]);
 
   // Update marker when selectedLocation changes externally
   useEffect(() => {
