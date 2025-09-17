@@ -950,6 +950,16 @@ const translations: Translations = {
     en: '🗺️ Powered by OpenStreetMap & Leaflet.js',
     ar: '🗺️ مدعوم بواسطة OpenStreetMap و Leaflet.js',
     kur: '🗺️ پشتگیری لەلایەن OpenStreetMap و Leaflet.js'
+  },
+  'map.propertiesIn': {
+    en: 'Properties in',
+    ar: 'العقارات في',
+    kur: 'خانووبەرە لە'
+  },
+  'map.propertiesInThisArea': {
+    en: 'Properties in this area',
+    ar: 'العقارات في هذه المنطقة',
+    kur: 'خانووبەرە لەم ناوچەیەدا'
   }
 };
 
