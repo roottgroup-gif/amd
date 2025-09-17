@@ -493,7 +493,7 @@ export default function PropertyDetailPage() {
             {/* Property Features */}
             <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 mb-8">
               <CardContent className="p-4 sm:p-5 md:p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                   {property.bedrooms && (
                     <div className="flex items-center gap-3 md:flex-col md:items-center md:justify-center text-start md:text-center" data-testid="bedrooms-info">
                       <Bed className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-primary md:mx-auto shrink-0" />
