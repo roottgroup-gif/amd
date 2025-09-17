@@ -492,33 +492,41 @@ export default function PropertyDetailPage() {
 
             {/* Property Features */}
             <Card className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 dark:border-white/10 mb-8">
-              <CardContent className="p-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <CardContent className="p-4 sm:p-5 md:p-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                   {property.bedrooms && (
-                    <div className="text-center" data-testid="bedrooms-info">
-                      <Bed className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <div className="font-semibold text-lg">{property.bedrooms}</div>
-                      <div className="text-sm text-muted-foreground">{t('property.bedrooms')}</div>
+                    <div className="flex items-center gap-3 md:flex-col md:items-center md:justify-center text-start md:text-center" data-testid="bedrooms-info">
+                      <Bed className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-primary md:mx-auto shrink-0" />
+                      <div>
+                        <div className="font-semibold text-base sm:text-lg md:text-xl">{property.bedrooms}</div>
+                        <div className="text-[11px] sm:text-xs md:text-sm text-muted-foreground leading-tight">{t('property.bedrooms')}</div>
+                      </div>
                     </div>
                   )}
                   {property.bathrooms && (
-                    <div className="text-center" data-testid="bathrooms-info">
-                      <Bath className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <div className="font-semibold text-lg">{property.bathrooms}</div>
-                      <div className="text-sm text-muted-foreground">{t('property.bathrooms')}</div>
+                    <div className="flex items-center gap-3 md:flex-col md:items-center md:justify-center text-start md:text-center" data-testid="bathrooms-info">
+                      <Bath className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-primary md:mx-auto shrink-0" />
+                      <div>
+                        <div className="font-semibold text-base sm:text-lg md:text-xl">{property.bathrooms}</div>
+                        <div className="text-[11px] sm:text-xs md:text-sm text-muted-foreground leading-tight">{t('property.bathrooms')}</div>
+                      </div>
                     </div>
                   )}
                   {property.area && (
-                    <div className="text-center" data-testid="area-info">
-                      <Square className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <div className="font-semibold text-lg">{property.area.toLocaleString()}</div>
-                      <div className="text-sm text-muted-foreground">{t('property.sqFt')}</div>
+                    <div className="flex items-center gap-3 md:flex-col md:items-center md:justify-center text-start md:text-center" data-testid="area-info">
+                      <Square className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-primary md:mx-auto shrink-0" />
+                      <div>
+                        <div className="font-semibold text-base sm:text-lg md:text-xl">{property.area.toLocaleString()}</div>
+                        <div className="text-[11px] sm:text-xs md:text-sm text-muted-foreground leading-tight">{t('property.sqFt')}</div>
+                      </div>
                     </div>
                   )}
-                  <div className="text-center">
-                    <Car className="h-8 w-8 text-primary mx-auto mb-2" />
-                    <div className="font-semibold text-lg">2</div>
-                    <div className="text-sm text-muted-foreground">{t('property.parking')}</div>
+                  <div className="flex items-center gap-3 md:flex-col md:items-center md:justify-center text-start md:text-center">
+                    <Car className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-primary md:mx-auto shrink-0" />
+                    <div>
+                      <div className="font-semibold text-base sm:text-lg md:text-xl">2</div>
+                      <div className="text-[11px] sm:text-xs md:text-sm text-muted-foreground leading-tight">{t('property.parking')}</div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
