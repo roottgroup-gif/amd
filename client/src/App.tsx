@@ -49,12 +49,14 @@ function Router() {
 
 function App() {
   const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showBlur, setShowBlur] = useState(false);
 
   useEffect(() => {
     // Check if user has already selected a language
     const hasSelectedLanguage = localStorage.getItem('language-selected');
     if (!hasSelectedLanguage) {
       setShowLanguageModal(true);
+      setShowBlur(true);
     }
   }, []);
 
@@ -64,6 +66,8 @@ function App() {
       globalChangeLanguage(languageCode as any);
       localStorage.setItem('language-selected', 'true');
       setShowLanguageModal(false);
+      // Keep blur for a moment after selection
+      setTimeout(() => setShowBlur(false), 300);
     });
   };
 
@@ -76,6 +80,7 @@ function App() {
             <Toaster />
             <LanguageSelectionModal 
               isOpen={showLanguageModal}
+              showBlur={showBlur}
               onLanguageSelect={handleLanguageSelect}
             />
             <Router />
