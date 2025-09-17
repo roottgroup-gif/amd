@@ -195,7 +195,7 @@ export default function SettingsPage() {
                     {t("settings.emailNotificationsDesc")}
                   </p>
                 </div>
-                <div className="flex-shrink-0" dir="ltr">
+                <div className="flex-shrink-0">
                   <Switch
                     checked={userSettings.emailNotifications}
                     onCheckedChange={(checked) =>
@@ -216,7 +216,7 @@ export default function SettingsPage() {
                     {t("settings.pushNotificationsDesc")}
                   </p>
                 </div>
-                <div className="flex-shrink-0" dir="ltr">
+                <div className="flex-shrink-0">
                   <Switch
                     checked={userSettings.pushNotifications}
                     onCheckedChange={(checked) =>
@@ -255,7 +255,7 @@ export default function SettingsPage() {
                     {t("settings.priceAlertsDesc")}
                   </p>
                 </div>
-                <div className="flex-shrink-0" dir="ltr">
+                <div className="flex-shrink-0">
                   <Switch
                     checked={userSettings.priceAlerts}
                     onCheckedChange={(checked) =>
@@ -310,7 +310,7 @@ export default function SettingsPage() {
                     {t("settings.showPropertyPricesDesc")}
                   </p>
                 </div>
-                <div className="flex-shrink-0" dir="ltr">
+                <div className="flex-shrink-0">
                   <Switch
                     checked={userSettings.showPropertyPrices}
                     onCheckedChange={(checked) =>
@@ -331,7 +331,7 @@ export default function SettingsPage() {
                     {t("settings.showDistanceDesc")}
                   </p>
                 </div>
-                <div className="flex-shrink-0" dir="ltr">
+                <div className="flex-shrink-0">
                   <Switch
                     checked={userSettings.showDistance}
                     onCheckedChange={(checked) =>
@@ -349,7 +349,7 @@ export default function SettingsPage() {
                     {t("settings.autoZoomDesc")}
                   </p>
                 </div>
-                <div className="flex-shrink-0" dir="ltr">
+                <div className="flex-shrink-0">
                   <Switch
                     checked={userSettings.autoZoom}
                     onCheckedChange={(checked) =>
