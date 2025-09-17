@@ -4,12 +4,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { useTranslation } from "@/lib/i18n";
+import { SEOHead } from "@/components/SEOHead";
 
 export default function AboutPage() {
   const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <SEOHead
+        title={`${t('about.title')} - MapEstate`}
+        description={t('about.subtitle')}
+      />
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 py-4">

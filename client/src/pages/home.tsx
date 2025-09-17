@@ -45,12 +45,12 @@ import {
   User,
   Heart,
   Settings,
-  LogOut,
   University,
   Sun,
   Moon,
   Building,
   Mountain,
+  Info,
 } from "lucide-react";
 import logoImage from "@assets/logo_1757848527935.png";
 
@@ -358,6 +358,14 @@ export default function HomePage() {
                     >
                       <Settings className="h-4 w-4" />
                       <span>{t("menu.settings")}</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="flex items-center gap-2 cursor-pointer"
+                      onClick={() => setLocation("/about")}
+                      data-testid="about-menu"
+                    >
+                      <Info className="h-4 w-4" />
+                      <span>{t("nav.about")}</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="flex items-center gap-2 cursor-pointer"
