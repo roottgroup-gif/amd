@@ -392,7 +392,7 @@ export default function PropertyDetailPage() {
                 </Button>
                 
                 {/* Image Counter */}
-                <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                <div className="absolute top-4 left-4 bg-orange-500/70 text-white px-3 py-1 rounded-full text-sm">
                   {currentImageIndex + 1} / {images.length}
                 </div>
               </>
