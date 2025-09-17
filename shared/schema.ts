@@ -56,6 +56,7 @@ export const properties = pgTable("properties", {
   waveId: varchar("wave_id").references(() => waves.id), // Wave assignment
   views: integer("views").default(0),
   isFeatured: boolean("is_featured").default(false),
+  slug: text("slug").unique(), // SEO-friendly URL slug (nullable for backward compatibility)
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -300,6 +301,7 @@ export const insertPropertySchema = createInsertSchema(properties).omit({
   createdAt: true,
   updatedAt: true,
   views: true,
+  slug: true, // Slug will be auto-generated
 }).extend({
   language: z.enum(SUPPORTED_LANGUAGES).default("en"),
 });
@@ -309,6 +311,7 @@ export const updatePropertySchema = createInsertSchema(properties).omit({
   createdAt: true,
   updatedAt: true,
   views: true,
+  slug: true, // Slug will be auto-regenerated if needed
 }).extend({
   language: z.enum(SUPPORTED_LANGUAGES).optional(), // No default for updates
 }).partial();

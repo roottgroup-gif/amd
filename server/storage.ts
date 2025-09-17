@@ -13,6 +13,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, like, gte, lte, desc, asc, sql, inArray } from "drizzle-orm";
+import { generatePropertySlug } from "@shared/slug-utils";
 
 export interface IStorage {
   // Users
@@ -1175,6 +1176,16 @@ class MemStorage implements IStorage {
     // Add each property to memory storage
     for (let i = 0; i < sampleProperties.length; i++) {
       const property = sampleProperties[i];
+      const propertyForSlug = {
+        ...property,
+        city: property.city || '',
+        type: property.type || '',
+        listingType: property.listingType || 'sale',
+        bedrooms: property.bedrooms || null,
+        title: property.title || ''
+      };
+      const slug = generatePropertySlug(propertyForSlug);
+      
       const newProperty: Property = {
         id: `prop-${1000 + i}`,
         ...property,
@@ -1194,6 +1205,7 @@ class MemStorage implements IStorage {
         features: property.features || [],
         language: property.language || 'en',
         views: Math.floor(Math.random() * 100) + 1,
+        slug: slug,
         createdAt: new Date(),
         updatedAt: new Date()
       };
@@ -1356,6 +1368,17 @@ class MemStorage implements IStorage {
     });
   }
   async createProperty(property: InsertProperty): Promise<Property> { 
+    // Generate slug for the new property
+    const propertyForSlug = {
+      ...property,
+      city: property.city || '',
+      type: property.type || '',
+      listingType: property.listingType || 'sale',
+      bedrooms: property.bedrooms || null,
+      title: property.title || ''
+    };
+    const slug = generatePropertySlug(propertyForSlug);
+    
     const newProperty: Property = { 
       id: `prop-${Date.now()}`, 
       ...property,
@@ -1376,6 +1399,7 @@ class MemStorage implements IStorage {
       features: (property.features as string[]) || [],
       language: property.language || 'en',
       views: 0, 
+      slug: slug,
       createdAt: new Date(), 
       updatedAt: new Date() 
     };
