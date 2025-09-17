@@ -24,6 +24,8 @@ export default function PropertyDetailPage() {
   const { t, changeLanguage, language: currentLanguage } = useTranslation();
   const { toast } = useToast();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [isAutoSliding, setIsAutoSliding] = useState(true);
   const [userId] = useState("demo-user-id"); // In real app, get from auth context
   const [originalLanguage, setOriginalLanguage] = useState<string | null>(null);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -248,6 +250,33 @@ export default function PropertyDetailPage() {
     }
   };
 
+  // Auto sliding functionality
+  useEffect(() => {
+    if (!isAutoSliding || !property?.images || property.images.length <= 1 || isFullScreen) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      nextImage();
+    }, 4000); // Change image every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [isAutoSliding, property?.images, isFullScreen]);
+
+  const openFullScreen = () => {
+    setIsFullScreen(true);
+    setIsAutoSliding(false);
+  };
+
+  const closeFullScreen = () => {
+    setIsFullScreen(false);
+    setIsAutoSliding(true);
+  };
+
+  const toggleAutoSlide = () => {
+    setIsAutoSliding(!isAutoSliding);
+  };
+
   const formatPrice = (price: string, currency: string, listingType: string) => {
     const amount = parseFloat(price);
     const formattedAmount = new Intl.NumberFormat().format(amount);
@@ -374,6 +403,37 @@ export default function PropertyDetailPage() {
               <Button
                 variant="secondary"
                 size="icon"
+                onClick={toggleAutoSlide}
+                className="bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white transition-all duration-200"
+                data-testid="auto-slide-button"
+                title={isAutoSliding ? 'Pause auto slide' : 'Play auto slide'}
+              >
+                {isAutoSliding ? (
+                  <div className="h-4 w-4 flex items-center justify-center">
+                    <div className="w-1 h-3 bg-current mr-0.5"></div>
+                    <div className="w-1 h-3 bg-current"></div>
+                  </div>
+                ) : (
+                  <div className="h-4 w-4 flex items-center justify-center">
+                    <div className="w-0 h-0 border-l-4 border-l-current border-t-2 border-t-transparent border-b-2 border-b-transparent"></div>
+                  </div>
+                )}
+              </Button>
+              
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={openFullScreen}
+                className="bg-white/80 hover:bg-white text-gray-600 hover:text-gray-700 dark:bg-black/80 dark:hover:bg-black dark:text-gray-300 dark:hover:text-white transition-all duration-200"
+                data-testid="fullscreen-button"
+                title="View full screen"
+              >
+                <Eye className="h-4 w-4 hover:scale-105 transition-all duration-200" />
+              </Button>
+              
+              <Button
+                variant="secondary"
+                size="icon"
                 onClick={handleFavoriteClick}
                 className={`transition-all duration-200 ${
                   isFavorite 
@@ -451,6 +511,63 @@ export default function PropertyDetailPage() {
             </div>
           )}
         </Card>
+
+        {/* Full Screen Modal */}
+        {isFullScreen && (
+          <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
+            <div className="relative w-full h-full flex items-center justify-center">
+              <img
+                src={images[currentImageIndex]}
+                alt={`${property.title} - Full Screen ${currentImageIndex + 1}`}
+                className="max-w-full max-h-full object-contain"
+                data-testid="fullscreen-image"
+              />
+              
+              {/* Close button */}
+              <Button
+                variant="secondary"
+                size="icon"
+                className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white border-white/30"
+                onClick={closeFullScreen}
+                data-testid="close-fullscreen-button"
+              >
+                <div className="h-4 w-4 flex items-center justify-center">
+                  <div className="w-3 h-0.5 bg-current transform rotate-45 absolute"></div>
+                  <div className="w-3 h-0.5 bg-current transform -rotate-45 absolute"></div>
+                </div>
+              </Button>
+              
+              {/* Navigation buttons in full screen */}
+              {images.length > 1 && (
+                <>
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white border-white/30"
+                    onClick={prevImage}
+                    data-testid="fullscreen-prev-button"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white border-white/30"
+                    onClick={nextImage}
+                    data-testid="fullscreen-next-button"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </Button>
+                  
+                  {/* Image counter in full screen */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm">
+                    {currentImageIndex + 1} / {images.length}
+                  </div>
+                </>  
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
