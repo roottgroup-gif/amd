@@ -455,7 +455,7 @@ export default function PropertyDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Property Header */}
-            <div className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 mb-8 border border-blue-200/30 dark:border-blue-700/30 shadow-lg backdrop-blur-sm">
+            <div className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 mb-8 border border-blue-200/30 dark:border-blue-700/30 backdrop-blur-sm">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between">
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
@@ -493,7 +493,7 @@ export default function PropertyDetailPage() {
             </div>
 
             {/* Property Features */}
-            <Card className="bg-gradient-to-br from-green-50/80 to-emerald-50/80 dark:from-green-900/20 dark:to-emerald-900/20 backdrop-blur-xl border-green-200/40 dark:border-green-700/40 shadow-xl mb-8">
+            <Card className="bg-gradient-to-br from-green-50/80 to-emerald-50/80 dark:from-green-900/20 dark:to-emerald-900/20 backdrop-blur-xl border-green-200/40 dark:border-green-700/40 mb-8">
               <CardContent className="p-4 sm:p-5 md:p-6">
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                   {property.bedrooms && (
@@ -536,7 +536,7 @@ export default function PropertyDetailPage() {
 
             {/* Description */}
             {property.description && (
-              <Card className="bg-gradient-to-r from-orange-50/80 to-amber-50/80 dark:from-orange-900/20 dark:to-amber-900/20 backdrop-blur-xl border-orange-200/40 dark:border-orange-700/40 shadow-lg mb-8">
+              <Card className="bg-gradient-to-r from-orange-50/80 to-amber-50/80 dark:from-orange-900/20 dark:to-amber-900/20 backdrop-blur-xl border-orange-200/40 dark:border-orange-700/40 mb-8">
                 <CardContent className="p-6">
                   <h3 className="text-lg font-semibold mb-4">{t('property.description')}</h3>
                   <p className="text-muted-foreground leading-relaxed" data-testid="property-description">
@@ -547,7 +547,7 @@ export default function PropertyDetailPage() {
             )}
 
             {/* Amenities & Features */}
-            <Card className="bg-gradient-to-bl from-indigo-50/80 to-cyan-50/80 dark:from-indigo-900/20 dark:to-cyan-900/20 backdrop-blur-xl border-indigo-200/40 dark:border-indigo-700/40 shadow-lg mb-8">
+            <Card className="bg-gradient-to-bl from-indigo-50/80 to-cyan-50/80 dark:from-indigo-900/20 dark:to-cyan-900/20 backdrop-blur-xl border-indigo-200/40 dark:border-indigo-700/40 mb-8">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">{t('property.featuresAmenities')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -631,7 +631,7 @@ export default function PropertyDetailPage() {
             </Card>
 
             {/* Property Stats */}
-            <Card className="bg-gradient-to-tr from-rose-50/80 to-pink-50/80 dark:from-rose-900/20 dark:to-pink-900/20 backdrop-blur-xl border-rose-200/40 dark:border-rose-700/40 shadow-xl">
+            <Card className="bg-gradient-to-tr from-rose-50/80 to-pink-50/80 dark:from-rose-900/20 dark:to-pink-900/20 backdrop-blur-xl border-rose-200/40 dark:border-rose-700/40">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">{t('property.propertyInformation')}</h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
