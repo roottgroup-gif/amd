@@ -458,7 +458,7 @@ export default function PropertyDetailPage() {
             <div className="bg-gradient-to-r from-blue-50/80 to-purple-50/80 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 mb-8 border border-blue-200/30 dark:border-blue-700/30 backdrop-blur-sm">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between">
               <div className="flex-1">
-                <div className="flex items-center space-x-2 mb-2">
+                <div className="flex items-center space-x-4 mb-2">
                   <Badge className={property.listingType === 'sale' 
                     ? 'bg-red-600 text-white' 
                     : 'bg-emerald-600 text-white'
