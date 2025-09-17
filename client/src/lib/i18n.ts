@@ -268,6 +268,11 @@ const translations: Translations = {
     ar: '/قدم مربع',
     kur: '/پێی چوارگۆشە'
   },
+  'property.perMonth': {
+    en: '/mo',
+    ar: '/شهريًا',
+    kur: '/مانگانە'
+  },
   'property.shareOnFacebook': {
     en: 'Share on Facebook',
     ar: 'مشاركة على فيسبوك',

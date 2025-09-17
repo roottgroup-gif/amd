@@ -97,7 +97,7 @@ export default function PropertyCard({
   ) => {
     const amount = parseFloat(price);
     const formattedAmount = new Intl.NumberFormat().format(amount);
-    const suffix = listingType === "rent" ? "/mo" : "";
+    const suffix = listingType === "rent" ? t('property.perMonth') : "";
     return `${currency === "USD" ? "$" : currency}${formattedAmount}${suffix}`;
   };
 
