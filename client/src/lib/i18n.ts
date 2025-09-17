@@ -214,17 +214,17 @@ const translations: Translations = {
   'property.propertyType': {
     en: 'Property Type:',
     ar: 'نوع العقار:',
-    kur: 'جۆری خانووبەرە:'
+    kur: 'جۆری خانووبەرە'
   },
   'property.listed': {
     en: 'Listed:',
     ar: 'تاريخ الإدراج:',
-    kur: 'لیست کراوە:'
+    kur: 'لیست کراوە'
   },
   'property.status': {
     en: 'Status:',
     ar: 'الحالة:',
-    kur: 'دۆخ:'
+    kur: 'دۆخ'
   },
   'property.bedrooms': {
     en: 'Bedrooms',
