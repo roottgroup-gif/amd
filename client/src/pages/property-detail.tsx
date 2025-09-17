@@ -634,7 +634,7 @@ export default function PropertyDetailPage() {
             <Card className="bg-gradient-to-tr from-rose-50/80 to-pink-50/80 dark:from-rose-900/20 dark:to-pink-900/20 backdrop-blur-xl border-rose-200/40 dark:border-rose-700/40">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">{t('property.propertyInformation')}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-right">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{t('property.propertyType')}</span>
                     <span className="font-medium capitalize">
