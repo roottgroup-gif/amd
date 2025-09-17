@@ -1655,7 +1655,9 @@ export default function PropertyMap({
                     🔑 {t("filter.forRent")}
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
+                <div className={`flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6 ${
+                  isRTL ? 'flex-wrap' : 'flex-nowrap'
+                }`}>
                   <div
                     className={`flex items-center ${spacingType} p-2 rounded-xl backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer ${
                       localFilters.type === "house"
