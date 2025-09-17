@@ -459,7 +459,7 @@ export default function PropertyDetailPage() {
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-2">
                   <Badge className={property.listingType === 'sale' 
-                    ? 'bg-primary text-primary-foreground' 
+                    ? 'bg-red-600 text-white' 
                     : 'bg-emerald-600 text-white'
                   }>
                     {property.listingType === 'sale' ? t('filter.forSale') : t('filter.forRent')}
