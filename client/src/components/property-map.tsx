@@ -935,7 +935,7 @@ export default function PropertyMap({
                         line-height: 1.3;
                       ">
                         <span>${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}</span>
-                        ${property.listingType === "rent" ? '<span style="font-size: clamp(9px, 2.5vw, 11px); font-weight: 500;">/mo</span>' : ""}
+                        ${property.listingType === "rent" ? `<span style="font-size: clamp(9px, 2.5vw, 11px); font-weight: 500;">${t('property.perMonth')}</span>` : ""}
                       </div>
                       <div style="
                         display: inline-flex;
@@ -955,8 +955,8 @@ export default function PropertyMap({
                       ">
                         ${
                           property.listingType === "rent"
-                            ? '<span style="color: #059669;"></span><span>Rent</span>'
-                            : '<span style="color: #dc2626;"></span><span>Sale</span>'
+                            ? `<span style="color: #059669;"></span><span>${t("filter.forRent")}</span>`
+                            : `<span style="color: #dc2626;"></span><span>${t("filter.forSale")}</span>`
                         }
                       </div>
                     </div>
