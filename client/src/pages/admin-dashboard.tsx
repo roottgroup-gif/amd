@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -457,7 +457,7 @@ export default function AdminDashboard() {
     await createCurrencyRateMutation.mutateAsync({
       toCurrency: data.toCurrency,
       rate: data.rate.toString(), // Convert to string for API
-      isActive: data.isActive,
+      isActive: data.isActive ?? false,
     });
     setIsCreateCurrencyRateOpen(false);
     currencyRateForm.reset();
@@ -469,7 +469,7 @@ export default function AdminDashboard() {
         id: editingCurrencyRate.id, 
         data: {
           rate: data.rate.toString(), // Convert to string for API
-          isActive: data.isActive,
+          isActive: data.isActive ?? false,
         }
       });
       setIsEditCurrencyRateOpen(false);
@@ -1678,7 +1678,7 @@ export default function AdminDashboard() {
                               </div>
                               <FormControl>
                                 <Checkbox
-                                  checked={field.value}
+                                  checked={field.value ?? false}
                                   onCheckedChange={field.onChange}
                                   data-testid="checkbox-is-active"
                                 />
@@ -1736,7 +1736,7 @@ export default function AdminDashboard() {
                             </Badge>
                           </td>
                           <td className="py-4 px-4 text-sm text-gray-500">
-                            {new Date(rate.updatedAt || rate.createdAt).toLocaleDateString()}
+                            {new Date(rate.updatedAt || rate.createdAt || new Date()).toLocaleDateString()}
                           </td>
                           <td className="py-4 px-4 text-right space-x-2">
                             <Button
@@ -1813,7 +1813,7 @@ export default function AdminDashboard() {
                       </div>
                       <FormControl>
                         <Checkbox
-                          checked={field.value}
+                          checked={field.value ?? false}
                           onCheckedChange={field.onChange}
                           data-testid="checkbox-edit-is-active"
                         />
