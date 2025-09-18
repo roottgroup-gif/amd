@@ -117,34 +117,49 @@ export default function PropertyMap({
   // Pre-calculate currency conversions when properties or currency changes
   useEffect(() => {
     const calculateConversions = async () => {
-      if (!properties || properties.length === 0) return;
+      console.log('🔄 Currency conversion triggered:', {
+        propertiesCount: properties?.length || 0,
+        preferredCurrency: preferredCurrency,
+        properties: properties?.map(p => ({ id: p.id, price: p.price, currency: p.currency }))
+      });
+      
+      if (!properties || properties.length === 0) {
+        console.log('❌ No properties to convert');
+        return;
+      }
       
       const newConvertedPrices: { [propertyId: string]: number } = {};
       
       for (const property of properties) {
         if (property.currency === preferredCurrency) {
           // Same currency, no conversion needed
+          console.log('✅ Same currency for', property.id, ':', property.currency);
           newConvertedPrices[property.id] = parseFloat(property.price);
         } else {
           try {
+            console.log('💱 Converting', property.id, ':', property.price, property.currency, '→', preferredCurrency);
             // Use the same conversion API as the rest of the app
             const response = await fetch(
               `/api/currency/convert?amount=${property.price}&from=${property.currency}&to=${preferredCurrency}`
             );
             if (response.ok) {
               const data = await response.json();
+              console.log('✅ Converted', property.id, ':', data.convertedAmount);
               newConvertedPrices[property.id] = data.convertedAmount;
             } else {
               // Fallback to original price if conversion fails
+              console.log('❌ Conversion failed for', property.id, '- using original price');
               newConvertedPrices[property.id] = parseFloat(property.price);
             }
           } catch (error) {
             // Fallback to original price if conversion fails
+            console.log('❌ Conversion error for', property.id, ':', error);
             newConvertedPrices[property.id] = parseFloat(property.price);
           }
         }
       }
       
+      console.log('📊 Final converted prices:', newConvertedPrices);
       setConvertedPrices(newConvertedPrices);
     };
     
@@ -1468,9 +1483,18 @@ export default function PropertyMap({
 
     // Update price when popup opens to ensure latest converted value
     marker.on("popupopen", () => {
+      console.log('🔓 Popup opened for property:', property.id);
       const priceElement = document.getElementById(`popup-price-${property.id}`);
       if (priceElement) {
-        priceElement.innerHTML = formatMapPrice(property);
+        const newPrice = formatMapPrice(property);
+        console.log('💰 Updating popup price:', { 
+          propertyId: property.id, 
+          oldPrice: priceElement.innerHTML, 
+          newPrice: newPrice 
+        });
+        priceElement.innerHTML = newPrice;
+      } else {
+        console.log('❌ Price element not found for property:', property.id);
       }
     });
 
