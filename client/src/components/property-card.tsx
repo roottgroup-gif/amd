@@ -23,7 +23,11 @@ import {
   MessageCircle,
   Map,
 } from "lucide-react";
-import { formatPrice, formatPricePerUnit, useCurrencyConversion } from "@/lib/currency";
+import {
+  formatPrice,
+  formatPricePerUnit,
+  useCurrencyConversion,
+} from "@/lib/currency";
 import { useCurrency } from "@/lib/currency-context";
 
 interface PropertyCardProps {
@@ -51,9 +55,11 @@ export default function PropertyCard({
   const { preferredCurrency } = useCurrency();
   const isFavorite = favoriteData?.isFavorite || false;
 
-
   // Get currency conversion rate if needed
-  const conversionQuery = useCurrencyConversion(property.currency, preferredCurrency);
+  const conversionQuery = useCurrencyConversion(
+    property.currency,
+    preferredCurrency,
+  );
 
   // Get all images or use default if no images
   const images =
@@ -99,9 +105,13 @@ export default function PropertyCard({
 
   // Calculate converted amount if currency conversion is available
   const baseAmount = parseFloat(property.price);
-  const convertedAmount = conversionQuery.data?.convertedAmount ? 
-    (conversionQuery.data.convertedAmount * baseAmount) : baseAmount;
-  const displayCurrency = property.currency === preferredCurrency ? property.currency : preferredCurrency;
+  const convertedAmount = conversionQuery.data?.convertedAmount
+    ? conversionQuery.data.convertedAmount * baseAmount
+    : baseAmount;
+  const displayCurrency =
+    property.currency === preferredCurrency
+      ? property.currency
+      : preferredCurrency;
 
   const handleViewProperty = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -221,7 +231,7 @@ export default function PropertyCard({
               property.listingType,
               displayCurrency,
               convertedAmount,
-              t
+              t,
             )}
           </span>
         </div>
@@ -240,20 +250,35 @@ export default function PropertyCard({
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-300 mb-4">
           {property.bedrooms && (
             <div className="flex items-center">
-              <Bed className="h-3 w-3 sm:h-4 sm:w-4 mr-1" style={{ color: "#FF7800" }} />
-              <span className="truncate">{property.bedrooms} {t("property.beds")}</span>
+              <Bed
+                className="h-3 w-3 sm:h-4 sm:w-4 mr-1"
+                style={{ color: "#FF7800" }}
+              />
+              <span className="truncate">
+                {property.bedrooms} {t("property.beds")}
+              </span>
             </div>
           )}
           {property.bathrooms && (
             <div className="flex items-center">
-              <Bath className="h-3 w-3 sm:h-4 sm:w-4 mr-1" style={{ color: "#FF7800" }} />
-              <span className="truncate">{property.bathrooms} {t("property.baths")}</span>
+              <Bath
+                className="h-3 w-3 sm:h-4 sm:w-4 mr-1"
+                style={{ color: "#FF7800" }}
+              />
+              <span className="truncate">
+                {property.bathrooms} {t("property.baths")}
+              </span>
             </div>
           )}
           {property.area && (
             <div className="flex items-center col-span-2 sm:col-span-1">
-              <Square className="h-3 w-3 sm:h-4 sm:w-4 mr-1" style={{ color: "#FF7800" }} />
-              <span className="truncate">{property.area.toLocaleString()} {t("property.sqft")}</span>
+              <Square
+                className="h-3 w-3 sm:h-4 sm:w-4 mr-1"
+                style={{ color: "#FF7800" }}
+              />
+              <span className="truncate">
+                {property.area.toLocaleString()} {t("property.sqft")}
+              </span>
             </div>
           )}
         </div>
