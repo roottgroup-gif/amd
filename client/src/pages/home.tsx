@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, Suspense, lazy } from "react";
+import { useState, useRef, useEffect, useMemo, Suspense, lazy } from "react";
 import { Link, useLocation } from "wouter";
 import SearchBar from "@/components/search-bar";
 import PropertyCard from "@/components/property-card";
@@ -25,6 +25,7 @@ import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { SEOHead } from "@/components/SEOHead";
 import { useTranslation } from "@/lib/i18n";
+import { generateHomeMeta, generateFAQStructuredData } from "@/lib/meta-enhancement";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
 import { useAuth } from "@/hooks/useAuth";
 import { usePropertyEvents } from "@/hooks/usePropertyEvents";
@@ -278,19 +279,25 @@ export default function HomePage() {
     };
   };
 
+  // Generate enhanced homepage meta data
+  const homeMeta = useMemo(() => {
+    const featuredCount = featuredProperties?.length || 0;
+    return generateHomeMeta(featuredCount, language);
+  }, [featuredProperties?.length, language]);
+
   return (
     <div className="map-page h-screen w-full bg-background relative">
       <SEOHead
-        title="MapEstate - AI-Powered Real Estate Finder | Properties in Kurdistan, Iraq"
-        description="Find your perfect home with AI-powered recommendations. Discover properties for rent and sale in Kurdistan, Iraq with intelligent search and expert agents. Browse houses, apartments, villas and land."
-        keywords="real estate Kurdistan Iraq, properties for sale, properties for rent, apartments houses villas land, AI real estate search, property finder Iraq, Kurdistan real estate agent, buy rent property Iraq"
+        title={homeMeta.title}
+        description={homeMeta.description}
+        keywords={homeMeta.keywords.join(', ')}
         ogImage={
           featuredProperties && featuredProperties.length > 0
             ? featuredProperties[0].images?.[0]
             : undefined
         }
         canonicalUrl={window.location.origin}
-        structuredData={getHomepageStructuredData()}
+        structuredData={[getHomepageStructuredData(), generateFAQStructuredData(language)]}
       />
       {/* Full Screen Map Section */}
       <section className="h-full w-full relative">

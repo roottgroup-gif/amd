@@ -16,6 +16,7 @@ import { Slider } from "@/components/ui/slider";
 import { SEOHead } from "@/components/SEOHead";
 import { useTranslation } from "@/lib/i18n";
 import { useProperties } from "@/hooks/use-properties";
+import { generateSearchMeta } from "@/lib/meta-enhancement";
 import type { PropertyFilters, AISearchResponse } from "@/types";
 import {
   Search,
@@ -172,33 +173,23 @@ export default function PropertiesPage() {
     };
   };
 
-  // Generate dynamic SEO content based on filters
-  const getSEOContent = () => {
-    const listingType = filters.listingType || "sale and rent";
-    const propertyType = filters.type || "properties";
-    const city = filters.city || "Kurdistan";
+  // Generate enhanced SEO content based on filters
+  const seoContent = useMemo(() => {
     const totalCount = properties?.length || 0;
-
-    const title = `${propertyType.charAt(0).toUpperCase()}${propertyType.slice(1)} for ${listingType.charAt(0).toUpperCase()}${listingType.slice(1)} in ${city} | MapEstate`;
-    const description = `Browse ${totalCount > 0 ? totalCount : ""} ${propertyType} for ${listingType} in ${city}, Iraq. Find houses, apartments, villas and land with detailed property information, photos, and expert real estate agents.`;
-    const keywords = `${propertyType} for ${listingType} ${city}, real estate ${city} Iraq, ${propertyType} listings ${city}, buy rent ${propertyType} Iraq, ${city} real estate agent, property finder ${city}`;
-
-    return { title, description, keywords };
-  };
-
-  const seoContent = getSEOContent();
+    return generateSearchMeta(filters, totalCount, language);
+  }, [filters, properties?.length, language]);
 
   return (
     <div className="properties-page min-h-screen bg-background">
       <SEOHead
         title={seoContent.title}
         description={seoContent.description}
-        keywords={seoContent.keywords}
-        ogImage={
+        keywords={seoContent.keywords.join(', ')}
+        ogImage={seoContent.ogImage || (
           properties && properties.length > 0
             ? properties[0].images?.[0]
             : undefined
-        }
+        )}
         canonicalUrl={`${window.location.origin}/properties`}
         structuredData={getPropertiesStructuredData()}
       />
