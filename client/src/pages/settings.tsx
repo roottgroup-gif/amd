@@ -179,6 +179,7 @@ export default function SettingsPage() {
                       <SelectItem value="USD">USD ($)</SelectItem>
                       <SelectItem value="IQD">IQD (د.ع)</SelectItem>
                       <SelectItem value="EUR">EUR (€)</SelectItem>
+                      <SelectItem value="AED">AED (د.إ)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
