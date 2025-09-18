@@ -1593,8 +1593,8 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
 
-        {/* Currency Rate Management Section - Super Admin Only */}
-        {user?.role === 'super_admin' && (
+        {/* Currency Rate Management Section - Admin and Super Admin */}
+        {(user?.role === 'admin' || user?.role === 'super_admin') && (
           <Card className="shadow-lg border-0 bg-white dark:bg-gray-800 mt-8">
             <CardHeader className="border-b border-orange-100 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-white dark:from-gray-800 dark:to-gray-800">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">

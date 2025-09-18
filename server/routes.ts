@@ -395,8 +395,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Currency rate management routes (super admin only)
-  app.get("/api/admin/currency-rates", adminRateLimit, requireRole("super_admin"), async (req, res) => {
+  // Currency rate management routes (admin and super admin)
+  app.get("/api/admin/currency-rates", adminRateLimit, requireRole("admin"), async (req, res) => {
     try {
       const rates = await storage.getCurrencyRates();
       res.json(rates);
@@ -406,7 +406,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/currency-rates/active", adminRateLimit, requireRole("super_admin"), async (req, res) => {
+  app.get("/api/admin/currency-rates/active", adminRateLimit, requireRole("admin"), async (req, res) => {
     try {
       const rates = await storage.getActiveCurrencyRates();
       res.json(rates);
@@ -416,7 +416,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/admin/currency-rates", adminRateLimit, requireRole("super_admin"), async (req, res) => {
+  app.post("/api/admin/currency-rates", adminRateLimit, requireRole("admin"), async (req, res) => {
     try {
       const validatedData = insertCurrencyRateSchema.parse({
         ...req.body,
@@ -434,7 +434,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/admin/currency-rates/:id", adminRateLimit, requireRole("super_admin"), async (req, res) => {
+  app.put("/api/admin/currency-rates/:id", adminRateLimit, requireRole("admin"), async (req, res) => {
     try {
       const { id } = req.params;
       const validatedData = updateCurrencyRateSchema.parse(req.body);
@@ -455,7 +455,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/admin/currency-rates/:id", adminRateLimit, requireRole("super_admin"), async (req, res) => {
+  app.delete("/api/admin/currency-rates/:id", adminRateLimit, requireRole("admin"), async (req, res) => {
     try {
       const { id } = req.params;
       const success = await storage.deactivateCurrencyRate(id);
