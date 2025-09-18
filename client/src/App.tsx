@@ -10,7 +10,7 @@ import { CurrencyProvider } from "@/lib/currency-context";
 import { useNetworkError } from "@/hooks/useNetworkError";
 import { Suspense, lazy, useState, useEffect } from "react";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import LanguageSelectionModal from "@/components/language-selection-modal";
+import LanguageSelection from "@/components/language-selection-modal";
 import { globalChangeLanguage, useLanguage, detectLanguageFromUrl, redirectToLanguage, detectBrowserLanguage, type Language } from "@/lib/i18n";
 import { Redirect } from "@/components/Redirect";
 
@@ -85,16 +85,14 @@ function Router() {
 }
 
 function App() {
-  const [showLanguageModal, setShowLanguageModal] = useState(false);
-  const [showBlur, setShowBlur] = useState(false);
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const [location, setLocation] = useLocation();
 
   useEffect(() => {
     // Check if user has already selected a language
     const hasSelectedLanguage = localStorage.getItem('language-selected');
     if (!hasSelectedLanguage) {
-      setShowLanguageModal(true);
-      setShowBlur(true);
+      setShowLanguageSelector(true);
     }
   }, []);
 
@@ -102,9 +100,7 @@ function App() {
     // Call the global language change function directly
     globalChangeLanguage(languageCode as any);
     localStorage.setItem('language-selected', 'true');
-    setShowLanguageModal(false);
-    // Keep blur for a moment after selection
-    setTimeout(() => setShowBlur(false), 300);
+    setShowLanguageSelector(false);
     
     // Redirect to language-prefixed URL
     redirectToLanguage(languageCode as any, location || '/', setLocation);
@@ -118,9 +114,8 @@ function App() {
             <TooltipProvider>
               <NetworkStatus />
               <Toaster />
-              <LanguageSelectionModal 
-                isOpen={showLanguageModal}
-                showBlur={showBlur}
+              <LanguageSelection 
+                isOpen={showLanguageSelector}
                 onLanguageSelect={handleLanguageSelect}
               />
               <Router />
