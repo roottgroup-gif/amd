@@ -16,13 +16,13 @@ export interface UpdateCurrencyRateForm {
   isActive?: boolean;
 }
 
-// Hook to fetch all currency rates (super admin only)
+// Hook to fetch all currency rates (admin and super admin)
 export function useCurrencyRates() {
   const { user } = useAuth();
   
   return useQuery<CurrencyRate[]>({
     queryKey: ['/api/admin/currency-rates'],
-    enabled: user?.role === 'super_admin',
+    enabled: user?.role === 'admin' || user?.role === 'super_admin',
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
@@ -33,7 +33,7 @@ export function useActiveCurrencyRates() {
   
   return useQuery<CurrencyRate[]>({
     queryKey: ['/api/admin/currency-rates/active'],
-    enabled: user?.role === 'super_admin',
+    enabled: user?.role === 'admin' || user?.role === 'super_admin',
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
