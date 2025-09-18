@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import Navigation from "@/components/navigation";
 import PropertyCard from "@/components/property-card";
 import SearchBar from "@/components/search-bar";
 import { Button } from "@/components/ui/button";

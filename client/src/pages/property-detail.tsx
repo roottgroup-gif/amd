@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo, Suspense, lazy } from "react";
 import { useParams, Link } from "wouter";
-import Navigation from "@/components/navigation";
 import ContactForm from "@/components/contact-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

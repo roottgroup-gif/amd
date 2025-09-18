@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
-import Navigation from "@/components/navigation";
 import { useTranslation } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
