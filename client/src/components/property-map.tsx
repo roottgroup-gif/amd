@@ -151,10 +151,22 @@ export default function PropertyMap({
     calculateConversions();
   }, [properties, preferredCurrency]);
 
+  // Function to update popup prices dynamically
+  const updatePopupPrices = () => {
+    currentPropertiesRef.current.forEach((property) => {
+      const priceElement = document.getElementById(`popup-price-${property.id}`);
+      if (priceElement) {
+        priceElement.innerHTML = formatMapPrice(property);
+      }
+    });
+  };
+
   // Update markers when currency changes to refresh price displays in popups
   useEffect(() => {
     if (currentPropertiesRef.current.length > 0) {
       updateMarkersForProperties(currentPropertiesRef.current);
+      // Also update any currently visible popups
+      updatePopupPrices();
     }
   }, [preferredCurrency, convertedPrices]);
 
@@ -1312,7 +1324,7 @@ export default function PropertyMap({
         <div class="popup-content" style="padding: 16px; background: ${popupBg}; direction: ${language === "ar" || language === "kur" ? "rtl" : "ltr"}; text-align: ${language === "ar" || language === "kur" ? "right" : "left"};">
           <h4 class="popup-title" style="color: ${textColor}; font-weight: 600; font-size: 16px; margin-bottom: 8px;">${getPropertyTitle(property)}</h4>
           <p class="popup-address" style="color: ${subTextColor}; font-size: 12px; margin-bottom: 8px;">${property.address}</p>
-          <p class="popup-price" style="color: #FF7800; font-weight: 700; font-size: 18px; margin-bottom: 12px;">
+          <p class="popup-price" id="popup-price-${property.id}" style="color: #FF7800; font-weight: 700; font-size: 18px; margin-bottom: 12px;">
             ${formatMapPrice(property)}
           </p>
           <div class="popup-details" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; font-size: 12px; color: ${subTextColor}; justify-content: ${language === "ar" || language === "kur" ? "flex-end" : "flex-start"};">
@@ -1452,6 +1464,14 @@ export default function PropertyMap({
       maxWidth: 350,
       minWidth: 240,
       className: "custom-popup",
+    });
+
+    // Update price when popup opens to ensure latest converted value
+    marker.on("popupopen", () => {
+      const priceElement = document.getElementById(`popup-price-${property.id}`);
+      if (priceElement) {
+        priceElement.innerHTML = formatMapPrice(property);
+      }
     });
 
     // Add click event without zoom behavior
