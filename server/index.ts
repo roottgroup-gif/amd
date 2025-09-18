@@ -71,7 +71,8 @@ function escapeHtml(text: string): string {
 }
 
 async function injectPropertyMetaTags(req: Request, res: Response, next: NextFunction) {
-  const propertyMatch = req.path.match(/^\/property\/(.+)$/);
+  // Match both legacy and language-prefixed property URLs
+  const propertyMatch = req.path.match(/^(?:\/(en|ar|kur))?\/property\/(.+)$/);
   
   if (!propertyMatch) {
     return next();
@@ -84,12 +85,19 @@ async function injectPropertyMetaTags(req: Request, res: Response, next: NextFun
     return next();
   }
   
-  const propertyId = propertyMatch[1];
+  const propertyId = propertyMatch[2]; // Extract property ID from second capture group
   
   try {
-    const property = await storage.getProperty(propertyId);
+    // Try to get property by slug first, then by ID (similar to API route logic)
+    let property = await storage.getPropertyBySlug(propertyId);
     
     if (!property) {
+      console.log(`🔄 Slug lookup failed for social crawler, trying ID lookup for: ${propertyId}`);
+      property = await storage.getProperty(propertyId);
+    }
+    
+    if (!property) {
+      console.log(`❌ Property not found for social crawler with slug or ID: ${propertyId}`);
       return next();
     }
     
@@ -117,7 +125,9 @@ async function injectPropertyMetaTags(req: Request, res: Response, next: NextFun
     const propertyImage = property.images && property.images.length > 0 
       ? (property.images[0].startsWith('http') ? property.images[0] : `${protocol}://${req.get('host')}${property.images[0]}`)
       : `${protocol}://${req.get('host')}/logo_1757848527935.png`;
-    const propertyUrl = `${protocol}://${req.get('host')}/property/${property.id}`;
+    // Generate property URL with language prefix if present
+    const languagePrefix = propertyMatch[1] ? `/${propertyMatch[1]}` : '';
+    const propertyUrl = `${protocol}://${req.get('host')}${languagePrefix}/property/${property.slug || property.id}`;
     const secureImageUrl = propertyImage.replace('http://', 'https://');
     
     // Build comprehensive meta tags for social media
