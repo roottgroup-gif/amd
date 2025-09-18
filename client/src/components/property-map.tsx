@@ -1512,8 +1512,14 @@ export default function PropertyMap({
   // Update markers when properties change (from API)
   useEffect(() => {
     currentPropertiesRef.current = properties;
-    updateMarkersForProperties(properties);
-  }, [properties]);
+    // Only update markers if currency conversion is complete or if using same currency
+    const conversionNeeded = properties.some(p => p.currency !== preferredCurrency);
+    const conversionReady = !conversionNeeded || Object.keys(convertedPrices).length > 0;
+    
+    if (conversionReady) {
+      updateMarkersForProperties(properties);
+    }
+  }, [properties, convertedPrices, preferredCurrency]);
 
   // Update markers when language changes to refresh translations
   useEffect(() => {
