@@ -100,12 +100,7 @@ export function formatPrice(
   // Add suffix for rent
   const suffix = listingType === "rent" ? (t?.('property.perMonth') || "/month") : "";
   
-  // Show conversion indicator if converted
-  const conversionIndicator = displayCurrency && displayCurrency !== originalCurrency 
-    ? ` (${originalCurrency})` 
-    : "";
-  
-  return `${symbol}${formattedAmount}${suffix}${conversionIndicator}`;
+  return `${symbol}${formattedAmount}${suffix}`;
 }
 
 // Format price per square foot/meter
