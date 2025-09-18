@@ -73,27 +73,22 @@ export default function PropertyMap({
     return getLocalized(property.title, property.title || "Untitled Property");
   };
 
-  // Pre-calculate currency conversions for all properties
+  // Pre-calculate currency conversions for all properties  
   const [convertedPrices, setConvertedPrices] = useState<{
     [propertyId: string]: number;
   }>({});
+  
+  // Use ref to maintain converted prices across re-renders
+  const convertedPricesRef = useRef<{[propertyId: string]: number}>({});
 
   // Helper function to format price for map popups using pre-calculated conversions
   const formatMapPrice = (property: any) => {
-    console.log("🔍 formatMapPrice called:", {
-      propertyId: property.id,
-      originalPrice: property.price,
-      originalCurrency: property.currency,
-      preferredCurrency: preferredCurrency,
-      hasConversion: convertedPrices[property.id] !== undefined,
-      convertedAmount: convertedPrices[property.id],
-      listingType: property.listingType,
-    });
+    // Try to get conversion from state first, then from ref as backup
+    const convertedAmount = convertedPrices[property.id] ?? convertedPricesRef.current[property.id];
+    const hasConversion = convertedAmount !== undefined;
     
     // Only use converted price if we have the actual conversion result
-    if (convertedPrices[property.id] !== undefined) {
-      const convertedAmount = convertedPrices[property.id];
-      console.log("✅ Using converted amount:", convertedAmount);
+    if (hasConversion) {
       return formatPrice(
         property.price,
         property.currency,
@@ -105,7 +100,6 @@ export default function PropertyMap({
     }
     
     // If no conversion available yet, show original price with original currency
-    console.log("⚠️ No conversion available, using original currency");
     return formatPrice(
       property.price,
       property.currency,
@@ -213,6 +207,8 @@ export default function PropertyMap({
 
       console.log("📊 Final converted prices:", newConvertedPrices);
       setConvertedPrices(newConvertedPrices);
+      // Also update the ref to persist across re-renders
+      convertedPricesRef.current = { ...newConvertedPrices };
     };
 
     calculateConversions();
@@ -226,13 +222,6 @@ export default function PropertyMap({
       );
       if (priceElement) {
         const newPrice = formatMapPrice(property);
-        console.log("🔄 Updating popup price:", {
-          propertyId: property.id,
-          oldPrice: priceElement.innerHTML.replace(/\s+/g, ' ').trim(),
-          newPrice: newPrice,
-          hasConversion: convertedPrices[property.id] !== undefined,
-          convertedAmount: convertedPrices[property.id],
-        });
         priceElement.innerHTML = newPrice;
       }
     });
