@@ -191,7 +191,12 @@ export default function PropertyDetailPage() {
   const handleShare = async (platform?: string) => {
     if (!property) return;
 
-    const propertyUrl = `${window.location.origin}/property/${property.slug || property.id}`;
+    // Get the current language prefix from the URL to maintain language consistency
+    const currentPath = window.location.pathname;
+    const languageMatch = currentPath.match(/^\/(en|ar|kur)\//);
+    const languagePrefix = languageMatch ? `/${languageMatch[1]}` : '/en'; // Default to English if no prefix found
+    
+    const propertyUrl = `${window.location.origin}${languagePrefix}/property/${property.slug || property.id}`;
     const shareTitle = `${property.title} - MapEstate`;
     const shareText = `Check out this amazing ${property.type} in ${property.city}! ${formatPrice(property.price, property.currency || 'USD', property.listingType, displayCurrency, convertedAmount, t)}`;
 
