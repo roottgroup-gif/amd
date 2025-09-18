@@ -18,6 +18,8 @@ import {
 } from "@/hooks/use-properties";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "@/lib/i18n";
+import { useCurrency } from "@/lib/currency-context";
+import { formatPrice } from "@/lib/currency";
 
 interface PropertyMapProps {
   properties: PropertyWithAgent[];
@@ -39,6 +41,7 @@ export default function PropertyMap({
   className,
 }: PropertyMapProps) {
   const { t, getLocalized, language } = useTranslation();
+  const { preferredCurrency } = useCurrency();
 
   // Add conditional spacing for Arabic and Kurdish languages
   const isRTL = language === "ar" || language === "kur";
@@ -70,6 +73,23 @@ export default function PropertyMap({
     return getLocalized(property.title, property.title || "Untitled Property");
   };
 
+  // Pre-calculate currency conversions for all properties
+  const [convertedPrices, setConvertedPrices] = useState<{ [propertyId: string]: number }>({});
+
+  // Helper function to format price for map popups using pre-calculated conversions
+  const formatMapPrice = (property: any) => {
+    const convertedAmount = convertedPrices[property.id] || parseFloat(property.price);
+    
+    return formatPrice(
+      property.price,
+      property.currency,
+      property.listingType,
+      preferredCurrency,
+      convertedAmount,
+      t
+    );
+  };
+
   // Check for dark mode and update markers when theme changes
   useEffect(() => {
     const checkDarkMode = () => {
@@ -93,6 +113,50 @@ export default function PropertyMap({
 
     return () => observer.disconnect();
   }, []);
+
+  // Pre-calculate currency conversions when properties or currency changes
+  useEffect(() => {
+    const calculateConversions = async () => {
+      if (!properties || properties.length === 0) return;
+      
+      const newConvertedPrices: { [propertyId: string]: number } = {};
+      
+      for (const property of properties) {
+        if (property.currency === preferredCurrency) {
+          // Same currency, no conversion needed
+          newConvertedPrices[property.id] = parseFloat(property.price);
+        } else {
+          try {
+            // Use the same conversion API as the rest of the app
+            const response = await fetch(
+              `/api/currency/convert?amount=${property.price}&from=${property.currency}&to=${preferredCurrency}`
+            );
+            if (response.ok) {
+              const data = await response.json();
+              newConvertedPrices[property.id] = data.convertedAmount;
+            } else {
+              // Fallback to original price if conversion fails
+              newConvertedPrices[property.id] = parseFloat(property.price);
+            }
+          } catch (error) {
+            // Fallback to original price if conversion fails
+            newConvertedPrices[property.id] = parseFloat(property.price);
+          }
+        }
+      }
+      
+      setConvertedPrices(newConvertedPrices);
+    };
+    
+    calculateConversions();
+  }, [properties, preferredCurrency]);
+
+  // Update markers when currency changes to refresh price displays in popups
+  useEffect(() => {
+    if (currentPropertiesRef.current.length > 0) {
+      updateMarkersForProperties(currentPropertiesRef.current);
+    }
+  }, [preferredCurrency, convertedPrices]);
 
   // Sync local filters with prop changes, but don't overwrite local updates
   useEffect(() => {
@@ -934,8 +998,7 @@ export default function PropertyMap({
                         gap: 4px;
                         line-height: 1.3;
                       ">
-                        <span>${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}</span>
-                        ${property.listingType === "rent" ? `<span style="font-size: clamp(9px, 2.5vw, 11px); font-weight: 500;">${t('property.perMonth')}</span>` : ""}
+                        <span>${formatMapPrice(property)}</span>
                       </div>
                       <div style="
                         display: inline-flex;
@@ -1250,7 +1313,7 @@ export default function PropertyMap({
           <h4 class="popup-title" style="color: ${textColor}; font-weight: 600; font-size: 16px; margin-bottom: 8px;">${getPropertyTitle(property)}</h4>
           <p class="popup-address" style="color: ${subTextColor}; font-size: 12px; margin-bottom: 8px;">${property.address}</p>
           <p class="popup-price" style="color: #FF7800; font-weight: 700; font-size: 18px; margin-bottom: 12px;">
-            ${property.currency === "USD" ? "$" : property.currency}${parseFloat(property.price).toLocaleString()}${property.listingType === "rent" ? t('property.perMonth') : ""}
+            ${formatMapPrice(property)}
           </p>
           <div class="popup-details" style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; font-size: 12px; color: ${subTextColor}; justify-content: ${language === "ar" || language === "kur" ? "flex-end" : "flex-start"};">
             ${property.bedrooms ? `<span style="color: ${subTextColor};">${language === "ar" || language === "kur" ? `${property.bedrooms} ${t("property.beds")} <i class="fas fa-bed" style="color: #FF7800; margin-left: 4px;"></i>` : `<i class="fas fa-bed" style="color: #FF7800; margin-right: 4px;"></i>${property.bedrooms} ${t("property.beds")}`}</span>` : ""} 
