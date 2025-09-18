@@ -19,6 +19,8 @@ import {
   Eye, Phone, MessageSquare, Mail, Sun, Moon, Share2, Copy
 } from "lucide-react";
 import { SiFacebook, SiX, SiWhatsapp, SiLinkedin } from "react-icons/si";
+import { formatPrice, formatPricePerUnit, useCurrencyConversion } from "@/lib/currency";
+import { useCurrency } from "@/lib/currency-context";
 
 export default function PropertyDetailPage() {
   const { id } = useParams();
@@ -35,8 +37,21 @@ export default function PropertyDetailPage() {
     }
     return 'light';
   });
+  const { preferredCurrency } = useCurrency();
+
 
   const { data: property, isLoading, error } = useProperty(id!);
+  
+  // Get currency conversion rate if needed
+  const conversionQuery = useCurrencyConversion(property?.currency || 'USD', preferredCurrency);
+  
+  // Calculate converted amount if currency conversion is available
+  const baseAmount = property ? parseFloat(property.price) : 0;
+  const convertedAmount = property && conversionQuery.data?.convertedAmount ? 
+    (conversionQuery.data.convertedAmount * baseAmount) : baseAmount;
+  const displayCurrency = property && property.currency === preferredCurrency ? 
+    property.currency : preferredCurrency;
+  
   const addToFavorites = useAddToFavorites();
   const removeFromFavorites = useRemoveFromFavorites();
   const { data: favoriteData } = useIsFavorite(userId, property?.id || "");
@@ -179,7 +194,7 @@ export default function PropertyDetailPage() {
 
     const propertyUrl = `${window.location.origin}/property/${property.slug || property.id}`;
     const shareTitle = `${property.title} - MapEstate`;
-    const shareText = `Check out this amazing ${property.type} in ${property.city}! ${formatPrice(property.price, property.currency || 'USD', property.listingType)}`;
+    const shareText = `Check out this amazing ${property.type} in ${property.city}! ${formatPrice(property.price, property.currency || 'USD', property.listingType, displayCurrency, convertedAmount, t)}`;
 
     // Try Web Share API first (mainly for mobile)
     if (navigator.share && !platform) {
@@ -278,12 +293,6 @@ export default function PropertyDetailPage() {
     setIsAutoSliding(!isAutoSliding);
   };
 
-  const formatPrice = (price: string, currency: string, listingType: string) => {
-    const amount = parseFloat(price);
-    const formattedAmount = new Intl.NumberFormat().format(amount);
-    const suffix = listingType === 'rent' ? t('property.perMonth') : '';
-    return `${currency === 'USD' ? '$' : currency}${formattedAmount}${suffix}`;
-  };
 
   if (isLoading) {
     return (
@@ -336,7 +345,7 @@ export default function PropertyDetailPage() {
     <div className="min-h-screen bg-background">
       {property && (
         <SEOHead
-          title={`${property.title} - ${formatPrice(property.price, property.currency || 'USD', property.listingType)} | MapEstate`}
+          title={`${property.title} - ${formatPrice(property.price, property.currency || 'USD', property.listingType, displayCurrency, convertedAmount, t)} | MapEstate`}
           description={`${property.description || `${property.bedrooms} bedroom ${property.type} for ${property.listingType} in ${property.city}, ${property.country}.`} View details, photos, and contact information.`}
           keywords={`${property.type}, ${property.city}, ${property.country}, ${property.listingType}, real estate, property, ${property.bedrooms} bedroom, ${property.bathrooms} bathroom`}
           ogImage={property.images && property.images.length > 0 ? property.images[0] : `${window.location.origin}/logo_1757848527935.png`}
@@ -569,11 +578,11 @@ export default function PropertyDetailPage() {
               </div>
               <div className="text-left md:text-right">
                 <div className="text-3xl font-bold text-primary mb-1" data-testid="property-price">
-                  {formatPrice(property.price, property.currency, property.listingType)}
+                  {formatPrice(property.price, property.currency, property.listingType, displayCurrency, convertedAmount, t)}
                 </div>
                 {property.area && (
                   <div className="text-sm text-muted-foreground">
-                    ${Math.round(parseFloat(property.price) / property.area)}{t('property.perSqFt')}
+                    {formatPricePerUnit(property.price, property.area, property.currency, displayCurrency, convertedAmount, t)}
                   </div>
                 )}
               </div>

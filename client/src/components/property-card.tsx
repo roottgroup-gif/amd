@@ -8,7 +8,7 @@ import {
   useRemoveFromFavorites,
   useIsFavorite,
 } from "@/hooks/use-properties";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Property } from "@/types";
 import {
   Heart,
@@ -23,6 +23,8 @@ import {
   MessageCircle,
   Map,
 } from "lucide-react";
+import { formatPrice, formatPricePerUnit, useCurrencyConversion } from "@/lib/currency";
+import { useCurrency } from "@/lib/currency-context";
 
 interface PropertyCardProps {
   property: Property;
@@ -46,7 +48,12 @@ export default function PropertyCard({
   const { data: favoriteData } = useIsFavorite(userId || "", property.id);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { preferredCurrency } = useCurrency();
   const isFavorite = favoriteData?.isFavorite || false;
+
+
+  // Get currency conversion rate if needed
+  const conversionQuery = useCurrencyConversion(property.currency, preferredCurrency);
 
   // Get all images or use default if no images
   const images =
@@ -90,16 +97,11 @@ export default function PropertyCard({
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  const formatPrice = (
-    price: string,
-    currency: string,
-    listingType: string,
-  ) => {
-    const amount = parseFloat(price);
-    const formattedAmount = new Intl.NumberFormat().format(amount);
-    const suffix = listingType === "rent" ? t('property.perMonth') : "";
-    return `${currency === "USD" ? "$" : currency}${formattedAmount}${suffix}`;
-  };
+  // Calculate converted amount if currency conversion is available
+  const baseAmount = parseFloat(property.price);
+  const convertedAmount = conversionQuery.data?.convertedAmount ? 
+    (conversionQuery.data.convertedAmount * baseAmount) : baseAmount;
+  const displayCurrency = property.currency === preferredCurrency ? property.currency : preferredCurrency;
 
   const handleViewProperty = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -217,6 +219,9 @@ export default function PropertyCard({
               property.price,
               property.currency,
               property.listingType,
+              displayCurrency,
+              convertedAmount,
+              t
             )}
           </span>
         </div>

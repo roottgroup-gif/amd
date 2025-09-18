@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/components/AuthProvider";
 import { NetworkStatus } from "@/components/NetworkStatus";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { CurrencyProvider } from "@/lib/currency-context";
 import { useNetworkError } from "@/hooks/useNetworkError";
 import { Suspense, lazy, useState, useEffect } from "react";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
@@ -73,18 +74,20 @@ function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TooltipProvider>
-            <NetworkStatus />
-            <Toaster />
-            <LanguageSelectionModal 
-              isOpen={showLanguageModal}
-              showBlur={showBlur}
-              onLanguageSelect={handleLanguageSelect}
-            />
-            <Router />
-          </TooltipProvider>
-        </AuthProvider>
+        <CurrencyProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <NetworkStatus />
+              <Toaster />
+              <LanguageSelectionModal 
+                isOpen={showLanguageModal}
+                showBlur={showBlur}
+                onLanguageSelect={handleLanguageSelect}
+              />
+              <Router />
+            </TooltipProvider>
+          </AuthProvider>
+        </CurrencyProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );
