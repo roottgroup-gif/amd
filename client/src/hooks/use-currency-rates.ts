@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import type { CurrencyRate } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 // Type definitions for the forms
 export interface CreateCurrencyRateForm {
@@ -17,24 +18,22 @@ export interface UpdateCurrencyRateForm {
 
 // Hook to fetch all currency rates (super admin only)
 export function useCurrencyRates() {
+  const { user } = useAuth();
+  
   return useQuery<CurrencyRate[]>({
     queryKey: ['/api/admin/currency-rates'],
-    queryFn: async () => {
-      const response = await apiRequest('GET', '/api/admin/currency-rates');
-      return await response.json();
-    },
+    enabled: user?.role === 'super_admin',
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
 // Hook to fetch active currency rates only
 export function useActiveCurrencyRates() {
+  const { user } = useAuth();
+  
   return useQuery<CurrencyRate[]>({
     queryKey: ['/api/admin/currency-rates/active'],
-    queryFn: async () => {
-      const response = await apiRequest('GET', '/api/admin/currency-rates/active');
-      return await response.json();
-    },
+    enabled: user?.role === 'super_admin',
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

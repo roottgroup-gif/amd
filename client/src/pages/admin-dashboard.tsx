@@ -17,8 +17,8 @@ import { apiRequest } from '@/lib/queryClient';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import type { User } from '@shared/schema';
-import { SUPPORTED_LANGUAGES, LANGUAGE_NAMES } from '@shared/schema';
+import type { User, CurrencyRate, InsertCurrencyRate, UpdateCurrencyRate } from '@shared/schema';
+import { SUPPORTED_LANGUAGES, LANGUAGE_NAMES, insertCurrencyRateSchema, updateCurrencyRateSchema } from '@shared/schema';
 import { 
   Shield, Users, Building2, Settings, Plus, Edit, Trash2, 
   LogOut, UserPlus, Key, BarChart3, Activity, Calendar,
@@ -34,7 +34,6 @@ import {
   type CreateCurrencyRateForm,
   type UpdateCurrencyRateForm
 } from '@/hooks/use-currency-rates';
-import type { CurrencyRate } from '@shared/schema';
 
 const createUserSchema = z.object({
   username: z.string().min(3, 'Username must be at least 3 characters'),
@@ -66,30 +65,23 @@ const editUserSchema = z.object({
   allowedLanguages: z.array(z.enum(SUPPORTED_LANGUAGES)).optional(),
 });
 
-// Currency rate management schemas
-const createCurrencyRateSchema = z.object({
+type CreateUserForm = z.infer<typeof createUserSchema>;
+type EditUserForm = z.infer<typeof editUserSchema>;
+
+// Extend shared schemas with form-specific validation
+const createCurrencyRateFormSchema = insertCurrencyRateSchema.extend({
   toCurrency: z.enum(['IQD', 'EUR', 'AED'], {
     required_error: 'Please select a target currency',
   }),
-  rate: z.string().min(1, 'Exchange rate is required')
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: 'Please enter a valid exchange rate greater than 0',
-    }),
-  isActive: z.boolean().default(true),
+  rate: z.coerce.number().positive('Exchange rate must be greater than 0'),
 });
 
-const updateCurrencyRateSchema = z.object({
-  rate: z.string().min(1, 'Exchange rate is required')
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-      message: 'Please enter a valid exchange rate greater than 0',
-    }),
-  isActive: z.boolean().default(true),
+const updateCurrencyRateFormSchema = updateCurrencyRateSchema.extend({
+  rate: z.coerce.number().positive('Exchange rate must be greater than 0'),
 });
 
-type CreateUserForm = z.infer<typeof createUserSchema>;
-type EditUserForm = z.infer<typeof editUserSchema>;
-type CreateCurrencyRateFormData = z.infer<typeof createCurrencyRateSchema>;
-type UpdateCurrencyRateFormData = z.infer<typeof updateCurrencyRateSchema>;
+type CreateCurrencyRateFormData = z.infer<typeof createCurrencyRateFormSchema>;
+type UpdateCurrencyRateFormData = z.infer<typeof updateCurrencyRateFormSchema>;
 
 // Helper functions for expiration
 const calculateDaysUntilExpiration = (expiresAt: string | Date | null): number | null => {
@@ -200,18 +192,18 @@ export default function AdminDashboard() {
 
   // Currency rate forms
   const currencyRateForm = useForm<CreateCurrencyRateFormData>({
-    resolver: zodResolver(createCurrencyRateSchema),
+    resolver: zodResolver(createCurrencyRateFormSchema),
     defaultValues: {
       toCurrency: 'IQD',
-      rate: '',
+      rate: 0,
       isActive: true,
     },
   });
 
   const editCurrencyRateForm = useForm<UpdateCurrencyRateFormData>({
-    resolver: zodResolver(updateCurrencyRateSchema),
+    resolver: zodResolver(updateCurrencyRateFormSchema),
     defaultValues: {
-      rate: '',
+      rate: 0,
       isActive: true,
     },
   });
@@ -464,7 +456,7 @@ export default function AdminDashboard() {
   const onCreateCurrencyRate = async (data: CreateCurrencyRateFormData) => {
     await createCurrencyRateMutation.mutateAsync({
       toCurrency: data.toCurrency,
-      rate: data.rate,
+      rate: data.rate.toString(), // Convert to string for API
       isActive: data.isActive,
     });
     setIsCreateCurrencyRateOpen(false);
@@ -476,7 +468,7 @@ export default function AdminDashboard() {
       await updateCurrencyRateMutation.mutateAsync({ 
         id: editingCurrencyRate.id, 
         data: {
-          rate: data.rate,
+          rate: data.rate.toString(), // Convert to string for API
           isActive: data.isActive,
         }
       });
@@ -489,7 +481,7 @@ export default function AdminDashboard() {
   const handleEditCurrencyRate = (currencyRate: CurrencyRate) => {
     setEditingCurrencyRate(currencyRate);
     editCurrencyRateForm.reset({
-      rate: currencyRate.rate.toString(),
+      rate: Number(currencyRate.rate), // Convert to number for form
       isActive: currencyRate.isActive || false,
     });
     setIsEditCurrencyRateOpen(true);
@@ -1666,6 +1658,7 @@ export default function AdminDashboard() {
                                   step="0.000001"
                                   placeholder="e.g., 1173.5"
                                   data-testid="input-exchange-rate"
+                                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                                 />
                               </FormControl>
                               <FormMessage />
@@ -1800,6 +1793,7 @@ export default function AdminDashboard() {
                           step="0.000001"
                           placeholder="e.g., 1173.5"
                           data-testid="input-edit-exchange-rate"
+                          onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                         />
                       </FormControl>
                       <FormMessage />
