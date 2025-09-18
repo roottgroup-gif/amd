@@ -9,6 +9,18 @@ interface SEOProps {
   ogImage?: string;
   canonicalUrl?: string;
   structuredData?: object;
+  breadcrumbs?: Array<{ name: string; url: string }>;
+  propertyData?: {
+    address?: string;
+    city?: string;
+    country?: string;
+    price?: string;
+    currency?: string;
+    propertyType?: string;
+    bedrooms?: number;
+    bathrooms?: number;
+    area?: number;
+  };
 }
 
 function generateCanonicalUrl(location: string, language: Language): string {
@@ -84,13 +96,132 @@ function ensureMultiMeta(attr: string, name: string, values: string[]) {
   });
 }
 
+function generateCombinedStructuredData(
+  customStructuredData?: object,
+  breadcrumbs?: Array<{ name: string; url: string }>,
+  propertyData?: SEOProps['propertyData'],
+  language?: Language,
+  canonicalUrl?: string
+) {
+  const baseUrl = window.location.origin;
+  const schemas: any[] = [];
+
+  // Website/Organization schema
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "MapEstate",
+    "url": baseUrl,
+    "logo": `${baseUrl}/logo_1757848527935.png`,
+    "description": "AI-Powered Real Estate Platform for Kurdistan and Iraq",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "Iraq",
+      "addressRegion": "Kurdistan"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "availableLanguage": ["English", "Arabic", "Kurdish"]
+    },
+    "sameAs": [
+      "https://facebook.com/mapestate",
+      "https://twitter.com/mapestate"
+    ]
+  };
+
+  // Website schema
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "MapEstate",
+    "url": baseUrl,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${baseUrl}/properties?search={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    },
+    "inLanguage": [
+      { "@type": "Language", "name": "English", "alternateName": "en" },
+      { "@type": "Language", "name": "Arabic", "alternateName": "ar" },
+      { "@type": "Language", "name": "Kurdish", "alternateName": "ku" }
+    ]
+  };
+
+  schemas.push(organizationSchema, websiteSchema);
+
+  // Breadcrumb schema
+  if (breadcrumbs && breadcrumbs.length > 0) {
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": breadcrumbs.map((crumb, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": crumb.name,
+        "item": `${baseUrl}${crumb.url}`
+      }))
+    };
+    schemas.push(breadcrumbSchema);
+  }
+
+  // Enhanced property/listing schema if property data exists
+  if (propertyData) {
+    const propertyType = propertyData.propertyType?.toLowerCase();
+    const schemaPropertyType = propertyType === 'apartment' ? 'Apartment' : 
+                               propertyType === 'house' ? 'House' : 'Residence';
+    
+    const propertySchema = {
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      "@id": canonicalUrl,
+      "url": canonicalUrl,
+      "name": `${propertyData.propertyType || 'Property'} in ${propertyData.city || ''}`,
+      "description": `${propertyData.bedrooms ? `${propertyData.bedrooms} bedroom ` : ''}${propertyData.propertyType || 'property'} ${propertyData.address ? `located at ${propertyData.address}` : ''} in ${propertyData.city || ''}, ${propertyData.country || ''}`,
+      "itemOffered": {
+        "@type": schemaPropertyType,
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": propertyData.address || "",
+          "addressLocality": propertyData.city || "",
+          "addressCountry": propertyData.country || "Iraq"
+        },
+        "numberOfRooms": propertyData.bedrooms,
+        "numberOfBathroomsTotal": propertyData.bathrooms,
+        "floorSize": propertyData.area ? {
+          "@type": "QuantitativeValue",
+          "value": propertyData.area,
+          "unitText": "square feet"
+        } : undefined
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": propertyData.price,
+        "priceCurrency": propertyData.currency || "USD",
+        "availability": "https://schema.org/InStock",
+        "validFrom": new Date().toISOString()
+      }
+    };
+    schemas.push(propertySchema);
+  }
+
+  // Add custom structured data if provided
+  if (customStructuredData) {
+    schemas.push(customStructuredData);
+  }
+
+  return schemas.length === 1 ? schemas[0] : schemas;
+}
+
 export function SEOHead({ 
   title = "MapEstate - AI-Powered Real Estate Finder",
   description = "Find your perfect home with AI-powered recommendations. Discover properties for rent and sale in Kurdistan, Iraq with intelligent search and expert agents on MapEstate.",
   keywords = "real estate, Kurdistan, Iraq, properties for sale, properties for rent, apartments, houses, villas, land",
   ogImage = `${window.location.protocol}//${window.location.host}/mapestate-og-image.jpg`,
   canonicalUrl,
-  structuredData
+  structuredData,
+  breadcrumbs,
+  propertyData
 }: SEOProps) {
   const [location] = useLocation();
   const { language } = useLanguage();
@@ -117,7 +248,7 @@ export function SEOHead({
     const properCanonicalUrl = canonicalUrl || generateCanonicalUrl(location, currentLanguage);
     
     updateMetaTag('property', 'og:url', properCanonicalUrl);
-    updateMetaTag('property', 'og:type', structuredData ? 'product' : 'website');
+    updateMetaTag('property', 'og:type', propertyData ? 'product' : 'website');
     updateMetaTag('property', 'og:site_name', 'MapEstate');
     
     // Set og:locale based on current language
@@ -183,10 +314,15 @@ export function SEOHead({
     // Add performance optimization hints
     addPreconnectHints();
     
-    // Update structured data
-    if (structuredData) {
-      updateStructuredData(structuredData);
-    }
+    // Update structured data with comprehensive website schema
+    const combinedStructuredData = generateCombinedStructuredData(
+      structuredData, 
+      breadcrumbs, 
+      propertyData,
+      currentLanguage,
+      properCanonicalUrl
+    );
+    updateStructuredData(combinedStructuredData);
   }, [title, description, keywords, ogImage, canonicalUrl, structuredData, location, language]);
 
   return null;
