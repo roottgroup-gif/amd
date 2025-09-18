@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { useTranslation } from "@/lib/i18n";
+import { useCurrency } from "@/lib/currency-context";
+import { SUPPORTED_CURRENCIES } from "@/lib/currency";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,6 +34,7 @@ import kurdishFlag from "@assets/generated_images/Kurdish_flag_circular_design_5
 
 export default function SettingsPage() {
   const { language, changeLanguage, t } = useTranslation();
+  const { preferredCurrency, setPreferredCurrency } = useCurrency();
   const [userSettings, setUserSettings] = useState({
     // Profile Settings
     displayName: "",
@@ -40,7 +43,7 @@ export default function SettingsPage() {
 
     // Language & Region (will sync with global language)
     language: language,
-    currency: "USD",
+    currency: preferredCurrency,
     dateFormat: "MM/DD/YYYY",
 
     // Notifications
@@ -72,6 +75,14 @@ export default function SettingsPage() {
     }));
   }, [language]);
 
+  // Sync local currency state with global currency state
+  useEffect(() => {
+    setUserSettings((prev) => ({
+      ...prev,
+      currency: preferredCurrency,
+    }));
+  }, [preferredCurrency]);
+
   const handleSave = () => {
     // In a real app, this would save to the backend
     console.log("Saving settings:", userSettings);
@@ -83,6 +94,14 @@ export default function SettingsPage() {
     if (key === "language") {
       // Update global language state when language is changed
       changeLanguage(value as "en" | "ar" | "kur");
+    } else if (key === "currency") {
+      // Update global currency state when currency is changed
+      setPreferredCurrency(value);
+      // Also update local state for immediate UI feedback
+      setUserSettings((prev) => ({
+        ...prev,
+        [key]: value,
+      }));
     } else {
       setUserSettings((prev) => ({
         ...prev,
@@ -176,10 +195,11 @@ export default function SettingsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="USD">USD ($)</SelectItem>
-                      <SelectItem value="IQD">IQD (د.ع)</SelectItem>
-                      <SelectItem value="EUR">EUR (€)</SelectItem>
-                      <SelectItem value="AED">AED (د.إ)</SelectItem>
+                      {Object.entries(SUPPORTED_CURRENCIES).map(([code, info]) => (
+                        <SelectItem key={code} value={code}>
+                          {code} ({info.symbol})
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
