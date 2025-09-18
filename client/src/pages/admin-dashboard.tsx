@@ -23,9 +23,18 @@ import {
   Shield, Users, Building2, Settings, Plus, Edit, Trash2, 
   LogOut, UserPlus, Key, BarChart3, Activity, Calendar,
   Search, Filter, MoreVertical, AlertTriangle, Eye, MapPin,
-  Home, DollarSign, ImageIcon, Languages
+  Home, DollarSign, ImageIcon, Languages, CreditCard
 } from 'lucide-react';
 import { CustomerAnalytics } from '@/components/CustomerAnalytics';
+import { 
+  useCurrencyRates, 
+  useCreateCurrencyRate, 
+  useUpdateCurrencyRate, 
+  useDeleteCurrencyRate,
+  type CreateCurrencyRateForm,
+  type UpdateCurrencyRateForm
+} from '@/hooks/use-currency-rates';
+import type { CurrencyRate } from '@shared/schema';
 
 const createUserSchema = z.object({
   username: z.string().min(3, 'Username must be at least 3 characters'),
@@ -57,8 +66,30 @@ const editUserSchema = z.object({
   allowedLanguages: z.array(z.enum(SUPPORTED_LANGUAGES)).optional(),
 });
 
+// Currency rate management schemas
+const createCurrencyRateSchema = z.object({
+  toCurrency: z.enum(['IQD', 'EUR', 'AED'], {
+    required_error: 'Please select a target currency',
+  }),
+  rate: z.string().min(1, 'Exchange rate is required')
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: 'Please enter a valid exchange rate greater than 0',
+    }),
+  isActive: z.boolean().default(true),
+});
+
+const updateCurrencyRateSchema = z.object({
+  rate: z.string().min(1, 'Exchange rate is required')
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: 'Please enter a valid exchange rate greater than 0',
+    }),
+  isActive: z.boolean().default(true),
+});
+
 type CreateUserForm = z.infer<typeof createUserSchema>;
 type EditUserForm = z.infer<typeof editUserSchema>;
+type CreateCurrencyRateFormData = z.infer<typeof createCurrencyRateSchema>;
+type UpdateCurrencyRateFormData = z.infer<typeof updateCurrencyRateSchema>;
 
 // Helper functions for expiration
 const calculateDaysUntilExpiration = (expiresAt: string | Date | null): number | null => {
@@ -106,6 +137,11 @@ export default function AdminDashboard() {
   const [itemsPerPage] = useState(10);
   const [selectedCustomer, setSelectedCustomer] = useState<User | null>(null);
   const [isCustomerDetailsOpen, setIsCustomerDetailsOpen] = useState(false);
+  
+  // Currency rate management state
+  const [isCreateCurrencyRateOpen, setIsCreateCurrencyRateOpen] = useState(false);
+  const [isEditCurrencyRateOpen, setIsEditCurrencyRateOpen] = useState(false);
+  const [editingCurrencyRate, setEditingCurrencyRate] = useState<CurrencyRate | null>(null);
 
   // Redirect if not admin or super admin
   useEffect(() => {
@@ -161,6 +197,30 @@ export default function AdminDashboard() {
       allowedLanguages: ['en'],
     },
   });
+
+  // Currency rate forms
+  const currencyRateForm = useForm<CreateCurrencyRateFormData>({
+    resolver: zodResolver(createCurrencyRateSchema),
+    defaultValues: {
+      toCurrency: 'IQD',
+      rate: '',
+      isActive: true,
+    },
+  });
+
+  const editCurrencyRateForm = useForm<UpdateCurrencyRateFormData>({
+    resolver: zodResolver(updateCurrencyRateSchema),
+    defaultValues: {
+      rate: '',
+      isActive: true,
+    },
+  });
+
+  // Currency rate hooks
+  const { data: currencyRates = [], isLoading: currencyRatesLoading } = useCurrencyRates();
+  const createCurrencyRateMutation = useCreateCurrencyRate();
+  const updateCurrencyRateMutation = useUpdateCurrencyRate();
+  const deleteCurrencyRateMutation = useDeleteCurrencyRate();
 
   // Handle avatar file selection
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -398,6 +458,47 @@ export default function AdminDashboard() {
     });
     setAvatarPreview(user.avatar || '');
     setIsEditUserOpen(true);
+  };
+
+  // Currency rate handlers
+  const onCreateCurrencyRate = async (data: CreateCurrencyRateFormData) => {
+    await createCurrencyRateMutation.mutateAsync({
+      toCurrency: data.toCurrency,
+      rate: data.rate,
+      isActive: data.isActive,
+    });
+    setIsCreateCurrencyRateOpen(false);
+    currencyRateForm.reset();
+  };
+
+  const onEditCurrencyRate = async (data: UpdateCurrencyRateFormData) => {
+    if (editingCurrencyRate) {
+      await updateCurrencyRateMutation.mutateAsync({ 
+        id: editingCurrencyRate.id, 
+        data: {
+          rate: data.rate,
+          isActive: data.isActive,
+        }
+      });
+      setIsEditCurrencyRateOpen(false);
+      setEditingCurrencyRate(null);
+      editCurrencyRateForm.reset();
+    }
+  };
+
+  const handleEditCurrencyRate = (currencyRate: CurrencyRate) => {
+    setEditingCurrencyRate(currencyRate);
+    editCurrencyRateForm.reset({
+      rate: currencyRate.rate.toString(),
+      isActive: currencyRate.isActive || false,
+    });
+    setIsEditCurrencyRateOpen(true);
+  };
+
+  const handleDeleteCurrencyRate = async (id: string) => {
+    if (confirm('Are you sure you want to deactivate this currency rate? This action cannot be undone.')) {
+      await deleteCurrencyRateMutation.mutateAsync(id);
+    }
   };
 
   const handleDeleteUser = async (userId: string, username: string) => {
@@ -1499,6 +1600,245 @@ export default function AdminDashboard() {
             )}
           </CardContent>
         </Card>
+
+        {/* Currency Rate Management Section - Super Admin Only */}
+        {user?.role === 'super_admin' && (
+          <Card className="shadow-lg border-0 bg-white dark:bg-gray-800 mt-8">
+            <CardHeader className="border-b border-orange-100 dark:border-gray-700 bg-gradient-to-r from-orange-50 to-white dark:from-gray-800 dark:to-gray-800">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                <div>
+                  <CardTitle className="text-lg sm:text-xl text-orange-800 dark:text-orange-200 font-bold">Currency Exchange Rates</CardTitle>
+                  <CardDescription className="text-orange-600 dark:text-orange-300 mt-1">
+                    Manage USD exchange rates for supported currencies (IQD, EUR, AED)
+                  </CardDescription>
+                </div>
+                <Dialog open={isCreateCurrencyRateOpen} onOpenChange={setIsCreateCurrencyRateOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      className="bg-orange-600 hover:bg-orange-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto"
+                      data-testid="button-create-currency-rate"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Exchange Rate
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Add New Exchange Rate</DialogTitle>
+                      <DialogDescription>
+                        Set the exchange rate from 1 USD to the target currency
+                      </DialogDescription>
+                    </DialogHeader>
+                    <Form {...currencyRateForm}>
+                      <form onSubmit={currencyRateForm.handleSubmit(onCreateCurrencyRate)} className="space-y-6">
+                        <FormField
+                          control={currencyRateForm.control}
+                          name="toCurrency"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Target Currency</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-currency">
+                                    <SelectValue placeholder="Select target currency" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="IQD">Iraqi Dinar (IQD)</SelectItem>
+                                  <SelectItem value="EUR">Euro (EUR)</SelectItem>
+                                  <SelectItem value="AED">UAE Dirham (AED)</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={currencyRateForm.control}
+                          name="rate"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Exchange Rate (1 USD =)</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  type="number"
+                                  step="0.000001"
+                                  placeholder="e.g., 1173.5"
+                                  data-testid="input-exchange-rate"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={currencyRateForm.control}
+                          name="isActive"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                              <div className="space-y-0.5">
+                                <FormLabel className="text-base">Active Rate</FormLabel>
+                                <FormDescription>
+                                  Make this rate active for user transactions
+                                </FormDescription>
+                              </div>
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                  data-testid="checkbox-is-active"
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        <div className="flex justify-end space-x-2">
+                          <Button type="button" variant="outline" onClick={() => setIsCreateCurrencyRateOpen(false)} data-testid="button-cancel-create">
+                            Cancel
+                          </Button>
+                          <Button type="submit" disabled={createCurrencyRateMutation.isPending} data-testid="button-submit-create">
+                            {createCurrencyRateMutation.isPending ? 'Creating...' : 'Add Rate'}
+                          </Button>
+                        </div>
+                      </form>
+                    </Form>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </CardHeader>
+
+            <CardContent className="p-6">
+              {currencyRatesLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
+                </div>
+              ) : currencyRates.length === 0 ? (
+                <div className="text-center py-8">
+                  <CreditCard className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-500">No currency exchange rates configured yet.</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b border-orange-200 dark:border-gray-600">
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">From</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">To</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">Exchange Rate</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">Status</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">Last Updated</th>
+                        <th className="text-right py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currencyRates.map((rate) => (
+                        <tr key={rate.id} className="border-b border-gray-100 dark:border-gray-700 hover:bg-orange-25 dark:hover:bg-gray-750" data-testid={`row-currency-rate-${rate.id}`}>
+                          <td className="py-4 px-4 font-medium">{rate.fromCurrency}</td>
+                          <td className="py-4 px-4 font-medium">{rate.toCurrency}</td>
+                          <td className="py-4 px-4 font-mono text-lg">{Number(rate.rate).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}</td>
+                          <td className="py-4 px-4">
+                            <Badge variant={rate.isActive ? 'default' : 'secondary'} className={rate.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'} data-testid={`badge-status-${rate.id}`}>
+                              {rate.isActive ? 'Active' : 'Inactive'}
+                            </Badge>
+                          </td>
+                          <td className="py-4 px-4 text-sm text-gray-500">
+                            {new Date(rate.updatedAt || rate.createdAt).toLocaleDateString()}
+                          </td>
+                          <td className="py-4 px-4 text-right space-x-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEditCurrencyRate(rate)}
+                              className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                              data-testid={`button-edit-${rate.id}`}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDeleteCurrencyRate(rate.id)}
+                              disabled={deleteCurrencyRateMutation.isPending}
+                              className="text-red-600 border-red-200 hover:bg-red-50"
+                              data-testid={`button-delete-${rate.id}`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Edit Currency Rate Modal */}
+        <Dialog open={isEditCurrencyRateOpen} onOpenChange={setIsEditCurrencyRateOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Edit Exchange Rate</DialogTitle>
+              <DialogDescription>
+                Update the exchange rate from 1 USD to {editingCurrencyRate?.toCurrency}
+              </DialogDescription>
+            </DialogHeader>
+            <Form {...editCurrencyRateForm}>
+              <form onSubmit={editCurrencyRateForm.handleSubmit(onEditCurrencyRate)} className="space-y-6">
+                <FormField
+                  control={editCurrencyRateForm.control}
+                  name="rate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Exchange Rate (1 USD = {editingCurrencyRate?.toCurrency})</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="number"
+                          step="0.000001"
+                          placeholder="e.g., 1173.5"
+                          data-testid="input-edit-exchange-rate"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={editCurrencyRateForm.control}
+                  name="isActive"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">Active Rate</FormLabel>
+                        <FormDescription>
+                          Make this rate active for user transactions
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          data-testid="checkbox-edit-is-active"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <div className="flex justify-end space-x-2">
+                  <Button type="button" variant="outline" onClick={() => setIsEditCurrencyRateOpen(false)} data-testid="button-cancel-edit">
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={updateCurrencyRateMutation.isPending} data-testid="button-submit-edit">
+                    {updateCurrencyRateMutation.isPending ? 'Updating...' : 'Update Rate'}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
 
         {/* Customer Details Modal */}
         <Dialog open={isCustomerDetailsOpen} onOpenChange={setIsCustomerDetailsOpen}>
