@@ -26,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { SEOHead } from "@/components/SEOHead";
 import { useTranslation } from "@/lib/i18n";
 import { generateHomeMeta, generateFAQStructuredData } from "@/lib/meta-enhancement";
+import { useImagePreloader } from "@/lib/image-preloader";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
 import { useAuth } from "@/hooks/useAuth";
 import { usePropertyEvents } from "@/hooks/usePropertyEvents";

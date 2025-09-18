@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 import { useLocation } from "wouter";
 import { useTranslation } from "@/lib/i18n";
 import {
@@ -138,16 +139,16 @@ export default function PropertyCard({
     >
       <div className="relative">
         <div className="relative h-48 sm:h-52 md:h-56 lg:h-48 xl:h-52 overflow-hidden">
-          <img
+          <OptimizedImage
             src={images[currentImageIndex]}
             alt={property.title}
-            className="w-full h-48 sm:h-52 md:h-56 lg:h-48 xl:h-52 object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
-            decoding="async"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src =
-                "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600";
-            }}
+            className="transition-transform duration-500 group-hover:scale-105"
+            aspectRatio="3/2"
+            objectFit="cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            fallbackSrc="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
+            width={400}
+            height={267}
           />
 
           {/* Navigation arrows - only show if multiple images */}
