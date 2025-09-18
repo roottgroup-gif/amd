@@ -188,10 +188,14 @@ export default function PropertiesPage() {
         ogImage={seoContent.ogImage || (
           properties && properties.length > 0
             ? properties[0].images?.[0]
-            : undefined
+            : `${window.location.origin}/mapestate-og-image.jpg`
         )}
-        canonicalUrl={`${window.location.origin}/properties`}
+        canonicalUrl={undefined}
         structuredData={getPropertiesStructuredData()}
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Properties', url: '/properties' }
+        ]}
       />
 
       {/* Header */}

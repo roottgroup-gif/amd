@@ -295,10 +295,13 @@ export default function HomePage() {
         ogImage={
           featuredProperties && featuredProperties.length > 0
             ? featuredProperties[0].images?.[0]
-            : undefined
+            : `${window.location.origin}/mapestate-og-image.jpg`
         }
-        canonicalUrl={window.location.origin}
+        canonicalUrl={undefined}
         structuredData={[getHomepageStructuredData(), generateFAQStructuredData(language)]}
+        breadcrumbs={[
+          { name: t('nav.home'), url: '/' }
+        ]}
       />
       {/* Full Screen Map Section */}
       <section className="h-full w-full relative">

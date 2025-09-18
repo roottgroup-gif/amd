@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useTranslation, redirectToLanguage } from "@/lib/i18n";
+import { SEOHead } from "@/components/SEOHead";
 import { useCurrency } from "@/lib/currency-context";
 import { SUPPORTED_CURRENCIES } from "@/lib/currency";
 import { Button } from "@/components/ui/button";
@@ -115,6 +116,17 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
+      <SEOHead
+        title={`${t('settings.title')} | MapEstate - AI-Powered Real Estate Finder`}
+        description={`Customize your MapEstate experience with personalized settings. Manage language preferences, currency, notifications, and display options for the best real estate search experience in Kurdistan, Iraq.`}
+        keywords="MapEstate settings, real estate preferences, property search settings, language settings, currency preferences, Kurdistan Iraq real estate customization"
+        canonicalUrl={undefined}
+        ogImage={`${window.location.origin}/mapestate-og-image.jpg`}
+        breadcrumbs={[
+          { name: 'Home', url: '/' },
+          { name: 'Settings', url: '/settings' }
+        ]}
+      />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

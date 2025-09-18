@@ -268,6 +268,7 @@ export function SEOHead({
     updateMetaTag('name', 'twitter:site', '@MapEstate');
     updateMetaTag('name', 'twitter:creator', '@MapEstate');
     updateMetaTag('name', 'twitter:domain', window.location.hostname);
+    // Twitter URL is handled by og:url
     updateMetaTag('name', 'twitter:app:name:iphone', 'MapEstate');
     updateMetaTag('name', 'twitter:app:name:ipad', 'MapEstate');
     updateMetaTag('name', 'twitter:app:name:googleplay', 'MapEstate');

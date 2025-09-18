@@ -343,11 +343,27 @@ export default function PropertyDetailPage() {
       {property && (
         <SEOHead
           title={`${property.title} - ${formatPrice(property.price, property.currency || 'USD', property.listingType, displayCurrency, convertedAmount, t)} | MapEstate`}
-          description={`${property.description || `${property.bedrooms} bedroom ${property.type} for ${property.listingType} in ${property.city}, ${property.country}.`} View details, photos, and contact information.`}
-          keywords={`${property.type}, ${property.city}, ${property.country}, ${property.listingType}, real estate, property, ${property.bedrooms} bedroom, ${property.bathrooms} bathroom`}
-          ogImage={property.images && property.images.length > 0 ? property.images[0] : `${window.location.origin}/logo_1757848527935.png`}
-          canonicalUrl={`${window.location.origin}/property/${property.slug || property.id}`}
+          description={`${property.description || `${property.bedrooms} bedroom ${property.type} for ${property.listingType} in ${property.city}, ${property.country}.`} View details, photos, and contact information on MapEstate - AI-powered real estate platform.`}
+          keywords={`${property.type}, ${property.city}, ${property.country}, ${property.listingType}, real estate, property, ${property.bedrooms} bedroom, ${property.bathrooms} bathroom, MapEstate, Kurdistan Iraq properties`}
+          ogImage={property.images && property.images.length > 0 ? property.images[0] : `${window.location.origin}/mapestate-og-image.jpg`}
+          canonicalUrl={undefined}
           structuredData={getPropertyStructuredData(property)}
+          propertyData={{
+            address: property.address,
+            city: property.city,
+            country: property.country,
+            price: property.price?.toString(),
+            currency: property.currency || 'USD',
+            propertyType: property.type,
+            bedrooms: property.bedrooms,
+            bathrooms: property.bathrooms,
+            area: property.area
+          }}
+          breadcrumbs={[
+            { name: 'Home', url: '/' },
+            { name: 'Properties', url: '/properties' },
+            { name: property.title, url: `/property/${property.slug || property.id}` }
+          ]}
         />
       )}
       
