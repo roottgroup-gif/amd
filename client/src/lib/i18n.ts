@@ -2,6 +2,74 @@ import { useState, useEffect, useRef } from "react";
 
 export type Language = "en" | "ar" | "kur";
 
+// Language mapping for better SEO and standards compliance
+export const LANGUAGE_MAPPING = {
+  en: {
+    iso: 'en',
+    hreflang: 'en-US',
+    locale: 'en_US',
+    name: 'English',
+    nativeName: 'English',
+    dir: 'ltr' as const,
+    region: 'US'
+  },
+  ar: {
+    iso: 'ar',
+    hreflang: 'ar-IQ',
+    locale: 'ar_IQ', 
+    name: 'Arabic',
+    nativeName: 'العربية',
+    dir: 'rtl' as const,
+    region: 'IQ'
+  },
+  kur: {
+    iso: 'ku', // Proper ISO 639-1 code for Kurdish
+    hreflang: 'ku-IQ',
+    locale: 'ku_IQ',
+    name: 'Kurdish',
+    nativeName: 'کوردی',
+    dir: 'rtl' as const,
+    region: 'IQ'
+  }
+} as const;
+
+export const SUPPORTED_LANGUAGES = Object.keys(LANGUAGE_MAPPING) as Language[];
+
+// Get language info by internal code
+export function getLanguageInfo(language: Language) {
+  return LANGUAGE_MAPPING[language];
+}
+
+// Detect language from browser with improved fallback
+export function detectBrowserLanguage(): Language {
+  // Check localStorage first
+  const saved = localStorage.getItem('language') as Language;
+  if (saved && saved in LANGUAGE_MAPPING) {
+    return saved;
+  }
+
+  // Check navigator languages array (more comprehensive)
+  const browserLanguages = navigator.languages || [navigator.language];
+  
+  for (const browserLang of browserLanguages) {
+    const normalizedLang = browserLang.toLowerCase();
+    
+    // Direct matches
+    if (normalizedLang.startsWith('ar')) return 'ar';
+    if (normalizedLang.startsWith('ku')) return 'kur';
+    if (normalizedLang.startsWith('en')) return 'en';
+    
+    // Region-specific matches
+    if (normalizedLang.includes('iq') || normalizedLang.includes('iraq')) {
+      if (normalizedLang.includes('ar') || normalizedLang.includes('arab')) return 'ar';
+      if (normalizedLang.includes('ku') || normalizedLang.includes('kurd')) return 'kur';
+    }
+  }
+
+  // Default fallback
+  return 'en';
+}
+
 interface Translations {
   [key: string]: {
     en: string;

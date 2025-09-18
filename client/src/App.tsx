@@ -11,7 +11,7 @@ import { useNetworkError } from "@/hooks/useNetworkError";
 import { Suspense, lazy, useState, useEffect } from "react";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import LanguageSelectionModal from "@/components/language-selection-modal";
-import { globalChangeLanguage, useLanguage, detectLanguageFromUrl, redirectToLanguage, type Language } from "@/lib/i18n";
+import { globalChangeLanguage, useLanguage, detectLanguageFromUrl, redirectToLanguage, detectBrowserLanguage, type Language } from "@/lib/i18n";
 import { Redirect } from "@/components/Redirect";
 
 // Lazy load page components for better performance
@@ -38,9 +38,7 @@ function Router() {
     
     // If no language in URL, redirect to language-prefixed version
     if (!currentLang) {
-      const browserLang = (localStorage.getItem('language') as Language) ?? 
-                          (navigator.language.startsWith('ar') ? 'ar' : 
-                           navigator.language.startsWith('ku') ? 'kur' : 'en');
+      const browserLang = detectBrowserLanguage();
       redirectToLanguage(browserLang, location, setLocation);
       return;
     }

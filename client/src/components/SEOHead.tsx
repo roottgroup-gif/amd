@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { useLanguage, getLocalizedPath, detectLanguageFromUrl, type Language } from '@/lib/i18n';
+import { useLanguage, getLocalizedPath, detectLanguageFromUrl, getLanguageInfo, LANGUAGE_MAPPING, type Language } from '@/lib/i18n';
 
 interface SEOProps {
   title?: string;
@@ -38,16 +38,11 @@ function generateCanonicalUrl(location: string, language: Language): string {
 }
 
 function getOGLocale(language: Language): string {
-  const localeMap = {
-    'en': 'en_US',
-    'ar': 'ar_IQ', 
-    'kur': 'ku_IQ'
-  };
-  return localeMap[language] || 'en_US';
+  return getLanguageInfo(language).locale;
 }
 
 function getAlternateOGLocales(currentLanguage: Language): string[] {
-  const allLocales = ['en_US', 'ar_IQ', 'ku_IQ'];
+  const allLocales = Object.values(LANGUAGE_MAPPING).map(info => info.locale);
   const currentLocale = getOGLocale(currentLanguage);
   return allLocales.filter(locale => locale !== currentLocale);
 }
@@ -257,7 +252,9 @@ export function SEOHead({
     
     // Handle multiple og:locale:alternate tags for other languages
     const alternateLocales = getAlternateOGLocales(currentLanguage);
-    ensureMultiMeta('property', 'og:locale:alternate', alternateLocales);
+    if (alternateLocales.length > 0) {
+      ensureMultiMeta('property', 'og:locale:alternate', alternateLocales);
+    }
     updateMetaTag('property', 'og:country-name', 'Iraq');
     updateMetaTag('property', 'og:region', 'Kurdistan');
     updateMetaTag('property', 'og:updated_time', new Date().toISOString());
@@ -352,19 +349,18 @@ function updateHreflangTags(currentLocation: string, currentLanguage: Language) 
   }
   const baseUrl = window.location.origin;
   
-  // Language mapping for proper hreflang codes
-  const languages = [
-    { internal: 'en', hreflang: 'en', region: 'US' },
-    { internal: 'ar', hreflang: 'ar', region: 'IQ' }, 
-    { internal: 'kur', hreflang: 'ku', region: 'IQ' } // Map 'kur' to proper 'ku' ISO code
-  ];
+  // Use improved language mapping
+  const languages = Object.entries(LANGUAGE_MAPPING).map(([internal, info]) => ({
+    internal: internal as Language,
+    hreflang: info.hreflang
+  }));
   
   // Add hreflang tags for each supported language
   languages.forEach(lang => {
-    const localizedPath = getLocalizedPath(cleanPath, lang.internal as Language);
+    const localizedPath = getLocalizedPath(cleanPath, lang.internal);
     const link = document.createElement('link');
     link.rel = 'alternate';
-    link.hreflang = `${lang.hreflang}-${lang.region}`;
+    link.hreflang = lang.hreflang;
     link.href = `${baseUrl}${localizedPath}`;
     document.head.appendChild(link);
   });
