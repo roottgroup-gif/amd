@@ -10,8 +10,7 @@ import { CurrencyProvider } from "@/lib/currency-context";
 import { useNetworkError } from "@/hooks/useNetworkError";
 import { Suspense, lazy, useState, useEffect } from "react";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import LanguageSelection from "@/components/language-selection-modal";
-import { globalChangeLanguage, useLanguage, detectLanguageFromUrl, redirectToLanguage, detectBrowserLanguage, type Language } from "@/lib/i18n";
+import { useLanguage, detectLanguageFromUrl, redirectToLanguage, detectBrowserLanguage, globalChangeLanguage, type Language } from "@/lib/i18n";
 import { Redirect } from "@/components/Redirect";
 
 // Lazy load page components for better performance
@@ -85,27 +84,6 @@ function Router() {
 }
 
 function App() {
-  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
-  const [location, setLocation] = useLocation();
-
-  useEffect(() => {
-    // Check if user has already selected a language
-    const hasSelectedLanguage = localStorage.getItem('language-selected');
-    if (!hasSelectedLanguage) {
-      setShowLanguageSelector(true);
-    }
-  }, []);
-
-  const handleLanguageSelect = (languageCode: string) => {
-    // Call the global language change function directly
-    globalChangeLanguage(languageCode as any);
-    localStorage.setItem('language-selected', 'true');
-    setShowLanguageSelector(false);
-    
-    // Redirect to language-prefixed URL
-    redirectToLanguage(languageCode as any, location || '/', setLocation);
-  };
-
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -114,10 +92,6 @@ function App() {
             <TooltipProvider>
               <NetworkStatus />
               <Toaster />
-              <LanguageSelection 
-                isOpen={showLanguageSelector}
-                onLanguageSelect={handleLanguageSelect}
-              />
               <Router />
             </TooltipProvider>
           </AuthProvider>
