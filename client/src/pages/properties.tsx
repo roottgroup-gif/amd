@@ -202,7 +202,6 @@ export default function PropertiesPage() {
         canonicalUrl={`${window.location.origin}/properties`}
         structuredData={getPropertiesStructuredData()}
       />
-      <Navigation />
 
       {/* Header */}
       <div className="bg-muted/30 py-8">

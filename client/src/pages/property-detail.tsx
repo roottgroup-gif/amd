@@ -296,7 +296,6 @@ export default function PropertyDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-muted rounded w-32 mb-6"></div>
@@ -323,7 +322,6 @@ export default function PropertyDetailPage() {
   if (error || !property) {
     return (
       <div className="min-h-screen bg-background">
-        <Navigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <h1 className="text-2xl font-bold mb-4">{t('property.notFound')}</h1>
           <p className="text-muted-foreground mb-8">
@@ -352,7 +350,6 @@ export default function PropertyDetailPage() {
           structuredData={getPropertyStructuredData(property)}
         />
       )}
-      <Navigation />
       
       <div className={getLanguageClasses()} dir={isPropertyRTL ? 'rtl' : 'ltr'}>
         {/* Top Navigation with Back Button and Theme Toggle */}

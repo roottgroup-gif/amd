@@ -41,7 +41,6 @@ export default function FavoritesPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-900 dark:to-gray-800">
-        <Navigation />
         <div className="container mx-auto px-4 py-8">
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
@@ -57,7 +56,6 @@ export default function FavoritesPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-900 dark:to-gray-800">
-        <Navigation />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center">
             <p className="text-red-600 dark:text-red-400">{t('favorites.errorLoading')}</p>
@@ -76,7 +74,6 @@ export default function FavoritesPage() {
         canonicalUrl={`${window.location.origin}/favorites`}
         structuredData={getFavoritesStructuredData()}
       />
-      <Navigation />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
