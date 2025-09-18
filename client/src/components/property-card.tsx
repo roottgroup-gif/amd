@@ -118,9 +118,14 @@ export default function PropertyCard({
     e.preventDefault();
     e.stopPropagation();
 
+    // Get current language prefix from URL to maintain language consistency
+    const currentPath = window.location.pathname;
+    const languageMatch = currentPath.match(/^\/(en|ar|kur)\//);
+    const languagePrefix = languageMatch ? `/${languageMatch[1]}` : '/en'; // Default to English if no prefix found
+
     // Navigate to property detail page using slug if available, fallback to ID
     const identifier = property.slug || property.id;
-    navigate(`/property/${identifier}`);
+    navigate(`${languagePrefix}/property/${identifier}`);
   };
 
   const handleMapClick = (e: React.MouseEvent) => {

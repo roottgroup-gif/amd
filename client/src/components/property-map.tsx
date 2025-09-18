@@ -348,20 +348,28 @@ export default function PropertyMap({
           identifier,
         );
 
+        // Get current language prefix from URL to maintain language consistency
+        const currentPath = window.location.pathname;
+        const languageMatch = currentPath.match(/^\/(en|ar|kur)\//);
+        const languagePrefix = languageMatch ? `/${languageMatch[1]}` : '/en'; // Default to English if no prefix found
+
         // First try: Direct window navigation
         if (window.location) {
-          window.location.href = `/property/${identifier}`;
+          window.location.href = `${languagePrefix}/property/${identifier}`;
           return;
         }
 
         // Fallback: Open in new window if direct navigation fails
-        window.open(`/property/${identifier}`, "_self");
+        window.open(`${languagePrefix}/property/${identifier}`, "_self");
       } catch (error) {
         console.error("Navigation failed:", error);
         // Last resort: Open in new tab with the identifier
         const property = properties.find((p) => p.id === propertyId);
         const identifier = property?.slug || propertyId;
-        window.open(`/property/${identifier}`, "_blank");
+        const currentPath = window.location.pathname;
+        const languageMatch = currentPath.match(/^\/(en|ar|kur)\//);
+        const languagePrefix = languageMatch ? `/${languageMatch[1]}` : '/en';
+        window.open(`${languagePrefix}/property/${identifier}`, "_blank");
       }
     };
 
