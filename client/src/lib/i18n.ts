@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-type Language = "en" | "ar" | "kur";
+export type Language = "en" | "ar" | "kur";
 
 interface Translations {
   [key: string]: {
@@ -1120,4 +1120,58 @@ export function useTranslation() {
     getLocalized,
     isRTL: language === "ar" || language === "kur",
   };
+}
+
+// Hook to get current language state
+export function useLanguage() {
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof window === 'undefined') return 'en';
+    return (localStorage.getItem("language") as Language) || 'en';
+  });
+
+  useEffect(() => {
+    const handleLanguageChange = (event: CustomEvent) => {
+      setLanguage(event.detail.language);
+    };
+    
+    window.addEventListener(LANGUAGE_CHANGE_EVENT, handleLanguageChange as EventListener);
+    return () => window.removeEventListener(LANGUAGE_CHANGE_EVENT, handleLanguageChange as EventListener);
+  }, []);
+
+  return { language };
+}
+
+// Detect language from URL path
+export function detectLanguageFromUrl(url: string): Language | null {
+  const path = url.startsWith('/') ? url : '/' + url;
+  const segments = path.split('/').filter(Boolean);
+  
+  if (segments.length === 0) return null;
+  
+  const firstSegment = segments[0];
+  if (firstSegment === 'en' || firstSegment === 'ar' || firstSegment === 'kur') {
+    return firstSegment as Language;
+  }
+  
+  return null;
+}
+
+// Redirect to language-prefixed URL
+export function redirectToLanguage(language: Language, currentPath: string, setLocation: (path: string) => void) {
+  // Remove existing language prefix if present
+  const cleanPath = currentPath.replace(/^\/(en|ar|kur)/, '') || '/';
+  
+  // Add new language prefix - always include trailing slash for home route
+  const newPath = `/${language}${cleanPath}`;
+  
+  setLocation(newPath);
+}
+
+// Get localized path for a given route
+export function getLocalizedPath(path: string, language: Language): string {
+  // Remove existing language prefix if present
+  const cleanPath = path.replace(/^\/(en|ar|kur)/, '') || '/';
+  
+  // Add language prefix - include trailing slash for home route
+  return `/${language}${cleanPath}`;
 }
