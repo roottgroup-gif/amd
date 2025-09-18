@@ -80,15 +80,26 @@ export default function PropertyMap({
 
   // Helper function to format price for map popups using pre-calculated conversions
   const formatMapPrice = (property: any) => {
-    const convertedAmount =
-      convertedPrices[property.id] || parseFloat(property.price);
-
+    // Only use converted price if we have the actual conversion result
+    if (convertedPrices[property.id] !== undefined) {
+      const convertedAmount = convertedPrices[property.id];
+      return formatPrice(
+        property.price,
+        property.currency,
+        property.listingType,
+        preferredCurrency,
+        convertedAmount,
+        t,
+      );
+    }
+    
+    // If no conversion available yet, show original price with original currency
     return formatPrice(
       property.price,
       property.currency,
       property.listingType,
-      preferredCurrency,
-      convertedAmount,
+      property.currency, // Use original currency until conversion is available
+      parseFloat(property.price),
       t,
     );
   };
@@ -202,7 +213,15 @@ export default function PropertyMap({
         `popup-price-${property.id}`,
       );
       if (priceElement) {
-        priceElement.innerHTML = formatMapPrice(property);
+        const newPrice = formatMapPrice(property);
+        console.log("🔄 Updating popup price:", {
+          propertyId: property.id,
+          oldPrice: priceElement.innerHTML.replace(/\s+/g, ' ').trim(),
+          newPrice: newPrice,
+          hasConversion: convertedPrices[property.id] !== undefined,
+          convertedAmount: convertedPrices[property.id],
+        });
+        priceElement.innerHTML = newPrice;
       }
     });
   };
