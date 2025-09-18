@@ -967,6 +967,12 @@ export default function CustomerDashboard() {
 
   const handleEditProperty = (property: PropertyWithAgent) => {
     setEditingProperty(property);
+    
+    // Set the language to match the property's language
+    const propertyLanguage = (property.language as Language) || 'en';
+    setSelectedLanguage(propertyLanguage);
+    setShowLanguageSelection(false); // Hide language selection when editing
+    
     propertyForm.reset({
       title: property.title,
       description: property.description || '',
@@ -985,6 +991,7 @@ export default function CustomerDashboard() {
       features: property.features || [],
       images: property.images || [],
       status: property.status === 'active' ? 'active' : 'inactive',
+      language: propertyLanguage, // Preserve original language
     });
     if (property.latitude && property.longitude) {
       setSelectedLocation({
