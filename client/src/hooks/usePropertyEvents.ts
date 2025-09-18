@@ -18,6 +18,8 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
     onPropertyUpdated?: (property: Property) => void;
     onPropertyDeleted?: (propertyId: string) => void;
   }>({});
+  const reconnectAttemptsRef = useRef(0);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { currentFilters, onPropertyCreated, onPropertyUpdated, onPropertyDeleted } = options;
 
   // Update refs without triggering reconnection
@@ -25,9 +27,8 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
   callbacksRef.current = { onPropertyCreated, onPropertyUpdated, onPropertyDeleted };
 
   useEffect(() => {
-    // Create EventSource connection only once
-    const eventSource = new EventSource('/api/properties/stream');
-    eventSourceRef.current = eventSource;
+    const maxReconnectAttempts = 10;
+    let isCleaningUp = false;
 
     // Helper functions for handling events
     const handlePropertyCreated = (property: Property) => {
@@ -154,94 +155,130 @@ export function usePropertyEvents(options: PropertyEventOptions = {}) {
       callbacksRef.current.onPropertyDeleted?.(propertyId);
     };
 
-    // Handle connection established
-    eventSource.onopen = () => {
-      console.log('✅ SSE connection established and ready');
-      console.log('📊 EventSource readyState:', eventSource.readyState);
-    };
+    const createConnection = () => {
+      if (isCleaningUp) return;
 
-    // Handle messages
-    eventSource.onmessage = (event) => {
-      console.log('📨 SSE Raw message received:', event.data);
-      try {
-        const data = JSON.parse(event.data);
-        console.log('📨 SSE Parsed message:', data);
-        
-        if (data.type === 'connected') {
-          console.log('✅ SSE connected:', data.message);
-        } else if (data.type === 'heartbeat') {
-          // Handle heartbeat - just keep connection alive
-          console.log('💓 SSE heartbeat received');
-        } else if (data.eventType === 'property_created') {
-          // Handle property created with new payload structure
-          console.log('🏠 New property created - forcing immediate map update:', data.data.title);
-          handlePropertyCreated(data.data);
-          // Force immediate refetch to bypass polling delay
-          queryClient.refetchQueries({ queryKey: ['/api/properties'] });
-        } else if (data.eventType === 'property_updated') {
-          // Handle property updated with new payload structure
-          console.log('🔄 Property updated - forcing immediate map update:', data.data.title);
-          handlePropertyUpdated(data.data);
-          // Force immediate refetch to bypass polling delay
-          queryClient.refetchQueries({ queryKey: ['/api/properties'] });
-        } else if (data.eventType === 'property_deleted') {
-          // Handle property deleted with new payload structure
-          console.log('🗑️ Property deleted - forcing immediate map update:', data.data.title || data.data.id);
-          handlePropertyDeleted(data.data);
-          // Force immediate refetch to bypass polling delay
-          queryClient.refetchQueries({ queryKey: ['/api/properties'] });
-        } else {
-          console.log('❓ Unknown SSE message type:', data.type || data.eventType, data);
+      // Clean up any existing connection
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+
+      // Create EventSource connection
+      const eventSource = new EventSource('/api/properties/stream');
+      eventSourceRef.current = eventSource;
+
+      // Handle connection established
+      eventSource.onopen = () => {
+        console.log('✅ SSE connection established and ready');
+        console.log('📊 EventSource readyState:', eventSource.readyState);
+        // Reset reconnect attempts on successful connection
+        reconnectAttemptsRef.current = 0;
+      };
+
+      // Handle messages - only for system messages like heartbeat and connected
+      eventSource.onmessage = (event) => {
+        console.log('📨 SSE Raw message received:', event.data);
+        try {
+          const data = JSON.parse(event.data);
+          console.log('📨 SSE Parsed message:', data);
+          
+          if (data.type === 'connected') {
+            console.log('✅ SSE connected:', data.message);
+          } else if (data.type === 'heartbeat') {
+            // Handle heartbeat - just keep connection alive
+            console.log('💓 SSE heartbeat received');
+          } else {
+            console.log('❓ Unknown SSE message type:', data.type || data.eventType, data);
+          }
+        } catch (error) {
+          console.error('❌ Error parsing SSE message:', error, 'Raw data:', event.data);
         }
-      } catch (error) {
-        console.error('❌ Error parsing SSE message:', error, 'Raw data:', event.data);
-      }
+      };
+
+      // Handle custom events (primary path - fallback to onmessage if these don't fire)
+      eventSource.addEventListener('property_created', (event) => {
+        try {
+          const property: Property = JSON.parse((event as MessageEvent).data);
+          console.log('🏠 New property created and detected (via addEventListener):', property.title);
+          handlePropertyCreated(property);
+        } catch (error) {
+          console.error('❌ Error handling property_created event:', error);
+        }
+      });
+
+      eventSource.addEventListener('property_updated', (event) => {
+        try {
+          const property: Property = JSON.parse((event as MessageEvent).data);
+          console.log('🔄 Property updated and detected (via addEventListener):', property.title);
+          handlePropertyUpdated(property);
+        } catch (error) {
+          console.error('❌ Error handling property_updated event:', error);
+        }
+      });
+
+      eventSource.addEventListener('property_deleted', (event) => {
+        try {
+          const data = JSON.parse((event as MessageEvent).data);
+          console.log('🗑️ Property deleted and detected (via addEventListener):', data.title || data.id);
+          handlePropertyDeleted(data);
+        } catch (error) {
+          console.error('❌ Error handling property_deleted event:', error);
+        }
+      });
+
+      // Enhanced error handling with exponential backoff reconnection
+      eventSource.onerror = (error) => {
+        console.error('SSE connection error:', error);
+        
+        // Close current connection
+        eventSource.close();
+        eventSourceRef.current = null;
+
+        // Don't reconnect if we're cleaning up
+        if (isCleaningUp) return;
+
+        // Implement exponential backoff reconnection
+        if (reconnectAttemptsRef.current < maxReconnectAttempts) {
+          const delay = Math.min(1000 * Math.pow(2, reconnectAttemptsRef.current), 30000);
+          reconnectAttemptsRef.current++;
+          
+          console.log(`🔄 Attempting to reconnect SSE (attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts}) in ${delay}ms`);
+          
+          // Clear any existing timeout
+          if (reconnectTimeoutRef.current) {
+            clearTimeout(reconnectTimeoutRef.current);
+          }
+          
+          reconnectTimeoutRef.current = setTimeout(() => {
+            if (!isCleaningUp) {
+              createConnection();
+            }
+          }, delay);
+        } else {
+          console.error('❌ Maximum SSE reconnection attempts reached. Giving up.');
+        }
+      };
     };
 
-    // Handle custom events (primary path - fallback to onmessage if these don't fire)
-    eventSource.addEventListener('property_created', (event) => {
-      try {
-        const property: Property = JSON.parse((event as MessageEvent).data);
-        console.log('🏠 New property created and detected (via addEventListener):', property.title);
-        handlePropertyCreated(property);
-      } catch (error) {
-        console.error('❌ Error handling property_created event:', error);
-      }
-    });
-
-    eventSource.addEventListener('property_updated', (event) => {
-      try {
-        const property: Property = JSON.parse((event as MessageEvent).data);
-        console.log('🔄 Property updated and detected (via addEventListener):', property.title);
-        handlePropertyUpdated(property);
-      } catch (error) {
-        console.error('❌ Error handling property_updated event:', error);
-      }
-    });
-
-    eventSource.addEventListener('property_deleted', (event) => {
-      try {
-        const data = JSON.parse((event as MessageEvent).data);
-        console.log('🗑️ Property deleted and detected (via addEventListener):', data.title || data.id);
-        handlePropertyDeleted(data);
-      } catch (error) {
-        console.error('❌ Error handling property_deleted event:', error);
-      }
-    });
-
-    // Handle connection errors
-    eventSource.onerror = (error) => {
-      console.error('SSE connection error:', error);
-      
-      // The browser will automatically attempt to reconnect
-      // but we can add custom reconnection logic here if needed
-    };
+    // Initialize connection
+    createConnection();
 
     // Cleanup on unmount
     return () => {
       console.log('Closing SSE connection');
-      eventSource.close();
-      eventSourceRef.current = null;
+      isCleaningUp = true;
+      
+      // Clear reconnection timeout
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+        reconnectTimeoutRef.current = null;
+      }
+      
+      // Close connection
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
+      }
     };
   }, [queryClient]); // Removed currentFilters and callbacks to prevent unnecessary reconnections
 
