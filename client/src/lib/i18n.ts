@@ -1167,11 +1167,13 @@ export function redirectToLanguage(language: Language, currentPath: string, setL
   setLocation(newPath);
 }
 
-// Get localized path for a given route
+// Get localized path for a given route (idempotent)
 export function getLocalizedPath(path: string, language: Language): string {
-  // Remove existing language prefix if present
-  const cleanPath = path.replace(/^\/(en|ar|kur)/, '') || '/';
+  // Ensure path starts with a leading slash
+  let cleanPath = path.startsWith('/') ? path : `/${path}`;
+  // Remove existing language prefix if present to ensure idempotency
+  cleanPath = cleanPath.replace(/^\/(en|ar|kur)(?=\/|$)/, '') || '/';
   
-  // Add language prefix - include trailing slash for home route
+  // Add language prefix - always maintain leading slash
   return `/${language}${cleanPath}`;
 }

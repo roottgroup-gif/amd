@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'wouter';
+import { useLanguage, getLocalizedPath, detectLanguageFromUrl, type Language } from '@/lib/i18n';
 
 interface SEOProps {
   title?: string;
@@ -8,6 +9,35 @@ interface SEOProps {
   ogImage?: string;
   canonicalUrl?: string;
   structuredData?: object;
+}
+
+function generateCanonicalUrl(location: string, language: Language): string {
+  const baseUrl = window.location.origin;
+  // Parse URL to get clean pathname without query/hash
+  const pathname = location.split('?')[0].split('#')[0];
+  // Remove existing language prefix if present
+  let cleanPath = pathname.replace(/^\/(en|ar|kur)(?=\/|$)/, '') || '/';
+  // Normalize trailing slashes: no trailing slash except for home
+  if (cleanPath !== '/' && cleanPath.endsWith('/')) {
+    cleanPath = cleanPath.slice(0, -1);
+  }
+  const localizedPath = getLocalizedPath(cleanPath, language);
+  return `${baseUrl}${localizedPath}`;
+}
+
+function getOGLocale(language: Language): string {
+  const localeMap = {
+    'en': 'en_US',
+    'ar': 'ar_IQ', 
+    'kur': 'ku_IQ'
+  };
+  return localeMap[language] || 'en_US';
+}
+
+function getAlternateOGLocales(currentLanguage: Language): string[] {
+  const allLocales = ['en_US', 'ar_IQ', 'ku_IQ'];
+  const currentLocale = getOGLocale(currentLanguage);
+  return allLocales.filter(locale => locale !== currentLocale);
 }
 
 function addPreconnectHints() {
@@ -63,6 +93,7 @@ export function SEOHead({
   structuredData
 }: SEOProps) {
   const [location] = useLocation();
+  const { language } = useLanguage();
   
   useEffect(() => {
     // Update document title
@@ -81,12 +112,21 @@ export function SEOHead({
     updateMetaTag('property', 'og:image:height', '630');
     updateMetaTag('property', 'og:image:alt', title);
     updateMetaTag('property', 'og:image:type', 'image/jpeg');
-    updateMetaTag('property', 'og:url', canonicalUrl || window.location.href);
+    // Generate proper canonical URL and use it for OG url
+    const currentLanguage = detectLanguageFromUrl(location) || language;
+    const properCanonicalUrl = canonicalUrl || generateCanonicalUrl(location, currentLanguage);
+    
+    updateMetaTag('property', 'og:url', properCanonicalUrl);
     updateMetaTag('property', 'og:type', structuredData ? 'product' : 'website');
     updateMetaTag('property', 'og:site_name', 'MapEstate');
-    updateMetaTag('property', 'og:locale', 'en_US');
-    // Handle multiple og:locale:alternate tags
-    ensureMultiMeta('property', 'og:locale:alternate', ['ar_IQ', 'ku_IQ']);
+    
+    // Set og:locale based on current language
+    const ogLocale = getOGLocale(currentLanguage);
+    updateMetaTag('property', 'og:locale', ogLocale);
+    
+    // Handle multiple og:locale:alternate tags for other languages
+    const alternateLocales = getAlternateOGLocales(currentLanguage);
+    ensureMultiMeta('property', 'og:locale:alternate', alternateLocales);
     updateMetaTag('property', 'og:country-name', 'Iraq');
     updateMetaTag('property', 'og:region', 'Kurdistan');
     updateMetaTag('property', 'og:updated_time', new Date().toISOString());
@@ -134,11 +174,11 @@ export function SEOHead({
     updateMetaTag('name', 'HandheldFriendly', 'true');
     updateMetaTag('name', 'MobileOptimized', '320');
     
-    // Update canonical URL
-    updateCanonicalUrl(canonicalUrl || window.location.href);
+    // Update canonical URL using proper language-prefixed URL
+    updateCanonicalUrl(properCanonicalUrl);
     
-    // Add hreflang tags for multilingual SEO
-    updateHreflangTags(canonicalUrl || window.location.href);
+    // Add hreflang tags for multilingual SEO using language-prefixed URLs
+    updateHreflangTags(location, currentLanguage);
     
     // Add performance optimization hints
     addPreconnectHints();
@@ -147,7 +187,7 @@ export function SEOHead({
     if (structuredData) {
       updateStructuredData(structuredData);
     }
-  }, [title, description, keywords, ogImage, canonicalUrl, structuredData]);
+  }, [title, description, keywords, ogImage, canonicalUrl, structuredData, location, language]);
 
   return null;
 }
@@ -162,31 +202,43 @@ function updateCanonicalUrl(url: string) {
   element.setAttribute('href', url);
 }
 
-function updateHreflangTags(currentUrl: string) {
+function updateHreflangTags(currentLocation: string, currentLanguage: Language) {
   // Remove existing hreflang tags
   const existing = document.querySelectorAll('link[rel="alternate"][hreflang]');
   existing.forEach(element => element.remove());
   
-  // Add hreflang tags for each supported language
+  // Parse URL to get clean pathname without query/hash, then strip language prefix
+  const pathname = currentLocation.split('?')[0].split('#')[0];
+  let cleanPath = pathname.replace(/^\/(en|ar|kur)(?=\/|$)/, '') || '/';
+  // Normalize trailing slashes: no trailing slash except for home
+  if (cleanPath !== '/' && cleanPath.endsWith('/')) {
+    cleanPath = cleanPath.slice(0, -1);
+  }
+  const baseUrl = window.location.origin;
+  
+  // Language mapping for proper hreflang codes
   const languages = [
-    { code: 'en', label: 'English' },
-    { code: 'ar', label: 'Arabic' },
-    { code: 'ku', label: 'Kurdish' }
+    { internal: 'en', hreflang: 'en', region: 'US' },
+    { internal: 'ar', hreflang: 'ar', region: 'IQ' }, 
+    { internal: 'kur', hreflang: 'ku', region: 'IQ' } // Map 'kur' to proper 'ku' ISO code
   ];
   
+  // Add hreflang tags for each supported language
   languages.forEach(lang => {
+    const localizedPath = getLocalizedPath(cleanPath, lang.internal as Language);
     const link = document.createElement('link');
     link.rel = 'alternate';
-    link.hreflang = lang.code;
-    link.href = `${currentUrl}?lang=${lang.code}`;
+    link.hreflang = `${lang.hreflang}-${lang.region}`;
+    link.href = `${baseUrl}${localizedPath}`;
     document.head.appendChild(link);
   });
   
-  // Add x-default hreflang
+  // Add x-default hreflang (defaulting to English)
+  const defaultPath = getLocalizedPath(cleanPath, 'en');
   const defaultLink = document.createElement('link');
   defaultLink.rel = 'alternate';
   defaultLink.hreflang = 'x-default';
-  defaultLink.href = currentUrl;
+  defaultLink.href = `${baseUrl}${defaultPath}`;
   document.head.appendChild(defaultLink);
 }
 
