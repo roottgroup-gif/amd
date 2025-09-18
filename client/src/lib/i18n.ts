@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 type Language = 'en' | 'ar' | 'kur';
 
@@ -967,31 +967,63 @@ const translations: Translations = {
 const LANGUAGE_CHANGE_EVENT = 'languageChange';
 
 // Global function to change language and notify all components
+// Debouncing mechanism for language changes
+let languageChangeTimeout: NodeJS.Timeout | null = null;
+let pendingLanguageChange: { lang: Language; persist: boolean } | null = null;
+
+function applyLanguageChanges(lang: Language, persist: boolean) {
+  // Batch DOM updates using requestAnimationFrame for smoother performance
+  requestAnimationFrame(() => {
+    // Update localStorage first
+    if (persist) {
+      localStorage.setItem('language', lang);
+    }
+    
+    // Batch all DOM updates together to prevent layout thrashing
+    const isRTL = lang === 'ar' || lang === 'kur';
+    
+    // Update document attributes
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+    
+    // Apply font changes
+    const body = document.body;
+    body.classList.remove('arabic-font', 'kurdish-font');
+    
+    if (lang === 'ar') {
+      body.classList.add('arabic-font');
+      body.style.fontFamily = 'var(--font-arabic)';
+    } else if (lang === 'kur') {
+      body.classList.add('kurdish-font');
+      body.style.fontFamily = 'var(--font-kurdish)';
+    } else {
+      body.style.fontFamily = 'var(--font-sans)';
+    }
+    
+    // Dispatch event after DOM updates are complete
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new CustomEvent(LANGUAGE_CHANGE_EVENT, { detail: { language: lang } }));
+    });
+  });
+}
+
 export function globalChangeLanguage(lang: Language, persist: boolean = true) {
-  if (persist) {
-    localStorage.setItem('language', lang);
+  // Clear any pending language change
+  if (languageChangeTimeout) {
+    clearTimeout(languageChangeTimeout);
   }
   
-  // Update document direction for RTL languages
-  document.documentElement.dir = (lang === 'ar' || lang === 'kur') ? 'rtl' : 'ltr';
-  document.documentElement.lang = lang;
+  // Store the pending change
+  pendingLanguageChange = { lang, persist };
   
-  // Apply appropriate font based on language
-  if (lang === 'ar') {
-    document.body.classList.add('arabic-font');
-    document.body.classList.remove('kurdish-font');
-    document.body.style.fontFamily = 'var(--font-arabic)';
-  } else if (lang === 'kur') {
-    document.body.classList.add('kurdish-font');
-    document.body.classList.remove('arabic-font');
-    document.body.style.fontFamily = 'var(--font-kurdish)';
-  } else {
-    document.body.classList.remove('arabic-font', 'kurdish-font');
-    document.body.style.fontFamily = 'var(--font-sans)';
-  }
-  
-  // Dispatch event to notify all useTranslation hooks
-  window.dispatchEvent(new CustomEvent(LANGUAGE_CHANGE_EVENT, { detail: { language: lang } }));
+  // Debounce rapid language changes (useful during initialization)
+  languageChangeTimeout = setTimeout(() => {
+    if (pendingLanguageChange) {
+      applyLanguageChanges(pendingLanguageChange.lang, pendingLanguageChange.persist);
+      pendingLanguageChange = null;
+    }
+    languageChangeTimeout = null;
+  }, 50); // Small delay to batch rapid changes
 }
 
 export function useTranslation() {
@@ -1001,23 +1033,31 @@ export function useTranslation() {
     return (savedLanguage && ['en', 'ar', 'kur'].includes(savedLanguage)) ? savedLanguage : 'en';
   });
 
+  // Only apply DOM changes on initial load, not on subsequent state changes
+  // to prevent conflicts with globalChangeLanguage function
+  const initialLanguageRef = useRef<Language | null>(null);
+  
   useEffect(() => {
-    // Apply document direction and language on initial load
-    document.documentElement.dir = (language === 'ar' || language === 'kur') ? 'rtl' : 'ltr';
-    document.documentElement.lang = language;
-    
-    // Apply appropriate font based on language
-    if (language === 'ar') {
-      document.body.classList.add('arabic-font');
-      document.body.classList.remove('kurdish-font');
-      document.body.style.fontFamily = 'var(--font-arabic)';
-    } else if (language === 'kur') {
-      document.body.classList.add('kurdish-font');
-      document.body.classList.remove('arabic-font');
-      document.body.style.fontFamily = 'var(--font-kurdish)';
-    } else {
-      document.body.classList.remove('arabic-font', 'kurdish-font');
-      document.body.style.fontFamily = 'var(--font-sans)';
+    // Only apply DOM changes on the first render
+    if (initialLanguageRef.current === null) {
+      initialLanguageRef.current = language;
+      
+      document.documentElement.dir = (language === 'ar' || language === 'kur') ? 'rtl' : 'ltr';
+      document.documentElement.lang = language;
+      
+      // Apply appropriate font based on language
+      if (language === 'ar') {
+        document.body.classList.add('arabic-font');
+        document.body.classList.remove('kurdish-font');
+        document.body.style.fontFamily = 'var(--font-arabic)';
+      } else if (language === 'kur') {
+        document.body.classList.add('kurdish-font');
+        document.body.classList.remove('arabic-font');
+        document.body.style.fontFamily = 'var(--font-kurdish)';
+      } else {
+        document.body.classList.remove('arabic-font', 'kurdish-font');
+        document.body.style.fontFamily = 'var(--font-sans)';
+      }
     }
   }, [language]);
 
