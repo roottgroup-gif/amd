@@ -28,6 +28,8 @@ import { useTranslation } from "@/lib/i18n";
 import { useFeaturedProperties, useProperties } from "@/hooks/use-properties";
 import { useAuth } from "@/hooks/useAuth";
 import { usePropertyEvents } from "@/hooks/usePropertyEvents";
+import { useCurrency } from "@/lib/currency-context";
+import { SUPPORTED_CURRENCIES } from "@/lib/currency";
 import type { Property, AISearchResponse, PropertyFilters } from "@/types";
 import {
   Tag,
@@ -57,6 +59,8 @@ import logoImage from "@assets/logo_1757848527935.png";
 export default function HomePage() {
   const { t, language } = useTranslation();
   const { user } = useAuth();
+  const { preferredCurrency } = useCurrency();
+  const currencySymbol = SUPPORTED_CURRENCIES[preferredCurrency]?.symbol || preferredCurrency;
   const [, setLocation] = useLocation();
   const { data: featuredProperties, isLoading: featuredLoading } =
     useFeaturedProperties();
@@ -671,17 +675,17 @@ export default function HomePage() {
                   <label className="text-xs sm:text-sm font-medium text-black dark:text-gray-300 flex items-center gap-1 flex-wrap">
                     <DollarSign className="h-3 w-3 sm:h-4 sm:w-4" />
                     <span className="hidden sm:inline">
-                      {t('filter.priceRangeLabel')} ${priceRange[0].toLocaleString()} - $
+                      {t('filter.priceRangeLabel')} {currencySymbol}{priceRange[0].toLocaleString()} - {currencySymbol}
                       {priceRange[1].toLocaleString()}
                     </span>
                     <span className="sm:hidden">
-                      {t('filter.priceRange')}: $
+                      {t('filter.priceRange')}: {currencySymbol}
                       {priceRange[0] < 1000
                         ? priceRange[0]
                         : priceRange[0] < 1000000
                           ? Math.round(priceRange[0] / 1000) + "K"
                           : Math.round(priceRange[0] / 1000000) + "M"}{" "}
-                      - $
+                      - {currencySymbol}
                       {priceRange[1] < 1000
                         ? priceRange[1]
                         : priceRange[1] < 1000000
@@ -699,8 +703,8 @@ export default function HomePage() {
                     data-testid="price-range-slider"
                   />
                   <div className="flex justify-between text-xs text-black dark:text-gray-400">
-                    <span>$1</span>
-                    <span>$10M+</span>
+                    <span>{currencySymbol}1</span>
+                    <span>{currencySymbol}10M+</span>
                   </div>
                 </div>
               </div>
@@ -774,11 +778,11 @@ export default function HomePage() {
                         variant="secondary"
                         className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs"
                       >
-                        $
+                        {currencySymbol}
                         {mapFilters.minPrice
                           ? mapFilters.minPrice.toLocaleString()
                           : "1"}{" "}
-                        - $
+                        - {currencySymbol}
                         {mapFilters.maxPrice
                           ? mapFilters.maxPrice.toLocaleString()
                           : "10M+"}
