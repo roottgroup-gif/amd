@@ -223,6 +223,252 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Reset properties with new multilingual data (admin only)
+  app.post("/api/admin/properties/reset", adminRateLimit, requireRole("admin"), async (req, res) => {
+    try {
+      // First clear all existing properties
+      const deletedCount = await storage.clearAllProperties();
+      
+      // Define multilingual property data (3 per language: en, ar, kur)
+      const multilingualProperties = [
+        // English Properties
+        {
+          title: "Luxury Villa in Erbil Center",
+          description: "A stunning luxury villa located in the heart of Erbil with modern amenities and spacious rooms. Perfect for families seeking comfort and elegance in a prime location.",
+          type: "villa" as const,
+          listingType: "sale" as const,
+          price: "450000",
+          currency: "USD" as const,
+          bedrooms: 5,
+          bathrooms: 4,
+          area: 350,
+          address: "Central District, Erbil",
+          city: "Erbil",
+          country: "Iraq",
+          latitude: "36.1911",
+          longitude: "44.0092",
+          amenities: ["Swimming Pool", "Garden", "Garage", "Security System"],
+          features: ["Modern Kitchen", "Master Suite", "Balcony", "Central AC"],
+          language: "en" as const,
+          status: "active" as const,
+          isFeatured: true,
+          images: []
+        },
+        {
+          title: "Modern Apartment in Ankawa",
+          description: "Contemporary apartment in the vibrant Ankawa district, featuring modern design and convenient access to restaurants, shopping, and entertainment venues.",
+          type: "apartment" as const,
+          listingType: "rent" as const,
+          price: "800",
+          currency: "USD" as const,
+          bedrooms: 2,
+          bathrooms: 2,
+          area: 120,
+          address: "Ankawa District, Erbil",
+          city: "Erbil", 
+          country: "Iraq",
+          latitude: "36.2381",
+          longitude: "44.0092",
+          amenities: ["Parking", "Elevator", "Balcony"],
+          features: ["Open Plan", "Modern Fixtures", "City View"],
+          language: "en" as const,
+          status: "active" as const,
+          isFeatured: false,
+          images: []
+        },
+        {
+          title: "Commercial Office Space",
+          description: "Prime commercial office space in Erbil's business district, ideal for companies and startups. Features modern infrastructure and excellent connectivity.",
+          type: "commercial" as const,
+          listingType: "rent" as const,
+          price: "1200",
+          currency: "USD" as const,
+          bedrooms: 0,
+          bathrooms: 2,
+          area: 200,
+          address: "Business District, Erbil",
+          city: "Erbil",
+          country: "Iraq", 
+          latitude: "36.1776",
+          longitude: "44.0094",
+          amenities: ["Parking", "Security", "Meeting Rooms"],
+          features: ["High-Speed Internet", "Conference Room", "Reception Area"],
+          language: "en" as const,
+          status: "active" as const,
+          isFeatured: false,
+          images: []
+        },
+        // Arabic Properties
+        {
+          title: "فيلا فاخرة في مركز أربيل",
+          description: "فيلا فاخرة مذهلة تقع في قلب أربيل مع وسائل الراحة الحديثة والغرف الواسعة. مثالية للعائلات التي تسعى للراحة والأناقة في موقع متميز.",
+          type: "villa" as const,
+          listingType: "sale" as const,
+          price: "420000",
+          currency: "USD" as const,
+          bedrooms: 4,
+          bathrooms: 3,
+          area: 300,
+          address: "المنطقة المركزية، أربيل",
+          city: "أربيل",
+          country: "العراق",
+          latitude: "36.1950",
+          longitude: "44.0050",
+          amenities: ["حمام سباحة", "حديقة", "كراج", "نظام أمني"],
+          features: ["مطبخ حديث", "جناح رئيسي", "شرفة", "تكييف مركزي"],
+          language: "ar" as const,
+          status: "active" as const,
+          isFeatured: true,
+          images: []
+        },
+        {
+          title: "شقة حديثة في عنكاوا",
+          description: "شقة عصرية في منطقة عنكاوا النابضة بالحياة، تتميز بالتصميم الحديث والوصول المريح للمطاعم والتسوق وأماكن الترفيه.",
+          type: "apartment" as const,
+          listingType: "rent" as const,
+          price: "750",
+          currency: "USD" as const,
+          bedrooms: 3,
+          bathrooms: 2,
+          area: 140,
+          address: "منطقة عنكاوا، أربيل",
+          city: "أربيل",
+          country: "العراق",
+          latitude: "36.2400",
+          longitude: "44.0080",
+          amenities: ["موقف سيارات", "مصعد", "شرفة"],
+          features: ["مخطط مفتوح", "تجهيزات حديثة", "إطلالة على المدينة"],
+          language: "ar" as const,
+          status: "active" as const,
+          isFeatured: false,
+          images: []
+        },
+        {
+          title: "مساحة مكتبية تجارية",
+          description: "مساحة مكتبية تجارية متميزة في المنطقة التجارية بأربيل، مثالية للشركات والشركات الناشئة. تتميز بالبنية التحتية الحديثة والاتصال الممتاز.",
+          type: "commercial" as const,
+          listingType: "rent" as const,
+          price: "1100",
+          currency: "USD" as const,
+          bedrooms: 0,
+          bathrooms: 1,
+          area: 180,
+          address: "المنطقة التجارية، أربيل",
+          city: "أربيل",
+          country: "العراق",
+          latitude: "36.1800",
+          longitude: "44.0100",
+          amenities: ["موقف سيارات", "أمن", "قاعات اجتماعات"],
+          features: ["إنترنت عالي السرعة", "قاعة مؤتمرات", "منطقة استقبال"],
+          language: "ar" as const,
+          status: "active" as const,
+          isFeatured: false,
+          images: []
+        },
+        // Kurdish Properties  
+        {
+          title: "ڤیلای فاخر لە ناوەندی هەولێر",
+          description: "ڤیلایەکی فاخر و جوان لە دڵی شاری هەولێر، خاوەنی ئامرازە نوێکان و ژووری فراوان. تەواو گونجاوە بۆ خێزانەکان کە بەدوای ئاسوودەیی و جوانی دەگەڕێن.",
+          type: "villa" as const,
+          listingType: "sale" as const,
+          price: "380000",
+          currency: "USD" as const,
+          bedrooms: 4,
+          bathrooms: 3,
+          area: 280,
+          address: "ناوچەی ناوەند، هەولێر",
+          city: "هەولێر",
+          country: "عێراق",
+          latitude: "36.1930",
+          longitude: "44.0070",
+          amenities: ["حەوزی مەلەکردن", "باخچە", "گاراج", "سیستەمی ئاسایش"],
+          features: ["چێشتخانەی نوێ", "ژووری سەرەکی", "بەرەوپێش", "ئەیری ناوەند"],
+          language: "kur" as const,
+          status: "active" as const,
+          isFeatured: true,
+          images: []
+        },
+        {
+          title: "شوقەی نوێ لە عەنکاوا",
+          description: "شوقەیەکی هاوچەرخ لە ناوچەی بژووی عەنکاوا، خاوەنی دیزاینی نوێ و دەستگەیشتنی ئاسان بۆ چێشتخانە، بازاڕ و شوێنەکانی خۆشی.",
+          type: "apartment" as const,
+          listingType: "rent" as const,
+          price: "700",
+          currency: "USD" as const,
+          bedrooms: 2,
+          bathrooms: 1,
+          area: 100,
+          address: "ناوچەی عەنکاوا، هەولێر",
+          city: "هەولێر",
+          country: "عێراق",
+          latitude: "36.2350",
+          longitude: "44.0060",
+          amenities: ["پارکینگ", "ئاسانسۆر", "بەرەوپێش"],
+          features: ["نەخشەی کراوە", "ئامرازی نوێ", "بینینی شار"],
+          language: "kur" as const,
+          status: "active" as const,
+          isFeatured: false,
+          images: []
+        },
+        {
+          title: "شوێنی کاری بازرگانی",
+          description: "شوێنی کاری بازرگانی باش لە ناوچەی بازرگانی هەولێر، گونجاو بۆ کۆمپانیاکان و کۆمپانیا نوێکان. خاوەنی بنیاتی نوێ و پەیوەندی باشە.",
+          type: "commercial" as const,
+          listingType: "rent" as const,
+          price: "1000",
+          currency: "USD" as const,
+          bedrooms: 0,
+          bathrooms: 1,
+          area: 150,
+          address: "ناوچەی بازرگانی، هەولێر",
+          city: "هەولێر",
+          country: "عێراق",
+          latitude: "36.1750",
+          longitude: "44.0110",
+          amenities: ["پارکینگ", "ئاسایش", "ژووری کۆبوونەوە"],
+          features: ["ئینتەرنێتی خێرا", "ژووری کۆنفرانس", "ناوچەی پێشوازی"],
+          language: "kur" as const,
+          status: "active" as const,
+          isFeatured: false,
+          images: []
+        }
+      ];
+
+      // Insert new properties
+      const insertedProperties = [];
+      const counts = { en: 0, ar: 0, kur: 0 };
+      
+      for (const propertyData of multilingualProperties) {
+        try {
+          const property = await storage.createProperty(propertyData);
+          insertedProperties.push(property);
+          counts[propertyData.language]++;
+        } catch (error) {
+          console.error(`Failed to create property: ${propertyData.title}`, error);
+        }
+      }
+
+      // Broadcast to all SSE clients about the reset
+      broadcastToSSEClients('properties_reset', { 
+        deletedCount, 
+        insertedCount: insertedProperties.length,
+        languageCounts: counts 
+      });
+
+      res.status(201).json({
+        message: `Successfully reset properties. Deleted ${deletedCount}, inserted ${insertedProperties.length} new properties.`,
+        deletedCount,
+        insertedCount: insertedProperties.length,
+        languageCounts: counts,
+        properties: insertedProperties
+      });
+
+    } catch (error) {
+      console.error("Error resetting properties:", error);
+      res.status(500).json({ message: "Failed to reset properties" });
+    }
+  });
+
   // Admin and super admin - get users with passwords
   app.get("/api/admin/users/with-passwords", requireRole("admin"), async (req, res) => {
     try {
