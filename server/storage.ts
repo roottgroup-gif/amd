@@ -1,6 +1,6 @@
 import { 
   users, properties, inquiries, favorites, searchHistory, customerActivity, customerPoints,
-  waves, customerWavePermissions,
+  waves, customerWavePermissions, currencyRates,
   type User, type InsertUser,
   type Property, type InsertProperty, type PropertyWithAgent,
   type Inquiry, type InsertInquiry,
@@ -9,7 +9,8 @@ import {
   type CustomerActivity, type InsertCustomerActivity,
   type CustomerPoints, type InsertCustomerPoints,
   type Wave, type InsertWave,
-  type CustomerWavePermission, type InsertCustomerWavePermission
+  type CustomerWavePermission, type InsertCustomerWavePermission,
+  type CurrencyRate, type InsertCurrencyRate, type UpdateCurrencyRate
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, like, gte, lte, desc, asc, sql, inArray } from "drizzle-orm";
@@ -87,6 +88,15 @@ export interface IStorage {
   updateWavePermission(id: string, permission: Partial<InsertCustomerWavePermission>): Promise<CustomerWavePermission | undefined>;
   revokeWavePermission(userId: string, waveId: string): Promise<boolean>;
   getPropertiesByWave(waveId: string): Promise<PropertyWithAgent[]>;
+
+  // Currency exchange rates
+  getCurrencyRates(): Promise<CurrencyRate[]>;
+  getActiveCurrencyRates(): Promise<CurrencyRate[]>;
+  getCurrencyRate(fromCurrency: string, toCurrency: string): Promise<CurrencyRate | undefined>;
+  createCurrencyRate(rate: InsertCurrencyRate): Promise<CurrencyRate>;
+  updateCurrencyRate(id: string, rate: UpdateCurrencyRate): Promise<CurrencyRate | undefined>;
+  deactivateCurrencyRate(id: string): Promise<boolean>;
+  convertPrice(amount: number, fromCurrency: string, toCurrency: string): Promise<number>;
 }
 
 export interface PropertyFilters {
@@ -901,6 +911,77 @@ export class DatabaseStorage implements IStorage {
     console.log(`Updated wave balance for ${result.length} users`);
     return result.length;
   }
+
+  // Currency exchange rates
+  async getCurrencyRates(): Promise<CurrencyRate[]> {
+    return await db().select().from(currencyRates).orderBy(desc(currencyRates.createdAt));
+  }
+
+  async getActiveCurrencyRates(): Promise<CurrencyRate[]> {
+    return await db()
+      .select()
+      .from(currencyRates)
+      .where(eq(currencyRates.isActive, true))
+      .orderBy(currencyRates.toCurrency);
+  }
+
+  async getCurrencyRate(fromCurrency: string, toCurrency: string): Promise<CurrencyRate | undefined> {
+    const [rate] = await db()
+      .select()
+      .from(currencyRates)
+      .where(and(
+        eq(currencyRates.fromCurrency, fromCurrency),
+        eq(currencyRates.toCurrency, toCurrency),
+        eq(currencyRates.isActive, true)
+      ))
+      .orderBy(desc(currencyRates.effectiveDate))
+      .limit(1);
+    return rate || undefined;
+  }
+
+  async createCurrencyRate(rate: InsertCurrencyRate): Promise<CurrencyRate> {
+    const [created] = await db().insert(currencyRates).values(rate).returning();
+    return created;
+  }
+
+  async updateCurrencyRate(id: string, rate: UpdateCurrencyRate): Promise<CurrencyRate | undefined> {
+    const [updated] = await db()
+      .update(currencyRates)
+      .set({ ...rate, updatedAt: new Date() })
+      .where(eq(currencyRates.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async deactivateCurrencyRate(id: string): Promise<boolean> {
+    const result = await db()
+      .update(currencyRates)
+      .set({ isActive: false, updatedAt: new Date() })
+      .where(eq(currencyRates.id, id))
+      .returning();
+    return result.length > 0;
+  }
+
+  async convertPrice(amount: number, fromCurrency: string, toCurrency: string): Promise<number> {
+    // If same currency, return original amount
+    if (fromCurrency === toCurrency) {
+      return amount;
+    }
+
+    // Get exchange rate
+    const rate = await this.getCurrencyRate(fromCurrency, toCurrency);
+    if (!rate) {
+      // If no direct rate found, try reverse rate
+      const reverseRate = await this.getCurrencyRate(toCurrency, fromCurrency);
+      if (reverseRate) {
+        return amount / parseFloat(reverseRate.rate);
+      }
+      // If no rate found, return original amount (fallback)
+      return amount;
+    }
+
+    return amount * parseFloat(rate.rate);
+  }
 }
 
 class MemStorage implements IStorage {
@@ -910,12 +991,14 @@ class MemStorage implements IStorage {
   private favorites: Favorite[] = [];
   private searchHistories: SearchHistory[] = [];
   private waves: Wave[] = [];
+  private currencyRates: CurrencyRate[] = [];
 
   constructor() {
     // Initialize with admin and customer users
     this.initializeDefaultUsers();
     this.initializeDefaultWaves();
     this.initializeDefaultProperties();
+    this.initializeDefaultCurrencyRates();
   }
 
   private async initializeDefaultUsers() {
@@ -1291,6 +1374,46 @@ class MemStorage implements IStorage {
     }
 
     console.log(`✅ Initialized ${this.properties.length} sample properties in memory storage`);
+  }
+
+  private initializeDefaultCurrencyRates() {
+    // Initialize with default exchange rates as requested by user
+    this.currencyRates = [
+      {
+        id: 'rate-usd-iqd',
+        fromCurrency: 'USD',
+        toCurrency: 'IQD',
+        rate: '1173.0',
+        isActive: true,
+        setBy: 'admin-001',
+        effectiveDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: 'rate-usd-aed',
+        fromCurrency: 'USD',
+        toCurrency: 'AED',
+        rate: '3.67',
+        isActive: true,
+        setBy: 'admin-001',
+        effectiveDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: 'rate-usd-eur',
+        fromCurrency: 'USD',
+        toCurrency: 'EUR',
+        rate: '0.85',
+        isActive: true,
+        setBy: 'admin-001',
+        effectiveDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+    console.log(`✅ Initialized ${this.currencyRates.length} default currency rates in memory storage`);
   }
 
   // Users
@@ -1789,6 +1912,82 @@ class MemStorage implements IStorage {
     this.searchHistories = []; // Also clear search histories
     console.log(`Cleared ${count} properties and related data`);
     return count;
+  }
+
+  // Currency exchange rates
+  async getCurrencyRates(): Promise<CurrencyRate[]> {
+    return [...this.currencyRates].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async getActiveCurrencyRates(): Promise<CurrencyRate[]> {
+    return this.currencyRates.filter(rate => rate.isActive).sort((a, b) => a.toCurrency.localeCompare(b.toCurrency));
+  }
+
+  async getCurrencyRate(fromCurrency: string, toCurrency: string): Promise<CurrencyRate | undefined> {
+    return this.currencyRates
+      .filter(rate => 
+        rate.fromCurrency === fromCurrency && 
+        rate.toCurrency === toCurrency && 
+        rate.isActive
+      )
+      .sort((a, b) => new Date(b.effectiveDate).getTime() - new Date(a.effectiveDate).getTime())[0];
+  }
+
+  async createCurrencyRate(rate: InsertCurrencyRate): Promise<CurrencyRate> {
+    const newRate: CurrencyRate = {
+      id: `rate-${Date.now()}`,
+      ...rate,
+      effectiveDate: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    this.currencyRates.push(newRate);
+    return newRate;
+  }
+
+  async updateCurrencyRate(id: string, rate: UpdateCurrencyRate): Promise<CurrencyRate | undefined> {
+    const index = this.currencyRates.findIndex(r => r.id === id);
+    if (index === -1) return undefined;
+    
+    this.currencyRates[index] = {
+      ...this.currencyRates[index],
+      ...rate,
+      updatedAt: new Date()
+    };
+    return this.currencyRates[index];
+  }
+
+  async deactivateCurrencyRate(id: string): Promise<boolean> {
+    const index = this.currencyRates.findIndex(r => r.id === id);
+    if (index === -1) return false;
+    
+    this.currencyRates[index] = {
+      ...this.currencyRates[index],
+      isActive: false,
+      updatedAt: new Date()
+    };
+    return true;
+  }
+
+  async convertPrice(amount: number, fromCurrency: string, toCurrency: string): Promise<number> {
+    // If same currency, return original amount
+    if (fromCurrency === toCurrency) {
+      return amount;
+    }
+
+    // Get exchange rate
+    const rate = await this.getCurrencyRate(fromCurrency, toCurrency);
+    if (!rate) {
+      // If no direct rate found, try reverse rate
+      const reverseRate = await this.getCurrencyRate(toCurrency, fromCurrency);
+      if (reverseRate) {
+        return amount / parseFloat(reverseRate.rate);
+      }
+      // If no rate found, return original amount (fallback)
+      return amount;
+    }
+
+    return amount * parseFloat(rate.rate);
   }
 }
 

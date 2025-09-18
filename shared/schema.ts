@@ -168,6 +168,19 @@ export const recommendationAnalytics = pgTable("recommendation_analytics", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+// Currency exchange rates management
+export const currencyRates = pgTable("currency_rates", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  fromCurrency: text("from_currency").notNull().default("USD"), // Base currency (always USD)
+  toCurrency: text("to_currency").notNull(), // Target currency (IQD, AED, EUR, etc.)
+  rate: decimal("rate", { precision: 12, scale: 6 }).notNull(), // Exchange rate (e.g., 1173.0 for USD to IQD)
+  isActive: boolean("is_active").default(true),
+  setBy: varchar("set_by").references(() => users.id), // Super admin who set this rate
+  effectiveDate: timestamp("effective_date").defaultNow(), // When this rate becomes effective
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Wave management tables
 export const waves = pgTable("waves", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -236,6 +249,13 @@ export const customerWavePermissionsRelations = relations(customerWavePermission
   }),
   grantedBy: one(users, {
     fields: [customerWavePermissions.grantedBy],
+    references: [users.id],
+  }),
+}));
+
+export const currencyRatesRelations = relations(currencyRates, ({ one }) => ({
+  setBy: one(users, {
+    fields: [currencyRates.setBy],
     references: [users.id],
   }),
 }));
@@ -355,6 +375,20 @@ export const insertCustomerWavePermissionSchema = createInsertSchema(customerWav
   updatedAt: true,
 });
 
+export const insertCurrencyRateSchema = createInsertSchema(currencyRates).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  effectiveDate: true,
+});
+
+export const updateCurrencyRateSchema = createInsertSchema(currencyRates).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  effectiveDate: true,
+}).partial();
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -374,6 +408,9 @@ export type Wave = typeof waves.$inferSelect;
 export type InsertWave = z.infer<typeof insertWaveSchema>;
 export type CustomerWavePermission = typeof customerWavePermissions.$inferSelect;
 export type InsertCustomerWavePermission = z.infer<typeof insertCustomerWavePermissionSchema>;
+export type CurrencyRate = typeof currencyRates.$inferSelect;
+export type InsertCurrencyRate = z.infer<typeof insertCurrencyRateSchema>;
+export type UpdateCurrencyRate = z.infer<typeof updateCurrencyRateSchema>;
 
 // Property with relations
 export type PropertyWithAgent = Property & {

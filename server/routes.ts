@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
   insertPropertySchema, updatePropertySchema, insertInquirySchema, insertFavoriteSchema, insertUserSchema,
-  insertWaveSchema, insertCustomerWavePermissionSchema
+  insertWaveSchema, insertCustomerWavePermissionSchema, insertCurrencyRateSchema, updateCurrencyRateSchema
 } from "@shared/schema";
 import { extractPropertyIdentifier } from "@shared/slug-utils";
 import { hashPassword, requireAuth, requireRole, requireAnyRole, populateUser, validateLanguagePermission } from "./auth";
@@ -392,6 +392,113 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Set wave balance error:", error);
       res.status(500).json({ message: "Failed to set customer wave balance" });
+    }
+  });
+
+  // Currency rate management routes (super admin only)
+  app.get("/api/admin/currency-rates", adminRateLimit, requireRole("super_admin"), async (req, res) => {
+    try {
+      const rates = await storage.getCurrencyRates();
+      res.json(rates);
+    } catch (error) {
+      console.error("Get currency rates error:", error);
+      res.status(500).json({ message: "Failed to fetch currency rates" });
+    }
+  });
+
+  app.get("/api/admin/currency-rates/active", adminRateLimit, requireRole("super_admin"), async (req, res) => {
+    try {
+      const rates = await storage.getActiveCurrencyRates();
+      res.json(rates);
+    } catch (error) {
+      console.error("Get active currency rates error:", error);
+      res.status(500).json({ message: "Failed to fetch active currency rates" });
+    }
+  });
+
+  app.post("/api/admin/currency-rates", adminRateLimit, requireRole("super_admin"), async (req, res) => {
+    try {
+      const validatedData = insertCurrencyRateSchema.parse({
+        ...req.body,
+        setBy: req.user?.id || 'unknown'
+      });
+      
+      const newRate = await storage.createCurrencyRate(validatedData);
+      res.status(201).json(newRate);
+    } catch (error) {
+      console.error("Create currency rate error:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid currency rate data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create currency rate" });
+    }
+  });
+
+  app.put("/api/admin/currency-rates/:id", adminRateLimit, requireRole("super_admin"), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const validatedData = updateCurrencyRateSchema.parse(req.body);
+      
+      const updatedRate = await storage.updateCurrencyRate(id, validatedData);
+      
+      if (!updatedRate) {
+        return res.status(404).json({ message: "Currency rate not found" });
+      }
+      
+      res.json(updatedRate);
+    } catch (error) {
+      console.error("Update currency rate error:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid currency rate data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update currency rate" });
+    }
+  });
+
+  app.delete("/api/admin/currency-rates/:id", adminRateLimit, requireRole("super_admin"), async (req, res) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deactivateCurrencyRate(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Currency rate not found" });
+      }
+      
+      res.json({ message: "Currency rate deactivated successfully" });
+    } catch (error) {
+      console.error("Deactivate currency rate error:", error);
+      res.status(500).json({ message: "Failed to deactivate currency rate" });
+    }
+  });
+
+  // Public currency conversion endpoint
+  app.get("/api/currency/convert", apiRateLimit, async (req, res) => {
+    try {
+      const { amount, from, to } = req.query;
+      
+      if (!amount || !from || !to) {
+        return res.status(400).json({ 
+          message: "Missing required parameters: amount, from, to" 
+        });
+      }
+      
+      const numAmount = parseFloat(amount as string);
+      if (isNaN(numAmount)) {
+        return res.status(400).json({ message: "Invalid amount" });
+      }
+      
+      const convertedAmount = await storage.convertPrice(numAmount, from as string, to as string);
+      
+      res.json({
+        originalAmount: numAmount,
+        fromCurrency: from,
+        toCurrency: to,
+        convertedAmount,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Currency conversion error:", error);
+      res.status(500).json({ message: "Failed to convert currency" });
     }
   });
 
