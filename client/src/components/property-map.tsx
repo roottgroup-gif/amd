@@ -402,7 +402,8 @@ export default function PropertyMap({
 
         // First, zoom out slightly to show movement, then zoom to target
         const currentZoom = mapInstanceRef.current.getZoom();
-        const targetZoom = Math.max(16, currentZoom + 2);
+        // More reasonable zoom behavior - don't zoom too aggressively
+        const targetZoom = Math.min(Math.max(14, currentZoom + 1), 17);
 
         // Create smooth multi-stage animation
         setTimeout(() => {
@@ -1072,7 +1073,7 @@ export default function PropertyMap({
                       justify-content: space-between;
                       margin-bottom: 4px;
                     ">
-                      <div style="
+                      <div id="popup-price-${property.id}" style="
                         font-weight: 700; 
                         color: #FF7800; 
                         font-size: clamp(11px, 3vw, 13px);
@@ -1081,7 +1082,7 @@ export default function PropertyMap({
                         gap: 4px;
                         line-height: 1.3;
                       ">
-                     
+                        ${formatMapPrice(property)}
                       </div>
                       <div style="
                         display: inline-flex;
