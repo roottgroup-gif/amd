@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
-import { useTranslation } from "@/lib/i18n";
+import { Link, useLocation } from "wouter";
+import { useTranslation, redirectToLanguage } from "@/lib/i18n";
 import { useCurrency } from "@/lib/currency-context";
 import { SUPPORTED_CURRENCIES } from "@/lib/currency";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,7 @@ import kurdishFlag from "@assets/generated_images/Kurdish_flag_circular_design_5
 export default function SettingsPage() {
   const { language, changeLanguage, t } = useTranslation();
   const { preferredCurrency, setPreferredCurrency } = useCurrency();
+  const [location, setLocation] = useLocation();
   const [userSettings, setUserSettings] = useState({
     // Profile Settings
     displayName: "",
@@ -94,6 +95,8 @@ export default function SettingsPage() {
     if (key === "language") {
       // Update global language state when language is changed
       changeLanguage(value as "en" | "ar" | "kur");
+      // Redirect to the new language URL
+      redirectToLanguage(value as "en" | "ar" | "kur", location, setLocation);
     } else if (key === "currency") {
       // Update global currency state when currency is changed
       setPreferredCurrency(value);
