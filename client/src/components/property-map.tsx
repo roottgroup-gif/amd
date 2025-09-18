@@ -80,9 +80,20 @@ export default function PropertyMap({
 
   // Helper function to format price for map popups using pre-calculated conversions
   const formatMapPrice = (property: any) => {
+    console.log("🔍 formatMapPrice called:", {
+      propertyId: property.id,
+      originalPrice: property.price,
+      originalCurrency: property.currency,
+      preferredCurrency: preferredCurrency,
+      hasConversion: convertedPrices[property.id] !== undefined,
+      convertedAmount: convertedPrices[property.id],
+      listingType: property.listingType,
+    });
+    
     // Only use converted price if we have the actual conversion result
     if (convertedPrices[property.id] !== undefined) {
       const convertedAmount = convertedPrices[property.id];
+      console.log("✅ Using converted amount:", convertedAmount);
       return formatPrice(
         property.price,
         property.currency,
@@ -94,6 +105,7 @@ export default function PropertyMap({
     }
     
     // If no conversion available yet, show original price with original currency
+    console.log("⚠️ No conversion available, using original currency");
     return formatPrice(
       property.price,
       property.currency,
