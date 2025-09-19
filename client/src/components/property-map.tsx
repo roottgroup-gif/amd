@@ -340,15 +340,6 @@ export default function PropertyMap({
         const property = properties.find((p) => p.id === propertyId);
         const identifier = property?.slug || propertyId;
 
-        // Debug logging
-        console.log("🔍 Map property lookup debug:", {
-          propertyId,
-          propertyFound: !!property,
-          propertySlug: property?.slug,
-          propertyTitle: property?.title,
-          identifier,
-          totalProperties: properties.length
-        });
 
         // Navigate to property detail page using multiple approaches
         console.log(
