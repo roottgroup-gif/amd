@@ -14,10 +14,10 @@ export type Language = typeof SUPPORTED_LANGUAGES[number];
 
 export const users = mysqlTable("users", {
   id: varchar("id", { length: 36 }).primaryKey(),
-  username: text("username").notNull().unique(),
-  email: text("email").notNull().unique(),
+  username: varchar("username", { length: 191 }).notNull().unique(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
   password: text("password").notNull(),
-  role: text("role").notNull().default("user"), // "user" | "admin" | "super_admin"
+  role: varchar("role", { length: 20 }).notNull().default("user"), // "user" | "admin" | "super_admin"
   firstName: text("first_name"),
   lastName: text("last_name"),
   phone: text("phone"),
@@ -37,7 +37,7 @@ export const properties = mysqlTable("properties", {
   type: text("type").notNull(), // "house" | "apartment" | "villa" | "land"
   listingType: text("listing_type").notNull(), // "sale" | "rent"
   price: decimal("price", { precision: 12, scale: 2 }).notNull(),
-  currency: text("currency").default("USD"),
+  currency: varchar("currency", { length: 3 }).default("USD"),
   bedrooms: int("bedrooms"),
   bathrooms: int("bathrooms"),
   area: int("area"), // in square meters
@@ -49,16 +49,16 @@ export const properties = mysqlTable("properties", {
   images: json("images").$type<string[]>().default([]),
   amenities: json("amenities").$type<string[]>().default([]),
   features: json("features").$type<string[]>().default([]),
-  status: text("status").default("active"), // "active" | "sold" | "rented" | "pending"
-  language: text("language").notNull().default("en"), // Language of the property data: "en", "ar", "ku"
+  status: varchar("status", { length: 16 }).default("active"), // "active" | "sold" | "rented" | "pending"
+  language: varchar("language", { length: 3 }).notNull().default("en"), // Language of the property data: "en", "ar", "ku"
   agentId: varchar("agent_id", { length: 36 }).references(() => users.id),
   contactPhone: text("contact_phone"), // Contact phone number for this property (WhatsApp and calls)
   waveId: varchar("wave_id", { length: 36 }).references(() => waves.id), // Wave assignment
   views: int("views").default(0),
   isFeatured: boolean("is_featured").default(false),
-  slug: text("slug").unique(), // SEO-friendly URL slug (nullable for backward compatibility)
+  slug: varchar("slug", { length: 255 }).unique(), // SEO-friendly URL slug (nullable for backward compatibility)
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
 });
 
 export const inquiries = mysqlTable("inquiries", {
@@ -69,7 +69,7 @@ export const inquiries = mysqlTable("inquiries", {
   email: text("email").notNull(),
   phone: text("phone"),
   message: text("message").notNull(),
-  status: text("status").default("pending"), // "pending" | "replied" | "closed"
+  status: varchar("status", { length: 16 }).default("pending"), // "pending" | "replied" | "closed"
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -103,10 +103,10 @@ export const customerPoints = mysqlTable("customer_points", {
   id: varchar("id", { length: 36 }).primaryKey(),
   userId: varchar("user_id", { length: 36 }).references(() => users.id).notNull().unique(),
   totalPoints: int("total_points").default(0),
-  currentLevel: text("current_level").default("Bronze"), // Bronze, Silver, Gold, Platinum
+  currentLevel: varchar("current_level", { length: 20 }).default("Bronze"), // Bronze, Silver, Gold, Platinum
   pointsThisMonth: int("points_this_month").default(0),
   lastActivity: timestamp("last_activity").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
 });
 
 // User preference profiles for personalized recommendations
@@ -122,7 +122,7 @@ export const userPreferences = mysqlTable("user_preferences", {
   viewingHistory: json("viewing_history").$type<Record<string, number>>().default({}), // propertyId -> view_count
   interactionScores: json("interaction_scores").$type<Record<string, number>>().default({}), // propertyId -> score
   lastRecommendationUpdate: timestamp("last_recommendation_update").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
 });
 
 // AI-generated recommendations for users
@@ -138,7 +138,7 @@ export const userRecommendations = mysqlTable("user_recommendations", {
   isFavorited: boolean("is_favorited").default(false),
   feedbackScore: int("feedback_score"), // User feedback: -1 (negative), 0 (neutral), 1 (positive)
   createdAt: timestamp("created_at").defaultNow(),
-  expiresAt: timestamp("expires_at").default(sql`now() + interval '7 days'`),
+  expiresAt: timestamp("expires_at").default(sql`(DATE_ADD(NOW(), INTERVAL 7 DAY))`),
 });
 
 // Property similarity matrix for content-based recommendations
@@ -171,14 +171,14 @@ export const recommendationAnalytics = mysqlTable("recommendation_analytics", {
 // Currency exchange rates management
 export const currencyRates = mysqlTable("currency_rates", {
   id: varchar("id", { length: 36 }).primaryKey(),
-  fromCurrency: text("from_currency").notNull().default("USD"), // Base currency (always USD)
+  fromCurrency: varchar("from_currency", { length: 3 }).notNull().default("USD"), // Base currency (always USD)
   toCurrency: text("to_currency").notNull(), // Target currency (IQD, AED, EUR, etc.)
   rate: decimal("rate", { precision: 12, scale: 6 }).notNull(), // Exchange rate (e.g., 1173.0 for USD to IQD)
   isActive: boolean("is_active").default(true),
   setBy: varchar("set_by", { length: 36 }).references(() => users.id), // Super admin who set this rate
   effectiveDate: timestamp("effective_date").defaultNow(), // When this rate becomes effective
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
 });
 
 // Wave management tables
@@ -186,11 +186,11 @@ export const waves = mysqlTable("waves", {
   id: varchar("id", { length: 36 }).primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
-  color: text("color").default("#3B82F6"), // Hex color for map display
+  color: varchar("color", { length: 7 }).default("#3B82F6"), // Hex color for map display
   isActive: boolean("is_active").default(true),
   createdBy: varchar("created_by", { length: 36 }).references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
 });
 
 export const customerWavePermissions = mysqlTable("customer_wave_permissions", {
@@ -201,7 +201,7 @@ export const customerWavePermissions = mysqlTable("customer_wave_permissions", {
   usedProperties: int("used_properties").default(0), // How many properties customer has already assigned
   grantedBy: varchar("granted_by", { length: 36 }).references(() => users.id), // Super admin who granted permission
   createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
 });
 
 // Relations
