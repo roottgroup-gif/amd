@@ -283,7 +283,7 @@ export default function PropertyCard({
                 style={{ color: "#FF7800" }}
               />
               <span className="truncate">
-                {property.area.toLocaleString()} {t("property.sqft")}
+                {property.area.toLocaleString()} {t("property.sqFt")}
               </span>
             </div>
           )}

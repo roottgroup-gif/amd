@@ -131,7 +131,7 @@ export default function PropertyDetailPage() {
       "floorSize": {
         "@type": "QuantitativeValue",
         "value": property.area,
-        "unitText": "square feet"
+        "unitText": "square meters"
       },
       "availableFrom": property.createdAt,
       "listingType": property.listingType === 'rent' ? 'ForRent' : 'ForSale'

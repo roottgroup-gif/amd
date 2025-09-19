@@ -40,7 +40,7 @@ export const properties = pgTable("properties", {
   currency: text("currency").default("USD"),
   bedrooms: integer("bedrooms"),
   bathrooms: integer("bathrooms"),
-  area: integer("area"), // in square feet
+  area: integer("area"), // in square meters
   address: text("address").notNull(),
   city: text("city").notNull(),
   country: text("country").notNull(),

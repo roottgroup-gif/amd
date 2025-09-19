@@ -166,11 +166,6 @@ const translations: Translations = {
     ar: "حمامات",
     kur: "حەمام",
   },
-  "property.sqft": {
-    en: "M²",
-    ar: "متر مربع",
-    kur: "مەتری چوارگۆشە",
-  },
   "property.viewDetails": {
     en: "View Details",
     ar: "عرض التفاصيل",
