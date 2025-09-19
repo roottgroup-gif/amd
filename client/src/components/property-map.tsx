@@ -1793,16 +1793,14 @@ export default function PropertyMap({
                 <Button
                   onClick={handleGetMyLocation}
                   disabled={isLocating}
-                  className={`relative w-10 h-10 rounded-full backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 hover:from-orange-500 hover:via-orange-600 hover:to-orange-700 border-orange-400 text-white flex-shrink-0 flex items-center justify-center overflow-hidden ${isLocating ? "animate-pulse" : ""}`}
+                  className={`relative w-10 h-10 rounded-full backdrop-blur-md border shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl bg-orange-500 hover:bg-orange-600 border-orange-400 text-white flex-shrink-0 flex items-center justify-center overflow-hidden ${isLocating ? "animate-pulse" : ""}`}
                   data-testid="footer-location-button"
-                  style={{
-                    background: 'linear-gradient(45deg, #ff7800, #ffaa00, #ff7800, #ffaa00)',
-                    backgroundSize: '300% 300%',
-                    animation: isLocating ? 'none' : 'sweep 3s ease-in-out infinite',
-                  }}
                 >
+                  {!isLocating && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 animate-sweep" />
+                  )}
                   <Navigation
-                    className={`h-4 w-4 text-white ${isLocating ? "animate-spin" : ""}`}
+                    className={`relative h-4 w-4 text-white z-10 ${isLocating ? "animate-spin" : ""}`}
                   />
                 </Button>
               </div>
