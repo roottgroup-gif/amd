@@ -28,6 +28,7 @@ import {
   Heart,
   Mail,
   ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
 import usFlag from "@assets/generated_images/US_flag_circular_design_55844ad0.png";
 import saudiFlag from "@assets/generated_images/Saudi_flag_circular_design_3c46c604.png";
@@ -129,20 +130,23 @@ export default function SettingsPage() {
       />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className={`flex items-center mb-8 ${language === 'ar' || language === 'kur' ? 'justify-end' : 'justify-start'}`}>
           <div className="flex items-center gap-4">
             <Link href="/">
               <Button
                 variant="ghost"
                 size="sm"
-                className="flex items-center gap-2"
+                className={`flex items-center gap-2 ${language === 'ar' || language === 'kur' ? 'flex-row-reverse' : ''}`}
                 data-testid="back-to-home"
               >
-                <ArrowLeft className="h-4 w-4" />
+                {language === 'ar' || language === 'kur' ? (
+                  <ArrowRight className="h-4 w-4" />
+                ) : (
+                  <ArrowLeft className="h-4 w-4" />
+                )}
                 {t("settings.backToHome")}
               </Button>
             </Link>
-            <div></div>
           </div>
         </div>
 
