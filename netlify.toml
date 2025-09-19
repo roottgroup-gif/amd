@@ -26,8 +26,8 @@
 [build.environment]
   # Set Node.js version
   NODE_VERSION = "18"
-  # Production environment
-  NODE_ENV = "production"
+  # Allow devDependencies to be installed for build tools
+  NPM_CONFIG_PRODUCTION = "false"
 
 # Environment variables (set these in Netlify dashboard)
 # SESSION_SECRET = "your-secure-random-string-here"

@@ -1,0 +1,508 @@
+6:37:01 PM: Waiting for other deploys from your team to complete. Check the queue: https://app.netlify.com/teams/roottgroup/builds
+6:38:08 PM: build-image version: 82641f3cd91d26dfb76016a98afb1d48c45185fc (noble)
+6:38:08 PM: buildbot version: 82641f3cd91d26dfb76016a98afb1d48c45185fc
+6:38:08 PM: Fetching cached dependencies
+6:38:08 PM: Starting to download cache of 525.6MB (Last modified: 2025-09-19 15:30:00 +0000 UTC)
+6:38:10 PM: Finished downloading cache in 1.937s
+6:38:10 PM: Starting to extract cache
+6:38:15 PM: Finished extracting cache in 4.78s
+6:38:15 PM: Finished fetching cache in 6.794s
+6:38:15 PM: Starting to prepare the repo for build
+6:38:15 PM: Preparing Git Reference refs/heads/main
+6:38:17 PM: Starting to install dependencies
+6:38:17 PM: Started restoring cached python cache
+6:38:17 PM: Finished restoring cached python cache
+6:38:17 PM: Started restoring cached ruby cache
+6:38:18 PM: Finished restoring cached ruby cache
+6:38:18 PM: Started restoring cached go cache
+6:38:18 PM: Finished restoring cached go cache
+6:38:19 PM: Started restoring cached Node.js version
+6:38:19 PM: Finished restoring cached Node.js version
+6:38:19 PM: v18.20.8 is already installed.
+6:38:19 PM: Now using node v18.20.8 (npm v10.8.2)
+6:38:19 PM: Enabling Node.js Corepack
+6:38:20 PM: Started restoring cached build plugins
+6:38:20 PM: Finished restoring cached build plugins
+6:38:20 PM: WARNING: The environment variable 'NODE_ENV' is set to 'production'. Any 'devDependencies' in package.json will not be installed
+6:38:20 PM: Started restoring cached corepack dependencies
+6:38:20 PM: Finished restoring cached corepack dependencies
+6:38:20 PM: No npm workspaces detected
+6:38:20 PM: Started restoring cached node modules
+6:38:20 PM: Finished restoring cached node modules
+6:38:20 PM: Installing npm packages using npm version 10.8.2
+6:38:20 PM: npm warn ancient lockfile
+6:38:20 PM: npm warn ancient lockfile The package-lock.json file was created with an old version of npm,
+6:38:20 PM: npm warn ancient lockfile so supplemental metadata must be fetched from the registry.
+6:38:20 PM: npm warn ancient lockfile
+6:38:20 PM: npm warn ancient lockfile This is a one-time fix-up, please be patient...
+6:38:20 PM: npm warn ancient lockfile
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:34 PM: npm warn ERESOLVE overriding peer dependency
+6:38:34 PM: npm warn While resolving: rest-express@1.0.0
+6:38:34 PM: npm warn Found: react@19.1.1
+6:38:34 PM: npm warn node_modules/react
+6:38:34 PM: npm warn   react@"^18.3.1" from the root project
+6:38:34 PM: npm warn   42 more (@radix-ui/react-slot, @radix-ui/react-menubar, ...)
+6:38:34 PM: npm warn
+6:38:34 PM: npm warn Could not resolve dependency:
+6:38:34 PM: npm warn peer react@"^19.1.1" from react-dom@19.1.1
+6:38:34 PM: npm warn node_modules/react-dom
+6:38:34 PM: npm warn   react-dom@"^18.3.1" from the root project
+6:38:34 PM: npm warn   33 more (@radix-ui/react-menubar, @radix-ui/react-progress, ...)
+6:38:49 PM: Failed during stage 'building site': Build script returned non-zero exit code: 2
+6:38:44 PM: added 23 packages, removed 66 packages, and changed 191 packages in 24s
+6:38:44 PM: npm packages installed
+6:38:44 PM: Successfully installed dependencies
+6:38:44 PM: Starting build script
+6:38:45 PM: Detected 1 framework(s)
+6:38:45 PM: "vite" at version "5.4.19"
+6:38:45 PM: Section completed: initializing
+6:38:46 PM: ​
+6:38:46 PM: Netlify Build                                                 
+6:38:46 PM: ────────────────────────────────────────────────────────────────
+6:38:46 PM: ​
+6:38:46 PM: ❯ Version
+6:38:46 PM:   @netlify/build 35.1.6
+6:38:46 PM: ​
+6:38:46 PM: ❯ Flags
+6:38:46 PM:   accountId: 68cd5ec03b76fd1ed5d334ab
+6:38:46 PM:   baseRelDir: true
+6:38:46 PM:   buildId: 68cd789d07e1187999f0c29b
+6:38:46 PM:   deployId: 68cd789d07e1187999f0c29d
+6:38:46 PM: ​
+6:38:46 PM: ❯ Current directory
+6:38:46 PM:   /opt/build/repo
+6:38:46 PM: ​
+6:38:46 PM: ❯ Config file
+6:38:46 PM:   /opt/build/repo/netlify.toml
+6:38:46 PM: ​
+6:38:46 PM: ❯ Context
+6:38:46 PM:   production
+6:38:46 PM: ​
+6:38:46 PM: ❯ Installing extensions
+6:38:46 PM:    - neon
+6:38:47 PM: ​
+6:38:47 PM: ❯ Loading extensions
+6:38:47 PM:    - neon
+6:38:48 PM: ​
+6:38:48 PM: build.command from netlify.toml                               
+6:38:48 PM: ────────────────────────────────────────────────────────────────
+6:38:48 PM: ​
+6:38:48 PM: $ npm run build
+6:38:48 PM: > rest-express@1.0.0 build
+6:38:48 PM: > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+6:38:48 PM: sh: 1: vite: not found
+6:38:49 PM: ​
+6:38:49 PM: "build.command" failed                                        
+6:38:49 PM: ────────────────────────────────────────────────────────────────
+6:38:49 PM: ​
+6:38:49 PM:   Error message
+6:38:49 PM:   Command failed with exit code 127: npm run build
+6:38:49 PM: ​
+6:38:49 PM:   Error location
+6:38:49 PM:   In build.command from netlify.toml:
+6:38:49 PM:   npm run build
+6:38:49 PM: ​
+6:38:49 PM:   Resolved config
+6:38:49 PM:   build:
+6:38:49 PM:     command: npm run build
+6:38:49 PM:     commandOrigin: config
+6:38:49 PM:     environment:
+6:38:49 PM:       - NETLIFY_DATABASE_URL
+6:38:49 PM:       - NETLIFY_DATABASE_URL_UNPOOLED
+6:38:49 PM:       - NODE_VERSION
+6:38:49 PM:       - NODE_ENV
+6:38:49 PM:     publish: /opt/build/repo/dist/public
+6:38:49 PM:     publishOrigin: config
+6:38:49 PM:   functions:
+6:38:49 PM:     "*":
+6:38:49 PM:       included_files:
+6:38:49 PM:         - server/**/*
+6:38:49 PM:         - shared/**/*
+6:38:49 PM:   functionsDirectory: /opt/build/repo/functions
+6:38:49 PM:   headers:
+6:38:49 PM:     - for: /*
+      values:
+        Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'
+          'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:
+          https:; font-src 'self' data:; connect-src 'self'
+          https://api.netlify.com"
+        Referrer-Policy: strict-origin-when-cross-origin
+        X-Content-Type-Options: nosniff
+        X-Frame-Options: DENY
+        X-XSS-Protection: 1; mode=block
+    - for: /assets/*
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+  headersOrigin: config
+  redirects:
+    - force: true
+      from: /api/*
+      status: 200
+      to: /.netlify/functions/api/:splat
+    - from: /*
+      status: 200
+      to: /index.html
+  redirectsOrigin: config
+6:38:49 PM: Build failed due to a user error: Build script returned non-zero exit code: 2
+6:38:49 PM: Failing build: Failed to build site
+6:38:50 PM: Finished processing build request in 41.056s
