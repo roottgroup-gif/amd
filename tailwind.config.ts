@@ -67,6 +67,39 @@ export default {
         serif: ["var(--font-serif)"],
         mono: ["var(--font-mono)"],
       },
+      fontSize: {
+        // Responsive typography system with fluid scaling
+        'xs': ['var(--text-xs)', { lineHeight: 'var(--leading-xs)' }],
+        'sm': ['var(--text-sm)', { lineHeight: 'var(--leading-sm)' }],
+        'base': ['var(--text-base)', { lineHeight: 'var(--leading-base)' }],
+        'lg': ['var(--text-lg)', { lineHeight: 'var(--leading-lg)' }],
+        'xl': ['var(--text-xl)', { lineHeight: 'var(--leading-xl)' }],
+        '2xl': ['var(--text-2xl)', { lineHeight: 'var(--leading-2xl)' }],
+        '3xl': ['var(--text-3xl)', { lineHeight: 'var(--leading-3xl)' }],
+        '4xl': ['var(--text-4xl)', { lineHeight: 'var(--leading-4xl)' }],
+        '5xl': ['var(--text-5xl)', { lineHeight: 'var(--leading-5xl)' }],
+        
+        // Responsive display sizes with fluid scaling
+        'display-sm': ['var(--text-display-sm)', { lineHeight: 'var(--leading-display-sm)' }],
+        'display-md': ['var(--text-display-md)', { lineHeight: 'var(--leading-display-md)' }],
+        'display-lg': ['var(--text-display-lg)', { lineHeight: 'var(--leading-display-lg)' }],
+        'display-xl': ['var(--text-display-xl)', { lineHeight: 'var(--leading-display-xl)' }],
+      },
+      lineHeight: {
+        'xs': 'var(--leading-xs)',
+        'sm': 'var(--leading-sm)',
+        'base': 'var(--leading-base)',
+        'lg': 'var(--leading-lg)',
+        'xl': 'var(--leading-xl)',
+        '2xl': 'var(--leading-2xl)',
+        '3xl': 'var(--leading-3xl)',
+        '4xl': 'var(--leading-4xl)',
+        '5xl': 'var(--leading-5xl)',
+        'display-sm': 'var(--leading-display-sm)',
+        'display-md': 'var(--leading-display-md)',
+        'display-lg': 'var(--leading-display-lg)',
+        'display-xl': 'var(--leading-display-xl)',
+      },
       keyframes: {
         "accordion-down": {
           from: {
