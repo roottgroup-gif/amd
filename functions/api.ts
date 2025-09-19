@@ -7,6 +7,13 @@ import MemoryStore from 'memorystore';
 // Since we're in a serverless environment, we need to handle imports carefully
 // The storage and routes will be initialized on demand
 
+// IMPORTANT NOTES FOR NETLIFY DEPLOYMENT:
+// 1. SSE (Server-Sent Events) may not work reliably due to function timeouts
+// 2. Session storage uses memory - consider JWT tokens for production
+// 3. Set SESSION_SECRET environment variable in Netlify dashboard
+// 4. Set FRONTEND_URL environment variable to your Netlify site URL
+// 5. Functions have a 10-second timeout on free tier (26s on paid)
+
 const MemoryStoreSession = MemoryStore(session);
 
 // Create app with basic middleware
@@ -29,24 +36,31 @@ app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 
 // Session configuration for serverless
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'netlify-serverless-secret',
+  secret: process.env.SESSION_SECRET || 'change-this-in-production-for-security',
   resave: false,
   saveUninitialized: false,
   store: new MemoryStoreSession({
     checkPeriod: 86400000 // prune expired entries every 24h
   }),
   cookie: {
-    secure: false, // Set to true in production with HTTPS
+    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
     httpOnly: true,
+    sameSite: 'lax', // CSRF protection
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
 
 // Add CORS headers for cross-origin requests
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  // Use specific origin in production instead of '*' for better security
+  const origin = process.env.NODE_ENV === 'production' 
+    ? (process.env.FRONTEND_URL || 'https://your-site.netlify.app')
+    : '*';
+  
+  res.header('Access-Control-Allow-Origin', origin);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
   
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
@@ -59,7 +73,7 @@ app.use((req, res, next) => {
 async function initializeApp() {
   try {
     // Dynamically import the routes module
-    const { registerRoutes } = await import('../server/routes.js');
+    const { registerRoutes } = await import('../server/routes');
     
     // Register all the routes from the original server
     await registerRoutes(app);

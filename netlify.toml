@@ -28,6 +28,13 @@
 [build.environment]
   # Set Node.js version
   NODE_VERSION = "18"
+  # Production environment
+  NODE_ENV = "production"
+
+# Environment variables (set these in Netlify dashboard)
+# SESSION_SECRET = "your-secure-random-string-here"
+# FRONTEND_URL = "https://your-site.netlify.app"
+# DATABASE_URL = "your-database-connection-string" (if using external DB)
 
 # Headers for security and performance
 [[headers]]
