@@ -142,7 +142,7 @@ export default function SettingsPage() {
                 {language === 'ar' || language === 'kur' ? (
                   <ArrowLeft className="h-4 w-4" />
                 ) : (
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowLeft className="h-4 w-4" />
                 )}
                 {t("settings.backToHome")}
               </Button>
