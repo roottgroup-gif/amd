@@ -140,9 +140,9 @@ export default function SettingsPage() {
                 data-testid="back-to-home"
               >
                 {language === 'ar' || language === 'kur' ? (
-                  <ArrowRight className="h-4 w-4" />
-                ) : (
                   <ArrowLeft className="h-4 w-4" />
+                ) : (
+                  <ArrowRight className="h-4 w-4" />
                 )}
                 {t("settings.backToHome")}
               </Button>
