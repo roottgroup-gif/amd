@@ -1,0 +1,46 @@
+[build]
+  # Build the React frontend
+  command = "npm run build"
+  # Publish the dist directory that contains the built frontend
+  publish = "dist/public"
+  # Functions directory for Netlify Functions
+  functions = "functions"
+
+[functions]
+  # External dependencies that need to be bundled with the functions
+  external_node_modules = ["express", "serverless-http", "compression", "express-session", "memorystore", "bcryptjs", "drizzle-orm", "zod"]
+  # Increase timeout for database operations
+  timeout = 30
+
+# Redirect all API calls to the serverless function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# Redirect all other routes to index.html for SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  # Set Node.js version
+  NODE_VERSION = "18"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.netlify.com"
+
+# Cache static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
