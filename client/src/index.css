@@ -70,6 +70,56 @@
   --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
+
+  /* ========================================
+     RESPONSIVE TYPOGRAPHY SYSTEM
+     Fluid scaling using clamp() for smooth resizing
+     ======================================== */
+  
+  /* Base font sizes with fluid scaling */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);        /* 12px - 14px */
+  --text-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);         /* 14px - 16px */
+  --text-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);         /* 16px - 18px */
+  --text-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);        /* 18px - 20px */
+  --text-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);         /* 20px - 24px */
+  --text-2xl: clamp(1.5rem, 1.3rem + 1vw, 1.875rem);          /* 24px - 30px */
+  --text-3xl: clamp(1.875rem, 1.6rem + 1.375vw, 2.25rem);     /* 30px - 36px */
+  --text-4xl: clamp(2.25rem, 1.9rem + 1.75vw, 3rem);          /* 36px - 48px */
+  --text-5xl: clamp(3rem, 2.5rem + 2.5vw, 4rem);              /* 48px - 64px */
+  
+  /* Display sizes for hero text and major headings */
+  --text-display-sm: clamp(2.5rem, 2rem + 2.5vw, 3.5rem);     /* 40px - 56px */
+  --text-display-md: clamp(3.5rem, 2.8rem + 3.5vw, 4.5rem);   /* 56px - 72px */
+  --text-display-lg: clamp(4.5rem, 3.5rem + 5vw, 6rem);       /* 72px - 96px */
+  --text-display-xl: clamp(6rem, 4.5rem + 7.5vw, 8rem);       /* 96px - 128px */
+  
+  /* Corresponding line heights for optimal readability */
+  --leading-xs: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);         /* 16px - 20px */
+  --leading-sm: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);      /* 20px - 24px */
+  --leading-base: clamp(1.5rem, 1.3rem + 1vw, 1.75rem);       /* 24px - 28px */
+  --leading-lg: clamp(1.75rem, 1.5rem + 1.25vw, 2rem);        /* 28px - 32px */
+  --leading-xl: clamp(2rem, 1.7rem + 1.5vw, 2.25rem);         /* 32px - 36px */
+  --leading-2xl: clamp(2.25rem, 1.9rem + 1.75vw, 2.625rem);   /* 36px - 42px */
+  --leading-3xl: clamp(2.5rem, 2.1rem + 2vw, 3rem);           /* 40px - 48px */
+  --leading-4xl: clamp(3rem, 2.5rem + 2.5vw, 3.75rem);        /* 48px - 60px */
+  --leading-5xl: clamp(3.75rem, 3rem + 3.75vw, 5rem);         /* 60px - 80px */
+  
+  /* Display line heights */
+  --leading-display-sm: clamp(3rem, 2.4rem + 3vw, 4rem);      /* 48px - 64px */
+  --leading-display-md: clamp(4rem, 3.2rem + 4vw, 5rem);      /* 64px - 80px */
+  --leading-display-lg: clamp(5rem, 4rem + 5vw, 6.5rem);      /* 80px - 104px */
+  --leading-display-xl: clamp(6.5rem, 5rem + 7.5vw, 8.5rem); /* 104px - 136px */
+  
+  /* Letter spacing for different text sizes */
+  --tracking-tight: -0.025em;
+  --tracking-tighter: -0.05em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  
+  /* Maximum content widths for optimal reading */
+  --max-width-prose: clamp(16rem, 65ch, 70rem);
+  --max-width-prose-lg: clamp(18rem, 70ch, 75rem);
+  --max-width-prose-xl: clamp(20rem, 75ch, 80rem);
 }
 
 .dark {
@@ -111,6 +161,8 @@
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 1.3rem;
+
+  /* Typography variables remain the same in dark mode for consistency */
   --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
   --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
   --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
