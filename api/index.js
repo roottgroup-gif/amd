@@ -1,14 +1,7 @@
 import express from "express";
 import compression from "compression";
-import { storage } from "../server/storage.js";
-import { 
-  insertPropertySchema, updatePropertySchema, insertInquirySchema, insertFavoriteSchema, insertUserSchema,
-  insertWaveSchema, insertCustomerWavePermissionSchema, insertCurrencyRateSchema, updateCurrencyRateSchema
-} from "../shared/schema.js";
-import { extractPropertyIdentifier } from "../shared/slug-utils.js";
-import { hashPassword, requireAuth, requireRole, requireAnyRole, populateUser, validateLanguagePermission } from "../server/auth.js";
 import session from "express-session";
-import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 const app = express();
 
@@ -33,7 +26,44 @@ app.use(session({
   }
 }));
 
-// Add user to all requests
+// Simple in-memory storage for demo (replace with database in production)
+let users = [];
+let properties = [];
+let favorites = [];
+let inquiries = [];
+
+// Utility functions
+const hashPassword = async (password) => {
+  const saltRounds = 12;
+  return await bcrypt.hash(password, saltRounds);
+};
+
+const comparePassword = async (password, hash) => {
+  return await bcrypt.compare(password, hash);
+};
+
+const generateId = () => {
+  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+};
+
+// Middleware to populate user
+const populateUser = async (req, res, next) => {
+  if (req.session.userId) {
+    const user = users.find(u => u.id === req.session.userId);
+    if (user) {
+      req.user = user;
+    }
+  }
+  next();
+};
+
+const requireAuth = (req, res, next) => {
+  if (!req.session?.userId) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  next();
+};
+
 app.use(populateUser);
 
 // Health check route
@@ -41,95 +71,39 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'API is running on Vercel' });
 });
 
-// Properties routes
-app.get('/api/properties', async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 12;
-    const offset = (page - 1) * limit;
-    
-    const { type, country, city, minPrice, maxPrice, bedrooms, bathrooms, listingType, sortBy, order, search, language } = req.query;
-    
-    const filters = {
-      type: type,
-      country: country,
-      city: city,
-      minPrice: minPrice ? parseFloat(minPrice) : undefined,
-      maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
-      bedrooms: bedrooms ? parseInt(bedrooms) : undefined,
-      bathrooms: bathrooms ? parseInt(bathrooms) : undefined,
-      listingType: listingType,
-      search: search,
-      language: language
-    };
-    
-    const properties = await storage.getProperties(filters, {
-      offset,
-      limit,
-      sortBy: sortBy,
-      order: order
-    });
-    
-    const totalCount = await storage.getPropertiesCount(filters);
-    const totalPages = Math.ceil(totalCount / limit);
-    
-    res.json({
-      properties,
-      pagination: {
-        currentPage: page,
-        totalPages,
-        totalCount,
-        hasMore: page < totalPages
-      }
-    });
-  } catch (error) {
-    console.error('Error fetching properties:', error);
-    res.status(500).json({ message: 'Failed to fetch properties' });
-  }
-});
-
-app.get('/api/properties/:identifier', async (req, res) => {
-  try {
-    const { identifier } = req.params;
-    
-    let property = await storage.getPropertyBySlug(identifier);
-    
-    if (!property) {
-      property = await storage.getProperty(identifier);
-    }
-    
-    if (!property) {
-      return res.status(404).json({ message: 'Property not found' });
-    }
-    
-    res.json(property);
-  } catch (error) {
-    console.error('Error fetching property:', error);
-    res.status(500).json({ message: 'Failed to fetch property' });
-  }
-});
-
 // Authentication routes
 app.post('/api/register', async (req, res) => {
   try {
-    const userData = insertUserSchema.parse(req.body);
-    const hashedPassword = await hashPassword(userData.password);
+    const { username, email, password, role = 'user' } = req.body;
     
-    const user = await storage.createUser({
-      ...userData,
-      password: hashedPassword
-    });
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'Username, email, and password are required' });
+    }
     
+    // Check if user already exists
+    const existingUser = users.find(u => u.email === email || u.username === username);
+    if (existingUser) {
+      return res.status(409).json({ message: 'User already exists' });
+    }
+    
+    const hashedPassword = await hashPassword(password);
+    const user = {
+      id: generateId(),
+      username,
+      email,
+      password: hashedPassword,
+      role,
+      createdAt: new Date().toISOString()
+    };
+    
+    users.push(user);
     req.session.userId = user.id;
     
     const { password: _, ...userWithoutPassword } = user;
     res.status(201).json({ user: userWithoutPassword, message: 'Registration successful' });
   } catch (error) {
     console.error('Registration error:', error);
-    if (error.message?.includes('already exists')) {
-      return res.status(409).json({ message: error.message });
-    }
-    res.status(400).json({ message: 'Registration failed' });
+    res.status(500).json({ message: 'Registration failed' });
   }
 });
 
@@ -141,13 +115,12 @@ app.post('/api/login', async (req, res) => {
       return res.status(400).json({ message: 'Email and password are required' });
     }
     
-    const user = await storage.getUserByEmail(email);
+    const user = users.find(u => u.email === email);
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
     
-    const bcrypt = await import('bcryptjs');
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await comparePassword(password, user.password);
     if (!isValidPassword) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -183,11 +156,91 @@ app.get('/api/user', (req, res) => {
   res.json({ user: userWithoutPassword });
 });
 
+// Properties routes
+app.get('/api/properties', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12;
+    const offset = (page - 1) * limit;
+    
+    const { type, country, city, minPrice, maxPrice, bedrooms, bathrooms, listingType, sortBy, order, search } = req.query;
+    
+    let filteredProperties = [...properties];
+    
+    // Apply filters
+    if (type) filteredProperties = filteredProperties.filter(p => p.type === type);
+    if (country) filteredProperties = filteredProperties.filter(p => p.country === country);
+    if (city) filteredProperties = filteredProperties.filter(p => p.city === city);
+    if (minPrice) filteredProperties = filteredProperties.filter(p => parseFloat(p.price) >= parseFloat(minPrice));
+    if (maxPrice) filteredProperties = filteredProperties.filter(p => parseFloat(p.price) <= parseFloat(maxPrice));
+    if (bedrooms) filteredProperties = filteredProperties.filter(p => p.bedrooms >= parseInt(bedrooms));
+    if (bathrooms) filteredProperties = filteredProperties.filter(p => p.bathrooms >= parseInt(bathrooms));
+    if (listingType) filteredProperties = filteredProperties.filter(p => p.listingType === listingType);
+    if (search) {
+      const searchTerm = search.toLowerCase();
+      filteredProperties = filteredProperties.filter(p => 
+        p.title?.toLowerCase().includes(searchTerm) ||
+        p.description?.toLowerCase().includes(searchTerm) ||
+        p.address?.toLowerCase().includes(searchTerm)
+      );
+    }
+    
+    // Apply sorting
+    if (sortBy === 'price') {
+      filteredProperties.sort((a, b) => {
+        const priceA = parseFloat(a.price);
+        const priceB = parseFloat(b.price);
+        return order === 'desc' ? priceB - priceA : priceA - priceB;
+      });
+    }
+    
+    const totalCount = filteredProperties.length;
+    const paginatedProperties = filteredProperties.slice(offset, offset + limit);
+    const totalPages = Math.ceil(totalCount / limit);
+    
+    res.json({
+      properties: paginatedProperties,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalCount,
+        hasMore: page < totalPages
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching properties:', error);
+    res.status(500).json({ message: 'Failed to fetch properties' });
+  }
+});
+
+app.get('/api/properties/:identifier', async (req, res) => {
+  try {
+    const { identifier } = req.params;
+    
+    // Try to find by slug first, then by id
+    let property = properties.find(p => p.slug === identifier) || properties.find(p => p.id === identifier);
+    
+    if (!property) {
+      return res.status(404).json({ message: 'Property not found' });
+    }
+    
+    res.json(property);
+  } catch (error) {
+    console.error('Error fetching property:', error);
+    res.status(500).json({ message: 'Failed to fetch property' });
+  }
+});
+
 // Favorites routes
 app.get('/api/favorites', requireAuth, async (req, res) => {
   try {
-    const favorites = await storage.getUserFavorites(req.user.id);
-    res.json(favorites);
+    const userFavorites = favorites.filter(f => f.userId === req.user.id);
+    const favoriteProperties = userFavorites.map(f => {
+      const property = properties.find(p => p.id === f.propertyId);
+      return property;
+    }).filter(Boolean);
+    
+    res.json(favoriteProperties);
   } catch (error) {
     console.error('Error fetching favorites:', error);
     res.status(500).json({ message: 'Failed to fetch favorites' });
@@ -196,12 +249,26 @@ app.get('/api/favorites', requireAuth, async (req, res) => {
 
 app.post('/api/favorites', requireAuth, async (req, res) => {
   try {
-    const favoriteData = insertFavoriteSchema.parse({
-      ...req.body,
-      userId: req.user.id
-    });
+    const { propertyId } = req.body;
     
-    const favorite = await storage.addFavorite(favoriteData);
+    if (!propertyId) {
+      return res.status(400).json({ message: 'Property ID is required' });
+    }
+    
+    // Check if already favorited
+    const existingFavorite = favorites.find(f => f.userId === req.user.id && f.propertyId === propertyId);
+    if (existingFavorite) {
+      return res.status(409).json({ message: 'Property already in favorites' });
+    }
+    
+    const favorite = {
+      id: generateId(),
+      userId: req.user.id,
+      propertyId,
+      createdAt: new Date().toISOString()
+    };
+    
+    favorites.push(favorite);
     res.status(201).json(favorite);
   } catch (error) {
     console.error('Error adding favorite:', error);
@@ -212,7 +279,13 @@ app.post('/api/favorites', requireAuth, async (req, res) => {
 app.delete('/api/favorites/:propertyId', requireAuth, async (req, res) => {
   try {
     const { propertyId } = req.params;
-    await storage.removeFavorite(req.user.id, propertyId);
+    const initialLength = favorites.length;
+    favorites = favorites.filter(f => !(f.userId === req.user.id && f.propertyId === propertyId));
+    
+    if (favorites.length === initialLength) {
+      return res.status(404).json({ message: 'Favorite not found' });
+    }
+    
     res.status(204).send();
   } catch (error) {
     console.error('Error removing favorite:', error);
@@ -223,12 +296,23 @@ app.delete('/api/favorites/:propertyId', requireAuth, async (req, res) => {
 // Inquiries routes
 app.post('/api/inquiries', requireAuth, async (req, res) => {
   try {
-    const inquiryData = insertInquirySchema.parse({
-      ...req.body,
-      userId: req.user.id
-    });
+    const { propertyId, message, contactInfo } = req.body;
     
-    const inquiry = await storage.createInquiry(inquiryData);
+    if (!propertyId || !message) {
+      return res.status(400).json({ message: 'Property ID and message are required' });
+    }
+    
+    const inquiry = {
+      id: generateId(),
+      userId: req.user.id,
+      propertyId,
+      message,
+      contactInfo: contactInfo || req.user.email,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    };
+    
+    inquiries.push(inquiry);
     res.status(201).json(inquiry);
   } catch (error) {
     console.error('Error creating inquiry:', error);
