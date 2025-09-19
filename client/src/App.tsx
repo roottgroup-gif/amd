@@ -24,6 +24,7 @@ const AdminLogin = lazy(() => import("@/pages/admin-login.tsx"));
 const AdminDashboard = lazy(() => import("@/pages/admin-dashboard"));
 const DashboardRedirect = lazy(() => import("@/pages/dashboard-redirect.tsx"));
 const AboutPage = lazy(() => import("@/pages/about.tsx"));
+const TypographyShowcasePage = lazy(() => import("@/pages/typography-showcase.tsx"));
 const NotFound = lazy(() => import("@/pages/not-found.tsx"));
 
 function Router() {
@@ -63,6 +64,7 @@ function Router() {
         <Route path="/:lang/admin/login" component={AdminLogin} />
         <Route path="/:lang/admin/dashboard" component={AdminDashboard} />
         <Route path="/:lang/about" component={AboutPage} />
+        <Route path="/:lang/typography" component={TypographyShowcasePage} />
         
         {/* Legacy routes without language prefix - redirect */}
         <Route path="/" component={() => <Redirect to="/" />} />
@@ -75,6 +77,7 @@ function Router() {
         <Route path="/admin/login" component={() => <Redirect to="/admin/login" />} />
         <Route path="/admin/dashboard" component={() => <Redirect to="/admin/dashboard" />} />
         <Route path="/about" component={() => <Redirect to="/about" />} />
+        <Route path="/typography" component={() => <Redirect to="/en/typography" />} />
         
         {/* Fallback to 404 */}
         <Route component={NotFound} />
