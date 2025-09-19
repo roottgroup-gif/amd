@@ -1,5 +1,5 @@
 import { sql, relations } from "drizzle-orm";
-import { pgTable, text, varchar, integer, decimal, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { mysqlTable, text, varchar, int, decimal, boolean, timestamp, json } from "drizzle-orm/mysql-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -12,8 +12,8 @@ export const LANGUAGE_NAMES = {
 } as const;
 export type Language = typeof SUPPORTED_LANGUAGES[number];
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const users = mysqlTable("users", {
+  id: varchar("id", { length: 36 }).primaryKey(),
   username: text("username").notNull().unique(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
@@ -23,48 +23,48 @@ export const users = pgTable("users", {
   phone: text("phone"),
   avatar: text("avatar"),
   isVerified: boolean("is_verified").default(false),
-  waveBalance: integer("wave_balance").default(10), // Number of waves user can assign to properties
+  waveBalance: int("wave_balance").default(10), // Number of waves user can assign to properties
   expiresAt: timestamp("expires_at"), // User account expiration date
   isExpired: boolean("is_expired").default(false), // Computed or manual flag for expiration status
-  allowedLanguages: jsonb("allowed_languages").$type<string[]>().default(["en"]), // Languages user can add data in: "en", "ar", "ku"
+  allowedLanguages: json("allowed_languages").$type<string[]>().default(["en"]), // Languages user can add data in: "en", "ar", "ku"
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const properties = pgTable("properties", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const properties = mysqlTable("properties", {
+  id: varchar("id", { length: 36 }).primaryKey(),
   title: text("title").notNull(),
   description: text("description"),
   type: text("type").notNull(), // "house" | "apartment" | "villa" | "land"
   listingType: text("listing_type").notNull(), // "sale" | "rent"
   price: decimal("price", { precision: 12, scale: 2 }).notNull(),
   currency: text("currency").default("USD"),
-  bedrooms: integer("bedrooms"),
-  bathrooms: integer("bathrooms"),
-  area: integer("area"), // in square meters
+  bedrooms: int("bedrooms"),
+  bathrooms: int("bathrooms"),
+  area: int("area"), // in square meters
   address: text("address").notNull(),
   city: text("city").notNull(),
   country: text("country").notNull(),
   latitude: decimal("latitude", { precision: 10, scale: 8 }),
   longitude: decimal("longitude", { precision: 11, scale: 8 }),
-  images: jsonb("images").$type<string[]>().default([]),
-  amenities: jsonb("amenities").$type<string[]>().default([]),
-  features: jsonb("features").$type<string[]>().default([]),
+  images: json("images").$type<string[]>().default([]),
+  amenities: json("amenities").$type<string[]>().default([]),
+  features: json("features").$type<string[]>().default([]),
   status: text("status").default("active"), // "active" | "sold" | "rented" | "pending"
   language: text("language").notNull().default("en"), // Language of the property data: "en", "ar", "ku"
-  agentId: varchar("agent_id").references(() => users.id),
+  agentId: varchar("agent_id", { length: 36 }).references(() => users.id),
   contactPhone: text("contact_phone"), // Contact phone number for this property (WhatsApp and calls)
-  waveId: varchar("wave_id").references(() => waves.id), // Wave assignment
-  views: integer("views").default(0),
+  waveId: varchar("wave_id", { length: 36 }).references(() => waves.id), // Wave assignment
+  views: int("views").default(0),
   isFeatured: boolean("is_featured").default(false),
   slug: text("slug").unique(), // SEO-friendly URL slug (nullable for backward compatibility)
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const inquiries = pgTable("inquiries", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  propertyId: varchar("property_id").references(() => properties.id),
-  userId: varchar("user_id").references(() => users.id),
+export const inquiries = mysqlTable("inquiries", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  propertyId: varchar("property_id", { length: 36 }).references(() => properties.id),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id),
   name: text("name").notNull(),
   email: text("email").notNull(),
   phone: text("phone"),
@@ -73,93 +73,93 @@ export const inquiries = pgTable("inquiries", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const favorites = pgTable("favorites", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id),
-  propertyId: varchar("property_id").references(() => properties.id),
+export const favorites = mysqlTable("favorites", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id),
+  propertyId: varchar("property_id", { length: 36 }).references(() => properties.id),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const searchHistory = pgTable("search_history", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id),
+export const searchHistory = mysqlTable("search_history", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id),
   query: text("query").notNull(),
-  filters: jsonb("filters").$type<Record<string, any>>().default({}),
-  results: integer("results").default(0),
+  filters: json("filters").$type<Record<string, any>>().default({}),
+  results: int("results").default(0),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const customerActivity = pgTable("customer_activity", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id).notNull(),
+export const customerActivity = mysqlTable("customer_activity", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id).notNull(),
   activityType: text("activity_type").notNull(), // "property_view" | "search" | "favorite_add" | "favorite_remove" | "inquiry_sent" | "login" | "profile_update"
-  propertyId: varchar("property_id").references(() => properties.id),
-  metadata: jsonb("metadata").$type<Record<string, any>>().default({}),
-  points: integer("points").default(0), // Points earned for this activity
+  propertyId: varchar("property_id", { length: 36 }).references(() => properties.id),
+  metadata: json("metadata").$type<Record<string, any>>().default({}),
+  points: int("points").default(0), // Points earned for this activity
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-export const customerPoints = pgTable("customer_points", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id).notNull().unique(),
-  totalPoints: integer("total_points").default(0),
+export const customerPoints = mysqlTable("customer_points", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id).notNull().unique(),
+  totalPoints: int("total_points").default(0),
   currentLevel: text("current_level").default("Bronze"), // Bronze, Silver, Gold, Platinum
-  pointsThisMonth: integer("points_this_month").default(0),
+  pointsThisMonth: int("points_this_month").default(0),
   lastActivity: timestamp("last_activity").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // User preference profiles for personalized recommendations
-export const userPreferences = pgTable("user_preferences", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id).notNull().unique(),
-  preferredPropertyTypes: jsonb("preferred_property_types").$type<string[]>().default([]), // ["apartment", "house", "villa"]
-  preferredListingTypes: jsonb("preferred_listing_types").$type<string[]>().default([]), // ["sale", "rent"]
-  budgetRange: jsonb("budget_range").$type<{ min: number; max: number; currency: string }>(),
-  preferredLocations: jsonb("preferred_locations").$type<string[]>().default([]), // ["erbil", "baghdad"]
-  preferredBedrooms: jsonb("preferred_bedrooms").$type<number[]>().default([]), // [2, 3, 4]
-  preferredAmenities: jsonb("preferred_amenities").$type<string[]>().default([]), // ["parking", "pool"]
-  viewingHistory: jsonb("viewing_history").$type<Record<string, number>>().default({}), // propertyId -> view_count
-  interactionScores: jsonb("interaction_scores").$type<Record<string, number>>().default({}), // propertyId -> score
+export const userPreferences = mysqlTable("user_preferences", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id).notNull().unique(),
+  preferredPropertyTypes: json("preferred_property_types").$type<string[]>().default([]), // ["apartment", "house", "villa"]
+  preferredListingTypes: json("preferred_listing_types").$type<string[]>().default([]), // ["sale", "rent"]
+  budgetRange: json("budget_range").$type<{ min: number; max: number; currency: string }>(),
+  preferredLocations: json("preferred_locations").$type<string[]>().default([]), // ["erbil", "baghdad"]
+  preferredBedrooms: json("preferred_bedrooms").$type<number[]>().default([]), // [2, 3, 4]
+  preferredAmenities: json("preferred_amenities").$type<string[]>().default([]), // ["parking", "pool"]
+  viewingHistory: json("viewing_history").$type<Record<string, number>>().default({}), // propertyId -> view_count
+  interactionScores: json("interaction_scores").$type<Record<string, number>>().default({}), // propertyId -> score
   lastRecommendationUpdate: timestamp("last_recommendation_update").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // AI-generated recommendations for users
-export const userRecommendations = pgTable("user_recommendations", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id).notNull(),
-  propertyId: varchar("property_id").references(() => properties.id).notNull(),
+export const userRecommendations = mysqlTable("user_recommendations", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id).notNull(),
+  propertyId: varchar("property_id", { length: 36 }).references(() => properties.id).notNull(),
   recommendationType: text("recommendation_type").notNull(), // "personalized", "similar", "trending", "location_based"
   confidence: decimal("confidence", { precision: 3, scale: 2 }).notNull().default("0.50"), // 0.0 - 1.0
-  reasoning: jsonb("reasoning").$type<string[]>().default([]), // ["matches_price_range", "similar_to_favorites"]
+  reasoning: json("reasoning").$type<string[]>().default([]), // ["matches_price_range", "similar_to_favorites"]
   isViewed: boolean("is_viewed").default(false),
   isClicked: boolean("is_clicked").default(false),
   isFavorited: boolean("is_favorited").default(false),
-  feedbackScore: integer("feedback_score"), // User feedback: -1 (negative), 0 (neutral), 1 (positive)
+  feedbackScore: int("feedback_score"), // User feedback: -1 (negative), 0 (neutral), 1 (positive)
   createdAt: timestamp("created_at").defaultNow(),
   expiresAt: timestamp("expires_at").default(sql`now() + interval '7 days'`),
 });
 
 // Property similarity matrix for content-based recommendations
-export const propertySimilarity = pgTable("property_similarity", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  propertyId1: varchar("property_id_1").references(() => properties.id).notNull(),
-  propertyId2: varchar("property_id_2").references(() => properties.id).notNull(),
+export const propertySimilarity = mysqlTable("property_similarity", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  propertyId1: varchar("property_id_1", { length: 36 }).references(() => properties.id).notNull(),
+  propertyId2: varchar("property_id_2", { length: 36 }).references(() => properties.id).notNull(),
   similarityScore: decimal("similarity_score", { precision: 3, scale: 2 }).notNull(), // 0.0 - 1.0
-  similarityFactors: jsonb("similarity_factors").$type<Record<string, number>>().default({}), // {"price": 0.8, "location": 0.9}
+  similarityFactors: json("similarity_factors").$type<Record<string, number>>().default({}), // {"price": 0.8, "location": 0.9}
   calculatedAt: timestamp("calculated_at").defaultNow(),
 });
 
 // Recommendation analytics and performance tracking
-export const recommendationAnalytics = pgTable("recommendation_analytics", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id),
+export const recommendationAnalytics = mysqlTable("recommendation_analytics", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id),
   recommendationType: text("recommendation_type").notNull(),
-  totalGenerated: integer("total_generated").default(0),
-  totalViewed: integer("total_viewed").default(0),
-  totalClicked: integer("total_clicked").default(0),
-  totalFavorited: integer("total_favorited").default(0),
+  totalGenerated: int("total_generated").default(0),
+  totalViewed: int("total_viewed").default(0),
+  totalClicked: int("total_clicked").default(0),
+  totalFavorited: int("total_favorited").default(0),
   clickThroughRate: decimal("click_through_rate", { precision: 3, scale: 2 }).default("0.00"),
   conversionRate: decimal("conversion_rate", { precision: 3, scale: 2 }).default("0.00"),
   avgConfidenceScore: decimal("avg_confidence_score", { precision: 3, scale: 2 }).default("0.50"),
@@ -169,37 +169,37 @@ export const recommendationAnalytics = pgTable("recommendation_analytics", {
 });
 
 // Currency exchange rates management
-export const currencyRates = pgTable("currency_rates", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const currencyRates = mysqlTable("currency_rates", {
+  id: varchar("id", { length: 36 }).primaryKey(),
   fromCurrency: text("from_currency").notNull().default("USD"), // Base currency (always USD)
   toCurrency: text("to_currency").notNull(), // Target currency (IQD, AED, EUR, etc.)
   rate: decimal("rate", { precision: 12, scale: 6 }).notNull(), // Exchange rate (e.g., 1173.0 for USD to IQD)
   isActive: boolean("is_active").default(true),
-  setBy: varchar("set_by").references(() => users.id), // Super admin who set this rate
+  setBy: varchar("set_by", { length: 36 }).references(() => users.id), // Super admin who set this rate
   effectiveDate: timestamp("effective_date").defaultNow(), // When this rate becomes effective
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // Wave management tables
-export const waves = pgTable("waves", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+export const waves = mysqlTable("waves", {
+  id: varchar("id", { length: 36 }).primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
   color: text("color").default("#3B82F6"), // Hex color for map display
   isActive: boolean("is_active").default(true),
-  createdBy: varchar("created_by").references(() => users.id),
+  createdBy: varchar("created_by", { length: 36 }).references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const customerWavePermissions = pgTable("customer_wave_permissions", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  userId: varchar("user_id").references(() => users.id).notNull(),
-  waveId: varchar("wave_id").references(() => waves.id).notNull(),
-  maxProperties: integer("max_properties").notNull().default(1), // How many properties customer can assign to this wave
-  usedProperties: integer("used_properties").default(0), // How many properties customer has already assigned
-  grantedBy: varchar("granted_by").references(() => users.id), // Super admin who granted permission
+export const customerWavePermissions = mysqlTable("customer_wave_permissions", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id).notNull(),
+  waveId: varchar("wave_id", { length: 36 }).references(() => waves.id).notNull(),
+  maxProperties: int("max_properties").notNull().default(1), // How many properties customer can assign to this wave
+  usedProperties: int("used_properties").default(0), // How many properties customer has already assigned
+  grantedBy: varchar("granted_by", { length: 36 }).references(() => users.id), // Super admin who granted permission
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
