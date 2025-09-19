@@ -7,10 +7,10 @@
   functions = "functions"
 
 [functions]
-  # External dependencies that need to be bundled with the functions
-  external_node_modules = ["express", "serverless-http", "compression", "express-session", "memorystore", "bcryptjs", "drizzle-orm", "zod"]
   # Increase timeout for database operations
   timeout = 30
+  # Let Netlify bundle all dependencies automatically
+  included_files = ["server/**/*", "shared/**/*"]
 
 # Redirect all API calls to the serverless function
 [[redirects]]
@@ -34,7 +34,7 @@
 # Environment variables (set these in Netlify dashboard)
 # SESSION_SECRET = "your-secure-random-string-here"
 # FRONTEND_URL = "https://your-site.netlify.app"
-# DATABASE_URL = "your-database-connection-string" (if using external DB)
+# DATABASE_URL = "your-database-connection-string-if-using-external-db"
 
 # Headers for security and performance
 [[headers]]
