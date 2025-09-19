@@ -167,9 +167,9 @@ const translations: Translations = {
     kur: "حەمام",
   },
   "property.sqft": {
-    en: "sq ft",
-    ar: "قدم مربع",
-    kur: "پێی چوارگۆشە",
+    en: "M²",
+    ar: "متر مربع",
+    kur: "مەتری چوارگۆشە",
   },
   "property.viewDetails": {
     en: "View Details",
@@ -305,9 +305,9 @@ const translations: Translations = {
     kur: "حەمام",
   },
   "property.sqFt": {
-    en: "Sq Ft",
-    ar: "قدم مربع",
-    kur: "پێی چوارگۆشە",
+    en: "M²",
+    ar: "متر مربع",
+    kur: "مەتری چوارگۆشە",
   },
   "property.parking": {
     en: "Parking",
@@ -332,9 +332,9 @@ const translations: Translations = {
     kur: "ئەو خانووبەرەی کە بەدوایدا دەگەڕێیت بوونی نییە یان سڕاوەتەوە.",
   },
   "property.perSqFt": {
-    en: "/sq ft",
-    ar: "/قدم مربع",
-    kur: "/پێی چوارگۆشە",
+    en: "/M²",
+    ar: "/متر مربع",
+    kur: "/مەتری چوارگۆشە",
   },
   "property.perMonth": {
     en: "/mo",

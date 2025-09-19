@@ -96,7 +96,7 @@ export function generatePropertyMeta(
   // Enhanced description with more details
   const bedroomInfo = property.bedrooms ? `${property.bedrooms} bedroom ` : '';
   const bathroomInfo = property.bathrooms ? `${property.bathrooms} bathroom ` : '';
-  const areaInfo = property.area ? `${property.area} sq ft ` : '';
+  const areaInfo = property.area ? `${property.area} M² ` : '';
   
   const description = property.description || 
     `${bedroomInfo}${bathroomInfo}${property.type} ${areaInfo}for ${property.listingType} in ${property.city}, ${property.country}. ` +

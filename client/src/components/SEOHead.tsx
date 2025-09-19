@@ -186,7 +186,7 @@ function generateCombinedStructuredData(
         "floorSize": propertyData.area ? {
           "@type": "QuantitativeValue",
           "value": propertyData.area,
-          "unitText": "square feet"
+          "unitText": "square meters"
         } : undefined
       },
       "offers": {

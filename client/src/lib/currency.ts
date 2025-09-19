@@ -119,7 +119,7 @@ export function formatPricePerUnit(
   const symbol = currencyInfo?.symbol || currency;
   
   const pricePerUnit = Math.round(amount / area);
-  const unitText = t?.('property.perSqFt') || "/sq ft";
+  const unitText = t?.('property.perSqFt') || "/M²";
   
   return `${symbol}${pricePerUnit}${unitText}`;
 }

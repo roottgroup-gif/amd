@@ -54,7 +54,7 @@ const translations = {
     propertyType: 'Property Type',
     listingType: 'Listing Type',
     price: 'Price (USD)',
-    area: 'Area (sq ft)',
+    area: 'Area (M²)',
     address: 'Address',
     selectLanguage: 'Select Language',
     
