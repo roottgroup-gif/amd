@@ -13,7 +13,7 @@ import { SEOHead } from "@/components/SEOHead";
 import type { Property } from "@/types";
 import { extractPropertyIdentifier } from "@shared/slug-utils";
 import { 
-  Heart, Bed, Bath, Square, Car, MapPin, ArrowLeft, 
+  Heart, Bed, Bath, Square, Car, MapPin, ArrowLeft, ArrowRight,
   ChevronLeft, ChevronRight, Check, Calendar,
   Eye, Phone, MessageSquare, Mail, Sun, Moon, Share2, Copy
 } from "lucide-react";
@@ -374,10 +374,18 @@ export default function PropertyDetailPage() {
       
       <div className={getLanguageClasses()} dir={isPropertyRTL ? 'rtl' : 'ltr'}>
         {/* Top Navigation with Back Button and Theme Toggle */}
-        <div className="flex items-center justify-between mb-6">
+        <div className={`flex items-center mb-6 ${isPropertyRTL ? 'justify-end' : 'justify-start'}`}>
           <Link href="/">
-            <Button variant="ghost" data-testid="back-button">
-              <ArrowLeft className="mr-2 h-4 w-4" />
+            <Button 
+              variant="ghost" 
+              data-testid="back-button"
+              className={`flex items-center gap-2 ${isPropertyRTL ? 'flex-row-reverse' : ''}`}
+            >
+              {isPropertyRTL ? (
+                <ArrowRight className="h-4 w-4" />
+              ) : (
+                <ArrowLeft className="h-4 w-4" />
+              )}
               {t('property.backToHome')}
             </Button>
           </Link>
