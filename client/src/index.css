@@ -1122,3 +1122,17 @@
   animation: sweep 2s ease-in-out infinite;
   animation-delay: 1s;
 }
+
+/* Professional Slow Spin Animation for Location Button */
+@keyframes slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-slow-spin {
+  animation: slow-spin 2s ease-in-out infinite;
+}

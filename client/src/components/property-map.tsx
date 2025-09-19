@@ -1800,7 +1800,7 @@ export default function PropertyMap({
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 animate-sweep" />
                   )}
                   <Navigation
-                    className={`relative h-4 w-4 text-white z-10 ${isLocating ? "animate-spin" : ""}`}
+                    className={`relative h-4 w-4 text-white z-10 transition-transform duration-300 ${isLocating ? "animate-slow-spin" : ""}`}
                   />
                 </Button>
               </div>
