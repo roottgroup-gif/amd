@@ -230,6 +230,211 @@
   }
 }
 
+/* ========================================
+   RESPONSIVE TYPOGRAPHY UTILITY CLASSES
+   ======================================== */
+
+@layer utilities {
+  /* Heading classes with responsive scaling */
+  .heading-1 {
+    @apply text-4xl md:text-5xl lg:text-display-sm font-bold;
+    letter-spacing: var(--tracking-tighter);
+    line-height: var(--leading-4xl);
+  }
+  
+  .heading-2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-3xl);
+  }
+  
+  .heading-3 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-semibold;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-2xl);
+  }
+  
+  .heading-4 {
+    @apply text-xl md:text-2xl lg:text-3xl font-semibold;
+    letter-spacing: var(--tracking-normal);
+    line-height: var(--leading-xl);
+  }
+  
+  .heading-5 {
+    @apply text-lg md:text-xl lg:text-2xl font-medium;
+    letter-spacing: var(--tracking-normal);
+    line-height: var(--leading-lg);
+  }
+  
+  .heading-6 {
+    @apply text-base md:text-lg lg:text-xl font-medium;
+    letter-spacing: var(--tracking-normal);
+    line-height: var(--leading-base);
+  }
+
+  /* Display text for hero sections and large headings */
+  .display-xl {
+    font-size: var(--text-display-xl);
+    line-height: var(--leading-display-xl);
+    letter-spacing: var(--tracking-tighter);
+    @apply font-black;
+  }
+  
+  .display-lg {
+    font-size: var(--text-display-lg);
+    line-height: var(--leading-display-lg);
+    letter-spacing: var(--tracking-tighter);
+    @apply font-black;
+  }
+  
+  .display-md {
+    font-size: var(--text-display-md);
+    line-height: var(--leading-display-md);
+    letter-spacing: var(--tracking-tight);
+    @apply font-bold;
+  }
+  
+  .display-sm {
+    font-size: var(--text-display-sm);
+    line-height: var(--leading-display-sm);
+    letter-spacing: var(--tracking-tight);
+    @apply font-bold;
+  }
+
+  /* Body text classes with optimal reading experience */
+  .body-xl {
+    @apply text-xl leading-relaxed;
+    max-width: var(--max-width-prose-xl);
+  }
+  
+  .body-lg {
+    @apply text-lg leading-relaxed;
+    max-width: var(--max-width-prose-lg);
+  }
+  
+  .body-base {
+    @apply text-base leading-relaxed;
+    max-width: var(--max-width-prose);
+  }
+  
+  .body-sm {
+    @apply text-sm leading-normal;
+    max-width: var(--max-width-prose);
+  }
+
+  /* Caption and small text */
+  .caption {
+    @apply text-sm text-muted-foreground;
+    letter-spacing: var(--tracking-wide);
+  }
+  
+  .overline {
+    @apply text-xs uppercase font-medium;
+    letter-spacing: var(--tracking-wider);
+  }
+
+  /* Responsive text utilities */
+  .text-responsive-xs { font-size: var(--text-xs); }
+  .text-responsive-sm { font-size: var(--text-sm); }
+  .text-responsive-base { font-size: var(--text-base); }
+  .text-responsive-lg { font-size: var(--text-lg); }
+  .text-responsive-xl { font-size: var(--text-xl); }
+  .text-responsive-2xl { font-size: var(--text-2xl); }
+  .text-responsive-3xl { font-size: var(--text-3xl); }
+  .text-responsive-4xl { font-size: var(--text-4xl); }
+  .text-responsive-5xl { font-size: var(--text-5xl); }
+
+  /* Leading utilities */
+  .leading-responsive-xs { line-height: var(--leading-xs); }
+  .leading-responsive-sm { line-height: var(--leading-sm); }
+  .leading-responsive-base { line-height: var(--leading-base); }
+  .leading-responsive-lg { line-height: var(--leading-lg); }
+  .leading-responsive-xl { line-height: var(--leading-xl); }
+  .leading-responsive-2xl { line-height: var(--leading-2xl); }
+  .leading-responsive-3xl { line-height: var(--leading-3xl); }
+  .leading-responsive-4xl { line-height: var(--leading-4xl); }
+  .leading-responsive-5xl { line-height: var(--leading-5xl); }
+
+  /* Typography scale for consistent hierarchy */
+  .scale-xs { 
+    @apply text-xs leading-responsive-xs; 
+    letter-spacing: var(--tracking-wide);
+  }
+  .scale-sm { 
+    @apply text-sm leading-responsive-sm; 
+    letter-spacing: var(--tracking-normal);
+  }
+  .scale-base { 
+    @apply text-base leading-responsive-base; 
+    letter-spacing: var(--tracking-normal);
+  }
+  .scale-lg { 
+    @apply text-lg leading-responsive-lg; 
+    letter-spacing: var(--tracking-normal);
+  }
+  .scale-xl { 
+    @apply text-xl leading-responsive-xl; 
+    letter-spacing: var(--tracking-tight);
+  }
+  .scale-2xl { 
+    @apply text-2xl leading-responsive-2xl; 
+    letter-spacing: var(--tracking-tight);
+  }
+  .scale-3xl { 
+    @apply text-3xl leading-responsive-3xl; 
+    letter-spacing: var(--tracking-tight);
+  }
+  .scale-4xl { 
+    @apply text-4xl leading-responsive-4xl; 
+    letter-spacing: var(--tracking-tighter);
+  }
+  .scale-5xl { 
+    @apply text-5xl leading-responsive-5xl; 
+    letter-spacing: var(--tracking-tighter);
+  }
+
+  /* Content width utilities for optimal reading */
+  .prose-responsive {
+    max-width: var(--max-width-prose);
+  }
+  
+  .prose-responsive-lg {
+    max-width: var(--max-width-prose-lg);
+  }
+  
+  .prose-responsive-xl {
+    max-width: var(--max-width-prose-xl);
+  }
+
+  /* Mobile-specific typography optimizations */
+  @media (max-width: 640px) {
+    .mobile-heading-1 {
+      @apply text-3xl font-bold;
+      line-height: 1.2;
+      letter-spacing: var(--tracking-tight);
+    }
+    
+    .mobile-heading-2 {
+      @apply text-2xl font-bold;
+      line-height: 1.3;
+      letter-spacing: var(--tracking-normal);
+    }
+    
+    .mobile-body {
+      @apply text-base leading-relaxed;
+      line-height: 1.6;
+    }
+  }
+
+  /* High DPI display optimizations */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .crisp-text {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  }
+}
+
 /* Custom Leaflet Popup Styles with Animations */
 .leaflet-popup-content-wrapper {
   border-radius: 16px !important;
