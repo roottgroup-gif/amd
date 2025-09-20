@@ -326,7 +326,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal server error' });
 });
 
-// Handle 404
+// Handle 404 for API routes
 app.use((req, res) => {
   res.status(404).json({ message: 'API endpoint not found' });
 });
