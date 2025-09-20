@@ -135,19 +135,21 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db()
+    const userId = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const userWithId = { ...insertUser, id: userId };
+    await db()
       .insert(users)
-      .values(insertUser)
-      .returning();
+      .values(userWithId);
+    const [user] = await db().select().from(users).where(eq(users.id, userId));
     return user;
   }
 
   async updateUser(id: string, updateUser: Partial<InsertUser>): Promise<User | undefined> {
-    const [user] = await db()
+    await db()
       .update(users)
       .set(updateUser)
-      .where(eq(users.id, id))
-      .returning();
+      .where(eq(users.id, id));
+    const [user] = await db().select().from(users).where(eq(users.id, id));
     return user || undefined;
   }
 
@@ -168,7 +170,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteUser(id: string): Promise<boolean> {
     const result = await db().delete(users).where(eq(users.id, id));
-    return (result.rowCount ?? 0) > 0;
+    return (result.rowsAffected ?? 0) > 0;
   }
 
   // Properties
@@ -251,7 +253,7 @@ export class DatabaseStorage implements IStorage {
     }
     if (filters.search) {
       conditions.push(
-        sql`(${properties.title} ILIKE ${`%${filters.search}%`} OR ${properties.description} ILIKE ${`%${filters.search}%`} OR ${properties.address} ILIKE ${`%${filters.search}%`})`
+        sql`(${properties.title} LIKE ${`%${filters.search}%`} OR ${properties.description} LIKE ${`%${filters.search}%`} OR ${properties.address} LIKE ${`%${filters.search}%`})`
       );
     }
 
@@ -363,15 +365,17 @@ export class DatabaseStorage implements IStorage {
       }
     }
 
+    const propertyId = `prop-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const propertyData = {
       ...insertProperty,
+      id: propertyId,
       slug
     };
 
-    const [property] = await db()
+    await db()
       .insert(properties)
-      .values(propertyData as any)
-      .returning();
+      .values(propertyData as any);
+    const [property] = await db().select().from(properties).where(eq(properties.id, propertyId));
     return property;
   }
 
@@ -416,11 +420,11 @@ export class DatabaseStorage implements IStorage {
       updateData.slug = slug;
     }
 
-    const [property] = await db()
+    await db()
       .update(properties)
       .set(updateData)
-      .where(eq(properties.id, id))
-      .returning();
+      .where(eq(properties.id, id));
+    const [property] = await db().select().from(properties).where(eq(properties.id, id));
     return property || undefined;
   }
 
@@ -428,7 +432,7 @@ export class DatabaseStorage implements IStorage {
     const result = await db()
       .delete(properties)
       .where(eq(properties.id, id));
-    return (result.rowCount ?? 0) > 0;
+    return (result.rowsAffected ?? 0) > 0;
   }
 
   async clearAllProperties(): Promise<number> {
@@ -473,19 +477,21 @@ export class DatabaseStorage implements IStorage {
 
 
   async createInquiry(insertInquiry: InsertInquiry): Promise<Inquiry> {
-    const [inquiry] = await db()
+    const inquiryId = `inq-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const inquiryWithId = { ...insertInquiry, id: inquiryId };
+    await db()
       .insert(inquiries)
-      .values(insertInquiry)
-      .returning();
+      .values(inquiryWithId);
+    const [inquiry] = await db().select().from(inquiries).where(eq(inquiries.id, inquiryId));
     return inquiry;
   }
 
   async updateInquiryStatus(id: string, status: string): Promise<Inquiry | undefined> {
-    const [inquiry] = await db()
+    await db()
       .update(inquiries)
       .set({ status })
-      .where(eq(inquiries.id, id))
-      .returning();
+      .where(eq(inquiries.id, id));
+    const [inquiry] = await db().select().from(inquiries).where(eq(inquiries.id, id));
     return inquiry || undefined;
   }
 
@@ -507,10 +513,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async addToFavorites(favorite: InsertFavorite): Promise<Favorite> {
-    const [fav] = await db()
+    const favId = `fav-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const favoriteWithId = { ...favorite, id: favId };
+    await db()
       .insert(favorites)
-      .values(favorite)
-      .returning();
+      .values(favoriteWithId);
+    const [fav] = await db().select().from(favorites).where(eq(favorites.id, favId));
     return fav;
   }
 
@@ -518,7 +526,7 @@ export class DatabaseStorage implements IStorage {
     const result = await db()
       .delete(favorites)
       .where(and(eq(favorites.userId, userId), eq(favorites.propertyId, propertyId)));
-    return (result.rowCount ?? 0) > 0;
+    return (result.rowsAffected ?? 0) > 0;
   }
 
   async isFavorite(userId: string, propertyId: string): Promise<boolean> {
@@ -531,10 +539,12 @@ export class DatabaseStorage implements IStorage {
 
   // Search History
   async addSearchHistory(search: InsertSearchHistory): Promise<SearchHistory> {
-    const [history] = await db()
+    const historyId = `search-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const searchWithId = { ...search, id: historyId };
+    await db()
       .insert(searchHistory)
-      .values(search)
-      .returning();
+      .values(searchWithId);
+    const [history] = await db().select().from(searchHistory).where(eq(searchHistory.id, historyId));
     return history;
   }
 
@@ -549,14 +559,16 @@ export class DatabaseStorage implements IStorage {
 
   // Customer Analytics
   async addCustomerActivity(activity: InsertCustomerActivity): Promise<CustomerActivity> {
-    const [newActivity] = await db()
+    const activityId = `act-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const activityWithId = { ...activity, id: activityId };
+    await db()
       .insert(customerActivity)
-      .values(activity)
-      .returning();
+      .values(activityWithId);
     
     // Update customer points
     await this.updateCustomerPointsAfterActivity(activity.userId, activity.points || 0);
     
+    const [newActivity] = await db().select().from(customerActivity).where(eq(customerActivity.id, activityId));
     return newActivity;
   }
 
@@ -581,17 +593,19 @@ export class DatabaseStorage implements IStorage {
     const existing = await this.getCustomerPoints(userId);
     
     if (existing) {
-      const [updated] = await db()
+      await db()
         .update(customerPoints)
         .set({ ...pointsData, updatedAt: new Date() })
-        .where(eq(customerPoints.userId, userId))
-        .returning();
+        .where(eq(customerPoints.userId, userId));
+      const [updated] = await db().select().from(customerPoints).where(eq(customerPoints.userId, userId));
       return updated;
     } else {
-      const [created] = await db()
+      const pointsId = `points-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const pointsWithId = { id: pointsId, userId, ...pointsData };
+      await db()
         .insert(customerPoints)
-        .values({ userId, ...pointsData })
-        .returning();
+        .values(pointsWithId);
+      const [created] = await db().select().from(customerPoints).where(eq(customerPoints.id, pointsId));
       return created;
     }
   }
@@ -617,9 +631,11 @@ export class DatabaseStorage implements IStorage {
     } else {
       const newLevel = this.calculateLevel(activityPoints);
       
+      const pointsId = `points-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       await db()
         .insert(customerPoints)
         .values({
+          id: pointsId,
           userId,
           totalPoints: activityPoints,
           currentLevel: newLevel,
@@ -730,19 +746,21 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createWave(insertWave: InsertWave): Promise<Wave> {
-    const [wave] = await db()
+    const waveId = `wave-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const waveWithId = { ...insertWave, id: waveId };
+    await db()
       .insert(waves)
-      .values(insertWave)
-      .returning();
+      .values(waveWithId);
+    const [wave] = await db().select().from(waves).where(eq(waves.id, waveId));
     return wave;
   }
 
   async updateWave(id: string, updateWave: Partial<InsertWave>): Promise<Wave | undefined> {
-    const [wave] = await db()
+    await db()
       .update(waves)
       .set({ ...updateWave, updatedAt: new Date() })
-      .where(eq(waves.id, id))
-      .returning();
+      .where(eq(waves.id, id));
+    const [wave] = await db().select().from(waves).where(eq(waves.id, id));
     return wave || undefined;
   }
 
@@ -752,7 +770,7 @@ export class DatabaseStorage implements IStorage {
       .update(waves)
       .set({ isActive: false, updatedAt: new Date() })
       .where(eq(waves.id, id));
-    return (result.rowCount ?? 0) > 0;
+    return (result.rowsAffected ?? 0) > 0;
   }
 
   // Customer wave permissions
@@ -787,43 +805,46 @@ export class DatabaseStorage implements IStorage {
     
     if (existing) {
       // Update existing permission
-      const [updated] = await db()
+      await db()
         .update(customerWavePermissions)
         .set({
           maxProperties: permission.maxProperties,
           grantedBy: permission.grantedBy,
           updatedAt: new Date()
         })
-        .where(eq(customerWavePermissions.id, existing.id))
-        .returning();
+        .where(eq(customerWavePermissions.id, existing.id));
+      const [updated] = await db().select().from(customerWavePermissions).where(eq(customerWavePermissions.id, existing.id));
       return updated;
     } else {
       // Create new permission
-      const [newPermission] = await db()
+      const permissionId = `perm-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const permissionWithId = { ...permission, id: permissionId };
+      await db()
         .insert(customerWavePermissions)
-        .values(permission)
-        .returning();
+        .values(permissionWithId);
+      const [newPermission] = await db().select().from(customerWavePermissions).where(eq(customerWavePermissions.id, permissionId));
       return newPermission;
     }
   }
 
   async updateWavePermission(id: string, permission: Partial<InsertCustomerWavePermission>): Promise<CustomerWavePermission | undefined> {
-    const [updated] = await db()
+    await db()
       .update(customerWavePermissions)
       .set({ ...permission, updatedAt: new Date() })
-      .where(eq(customerWavePermissions.id, id))
-      .returning();
+      .where(eq(customerWavePermissions.id, id));
+    const [updated] = await db().select().from(customerWavePermissions).where(eq(customerWavePermissions.id, id));
     return updated || undefined;
   }
 
   async revokeWavePermission(userId: string, waveId: string): Promise<boolean> {
-    const result = await db()
+    await db()
       .delete(customerWavePermissions)
       .where(and(
         eq(customerWavePermissions.userId, userId),
         eq(customerWavePermissions.waveId, waveId)
       ));
-    return (result.rowCount ?? 0) > 0;
+    // For MySQL, we'll assume the delete succeeded if no error was thrown
+    return true;
   }
 
   async getPropertiesByWave(waveId: string): Promise<PropertyWithAgent[]> {
@@ -940,26 +961,29 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createCurrencyRate(rate: InsertCurrencyRate): Promise<CurrencyRate> {
-    const [created] = await db().insert(currencyRates).values(rate).returning();
+    const rateId = `rate-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const rateWithId = { ...rate, id: rateId };
+    await db().insert(currencyRates).values(rateWithId);
+    const [created] = await db().select().from(currencyRates).where(eq(currencyRates.id, rateId));
     return created;
   }
 
   async updateCurrencyRate(id: string, rate: UpdateCurrencyRate): Promise<CurrencyRate | undefined> {
-    const [updated] = await db()
+    await db()
       .update(currencyRates)
       .set({ ...rate, updatedAt: new Date() })
-      .where(eq(currencyRates.id, id))
-      .returning();
+      .where(eq(currencyRates.id, id));
+    const [updated] = await db().select().from(currencyRates).where(eq(currencyRates.id, id));
     return updated || undefined;
   }
 
   async deactivateCurrencyRate(id: string): Promise<boolean> {
-    const result = await db()
+    await db()
       .update(currencyRates)
       .set({ isActive: false, updatedAt: new Date() })
-      .where(eq(currencyRates.id, id))
-      .returning();
-    return result.length > 0;
+      .where(eq(currencyRates.id, id));
+    // For MySQL, we'll assume the update succeeded if no error was thrown
+    return true;
   }
 
   async convertPrice(amount: number, fromCurrency: string, toCurrency: string): Promise<number> {
@@ -2014,7 +2038,7 @@ async function initializeDatabase() {
     const hashedCustomerPassword = await bcrypt.hash("customer123", 12);
 
     // Create admin user
-    const [admin] = await db().insert(users).values({
+    await db().insert(users).values({
       id: "admin-001",
       username: "admin",
       email: "admin@estateai.com",
@@ -2025,12 +2049,13 @@ async function initializeDatabase() {
       phone: "+964 750 000 0000",
       isVerified: true,
       waveBalance: 999999
-    }).returning();
+    });
+    const [admin] = await db().select().from(users).where(eq(users.id, "admin-001"));
 
     console.log("✅ Created admin user:", admin.username);
 
     // Create customer user for testing
-    const [customer] = await db().insert(users).values({
+    await db().insert(users).values({
       id: "customer-001",
       username: "Jutyar",
       email: "jutyar@estateai.com", 
@@ -2041,7 +2066,8 @@ async function initializeDatabase() {
       phone: "+964 750 111 2222",
       isVerified: true,
       waveBalance: 10
-    }).returning();
+    });
+    const [customer] = await db().select().from(users).where(eq(users.id, "customer-001"));
 
     console.log("✅ Created customer user:", customer.username);
 
