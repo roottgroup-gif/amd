@@ -170,7 +170,7 @@ export class DatabaseStorage implements IStorage {
 
   async deleteUser(id: string): Promise<boolean> {
     const result = await db().delete(users).where(eq(users.id, id));
-    return (result.rowsAffected ?? 0) > 0;
+    return ((result as any).changedRows ?? 0) > 0;
   }
 
   // Properties
@@ -432,7 +432,7 @@ export class DatabaseStorage implements IStorage {
     const result = await db()
       .delete(properties)
       .where(eq(properties.id, id));
-    return (result.rowsAffected ?? 0) > 0;
+    return ((result as any).changedRows ?? 0) > 0;
   }
 
   async clearAllProperties(): Promise<number> {
@@ -526,7 +526,7 @@ export class DatabaseStorage implements IStorage {
     const result = await db()
       .delete(favorites)
       .where(and(eq(favorites.userId, userId), eq(favorites.propertyId, propertyId)));
-    return (result.rowsAffected ?? 0) > 0;
+    return ((result as any).changedRows ?? 0) > 0;
   }
 
   async isFavorite(userId: string, propertyId: string): Promise<boolean> {
@@ -770,7 +770,7 @@ export class DatabaseStorage implements IStorage {
       .update(waves)
       .set({ isActive: false, updatedAt: new Date() })
       .where(eq(waves.id, id));
-    return (result.rowsAffected ?? 0) > 0;
+    return ((result as any).changedRows ?? 0) > 0;
   }
 
   // Customer wave permissions
@@ -926,11 +926,12 @@ export class DatabaseStorage implements IStorage {
       .where(and(
         eq(users.waveBalance, 0),
         eq(users.role, 'user')
-      ))
-      .returning({ id: users.id });
+      ));
     
-    console.log(`Updated wave balance for ${result.length} users`);
-    return result.length;
+    // For MySQL, use changedRows instead of rowsAffected
+    const count = (result as any).changedRows ?? 0;
+    console.log(`Updated wave balance for ${count} users`);
+    return count;
   }
 
   // Currency exchange rates
