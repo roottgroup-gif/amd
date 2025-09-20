@@ -9,10 +9,23 @@
     {
       "src": "api/index.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "api/**/*.php",
+      "use": "@vercel/php"
     }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.js" },
+    { "src": "/php/(.*)", "dest": "/api/$1.php" },
     { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  ],
+  "functions": {
+    "api/index.js": {
+      "runtime": "@vercel/node"
+    },
+    "api/**/*.php": {
+      "runtime": "vercel-php@1.0.0"
+    }
+  }
 }
