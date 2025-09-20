@@ -15,5 +15,9 @@
     "api/index.js": {
       "runtime": "@vercel/node"
     }
+    ,
+      "api/**/*.php": {
+      "runtime": "now-php"
+    }
   }
 }
