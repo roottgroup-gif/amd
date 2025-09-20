@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Real Estate Finder</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    popover: {
+                        DEFAULT: "var(--popover)",
+                        foreground: "var(--popover-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                }
+            },
+            fontFamily: {
+                sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+            }
+        }
+    };
+    </script>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Heroicons -->
+    <script src="https://unpkg.com/@heroicons/react@2.0.16/24/outline/index.js" type="module"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --background: hsl(0 0% 100%);
+            --foreground: hsl(222 84% 4.9%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(222 84% 4.9%);
+            --popover: hsl(0 0% 100%);
+            --popover-foreground: hsl(222 84% 4.9%);
+            --primary: hsl(214 84% 56%);
+            --primary-foreground: hsl(210 40% 98%);
+            --secondary: hsl(210 40% 96%);
+            --secondary-foreground: hsl(222.2 84% 4.9%);
+            --muted: hsl(210 40% 96%);
+            --muted-foreground: hsl(215.4 16.3% 46.9%);
+            --accent: hsl(210 40% 96%);
+            --accent-foreground: hsl(222.2 84% 4.9%);
+            --destructive: hsl(0 84.2% 60.2%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(214.3 31.8% 91.4%);
+            --input: hsl(214.3 31.8% 91.4%);
+            --ring: hsl(214 84% 56%);
+            --radius: 0.5rem;
+        }
+        
+        .leaflet-container {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .property-card {
+            transition: all 0.3s ease;
+        }
+        
+        .property-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        
+        .nav-active {
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+        }
+        
+        .search-suggestion {
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .search-suggestion:hover {
+            background-color: hsl(var(--muted));
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground">
+    <!-- @COMPONENT: Navigation -->
+    <nav class="bg-white border-b border-border sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fas fa-home text-primary-foreground text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold text-foreground">EstateAI</span>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="nav-active px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a href="#" class="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium">Properties</a>
+                    <a href="#" class="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium">Agents</a>
+                    <a href="#" class="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium">About</a>
+                </div>
+                
+                <!-- Language & Auth -->
+                <div class="flex items-center space-x-4">
+                    <select class="bg-background border border-border rounded-md px-3 py-1 text-sm">
+                        <option>English</option>
+                        <option>العربية</option>
+                        <option>کوردی</option>
+                    </select>
+                    <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90">
+                        Sign In
+                    </button>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button class="text-muted-foreground hover:text-foreground">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: Navigation -->
+
+    <!-- @COMPONENT: HeroSection -->
+    <!-- A beautiful panoramic view of a modern city skyline with skyscrapers -->
+    <section class="relative h-96 bg-gradient-to-r from-blue-600 to-blue-800 overflow-hidden">
+        <div class="absolute inset-0 bg-black/40"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+            <div class="text-center text-white max-w-3xl mx-auto">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">Find Your Perfect Home with AI</h1>
+                <p class="text-xl md:text-2xl mb-8 text-blue-100">Discover properties tailored to your needs using intelligent recommendations</p>
+                
+                <!-- AI Search Bar -->
+                <div class="bg-white rounded-lg p-2 max-w-2xl mx-auto shadow-xl">
+                    <div class="flex items-center space-x-2">
+                        <div class="flex-1 relative">
+                            <i class="fas fa-robot absolute left-3 top-1/2 transform -translate-y-1/2 text-primary"></i>
+                            <input 
+                                type="text" 
+                                placeholder="Ask AI: 'Find me a 3-bedroom house under $200k near downtown'"
+                                class="w-full pl-10 pr-4 py-3 text-foreground bg-background border-0 rounded-md focus:ring-2 focus:ring-primary outline-none"
+                                data-mock="true"
+                            />
+                        </div>
+                        <button class="bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors">
+                            <i class="fas fa-search mr-2"></i>Search
+                        </button>
+                    </div>
+                    
+                    <!-- AI Search Suggestions -->
+                    <div class="mt-2 bg-white rounded-md shadow-lg border border-border hidden" id="search-suggestions">
+                        <div class="search-suggestion text-foreground text-left">
+                            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                            "Show me apartments under $150k in Erbil"
+                        </div>
+                        <div class="search-suggestion text-foreground text-left">
+                            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                            "Find family homes with gardens near schools"
+                        </div>
+                        <div class="search-suggestion text-foreground text-left">
+                            <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                            "Luxury properties with mountain views"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HeroSection -->
+
+    <!-- @COMPONENT: QuickFilters -->
+    <section class="py-8 bg-muted/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <button class="bg-primary text-primary-foreground px-6 py-2 rounded-full font-medium">
+                    <i class="fas fa-tag mr-2"></i>For Sale
+                </button>
+                <button class="bg-white text-foreground border border-border px-6 py-2 rounded-full font-medium hover:bg-muted/50">
+                    <i class="fas fa-key mr-2"></i>For Rent
+                </button>
+                <button class="bg-white text-foreground border border-border px-6 py-2 rounded-full font-medium hover:bg-muted/50">
+                    <i class="fas fa-home mr-2"></i>Houses
+                </button>
+                <button class="bg-white text-foreground border border-border px-6 py-2 rounded-full font-medium hover:bg-muted/50">
+                    <i class="fas fa-building mr-2"></i>Apartments
+                </button>
+                <button class="bg-white text-foreground border border-border px-6 py-2 rounded-full font-medium hover:bg-muted/50">
+                    <i class="fas fa-map-marker-alt mr-2"></i>Near Me
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: QuickFilters -->
+
+    <!-- @COMPONENT: FeaturedProperties -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">Featured Properties</h2>
+                <p class="text-xl text-muted-foreground">Discover our handpicked selection of premium properties</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Property Card 1 -->
+                <!-- A stunning modern luxury house with clean architectural lines and large windows -->
+                <div class="property-card bg-card rounded-lg shadow-md overflow-hidden" data-mock="true">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" alt="Modern luxury house" class="w-full h-48 object-cover">
+                        <div class="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+                            For Sale
+                        </div>
+                        <div class="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full cursor-pointer hover:bg-black/70">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-semibold text-foreground" data-bind="property.title">Modern Villa</h3>
+                            <span class="text-2xl font-bold text-primary" data-bind="property.price">$450,000</span>
+                        </div>
+                        <p class="text-muted-foreground mb-4" data-bind="property.address">Downtown Erbil, Kurdistan</p>
+                        <div class="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
+                            <span><i class="fas fa-bed mr-1"></i>4 Beds</span>
+                            <span><i class="fas fa-bath mr-1"></i>3 Baths</span>
+                            <span><i class="fas fa-ruler-combined mr-1"></i>2,400 sq ft</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <!-- Professional real estate agent portrait -->
+                                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" alt="Agent" class="w-8 h-8 rounded-full">
+                                <span class="text-sm text-muted-foreground" data-bind="agent.name">Sarah Ahmed</span>
+                            </div>
+                            <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Card 2 -->
+                <!-- A contemporary apartment building with modern facade and balconies -->
+                <div class="property-card bg-card rounded-lg shadow-md overflow-hidden" data-mock="true">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" alt="Contemporary apartment building" class="w-full h-48 object-cover">
+                        <div class="absolute top-4 left-4 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            For Rent
+                        </div>
+                        <div class="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full cursor-pointer hover:bg-black/70">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-semibold text-foreground" data-bind="property.title">City Apartment</h3>
+                            <span class="text-2xl font-bold text-primary" data-bind="property.price">$1,200/mo</span>
+                        </div>
+                        <p class="text-muted-foreground mb-4" data-bind="property.address">Central Baghdad, Iraq</p>
+                        <div class="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
+                            <span><i class="fas fa-bed mr-1"></i>2 Beds</span>
+                            <span><i class="fas fa-bath mr-1"></i>2 Baths</span>
+                            <span><i class="fas fa-ruler-combined mr-1"></i>1,200 sq ft</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <!-- Professional real estate agent portrait -->
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" alt="Agent" class="w-8 h-8 rounded-full">
+                                <span class="text-sm text-muted-foreground" data-bind="agent.name">Ahmed Hassan</span>
+                            </div>
+                            <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Card 3 -->
+                <!-- A beautiful traditional house with modern updates and landscaped garden -->
+                <div class="property-card bg-card rounded-lg shadow-md overflow-hidden" data-mock="true">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600" alt="Traditional house with modern updates" class="w-full h-48 object-cover">
+                        <div class="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
+                            For Sale
+                        </div>
+                        <div class="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full cursor-pointer hover:bg-black/70">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl font-semibold text-foreground" data-bind="property.title">Family Home</h3>
+                            <span class="text-2xl font-bold text-primary" data-bind="property.price">$320,000</span>
+                        </div>
+                        <p class="text-muted-foreground mb-4" data-bind="property.address">Sulaymaniyah, Kurdistan</p>
+                        <div class="flex items-center space-x-4 text-sm text-muted-foreground mb-4">
+                            <span><i class="fas fa-bed mr-1"></i>3 Beds</span>
+                            <span><i class="fas fa-bath mr-1"></i>2 Baths</span>
+                            <span><i class="fas fa-ruler-combined mr-1"></i>1,800 sq ft</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <!-- Professional female real estate agent portrait -->
+                                <img src="https://pixabay.com/get/g1e0354422a2bc3e04eab47cfca20bba0057b2c4c3a52f220be129d54c887a0cd3e7736a8c8a7a5d73ff5530fb97da5e33811e1e67ae95727b15e99691a8d3c78_1280.jpg" alt="Agent" class="w-8 h-8 rounded-full">
+                                <span class="text-sm text-muted-foreground" data-bind="agent.name">Layla Omar</span>
+                            </div>
+                            <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="bg-primary text-primary-foreground px-8 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors">
+                    View All Properties
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: FeaturedProperties -->
+
+    <!-- @COMPONENT: InteractiveMapSection -->
+    <section class="py-16 bg-muted/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">Explore Properties on Map</h2>
+                <p class="text-xl text-muted-foreground">Find properties in your preferred locations</p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <!-- Map Filters -->
+                <div class="p-6 border-b border-border">
+                    <div class="flex flex-wrap items-center gap-4">
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm font-medium text-foreground">Price Range:</label>
+                            <select class="bg-background border border-border rounded-md px-3 py-2 text-sm">
+                                <option>Any Price</option>
+                                <option>Under $200k</option>
+                                <option>$200k - $500k</option>
+                                <option>$500k+</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm font-medium text-foreground">Property Type:</label>
+                            <select class="bg-background border border-border rounded-md px-3 py-2 text-sm">
+                                <option>All Types</option>
+                                <option>House</option>
+                                <option>Apartment</option>
+                                <option>Villa</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <label class="text-sm font-medium text-foreground">Bedrooms:</label>
+                            <select class="bg-background border border-border rounded-md px-3 py-2 text-sm">
+                                <option>Any</option>
+                                <option>1+</option>
+                                <option>2+</option>
+                                <option>3+</option>
+                                <option>4+</option>
+                            </select>
+                        </div>
+                        <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90">
+                            <i class="fas fa-search mr-2"></i>Apply Filters
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Map Container -->
+                <div class="relative h-96" id="property-map">
+                    <!-- Map will be rendered here by Leaflet -->
+                    <div class="absolute inset-0 bg-muted/20 flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-map text-4xl text-muted-foreground mb-4"></i>
+                            <p class="text-muted-foreground">Interactive map will load here</p>
+                            <p class="text-sm text-muted-foreground mt-2">Powered by OpenStreetMap & Leaflet.js</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Map Legend -->
+                <div class="p-4 bg-muted/30 border-t border-border">
+                    <div class="flex items-center justify-center space-x-6 text-sm">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-primary rounded-full"></div>
+                            <span class="text-muted-foreground">For Sale</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-emerald-600 rounded-full"></div>
+                            <span class="text-muted-foreground">For Rent</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                            <span class="text-muted-foreground">New Listing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: InteractiveMapSection -->
+
+    <!-- @COMPONENT: AIRecommendations -->
+    <section class="py-16 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-4">
+                    <i class="fas fa-robot"></i>
+                    <span class="text-sm font-medium">AI Powered</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold text-foreground mb-4">Personalized Recommendations</h2>
+                <p class="text-xl text-muted-foreground">Properties curated just for you based on your preferences</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Recommendation Card 1 -->
+                <!-- A luxurious modern apartment interior with floor-to-ceiling windows -->
+                <div class="bg-card rounded-lg shadow-lg overflow-hidden" data-mock="true">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" alt="Luxurious modern apartment interior" class="w-full h-64 object-cover">
+                        <div class="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="fas fa-crown mr-1"></i>AI Match: 95%
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-foreground mb-2" data-bind="property.title">Luxury Penthouse</h3>
+                        <p class="text-muted-foreground mb-4" data-bind="property.address">Erbil City Center, Kurdistan</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-bold text-primary" data-bind="property.price">$750,000</span>
+                            <div class="flex items-center space-x-3 text-sm text-muted-foreground">
+                                <span><i class="fas fa-bed mr-1"></i>3 Beds</span>
+                                <span><i class="fas fa-bath mr-1"></i>2 Baths</span>
+                            </div>
+                        </div>
+                        <div class="bg-primary/10 p-4 rounded-lg mb-4">
+                            <p class="text-sm text-primary font-medium mb-2">
+                                <i class="fas fa-lightbulb mr-2"></i>Why AI recommends this:
+                            </p>
+                            <ul class="text-sm text-muted-foreground space-y-1">
+                                <li>• Matches your budget preference</li>
+                                <li>• Located in your preferred area</li>
+                                <li>• Modern amenities you searched for</li>
+                            </ul>
+                        </div>
+                        <button class="w-full bg-primary text-primary-foreground py-3 rounded-md font-medium hover:bg-primary/90">
+                            View Property
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recommendation Card 2 -->
+                <!-- A contemporary house kitchen with marble countertops and modern appliances -->
+                <div class="bg-card rounded-lg shadow-lg overflow-hidden" data-mock="true">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" alt="Contemporary house kitchen with marble countertops" class="w-full h-64 object-cover">
+                        <div class="absolute top-4 left-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            <i class="fas fa-crown mr-1"></i>AI Match: 88%
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-foreground mb-2" data-bind="property.title">Designer Home</h3>
+                        <p class="text-muted-foreground mb-4" data-bind="property.address">Sulaymaniyah Heights, Kurdistan</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl font-bold text-primary" data-bind="property.price">$380,000</span>
+                            <div class="flex items-center space-x-3 text-sm text-muted-foreground">
+                                <span><i class="fas fa-bed mr-1"></i>4 Beds</span>
+                                <span><i class="fas fa-bath mr-1"></i>3 Baths</span>
+                            </div>
+                        </div>
+                        <div class="bg-primary/10 p-4 rounded-lg mb-4">
+                            <p class="text-sm text-primary font-medium mb-2">
+                                <i class="fas fa-lightbulb mr-2"></i>Why AI recommends this:
+                            </p>
+                            <ul class="text-sm text-muted-foreground space-y-1">
+                                <li>• Similar to your saved properties</li>
+                                <li>• Great investment potential</li>
+                                <li>• Near schools and amenities</li>
+                            </ul>
+                        </div>
+                        <button class="w-full bg-primary text-primary-foreground py-3 rounded-md font-medium hover:bg-primary/90">
+                            View Property
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: AIRecommendations -->
+
+    <!-- @COMPONENT: PropertyDetailModal -->
+    <div id="property-modal" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between p-6 border-b border-border">
+                    <h2 class="text-2xl font-bold text-foreground">Property Details</h2>
+                    <button class="text-muted-foreground hover:text-foreground" onclick="closeModal()">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="overflow-y-auto max-h-[calc(90vh-80px)]">
+                    <!-- Image Gallery -->
+                    <div class="relative h-64 md:h-96">
+                        <!-- A spacious modern living room with contemporary furniture and large windows -->
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=600" alt="Spacious modern living room" class="w-full h-full object-cover">
+                        <div class="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full">
+                            1 / 8 Photos
+                        </div>
+                        <div class="absolute inset-y-0 left-4 flex items-center">
+                            <button class="bg-white/80 hover:bg-white text-foreground p-2 rounded-full shadow-lg">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        </div>
+                        <div class="absolute inset-y-0 right-4 flex items-center">
+                            <button class="bg-white/80 hover:bg-white text-foreground p-2 rounded-full shadow-lg">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Property Info -->
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <!-- Main Info -->
+                            <div class="lg:col-span-2">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-foreground mb-2" data-bind="property.title">Modern Villa in Erbil</h3>
+                                        <p class="text-muted-foreground" data-bind="property.address">Downtown Erbil, Kurdistan Region</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-3xl font-bold text-primary" data-bind="property.price">$450,000</div>
+                                        <div class="text-sm text-muted-foreground">$187/sq ft</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Features -->
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                                    <div class="text-center p-4 bg-muted/30 rounded-lg">
+                                        <i class="fas fa-bed text-2xl text-primary mb-2"></i>
+                                        <div class="font-semibold">4</div>
+                                        <div class="text-sm text-muted-foreground">Bedrooms</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-muted/30 rounded-lg">
+                                        <i class="fas fa-bath text-2xl text-primary mb-2"></i>
+                                        <div class="font-semibold">3</div>
+                                        <div class="text-sm text-muted-foreground">Bathrooms</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-muted/30 rounded-lg">
+                                        <i class="fas fa-ruler-combined text-2xl text-primary mb-2"></i>
+                                        <div class="font-semibold">2,400</div>
+                                        <div class="text-sm text-muted-foreground">Sq Ft</div>
+                                    </div>
+                                    <div class="text-center p-4 bg-muted/30 rounded-lg">
+                                        <i class="fas fa-car text-2xl text-primary mb-2"></i>
+                                        <div class="font-semibold">2</div>
+                                        <div class="text-sm text-muted-foreground">Garage</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Description -->
+                                <div class="mb-8">
+                                    <h4 class="text-lg font-semibold text-foreground mb-4">Description</h4>
+                                    <p class="text-muted-foreground leading-relaxed" data-mock="true">
+                                        This stunning modern villa offers the perfect blend of luxury and comfort. Located in the heart of Erbil, 
+                                        it features an open-concept design with high ceilings, premium finishes, and floor-to-ceiling windows 
+                                        that flood the space with natural light. The gourmet kitchen boasts top-of-the-line appliances and 
+                                        marble countertops, while the master suite includes a walk-in closet and spa-like bathroom.
+                                    </p>
+                                </div>
+                                
+                                <!-- Amenities -->
+                                <div>
+                                    <h4 class="text-lg font-semibold text-foreground mb-4">Amenities</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="space-y-2">
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-check text-green-500"></i>
+                                                <span class="text-muted-foreground">Central Air Conditioning</span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-check text-green-500"></i>
+                                                <span class="text-muted-foreground">Hardwood Floors</span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-check text-green-500"></i>
+                                                <span class="text-muted-foreground">Modern Kitchen</span>
+                                            </div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-check text-green-500"></i>
+                                                <span class="text-muted-foreground">Garden & Patio</span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-check text-green-500"></i>
+                                                <span class="text-muted-foreground">Security System</span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i class="fas fa-check text-green-500"></i>
+                                                <span class="text-muted-foreground">Garage Parking</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Card -->
+                            <div class="lg:col-span-1">
+                                <div class="bg-muted/30 rounded-lg p-6 sticky top-6">
+                                    <div class="text-center mb-6">
+                                        <!-- Professional real estate agent portrait -->
+                                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200" alt="Agent Sarah Ahmed" class="w-20 h-20 rounded-full mx-auto mb-4">
+                                        <h4 class="text-lg font-semibold text-foreground" data-bind="agent.name">Sarah Ahmed</h4>
+                                        <p class="text-muted-foreground text-sm">Licensed Real Estate Agent</p>
+                                        <div class="flex items-center justify-center mt-2">
+                                            <div class="flex text-yellow-400">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <span class="text-sm text-muted-foreground ml-2">5.0 (48 reviews)</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="space-y-3">
+                                        <button class="w-full bg-primary text-primary-foreground py-3 rounded-md font-medium hover:bg-primary/90">
+                                            <i class="fas fa-phone mr-2"></i>Call Now
+                                        </button>
+                                        <button class="w-full bg-green-600 text-white py-3 rounded-md font-medium hover:bg-green-700">
+                                            <i class="fab fa-whatsapp mr-2"></i>WhatsApp
+                                        </button>
+                                        <button class="w-full bg-white border border-border text-foreground py-3 rounded-md font-medium hover:bg-muted/30">
+                                            <i class="fas fa-envelope mr-2"></i>Send Message
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Contact Form -->
+                                    <div class="mt-6 pt-6 border-t border-border">
+                                        <h5 class="font-semibold text-foreground mb-4">Send a Message</h5>
+                                        <form class="space-y-4" data-implementation="Should handle form submission">
+                                            <input type="text" placeholder="Your Name" class="w-full px-3 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                                            <input type="email" placeholder="Your Email" class="w-full px-3 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true">
+                                            <textarea placeholder="Your Message" rows="3" class="w-full px-3 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-transparent" data-mock="true"></textarea>
+                                            <button type="submit" class="w-full bg-primary text-primary-foreground py-2 rounded-md font-medium hover:bg-primary/90">
+                                                Send Message
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: PropertyDetailModal -->
+
+    <!-- @COMPONENT: AgentDashboard -->
+    <section class="py-16 bg-muted/30" id="agent-dashboard" style="display: none;">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-foreground mb-4">Agent Dashboard</h2>
+                <p class="text-muted-foreground">Manage your properties and client inquiries</p>
+            </div>
+            
+            <!-- Dashboard Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-muted-foreground">Total Properties</p>
+                            <p class="text-2xl font-bold text-foreground" data-bind="stats.totalProperties">24</p>
+                        </div>
+                        <div class="bg-primary/10 p-3 rounded-full">
+                            <i class="fas fa-home text-primary text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-muted-foreground">Active Listings</p>
+                            <p class="text-2xl font-bold text-foreground" data-bind="stats.activeListings">18</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-chart-line text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-muted-foreground">New Inquiries</p>
+                            <p class="text-2xl font-bold text-foreground" data-bind="stats.newInquiries">7</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <i class="fas fa-envelope text-yellow-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg p-6 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-muted-foreground">This Month's Sales</p>
+                            <p class="text-2xl font-bold text-foreground" data-bind="stats.monthlySales">$850k</p>
+                        </div>
+                        <div class="bg-emerald-100 p-3 rounded-full">
+                            <i class="fas fa-dollar-sign text-emerald-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Property Management -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Property List -->
+                <div class="bg-white rounded-lg shadow-sm">
+                    <div class="p-6 border-b border-border">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-foreground">Your Properties</h3>
+                            <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90">
+                                <i class="fas fa-plus mr-2"></i>Add Property
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <!-- Property Item -->
+                            <div class="flex items-center space-x-4 p-4 border border-border rounded-lg" data-mock="true">
+                                <!-- A modern house exterior with landscaping -->
+                                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" alt="Modern house exterior" class="w-16 h-16 rounded-lg object-cover">
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-foreground" data-bind="property.title">Modern Villa</h4>
+                                    <p class="text-sm text-muted-foreground" data-bind="property.address">Downtown Erbil</p>
+                                    <p class="text-sm font-medium text-primary" data-bind="property.price">$450,000</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="text-primary hover:text-primary/80">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-500 hover:text-red-600">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Property Item -->
+                            <div class="flex items-center space-x-4 p-4 border border-border rounded-lg" data-mock="true">
+                                <!-- A contemporary apartment living room -->
+                                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100" alt="Contemporary apartment living room" class="w-16 h-16 rounded-lg object-cover">
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-foreground" data-bind="property.title">City Apartment</h4>
+                                    <p class="text-sm text-muted-foreground" data-bind="property.address">Central Baghdad</p>
+                                    <p class="text-sm font-medium text-primary" data-bind="property.price">$1,200/mo</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="text-primary hover:text-primary/80">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="text-red-500 hover:text-red-600">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Inquiries -->
+                <div class="bg-white rounded-lg shadow-sm">
+                    <div class="p-6 border-b border-border">
+                        <h3 class="text-lg font-semibold text-foreground">Recent Inquiries</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <!-- Inquiry Item -->
+                            <div class="p-4 border border-border rounded-lg" data-mock="true">
+                                <div class="flex items-start justify-between mb-2">
+                                    <h4 class="font-medium text-foreground" data-bind="inquiry.name">John Smith</h4>
+                                    <span class="text-xs text-muted-foreground" data-bind="inquiry.time">2 hours ago</span>
+                                </div>
+                                <p class="text-sm text-muted-foreground mb-2" data-bind="inquiry.property">Interested in: Modern Villa</p>
+                                <p class="text-sm text-muted-foreground" data-bind="inquiry.message">
+                                    "I'm interested in viewing this property. When would be a good time?"
+                                </p>
+                                <div class="flex space-x-2 mt-3">
+                                    <button class="bg-primary text-primary-foreground px-3 py-1 rounded text-xs font-medium hover:bg-primary/90">
+                                        Reply
+                                    </button>
+                                    <button class="text-muted-foreground hover:text-foreground px-3 py-1 rounded text-xs">
+                                        Mark as Read
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Inquiry Item -->
+                            <div class="p-4 border border-border rounded-lg" data-mock="true">
+                                <div class="flex items-start justify-between mb-2">
+                                    <h4 class="font-medium text-foreground" data-bind="inquiry.name">Sarah Wilson</h4>
+                                    <span class="text-xs text-muted-foreground" data-bind="inquiry.time">1 day ago</span>
+                                </div>
+                                <p class="text-sm text-muted-foreground mb-2" data-bind="inquiry.property">Interested in: City Apartment</p>
+                                <p class="text-sm text-muted-foreground" data-bind="inquiry.message">
+                                    "What's included in the monthly rent? Is parking available?"
+                                </p>
+                                <div class="flex space-x-2 mt-3">
+                                    <button class="bg-primary text-primary-foreground px-3 py-1 rounded text-xs font-medium hover:bg-primary/90">
+                                        Reply
+                                    </button>
+                                    <button class="text-muted-foreground hover:text-foreground px-3 py-1 rounded text-xs">
+                                        Mark as Read
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: AgentDashboard -->
+
+    <!-- @COMPONENT: Footer -->
+    <footer class="bg-foreground text-background py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-home text-primary-foreground"></i>
+                        </div>
+                        <span class="text-xl font-bold">EstateAI</span>
+                    </div>
+                    <p class="text-muted-foreground text-sm">
+                        Your AI-powered real estate companion. Find your perfect home with intelligent recommendations and seamless property search.
+                    </p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li><a href="#" class="hover:text-background">Properties</a></li>
+                        <li><a href="#" class="hover:text-background">Agents</a></li>
+                        <li><a href="#" class="hover:text-background">About Us</a></li>
+                        <li><a href="#" class="hover:text-background">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Services -->
+                <div>
+                    <h4 class="font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2 text-sm text-muted-foreground">
+                        <li><a href="#" class="hover:text-background">Buy Property</a></li>
+                        <li><a href="#" class="hover:text-background">Rent Property</a></li>
+                        <li><a href="#" class="hover:text-background">Property Management</a></li>
+                        <li><a href="#" class="hover:text-background">AI Recommendations</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-semibold mb-4">Contact</h4>
+                    <div class="space-y-2 text-sm text-muted-foreground">
+                        <p><i class="fas fa-phone mr-2"></i>+964 750 123 4567</p>
+                        <p><i class="fas fa-envelope mr-2"></i>info@estateai.com</p>
+                        <p><i class="fas fa-map-marker-alt mr-2"></i>Erbil, Kurdistan Region</p>
+                    </div>
+                    
+                    <!-- Social Links -->
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-muted-foreground hover:text-background">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-background">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-background">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-background">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-muted-foreground/20 mt-8 pt-8 text-center">
+                <p class="text-sm text-muted-foreground">
+                    © 2024 EstateAI. All rights reserved. Built with Next.js, TailwindCSS & AI.
+                </p>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // TODO: Implement business logic, API calls, or state management
+        
+        (function() {
+            // Initialize the map
+            function initializeMap() {
+                if (typeof L !== 'undefined') {
+                    const map = L.map('property-map').setView([36.1911, 44.0093], 13); // Erbil coordinates
+                    
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenStreetMap contributors'
+                    }).addTo(map);
+                    
+                    // Add sample property markers
+                    const properties = [
+                        { lat: 36.1911, lng: 44.0093, title: "Modern Villa", price: "$450,000" },
+                        { lat: 36.1850, lng: 44.0150, title: "City Apartment", price: "$1,200/mo" },
+                        { lat: 36.1970, lng: 44.0050, title: "Family Home", price: "$320,000" }
+                    ];
+                    
+                    properties.forEach(property => {
+                        const marker = L.marker([property.lat, property.lng]).addTo(map);
+                        marker.bindPopup(`<b>${property.title}</b><br>${property.price}`);
+                    });
+                }
+            }
+            
+            // Search suggestions functionality
+            function initializeSearch() {
+                const searchInput = document.querySelector('input[placeholder*="Ask AI"]');
+                const suggestions = document.getElementById('search-suggestions');
+                
+                if (searchInput && suggestions) {
+                    searchInput.addEventListener('focus', () => {
+                        suggestions.classList.remove('hidden');
+                    });
+                    
+                    searchInput.addEventListener('blur', () => {
+                        setTimeout(() => {
+                            suggestions.classList.add('hidden');
+                        }, 200);
+                    });
+                    
+                    // Handle suggestion clicks
+                    suggestions.addEventListener('click', (e) => {
+                        const suggestion = e.target.closest('.search-suggestion');
+                        if (suggestion) {
+                            searchInput.value = suggestion.textContent.trim();
+                            suggestions.classList.add('hidden');
+                        }
+                    });
+                }
+            }
+            
+            // Modal functionality
+            window.openModal = function() {
+                document.getElementById('property-modal').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            };
+            
+            window.closeModal = function() {
+                document.getElementById('property-modal').classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            };
+            
+            // Initialize all functionality when DOM is loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                initializeMap();
+                initializeSearch();
+                
+                // Add click handlers for property cards
+                document.querySelectorAll('.property-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        openModal();
+                    });
+                });
+                
+                // Handle view details buttons
+                document.querySelectorAll('button:contains("View Details")').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openModal();
+                    });
+                });
+                
+                // Close modal when clicking outside
+                document.getElementById('property-modal').addEventListener('click', (e) => {
+                    if (e.target.id === 'property-modal') {
+                        closeModal();
+                    }
+                });
+            });
+            
+            // Toggle agent dashboard (for demo purposes)
+            window.toggleAgentDashboard = function() {
+                const dashboard = document.getElementById('agent-dashboard');
+                if (dashboard.style.display === 'none') {
+                    dashboard.style.display = 'block';
+                } else {
+                    dashboard.style.display = 'none';
+                }
+            };
+        })();
+    </script>
+</body>
+</html>
